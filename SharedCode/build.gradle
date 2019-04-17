@@ -1,0 +1,34 @@
+apply plugin: 'java-library'
+//apply plugin: 'kotlin'
+apply plugin: 'kotlin-multiplatform'
+
+kotlin {
+    targets {
+//        final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") \
+//                              ? presets.iosArm64 : presets.iosX64
+//
+//        fromPreset(iOSTarget, 'iOS') {
+//            binaries {
+//                framework('SharedCode')
+//            }
+//        }
+
+        fromPreset(presets.jvm, 'android')
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            api 'org.jetbrains.kotlin:kotlin-stdlib-common'
+        }
+
+        androidMain.dependencies {
+            api 'org.jetbrains.kotlin:kotlin-stdlib'
+            compileOnly group: 'com.google.android', name: 'android', version: '4.1.1.4'
+        }
+    }
+}
+
+
+configurations {
+    compileClasspath
+}
