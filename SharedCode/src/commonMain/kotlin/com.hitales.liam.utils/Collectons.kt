@@ -93,6 +93,7 @@ class LinkedList<T> : Iterator<T>{
             tail?.next = newNode
         }else{
             head = newNode
+            tail = head
         }
     }
 
@@ -105,17 +106,40 @@ class LinkedList<T> : Iterator<T>{
         return null
     }
 
-    override fun hasNext(): Boolean {
-        if(iterNode == null){
-            iterNode = head
+    fun remove(value: T):T?{
+        var temp = head
+        while (temp != null){
+            if(temp.value == value){
+                val next = temp.next
+                if(next != null){
+                    temp.previous?.next = temp.next
+                }else{
+                    tail = temp.previous
+                }
+                if(temp == head){
+                    head = null
+                }
+                return value
+            }else{
+                temp = temp.next
+            }
         }
+        return null
+    }
+
+    override fun hasNext(): Boolean {
         if(iterNode == tail){
             iterNode = null
             return false
         }
-        return iterNode?.next != null
+        if(iterNode == null){
+            iterNode = head
+        }else{
+            iterNode = iterNode?.next
+        }
+        return iterNode != null
     }
 
-    override fun next(): T = iterNode!!.next!!.value
+    override fun next(): T = iterNode!!.value
 
 }

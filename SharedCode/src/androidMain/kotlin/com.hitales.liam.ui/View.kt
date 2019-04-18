@@ -1,16 +1,34 @@
 package com.hitales.liam.ui
 
 import android.widget.TextView
+import com.hitales.liam.utils.Frame
+import com.hitales.liam.utils.NotificationCenter
+
+const val NOTIFY_VIEW_LAYOUT_CHANGE = "___NOTIFY_VIEW_LAYOUT_CHANGE___"
+
+val notificationCenter = NotificationCenter.getInstance()
 
 interface ViewWrapper<T> {
     val widget:T
     fun createWidget():T
 }
 
+
 actual open class View {
 
     private val widget: android.view.View = createWidget()
 
+    actual var frame:Frame
+    set(value) {
+        field = value
+        notificationCenter.notify(NOTIFY_VIEW_LAYOUT_CHANGE,this)
+    }
+
+    actual var superView:View? = null
+
+    actual constructor(frame: Frame){
+        this.frame = frame
+    }
 
     open fun createWidget(): android.view.View {
        return android.view.View(Platform.getApplication())
@@ -19,7 +37,6 @@ actual open class View {
     open fun getWidget(): android.view.View {
         return widget
     }
-
 
     actual fun setId(id: Int) {
         widget.id = id
@@ -43,7 +60,7 @@ actual open class View {
 
 actual open class TextView :  View {
 
-    actual constructor(text:CharSequence?):super(){
+    actual constructor(text:CharSequence?,frame: Frame):super(frame){
         getWidget().text = text
     }
 

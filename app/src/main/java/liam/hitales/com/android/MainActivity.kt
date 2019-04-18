@@ -9,11 +9,11 @@ import android.os.Bundle
 import android.transition.Fade
 import android.transition.Transition
 import android.transition.TransitionValues
+import android.view.ViewGroup
 import android.view.animation.ScaleAnimation
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.hitales.liam.ui.Platform
-import com.hitales.liam.ui.TestController
 import com.hitales.liam.ui.View
 import java.util.*
 
@@ -35,8 +35,8 @@ class MainActivity : AppCompatActivity() {
 //        val i = Intent(this,TestController::class.java)
 //        startActivity(i)
 
-        Platform.init(this)
 
+        Platform.init(this)
     }
 
     override fun getResources(): Resources {
