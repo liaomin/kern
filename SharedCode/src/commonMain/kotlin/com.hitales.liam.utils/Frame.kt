@@ -16,6 +16,15 @@ open class Frame(var left:Float = 0f,var top:Float = 0f, var right:Float = 0f,va
         return (bottom - top) / 2f
     }
 
+    fun getWdith():Float{
+        return right - left
+    }
+
+    fun getHeight():Float{
+        return bottom - top
+    }
+
+
     override fun equals(other: Any?): Boolean {
         if(this == other){
             return true

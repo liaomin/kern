@@ -1,5 +1,6 @@
 package com.hitales.liam.ui
 
+import android.widget.FrameLayout
 import android.widget.TextView
 import com.hitales.liam.utils.Frame
 import com.hitales.liam.utils.NotificationCenter
@@ -21,6 +22,10 @@ actual open class View {
     actual var frame:Frame
     set(value) {
         field = value
+        val params = FrameLayout.LayoutParams(frame.getWdith().toInt(),frame.getHeight().toInt())
+        params.topMargin = frame.top.toInt()
+        params.leftMargin = frame.left.toInt()
+        widget.layoutParams = params
         notificationCenter.notify(NOTIFY_VIEW_LAYOUT_CHANGE,this)
     }
 

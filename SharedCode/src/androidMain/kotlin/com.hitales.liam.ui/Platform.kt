@@ -34,11 +34,11 @@ actual class Platform {
                 rootActivity.setContentView(getWidget())
             }
 
-            notificationCenter.addObserver(NOTIFY_VIEW_LAYOUT_CHANGE){ key: Any, value: Any? ->  
-                val view:com.hitales.liam.ui.View = value as com.hitales.liam.ui.View
-                view.superView?.getWidget()?.requestLayout()
-            }
-            c.view?.frame = Frame(1f,2f,3f,4f)
+//            notificationCenter.addObserver(NOTIFY_VIEW_LAYOUT_CHANGE){ key: Any, value: Any? ->
+//                val view:com.hitales.liam.ui.View = value as com.hitales.liam.ui.View
+//                view.superView?.getWidget()?.requestLayout()
+//            }
+//            c.view?.frame = Frame(1f,2f,3f,4f)
         }
 
 
