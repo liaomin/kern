@@ -1,6 +1,6 @@
 package com.hitales.liam.utils
 
-open class Frame(var left:Float = 0f,var top:Float = 0f, var right:Float = 0f,var bottom:Float = 0f) {
+open class Frame(var x:Float = 0f,var y:Float = 0f, var width:Float = 0f,var height:Float = 0f) {
 
     companion object {
         fun zero():Frame{
@@ -9,28 +9,19 @@ open class Frame(var left:Float = 0f,var top:Float = 0f, var right:Float = 0f,va
     }
 
     fun getCenterX():Float{
-        return (right - left) / 2f
+        return x + width / 2f
     }
 
     fun getCenterY():Float{
-        return (bottom - top) / 2f
+        return y + height / 2f
     }
-
-    fun getWdith():Float{
-        return right - left
-    }
-
-    fun getHeight():Float{
-        return bottom - top
-    }
-
 
     override fun equals(other: Any?): Boolean {
         if(this == other){
             return true
         }
         if(other != null && other is Frame){
-            return left == other.left && top == other.top && right == other.right && bottom == other.bottom
+            return x == other.x && y == other.y && width == other.width && height == other.height
         }
         return super.equals(other)
     }

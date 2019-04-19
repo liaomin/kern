@@ -20,8 +20,14 @@ expect open class View  {
 
 expect open class TextView : View {
     constructor(text:CharSequence? = null,frame: Frame = Frame.zero())
-    fun setText(text:CharSequence?)
-    fun getText():CharSequence?
-
+    open fun setText(text:CharSequence?)
+    open fun getText():CharSequence?
 }
+
+
+expect open class Button : TextView {
+    constructor(text:CharSequence? = null,frame: Frame = Frame.zero())
+    var onPressListener:((iew:View)->Unit)?
+    var onLongPressListener:((iew:View)->Unit)?}
+
 

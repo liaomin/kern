@@ -17,6 +17,7 @@ actual class FrameViewGroup : View {
         if(index < 0){
             children.add(view)
             getWidget().addView(view.getWidget())
+            view.superView = this
         }
     }
 

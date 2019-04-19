@@ -17,34 +17,34 @@ class NotificationCenter {
         }
     }
 
-    val observers = HashMap<Any,LinkedList<((key:Any,value:Any?)->Unit)>>()
+    private val observers = HashMap<Any,LinkedList<((key:Any,value:Any?)->Unit)>>()
 
     @Synchronized
     fun addObserver(key:Any,block:((key:Any,value:Any?)->Unit)){
-        var list = observers.get(key)
+        var list = observers[key]
         if(list == null){
             list = LinkedList()
-            observers.put(key,list)
+            observers[key] = list
         }
         list.append(block)
     }
 
     @Synchronized
     fun removeObserver(key:Any,block:((key:Any,value:Any?)->Unit)){
-        var list = observers.get(key)
+        var list = observers[key]
         if(list == null){
             list = LinkedList()
-            observers.put(key,list)
+            observers[key] = list
         }
         list.remove(block)
     }
 
     @Synchronized
-    fun notify(key:Any,value: Any?){
-        var list = observers.get(key)
+    fun notify(key:Any,value: Any? = null){
+        var list = observers[key]
         if(list == null){
             list = LinkedList()
-            observers.put(key,list)
+            observers[key] = list
         }
         list.forEach {
             it(key,value)

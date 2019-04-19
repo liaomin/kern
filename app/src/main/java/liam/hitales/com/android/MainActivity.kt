@@ -15,6 +15,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.hitales.liam.ui.Platform
 import com.hitales.liam.ui.View
+import com.hitales.liam.utils.NotificationCenter
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -37,6 +38,14 @@ class MainActivity : AppCompatActivity() {
 
 
         Platform.init(this)
+        val update = object :Runnable{
+            override fun run() {
+                NotificationCenter.getInstance().notify("update")
+                window.decorView.postDelayed(this,10)
+            }
+        }
+
+        update.run()
     }
 
     override fun getResources(): Resources {

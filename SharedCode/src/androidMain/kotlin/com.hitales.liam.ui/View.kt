@@ -1,5 +1,6 @@
 package com.hitales.liam.ui
 
+import android.graphics.Color
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.hitales.liam.utils.Frame
@@ -19,12 +20,19 @@ actual open class View {
 
     private val widget: android.view.View = createWidget()
 
+
     actual var frame:Frame
     set(value) {
         field = value
-        val params = FrameLayout.LayoutParams(frame.getWdith().toInt(),frame.getHeight().toInt())
-        params.topMargin = frame.top.toInt()
-        params.leftMargin = frame.left.toInt()
+        var params = widget.layoutParams
+        if(params == null || params  !is FrameLayout.LayoutParams){
+            params = FrameLayout.LayoutParams(frame.width.toInt(),frame.height.toInt())
+        }else{
+            params.width = frame.width.toInt()
+            params.height = frame.height.toInt()
+        }
+        params.topMargin = frame.x.toInt()
+        params.leftMargin = frame.y.toInt()
         widget.layoutParams = params
         notificationCenter.notify(NOTIFY_VIEW_LAYOUT_CHANGE,this)
     }
@@ -33,6 +41,10 @@ actual open class View {
 
     actual constructor(frame: Frame){
         this.frame = frame
+    }
+
+    init {
+        setBackgroundColor(0L)
     }
 
     open fun createWidget(): android.view.View {
@@ -77,11 +89,43 @@ actual open class TextView :  View {
         return super.getWidget() as android.widget.TextView
     }
 
-    actual fun setText(text: CharSequence?) {
+    actual open fun setText(text: CharSequence?) {
         getWidget().text = text
     }
 
-    actual fun getText(): CharSequence? = getWidget().text
+    actual open fun getText(): CharSequence? = getWidget().text
+
+}
+
+
+actual open class Button :  com.hitales.liam.ui.TextView {
+
+    actual  var onPressListener:((view:View)->Unit)? = null
+
+    actual  var onLongPressListener:((view:View)->Unit)? = null
+
+    actual constructor(text:CharSequence?,frame: Frame):super(text,frame){
+        val widget = getWidget()
+        widget.text = text
+        widget.setOnClickListener{ _ -> onPressListener?.invoke(this)}
+        widget.setOnLongClickListener{ v ->
+            onLongPressListener?.invoke(this)
+            if(onLongPressListener != null){
+                return@setOnLongClickListener true
+            }
+            return@setOnLongClickListener false
+        }
+    }
+
+    override fun createWidget(): android.widget.Button {
+        return android.widget.Button(Platform.getApplication())
+    }
+
+    override fun getWidget(): android.widget.Button {
+        return super.getWidget() as android.widget.Button
+    }
+
+
 
 
 }
