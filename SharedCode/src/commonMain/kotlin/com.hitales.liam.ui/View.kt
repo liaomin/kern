@@ -1,9 +1,24 @@
 package com.hitales.liam.ui
 
+import com.hitales.liam.utils.EdgeInsets
 import com.hitales.liam.utils.Frame
 
 expect open class View  {
+    /**
+     * use margin and padding to calculate frame
+     */
+    var padding:EdgeInsets
+
+    /**
+     * use margin and padding to calculate frame
+     */
+    var margin:EdgeInsets
+
+    /**
+     * layout params
+     */
     var frame:Frame
+
     constructor(frame: Frame = Frame.zero())
     var superView:View?
     fun setId(id:Int)
@@ -28,6 +43,7 @@ expect open class TextView : View {
 expect open class Button : TextView {
     constructor(text:CharSequence? = null,frame: Frame = Frame.zero())
     var onPressListener:((iew:View)->Unit)?
-    var onLongPressListener:((iew:View)->Unit)?}
+    var onLongPressListener:((iew:View)->Unit)?
+}
 
 

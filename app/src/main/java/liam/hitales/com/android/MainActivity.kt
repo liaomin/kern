@@ -11,7 +11,9 @@ import android.transition.Transition
 import android.transition.TransitionValues
 import android.view.ViewGroup
 import android.view.animation.ScaleAnimation
+import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import com.hitales.liam.ui.Platform
 import com.hitales.liam.ui.View
@@ -35,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
 //        val i = Intent(this,TestController::class.java)
 //        startActivity(i)
-
+//        ScrollView(this).addView()
 
         Platform.init(this)
         val update = object :Runnable{

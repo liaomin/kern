@@ -3,6 +3,7 @@ package com.hitales.liam.ui
 import android.graphics.Color
 import android.widget.FrameLayout
 import android.widget.TextView
+import com.hitales.liam.utils.EdgeInsets
 import com.hitales.liam.utils.Frame
 import com.hitales.liam.utils.NotificationCenter
 
@@ -17,20 +18,18 @@ interface ViewWrapper<T> {
 
 
 actual open class View {
-
     private val widget: android.view.View = createWidget()
-
+    actual var padding: EdgeInsets = EdgeInsets.zero()
+    actual var margin:EdgeInsets = EdgeInsets.zero()
+    set(value) {
+        field = value
+        widget.setPadding(value.left.toInt(),value.top.toInt(),value.right.toInt(),value.bottom.toInt())
+    }
 
     actual var frame:Frame
     set(value) {
         field = value
-        var params = widget.layoutParams
-        if(params == null || params  !is FrameLayout.LayoutParams){
-            params = FrameLayout.LayoutParams(frame.width.toInt(),frame.height.toInt())
-        }else{
-            params.width = frame.width.toInt()
-            params.height = frame.height.toInt()
-        }
+        var params = getLayoutParams()
         params.topMargin = frame.x.toInt()
         params.leftMargin = frame.y.toInt()
         widget.layoutParams = params
@@ -72,6 +71,16 @@ actual open class View {
     }
 
 
+    protected fun getLayoutParams():FrameLayout.LayoutParams{
+        var params = widget.layoutParams
+        if(params == null || params  !is FrameLayout.LayoutParams){
+            params = FrameLayout.LayoutParams(frame.width.toInt(),frame.height.toInt())
+        }else{
+            params.width = frame.width.toInt()
+            params.height = frame.height.toInt()
+        }
+        return params
+    }
 }
 
 
@@ -107,6 +116,7 @@ actual open class Button :  com.hitales.liam.ui.TextView {
     actual constructor(text:CharSequence?,frame: Frame):super(text,frame){
         val widget = getWidget()
         widget.text = text
+        widget.setTextColor(Color.WHITE)
         widget.setOnClickListener{ _ -> onPressListener?.invoke(this)}
         widget.setOnLongClickListener{ v ->
             onLongPressListener?.invoke(this)
