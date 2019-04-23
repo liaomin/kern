@@ -18,7 +18,11 @@ import android.widget.TextView
 import com.hitales.liam.ui.Platform
 import com.hitales.liam.ui.View
 import com.hitales.liam.utils.NotificationCenter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import java.util.*
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,7 +42,6 @@ class MainActivity : AppCompatActivity() {
 //        val i = Intent(this,TestController::class.java)
 //        startActivity(i)
 //        ScrollView(this).addView()
-
         Platform.init(this)
         val update = object :Runnable{
             override fun run() {
@@ -46,9 +49,9 @@ class MainActivity : AppCompatActivity() {
                 window.decorView.postDelayed(this,10)
             }
         }
-
         update.run()
     }
+
 
     override fun getResources(): Resources {
         val res = super.getResources()

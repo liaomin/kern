@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 val PLATFORM_ANDROID = "android"
 val PLATFORM_IOS = "ios"
 
-suspend fun main() = coroutineScope {
+suspend fun test() = coroutineScope {
     launch {
         delay(1000)
         println("Kotlin Coroutines World!")
