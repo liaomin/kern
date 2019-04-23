@@ -1,8 +1,20 @@
 package com.hitales.liam.ui
 
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
 
 val PLATFORM_ANDROID = "android"
 val PLATFORM_IOS = "ios"
+
+suspend fun main() = coroutineScope {
+    launch {
+        delay(1000)
+        println("Kotlin Coroutines World!")
+    }
+    println("Hello")
+}
 
 expect class Platform {
     companion object {

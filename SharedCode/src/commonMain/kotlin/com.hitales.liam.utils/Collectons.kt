@@ -137,8 +137,10 @@ class LinkedList<T> : Iterator<T>{
         }else{
             iterNode = iterNode?.next
         }
+
         return iterNode != null
     }
+
 
     override fun next(): T = iterNode!!.value
 

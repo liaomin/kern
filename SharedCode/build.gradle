@@ -19,11 +19,13 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api 'org.jetbrains.kotlin:kotlin-stdlib-common'
+            implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.2.0'
         }
 
         androidMain.dependencies {
             api 'org.jetbrains.kotlin:kotlin-stdlib'
             compileOnly group: 'com.google.android', name: 'android', version: '4.1.1.4'
+            implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.0'
         }
     }
 }
