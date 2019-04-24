@@ -1,6 +1,6 @@
-package com.hitales.liam.ui
+package com.hitales.ui
 
-import com.hitales.liam.utils.Frame
+import com.hitales.utils.Frame
 
 expect class FrameViewGroup : View {
 

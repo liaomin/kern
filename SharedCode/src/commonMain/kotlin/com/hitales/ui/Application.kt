@@ -1,4 +1,4 @@
-package com.hitales.liam.ui
+package com.hitales.ui
 
 class Application {
 

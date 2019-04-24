@@ -1,4 +1,4 @@
-package com.hitales.liam.ui
+package com.hitales.ui
 
 
 import android.app.Activity
@@ -6,8 +6,8 @@ import android.app.Application
 import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
-import com.hitales.liam.utils.Frame
-import com.hitales.liam.utils.NotificationCenter
+import com.hitales.utils.Frame
+import com.hitales.utils.NotificationCenter
 
 
 actual class Platform {

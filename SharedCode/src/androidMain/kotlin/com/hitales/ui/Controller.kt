@@ -1,4 +1,4 @@
-package com.hitales.liam.ui
+package com.hitales.ui
 
 import android.app.Activity
 import android.content.Intent

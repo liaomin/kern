@@ -1,7 +1,7 @@
-package com.hitales.liam.ui
+package com.hitales.ui
 
 import android.widget.FrameLayout
-import com.hitales.liam.utils.Frame
+import com.hitales.utils.Frame
 
 
 actual class FrameViewGroup : View {

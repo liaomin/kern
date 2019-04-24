@@ -1,11 +1,10 @@
-package com.hitales.liam.ui
+package com.hitales.ui
 
 import android.graphics.Color
 import android.widget.FrameLayout
-import android.widget.TextView
-import com.hitales.liam.utils.EdgeInsets
-import com.hitales.liam.utils.Frame
-import com.hitales.liam.utils.NotificationCenter
+import com.hitales.utils.EdgeInsets
+import com.hitales.utils.Frame
+import com.hitales.utils.NotificationCenter
 
 const val NOTIFY_VIEW_LAYOUT_CHANGE = "___NOTIFY_VIEW_LAYOUT_CHANGE___"
 
@@ -107,7 +106,7 @@ actual open class TextView :  View {
 }
 
 
-actual open class Button :  com.hitales.liam.ui.TextView {
+actual open class Button :  com.hitales.ui.TextView {
 
     actual  var onPressListener:((view:View)->Unit)? = null
 

@@ -1,7 +1,7 @@
-package com.hitales.liam.ui
+package com.hitales.ui
 
-import com.hitales.liam.utils.Frame
-import com.hitales.liam.utils.NotificationCenter
+import com.hitales.utils.Frame
+import com.hitales.utils.NotificationCenter
 
 class TestController : Controller() {
 

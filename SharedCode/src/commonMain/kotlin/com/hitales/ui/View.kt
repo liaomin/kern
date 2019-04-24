@@ -1,7 +1,7 @@
-package com.hitales.liam.ui
+package com.hitales.ui
 
-import com.hitales.liam.utils.EdgeInsets
-import com.hitales.liam.utils.Frame
+import com.hitales.utils.EdgeInsets
+import com.hitales.utils.Frame
 
 expect open class View  {
     /**
