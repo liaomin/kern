@@ -15,13 +15,12 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
-import com.hitales.liam.ui.Platform
-import com.hitales.liam.ui.View
-import com.hitales.liam.utils.NotificationCenter
+import com.hitales.ui.Platform
+import com.hitales.ui.View
+import com.hitales.utils.NotificationCenter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
-import java.util.*
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -37,11 +36,7 @@ class MainActivity : AppCompatActivity() {
 //        v.text = "dwdw"
 //        setContentView(v)
 
-//        val t = TestController.j
 
-//        val i = Intent(this,TestController::class.java)
-//        startActivity(i)
-//        ScrollView(this).addView()
         Platform.init(this)
         val update = object :Runnable{
             override fun run() {
