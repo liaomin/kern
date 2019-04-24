@@ -11,12 +11,15 @@ class TestController : Controller() {
         super.onCreate()
         val rootView = FrameViewGroup()
 //        rootView.setBackgroundColor(0xFFFF0000)
-        val v  = Button("测试", Frame(60f,60f,100+60f,111+60f))
+        val v  = Button("测试", Frame(60f,60f,200f,200f))
         rootView.addView(v)
+        val v4  = Button("测试2", Frame(60f,260f,200f,200f))
+        rootView.addView(v4)
+        v4.setBackgroundColor(0xFFFFFF00)
         this.v = v
-        val v2  = TextView("测试", Frame(60f,200f,100+60f,200+60f))
+        val v2  = TextView("测试", Frame(60f,150f,100+60f,200+60f))
         rootView.addView(v2)
-        v.setBackgroundColor(0xFFFFFF00)
+        v.setBackgroundColor(0xFFFF0000)
         view = rootView
         v.onPressListener = {
             print(it)

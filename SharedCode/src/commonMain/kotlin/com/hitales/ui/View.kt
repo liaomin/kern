@@ -14,6 +14,10 @@ expect open class View  {
      */
     var margin:EdgeInsets
 
+    var border:EdgeInsets?
+
+    var borderWith:Float
+
     /**
      * layout params
      */

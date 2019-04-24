@@ -1,5 +1,6 @@
 package com.hitales.ui
 
+import android.graphics.Canvas
 import android.graphics.Color
 import android.widget.FrameLayout
 import com.hitales.utils.EdgeInsets
@@ -35,6 +36,10 @@ actual open class View {
         notificationCenter.notify(NOTIFY_VIEW_LAYOUT_CHANGE,this)
     }
 
+    actual var border:EdgeInsets? =  null
+
+    actual var borderWith:Float = 0f
+
     actual var superView:View? = null
 
     actual constructor(frame: Frame){
@@ -46,7 +51,11 @@ actual open class View {
     }
 
     open fun createWidget(): android.view.View {
-       return android.view.View(Platform.getApplication())
+       return object:android.view.View(Platform.getApplication()){
+           override fun onDraw(canvas: Canvas?) {
+               super.onDraw(canvas)
+           }
+       }
     }
 
     open fun getWidget(): android.view.View {

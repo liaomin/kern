@@ -15,13 +15,13 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
-import com.hitales.ui.Platform
-import com.hitales.ui.View
-import com.hitales.utils.NotificationCenter
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+//import com.hitales.ui.Platform
+//import com.hitales.ui.View
+//import com.hitales.utils.NotificationCenter
+//import kotlinx.coroutines.Dispatchers
+//import kotlinx.coroutines.coroutineScope
+//import kotlinx.coroutines.delay
+//import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,14 +37,14 @@ class MainActivity : AppCompatActivity() {
 //        setContentView(v)
 
 
-        Platform.init(this)
-        val update = object :Runnable{
-            override fun run() {
-                NotificationCenter.getInstance().notify("update")
-                window.decorView.postDelayed(this,10)
-            }
-        }
-        update.run()
+//        Platform.init(this)
+//        val update = object :Runnable{
+//            override fun run() {
+//                NotificationCenter.getInstance().notify("update")
+//                window.decorView.postDelayed(this,10)
+//            }
+//        }
+//        update.run()
     }
 
 
