@@ -2,14 +2,8 @@ package com.hitales.ui
 
 import com.hitales.utils.Frame
 
-expect class FrameViewGroup : View {
+class FrameViewGroup : LayoutView {
 
-    constructor(frame:Frame = Frame(0f,0f,Platform.windowWidth,Platform.windowHeight))
-
-    val children:ArrayList<View>
-
-    open fun addView(view: View, index:Int = -1)
-
-
+    constructor(frame:Frame = Frame(0f,0f,Platform.windowWidth,Platform.windowHeight)):super(frame)
 
 }

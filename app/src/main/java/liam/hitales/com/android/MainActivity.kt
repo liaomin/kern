@@ -1,21 +1,19 @@
 package liam.hitales.com.android
 
-import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Color
-import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.transition.Fade
-import android.transition.Transition
-import android.transition.TransitionValues
-import android.view.ViewGroup
-import android.view.animation.ScaleAnimation
 import android.widget.Button
-import android.widget.LinearLayout
+import android.widget.FrameLayout
 import android.widget.ScrollView
 import android.widget.TextView
-//import com.hitales.ui.Platform
+//import com.hitales.ui.StateListColor
+import com.hitales.ui.ViewState
+
+import com.hitales.ui.Platform
+import com.hitales.ui.StateListColor
+
 //import com.hitales.ui.View
 //import com.hitales.utils.NotificationCenter
 //import kotlinx.coroutines.Dispatchers
@@ -37,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 //        setContentView(v)
 
 
-//        Platform.init(this)
+        Platform.init(this)
 //        val update = object :Runnable{
 //            override fun run() {
 //                NotificationCenter.getInstance().notify("update")
@@ -45,6 +43,33 @@ class MainActivity : AppCompatActivity() {
 //            }
 //        }
 //        update.run()
+
+//        val scrollView = ScrollView(this)
+//        val frameLayout = FrameLayout(this)
+////        scrollView.addView(frameLayout,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT))
+//        for(i in 0 until 1000){
+//            val textView = Button(this)
+//            if(i == 0){
+//                textView.setPadding(100,0,100,0)
+//            }
+////            textView.setBackgroundColor(0)
+//            textView.text = i.toString()
+//            val textColor = StateListColor(Color.RED)
+//            textView.setBackgroundColor(Color.RED)
+//            var layout = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,150)
+//            layout.topMargin = 155 * i
+//            frameLayout.addView(textView,layout)
+//            textColor.setColorForState(Color.BLACK,ViewState.PRESSED)
+//            textView.setTextColor(textColor)
+//            frameLayout.postDelayed({
+//                textColor.setColorForState(Color.GREEN,ViewState.DISABLED)
+////                textView.isEnabled = false
+//            },5000)
+//        }
+//
+//        setContentView(frameLayout)
+
+
     }
 
 

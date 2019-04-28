@@ -1,8 +1,8 @@
 package com.hitales.ui
 
-import android.graphics.Canvas
 import android.graphics.Color
 import android.widget.FrameLayout
+import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
 import com.hitales.utils.NotificationCenter
@@ -11,28 +11,41 @@ const val NOTIFY_VIEW_LAYOUT_CHANGE = "___NOTIFY_VIEW_LAYOUT_CHANGE___"
 
 val notificationCenter = NotificationCenter.getInstance()
 
-interface ViewWrapper<T> {
-    val widget:T
-    fun createWidget():T
+
+open class AndroidView(private val view:View) : android.view.View(Platform.getApplication()){
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        view.onAttachedToWindow()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        view.onDetachedFromWindow()
+    }
+
 }
 
 
 actual open class View {
-    private val widget: android.view.View = createWidget()
+    protected val mWidget: android.view.View = createWidget()
+    init {
+        setBackgroundColor(Color.TRANSPARENT)
+    }
     actual var padding: EdgeInsets = EdgeInsets.zero()
     actual var margin:EdgeInsets = EdgeInsets.zero()
-    set(value) {
-        field = value
-        widget.setPadding(value.left.toInt(),value.top.toInt(),value.right.toInt(),value.bottom.toInt())
-    }
+        set(value) {
+            field = value
+            mWidget.setPadding(PixelUtil.toDIPFromPixel(value.left).toInt(),PixelUtil.toDIPFromPixel(value.top).toInt(),PixelUtil.toDIPFromPixel(value.right).toInt(),PixelUtil.toDIPFromPixel(value.bottom).toInt())
+        }
 
-    actual var frame:Frame
+    actual open var frame:Frame
     set(value) {
         field = value
         var params = getLayoutParams()
-        params.topMargin = frame.x.toInt()
-        params.leftMargin = frame.y.toInt()
-        widget.layoutParams = params
+        params.topMargin = PixelUtil.toPixelFromDIP(frame.y).toInt()
+        params.leftMargin = PixelUtil.toPixelFromDIP(frame.x).toInt()
+        mWidget.layoutParams = params
         notificationCenter.notify(NOTIFY_VIEW_LAYOUT_CHANGE,this)
     }
 
@@ -40,110 +53,71 @@ actual open class View {
 
     actual var borderWith:Float = 0f
 
-    actual var superView:View? = null
+    actual var superView:LayoutView? = null
+
+    actual open var id:Int
+        get() = mWidget.id
+        set(value) {
+            mWidget.id = value
+        }
+
+    actual open var tag:Any?
+        get() = mWidget.tag
+        set(value) {
+            mWidget.tag = value
+        }
 
     actual constructor(frame: Frame){
         this.frame = frame
     }
 
-    init {
-        setBackgroundColor(0L)
+    open fun getWidget(): android.view.View {
+        return mWidget
     }
 
     open fun createWidget(): android.view.View {
-       return object:android.view.View(Platform.getApplication()){
-           override fun onDraw(canvas: Canvas?) {
-               super.onDraw(canvas)
-           }
-       }
+       return AndroidView(this)
     }
 
-    open fun getWidget(): android.view.View {
-        return widget
+
+    actual open fun setBackgroundColor(color: Int) {
+        mWidget.setBackgroundColor(color)
     }
-
-    actual fun setId(id: Int) {
-        widget.id = id
-    }
-
-    actual fun getId(): Int = widget.id
-
-    actual fun setTag(tag: Any?) {
-        widget.tag = tag
-    }
-
-    actual fun getTag(): Any? = widget.tag
-
-    actual fun setBackgroundColor(color: Long) {
-        widget.setBackgroundColor(color.toInt())
-    }
-
 
     protected fun getLayoutParams():FrameLayout.LayoutParams{
-        var params = widget.layoutParams
+        var params = mWidget.layoutParams
+        val width = PixelUtil.toPixelFromDIP(frame.width).toInt()
+        val height  = PixelUtil.toPixelFromDIP(frame.height).toInt()
         if(params == null || params  !is FrameLayout.LayoutParams){
-            params = FrameLayout.LayoutParams(frame.width.toInt(),frame.height.toInt())
+            params = FrameLayout.LayoutParams(width,height)
         }else{
-            params.width = frame.width.toInt()
-            params.height = frame.height.toInt()
+            params.width = width
+            params.height = height
         }
         return params
     }
-}
 
-
-actual open class TextView :  View {
-
-    actual constructor(text:CharSequence?,frame: Frame):super(frame){
-        getWidget().text = text
+    override fun toString(): String {
+        return "${this::class.java.name}: frame :$frame"
     }
 
-    override fun createWidget(): android.widget.TextView {
-        return android.widget.TextView(Platform.getApplication())
+    actual open fun removeFromSuperView(){
+        superView?.removeView(this)
     }
 
-    override fun getWidget(): android.widget.TextView {
-        return super.getWidget() as android.widget.TextView
+    actual open fun onAttachedToWindow() {
+
     }
 
-    actual open fun setText(text: CharSequence?) {
-        getWidget().text = text
+    actual open fun onDetachedFromWindow() {
+
     }
 
-    actual open fun getText(): CharSequence? = getWidget().text
-
-}
-
-
-actual open class Button :  com.hitales.ui.TextView {
-
-    actual  var onPressListener:((view:View)->Unit)? = null
-
-    actual  var onLongPressListener:((view:View)->Unit)? = null
-
-    actual constructor(text:CharSequence?,frame: Frame):super(text,frame){
-        val widget = getWidget()
-        widget.text = text
-        widget.setTextColor(Color.WHITE)
-        widget.setOnClickListener{ _ -> onPressListener?.invoke(this)}
-        widget.setOnLongClickListener{ v ->
-            onLongPressListener?.invoke(this)
-            if(onLongPressListener != null){
-                return@setOnLongClickListener true
-            }
-            return@setOnLongClickListener false
-        }
+    actual open fun onAttachedToView(layoutView: LayoutView) {
+        println()
     }
 
-    override fun createWidget(): android.widget.Button {
-        return android.widget.Button(Platform.getApplication())
+    actual open fun onDetachedFromView(layoutView: LayoutView) {
+
     }
-
-    override fun getWidget(): android.widget.Button {
-        return super.getWidget() as android.widget.Button
-    }
-
-
-
-
 }

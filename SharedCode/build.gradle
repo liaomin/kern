@@ -13,7 +13,7 @@ kotlin {
 //            }
 //        }
 
-//        fromPreset(presets.jvm, 'android')
+        fromPreset(presets.jvm, 'android')
     }
 
     sourceSets {

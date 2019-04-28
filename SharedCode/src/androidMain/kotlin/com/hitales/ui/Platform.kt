@@ -4,8 +4,10 @@ package com.hitales.ui
 import android.app.Activity
 import android.app.Application
 import android.graphics.Color
+import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
+import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame
 import com.hitales.utils.NotificationCenter
 
@@ -16,6 +18,8 @@ actual class Platform {
 
         actual val windowWidth:Float by lazy { platform!!.windowWidth }
         actual val windowHeight:Float by lazy { platform!!.windowHeight }
+
+        val displayMetrics : DisplayMetrics by lazy { platform!!.application.resources.displayMetrics }
 
         actual val os:String = PLATFORM_ANDROID
 
@@ -58,16 +62,7 @@ actual class Platform {
         this.application = rootActivity.application
         this.rootActivity = rootActivity
         val dm = application.resources.displayMetrics
-        windowWidth = dm.widthPixels.toFloat()
-        windowHeight = dm.heightPixels.toFloat()
-
+        windowWidth = PixelUtil.toDIPFromPixel( dm.widthPixels.toFloat(),dm)
+        windowHeight = PixelUtil.toDIPFromPixel( dm.heightPixels.toFloat(),dm)
     }
-
-//    actual fun push(controller: Controller,animation: Animation?){
-//        val v = View(context)
-//        v.setBackgroundColor(Color.RED)
-//        context.setContentView(controller.view)
-//    }
-
-
 }

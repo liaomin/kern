@@ -26,4 +26,8 @@ open class Frame(var x:Float = 0f,var y:Float = 0f, var width:Float = 0f,var hei
         return super.equals(other)
     }
 
+    override fun toString(): String {
+        return "x:$x y:$y width:$width height:$height"
+    }
+
 }

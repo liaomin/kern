@@ -8,10 +8,14 @@ import android.os.Bundle
 actual open class Controller{
 
     actual var view:View? = null
-//        get() = window.decorView as View?
-//        set(value){
-//            this.setContentView(value)
-//        }
+        set(value) {
+            val temp = field
+            field = value
+            val superView = temp?.superView
+            if(superView != null && value != null){
+                superView.addView(value)
+            }
+        }
 
 
     actual open fun onCreate(){
