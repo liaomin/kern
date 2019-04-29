@@ -1,6 +1,7 @@
 package com.hitales.utils
 
 import kotlin.jvm.Synchronized
+import kotlin.native.concurrent.ThreadLocal
 
 class NotificationCenter {
 
@@ -8,9 +9,7 @@ class NotificationCenter {
 
     companion object {
 
-        private val instance_: NotificationCenter by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED){
-            NotificationCenter()
-        }
+        private val instance_ =  NotificationCenter()
 
         fun getInstance(): NotificationCenter {
             return instance_

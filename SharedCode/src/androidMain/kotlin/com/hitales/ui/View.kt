@@ -34,10 +34,6 @@ actual open class View {
     }
     actual var padding: EdgeInsets = EdgeInsets.zero()
     actual var margin:EdgeInsets = EdgeInsets.zero()
-        set(value) {
-            field = value
-            mWidget.setPadding(PixelUtil.toDIPFromPixel(value.left).toInt(),PixelUtil.toDIPFromPixel(value.top).toInt(),PixelUtil.toDIPFromPixel(value.right).toInt(),PixelUtil.toDIPFromPixel(value.bottom).toInt())
-        }
 
     actual open var frame:Frame
     set(value) {

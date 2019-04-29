@@ -4,19 +4,20 @@ apply plugin: 'kotlin-multiplatform'
 
 kotlin {
     targets {
-//        final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") \
-//                              ? presets.iosArm64 : presets.iosX64
-//
-//        fromPreset(iOSTarget, 'iOS') {
-//            binaries {
-//                framework('SharedCode')
-//            }
-//        }
+        final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") \
+                              ? presets.iosArm64 : presets.iosX64
+
+        fromPreset(iOSTarget, 'ios') {
+            binaries {
+                framework('SharedCode')
+            }
+        }
 
         fromPreset(presets.jvm, 'android')
     }
 
     sourceSets {
+
         commonMain.dependencies {
             api 'org.jetbrains.kotlin:kotlin-stdlib-common'
             api  'org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.2.0'
@@ -27,6 +28,10 @@ kotlin {
             compileOnly group: 'com.google.android', name: 'android', version: '4.1.1.4'
             api  'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.0'
         }
+
+        iosMain.dependencies {
+            api  'org.jetbrains.kotlinx:kotlinx-coroutines-core-native:1.2.0'
+        }
     }
 }
 
@@ -34,3 +39,23 @@ kotlin {
 configurations {
     compileClasspath
 }
+
+task packForXCode(type: Sync) {
+    final File frameworkDir = new File(buildDir, "xcode-frameworks")
+    final String mode = project.findProperty("XCODE_CONFIGURATION")?.toUpperCase() ?: 'DEBUG'
+    final def framework = kotlin.targets.ios.binaries.getFramework("SharedCode", mode)
+
+    inputs.property "mode", mode
+    dependsOn framework.linkTask
+
+    from { framework.outputFile.parentFile }
+    into frameworkDir
+
+    doLast {
+        new File(frameworkDir, 'gradlew').with {
+            text = "#!/bin/bash\nexport 'JAVA_HOME=${System.getProperty("java.home")}'\ncd '${rootProject.rootDir}'\n./gradlew \$@\n"
+            setExecutable(true)
+        }
+    }
+}
+tasks.build.dependsOn packForXCode
