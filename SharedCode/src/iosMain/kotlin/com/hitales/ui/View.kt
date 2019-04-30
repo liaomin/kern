@@ -4,12 +4,8 @@ import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
 import com.hitales.utils.NotificationCenter
 import kotlinx.cinterop.*
-import platform.CoreGraphics.CGRect
 import platform.CoreGraphics.CGRectMake
-import platform.CoreGraphics.CGRectZero
 import platform.UIKit.*
-
-const val NOTIFY_VIEW_LAYOUT_CHANGE = "___NOTIFY_VIEW_LAYOUT_CHANGE___"
 
 val notificationCenter = NotificationCenter.getInstance()
 
@@ -34,7 +30,7 @@ inline fun UIColor.toInt():Int{
 
 actual open class View {
 
-    protected val mWidget: UIResponder = createWidget()
+    protected val mWidget: UIView = createWidget()
 
     init {
         setBackgroundColor(0)
@@ -44,11 +40,10 @@ actual open class View {
     actual var margin:EdgeInsets = EdgeInsets.zero()
 
     actual open var frame:Frame
-    set(value) {
-        field = value
-        getWidget().setFrame(CGRectMake(value.x.toDouble(),value.y.toDouble(),value.width.toDouble(),value.height.toDouble()))
-//        mWidget.frame.size = f
-    }
+        set(value) {
+            field = value
+            setWidgetFrame(value)
+        }
 
     actual var border:EdgeInsets? =  null
 
@@ -69,13 +64,16 @@ actual open class View {
     }
 
     open fun getWidget(): UIView {
-        return mWidget as UIView
+        return mWidget
     }
 
-    open fun createWidget(): UIResponder {
+    open fun createWidget(): UIView {
        return UIView()
     }
 
+    open fun getIOSWidget(): UIView {
+        return mWidget
+    }
 
     actual open fun setBackgroundColor(color: Int) {
         getWidget().backgroundColor = color.toUIColor()
@@ -103,5 +101,9 @@ actual open class View {
 
     actual open fun onDetachedFromView(layoutView: LayoutView) {
 
+    }
+
+    open fun setWidgetFrame(value:Frame){
+        getWidget().setFrame(CGRectMake(value.x.toDouble(),value.y.toDouble(),value.width.toDouble(),value.height.toDouble()))
     }
 }

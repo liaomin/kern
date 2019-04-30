@@ -10,7 +10,7 @@ import platform.UIKit.UIView
 import kotlin.math.max
 
 
-class IOSScrollView(val scrollView: ScrollView) : UIScrollView(CGRectMake(0.0,0.0,0.0,0.0)){
+class IOSScrollView(private val scrollView: ScrollView) : UIScrollView(CGRectMake(0.0,0.0,0.0,0.0)){
     override fun layoutSublayersOfLayer(layer: CALayer) {
         super.layoutSublayersOfLayer(layer)
         var width = scrollView.frame.width
@@ -23,6 +23,7 @@ class IOSScrollView(val scrollView: ScrollView) : UIScrollView(CGRectMake(0.0,0.
         }
         setContentSize(CGSizeMake(width.toDouble(),height.toDouble()))
     }
+
 }
 
 

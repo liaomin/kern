@@ -2,6 +2,7 @@ package com.hitales.ui
 import com.hitales.utils.Frame
 import platform.UIKit.UILabel
 import platform.UIKit.UIResponder
+import platform.UIKit.UIView
 
 actual open class TextView :  View {
 
@@ -24,12 +25,16 @@ actual open class TextView :  View {
         }
 
     actual constructor(text:CharSequence?,frame: Frame):super(frame){
+        initWidget(text,frame)
+    }
+
+    open fun initWidget(text:CharSequence?,frame: Frame){
         val widget = getWidget()
         widget.text = text?.toString()
         widget.setTextColor(0xFF000000.toInt().toUIColor())
     }
 
-    override fun createWidget(): UIResponder {
+    override fun createWidget(): UIView {
         return UILabel()
     }
 

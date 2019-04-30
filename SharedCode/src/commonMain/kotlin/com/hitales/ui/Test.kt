@@ -15,6 +15,10 @@ class TestController : Controller() {
         val v  = Button("测试", Frame(0f,0f,100f,100f))
         rootView.addView(v)
         v.setBackgroundColor(0xff000000.toInt())
+
+        val v2  = Button("测试2", Frame(0f,1000f,100f,100f))
+        rootView.addView(v2)
+        v2.setBackgroundColor(0xff000000.toInt())
 //        this.v = v
 ////        val v4  = TextView("测试2", Frame(60f,260f,200f,200f))
 ////        rootView.addView(v4)

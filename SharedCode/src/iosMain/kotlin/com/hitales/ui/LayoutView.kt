@@ -18,12 +18,13 @@ actual open class LayoutView : View {
         view: View,
         index: Int
     ) {
+        val widget = view.getIOSWidget()
         if(index < 0){
-            getWidget().addSubview(view.getWidget())
             children.add(view)
+            getWidget().addSubview(widget)
         }else{
-            getWidget().insertSubview(view.getWidget(),index.toLong())
             children.add(index,view)
+            getWidget().insertSubview(widget,index.toLong())
         }
         view.superView = this
         view.onAttachedToView(this)

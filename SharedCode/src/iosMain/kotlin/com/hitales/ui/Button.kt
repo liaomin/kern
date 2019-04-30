@@ -1,17 +1,10 @@
 package com.hitales.ui
 
 import com.hitales.utils.Frame
-import platform.UIKit.UIButton
-import platform.UIKit.UIControlEventTouchDown
-import platform.UIKit.UILabel
-import platform.UIKit.UIResponder
+import platform.CoreGraphics.CGRectMake
+import platform.UIKit.*
 import platform.objc.sel_registerName
 
-
-
-fun touchDown(){
-    println("button touch down 22")
-}
 
 actual open class Button :  com.hitales.ui.TextView {
 
@@ -21,7 +14,7 @@ actual open class Button :  com.hitales.ui.TextView {
 
     actual constructor(text:CharSequence?,frame: Frame):super(text,frame){
         val widget = getIOSWidget()
-        widget.titleLabel?.text = text?.toString()
+        widget.setTitle(text?.toString(),UIControlStateNormal)
         setTextColor(0xFF0000FF.toInt())
         widget.addTarget(this, sel_registerName("touchDown"),UIControlEventTouchDown)
 //        widget.setOnClickListener{
@@ -41,23 +34,24 @@ actual open class Button :  com.hitales.ui.TextView {
         onPressListener?.invoke(this)
     }
 
+    override fun initWidget(text: CharSequence?, frame: Frame) {
 
+    }
 
-    override fun createWidget(): UIResponder {
-        return UIButton()
+    override fun createWidget(): UIView {
+        return UIButton.buttonWithType(UIButtonTypeCustom)
     }
 
     override fun getWidget(): UILabel {
         return getIOSWidget().titleLabel!!
     }
 
-    private fun getIOSWidget(): UIButton {
+    override fun getIOSWidget(): UIButton {
         return mWidget as UIButton
     }
 
-
-
     actual open fun setBackgroundColor(color: Int, state: ViewState) {
+
     }
 
     actual open fun setImage(image: Image, state: ViewState) {
@@ -67,6 +61,13 @@ actual open class Button :  com.hitales.ui.TextView {
 //        textColorList.setColorForState(color,state)
     }
 
+    override fun setWidgetFrame(value: Frame) {
+        getIOSWidget().setFrame(CGRectMake(value.x.toDouble(),value.y.toDouble(),value.width.toDouble(),value.height.toDouble()))
+    }
+
+    override fun setBackgroundColor(color: Int) {
+        getIOSWidget().backgroundColor = color.toUIColor()
+    }
 
 
 }
