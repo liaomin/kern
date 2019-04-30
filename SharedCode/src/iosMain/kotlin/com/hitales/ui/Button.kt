@@ -1,9 +1,11 @@
 package com.hitales.ui
 
 import com.hitales.utils.Frame
+import com.hitales.utils.runOnUiThread
 import platform.CoreGraphics.CGRectMake
 import platform.UIKit.*
 import platform.objc.sel_registerName
+import kotlin.system.getTimeMillis
 
 
 actual open class Button :  com.hitales.ui.TextView {
@@ -12,27 +14,44 @@ actual open class Button :  com.hitales.ui.TextView {
 
     actual  var onLongPressListener:((view:View)->Unit)? = null
 
+    private var touchDownTime:Long = 0
+
+
     actual constructor(text:CharSequence?,frame: Frame):super(text,frame){
         val widget = getIOSWidget()
         widget.setTitle(text?.toString(),UIControlStateNormal)
         setTextColor(0xFF0000FF.toInt())
         widget.addTarget(this, sel_registerName("touchDown"),UIControlEventTouchDown)
-//        widget.setOnClickListener{
-//            onPressListener?.invoke(this)
-//        }
-//        widget.setOnLongClickListener{
-//            onLongPressListener?.invoke(this)
-//            if(onLongPressListener != null){
-//                return@setOnLongClickListener true
-//            }
-//            return@setOnLongClickListener false
-//        }
+        widget.addTarget(this, sel_registerName("touchUpInside"),UIControlEventTouchUpInside)
+        widget.addTarget(this, sel_registerName("touchUpOutside"),UIControlEventTouchUpOutside)
     }
 
     fun touchDown(){
-        println("button touch down")
-        onPressListener?.invoke(this)
+        touchDownTime = getTimeMillis()
+        runOnUiThread(800){
+            if(touchDownTime > 0 && onLongPressListener != null){
+                //点击事件没有释放
+                releaseTouchEvent()
+                onLongPressListener?.invoke(this)
+            }
+        }
     }
+
+    fun touchUpInside(){
+        if(touchDownTime > 0){
+            onPressListener?.invoke(this)
+        }
+        releaseTouchEvent()
+    }
+
+    fun touchUpOutside(){
+        releaseTouchEvent()
+    }
+
+    private fun releaseTouchEvent(){
+        touchDownTime = 0
+    }
+
 
     override fun initWidget(text: CharSequence?, frame: Frame) {
 

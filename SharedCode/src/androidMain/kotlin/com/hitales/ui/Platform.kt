@@ -10,11 +10,17 @@ import android.view.ViewGroup
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame
 import com.hitales.utils.NotificationCenter
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlin.coroutines.CoroutineContext
+
 
 
 actual class Platform {
 
     actual companion object {
+
+        actual val mainLoopDispatcher: CoroutineDispatcher = Dispatchers.Main
 
         actual val windowWidth:Float by lazy { platform!!.windowWidth }
         actual val windowHeight:Float by lazy { platform!!.windowHeight }

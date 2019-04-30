@@ -1,12 +1,14 @@
 package com.hitales.ui
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-val PLATFORM_ANDROID = "android"
-val PLATFORM_IOS = "ios"
+
+const val PLATFORM_ANDROID = "android"
+const val PLATFORM_IOS = "ios"
 
 suspend fun test() = coroutineScope {
     launch {
@@ -16,8 +18,10 @@ suspend fun test() = coroutineScope {
     println("Hello")
 }
 
+
 expect class Platform {
     companion object {
+        val mainLoopDispatcher: CoroutineDispatcher
         val windowWidth:Float
         val windowHeight:Float
         fun getInstance() : Platform

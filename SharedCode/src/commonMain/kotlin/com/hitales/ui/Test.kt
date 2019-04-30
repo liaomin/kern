@@ -15,10 +15,28 @@ class TestController : Controller() {
         val v  = Button("测试", Frame(0f,0f,100f,100f))
         rootView.addView(v)
         v.setBackgroundColor(0xff000000.toInt())
+        v.onLongPressListener = {
+            println("long press $it")
+        }
 
-        val v2  = Button("测试2", Frame(0f,1000f,100f,100f))
+        val v2  = Button("测试2", Frame(0f,200f,100f,100f))
         rootView.addView(v2)
         v2.setBackgroundColor(0xff000000.toInt())
+        v2.onPressListener = {
+            println("press $it")
+        }
+
+        val v3  = Button("测试2", Frame(0f,400f,100f,100f))
+        rootView.addView(v3)
+        v3.setBackgroundColor(0xff000000.toInt())
+        v3.onPressListener = {
+            println("press $it")
+        }
+        v3.onLongPressListener = {
+            println("long press $it")
+        }
+
+
 //        this.v = v
 ////        val v4  = TextView("测试2", Frame(60f,260f,200f,200f))
 ////        rootView.addView(v4)
@@ -28,9 +46,7 @@ class TestController : Controller() {
 //        v.setTextColor(0xFF00FF00.toInt())
 //
 //
-//        v.onLongPressListener = {
-//            println(it)
-//        }
+
 //
 //        val imageView  = ImageView(Frame(0f,110f,200f,200f))
 //        rootView.addView(imageView)
