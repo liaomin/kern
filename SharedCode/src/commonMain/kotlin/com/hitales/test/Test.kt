@@ -1,38 +1,51 @@
-package com.hitales.ui
+package com.hitales.test
 
+import com.hitales.ui.*
 import com.hitales.utils.Frame
-import com.hitales.utils.NotificationCenter
+import com.hitales.utils.assertUI
 
-class TestController : Controller() {
+class TestController : BasicController() {
 
-    var v:TextView?  = null
+    var v: TextView?  = null
 
     override fun onCreate() {
         super.onCreate()
-        val rootView = ScrollView(Frame(0f,0f,Platform.windowWidth -2,Platform.windowHeight-30))
+        assertUI()
+        val buttonWidth = Platform.windowWidth - 20
+        val buttonHeight = 50f
+        val rootView = ScrollView(Frame(0f,0f, Platform.windowWidth ,Platform.windowHeight))
         view = rootView
-        rootView.setBackgroundColor(0xFF00FF00.toInt())
-        val v  = Button("测试", Frame(0f,0f,100f,100f))
+        rootView.setBackgroundColor(Colors.WHITE)
+        val v  = Button("view 测试", Frame(10f,10f, buttonWidth , buttonHeight))
         rootView.addView(v)
-        v.setBackgroundColor(0xff000000.toInt())
-        v.onLongPressListener = {
+        v.setBackgroundColor(Colors.BLUE)
+        v.setOnPressListener {
+            this.push(ViewController())
+        }
+        val v2  = Button("测试2", Frame(0f,200f,100f,100f))
+        rootView.addView(v2)
+        v2.setBackgroundColor(Colors.BLACK)
+        v2.setOnLongPressListener {
+            println("press $it")
+        }
+
+        val v3  = Button("测试3", Frame(0f,400f,100f,100f))
+        rootView.addView(v3)
+        v3.setBackgroundColor(Colors.BLACK)
+        v3.setOnPressListener  {
+            println("press $it")
+        }
+        v3.setOnLongPressListener {
             println("long press $it")
         }
 
-        val v2  = Button("测试2", Frame(0f,200f,100f,100f))
-        rootView.addView(v2)
-        v2.setBackgroundColor(0xff000000.toInt())
-        v2.onPressListener = {
+        val v4  = Button("测试4", Frame(0f,4000f,100f,100f))
+        rootView.addView(v4)
+        v4.setBackgroundColor(Colors.BLACK)
+        v4.setOnPressListener  {
             println("press $it")
         }
-
-        val v3  = Button("测试2", Frame(0f,400f,100f,100f))
-        rootView.addView(v3)
-        v3.setBackgroundColor(0xff000000.toInt())
-        v3.onPressListener = {
-            println("press $it")
-        }
-        v3.onLongPressListener = {
+        v4.setOnLongPressListener {
             println("long press $it")
         }
 
@@ -44,8 +57,7 @@ class TestController : Controller() {
 //        v.setBackgroundColor(0xFFFF0000.toInt())
 ////        v.setTextColor(0xFF00FF00.toInt(),ViewState.PRESSED)
 //        v.setTextColor(0xFF00FF00.toInt())
-//
-//
+
 
 //
 //        val imageView  = ImageView(Frame(0f,110f,200f,200f))

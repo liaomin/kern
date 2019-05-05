@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
+import com.hitales.test.TestController
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame
 import com.hitales.utils.NotificationCenter
@@ -40,8 +41,15 @@ actual class Platform {
 
             var c =  TestController()
             c.onCreate()
+            c.onResume()
             c.view?.apply {
                 rootActivity.setContentView(getWidget())
+            }
+
+            c.onViewChangedListener = {rootController:Controller,controller:Controller,view: com.hitales.ui.View? ->
+                view?.apply {
+                    rootActivity.setContentView(getWidget())
+                }
             }
 
 //            notificationCenter.addObserver(NOTIFY_VIEW_LAYOUT_CHANGE){ key: Any, value: Any? ->

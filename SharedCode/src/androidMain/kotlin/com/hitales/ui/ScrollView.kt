@@ -26,7 +26,7 @@ open class AndroidScrollView(val view: ScrollView) : android.widget.ScrollView(P
     }
 
     init {
-        frameLayout.setBackgroundColor(Color.BLUE)
+        frameLayout.setBackgroundColor(Colors.CLEAR)
         super.addView(frameLayout,-1,FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,FrameLayout.LayoutParams.WRAP_CONTENT))
     }
 

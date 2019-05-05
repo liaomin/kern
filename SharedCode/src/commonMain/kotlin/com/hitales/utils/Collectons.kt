@@ -2,9 +2,9 @@ package com.hitales.utils
 
 class Stack<T>(list : MutableList<T>? = null) : Iterator<T> {
 
-    var itCounter: Int = 0
+    private var itCounter: Int = 0
 
-    var items: MutableList<T> = list?: mutableListOf()
+    private var items: MutableList<T> = list?: mutableListOf()
 
     fun isEmpty(): Boolean = this.items.isEmpty()
 
@@ -33,6 +33,13 @@ class Stack<T>(list : MutableList<T>? = null) : Iterator<T> {
 
     fun append(value:T) {
         this.items.add(value)
+    }
+
+    fun last():T?{
+        if(items.isEmpty()){
+            return null
+        }
+        return items.get(items.count() - 1)
     }
 
     override fun hasNext(): Boolean {
@@ -64,13 +71,19 @@ class LinkedList<T> : Iterator<T>{
 
     var tail : Node<T>?= head
 
-    var iterNode : Node<T>?= null
+    private var iterNode : Node<T>?= null
 
-    var isEmpty : Boolean = head == null
+    fun isEmpty():Boolean {
+        return head == null
+    }
 
-    fun first() : T? = head?.value
+    fun first() : T? {
+        return head?.value
+    }
 
-    fun last() : T? = tail?.value
+    fun last() : T? {
+        return tail?.value
+    }
 
     fun count():Int {
         var node = head

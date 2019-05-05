@@ -14,6 +14,7 @@ import com.hitales.ui.ViewState
 import com.hitales.ui.Platform
 import com.hitales.ui.StateListColor
 import com.hitales.utils.Timer
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import java.util.*
 
@@ -71,15 +72,6 @@ class MainActivity : AppCompatActivity() {
 //        }
 //
 //        setContentView(frameLayout)
-
-         val t = Timer.schedule(1,1000){
-             println("11111111")
-         }
-
-        com.hitales.utils.runOnUiThread(10000){
-            t.cancle()
-        }
-
 
     }
 

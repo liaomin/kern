@@ -10,9 +10,9 @@ import kotlin.system.getTimeMillis
 
 actual open class Button :  com.hitales.ui.TextView {
 
-    actual  var onPressListener:((view:View)->Unit)? = null
+    private  var onPressListener:((view:View)->Unit)? = null
 
-    actual  var onLongPressListener:((view:View)->Unit)? = null
+    private  var onLongPressListener:((view:View)->Unit)? = null
 
     private var touchDownTime:Long = 0
 
@@ -88,5 +88,13 @@ actual open class Button :  com.hitales.ui.TextView {
         getIOSWidget().backgroundColor = color.toUIColor()
     }
 
+
+    actual fun setOnPressListener(listener: (iew: View) -> Unit) {
+        onPressListener = listener
+    }
+
+    actual fun setOnLongPressListener(listener: (iew: View) -> Unit) {
+        onLongPressListener = listener
+    }
 
 }

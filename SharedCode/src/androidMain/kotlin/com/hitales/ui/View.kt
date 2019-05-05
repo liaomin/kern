@@ -110,7 +110,7 @@ actual open class View {
     }
 
     actual open fun onAttachedToView(layoutView: LayoutView) {
-        println()
+
     }
 
     actual open fun onDetachedFromView(layoutView: LayoutView) {

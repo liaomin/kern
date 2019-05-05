@@ -1,21 +1,102 @@
 package com.hitales.ui
 
+import com.hitales.utils.Stack
 
-expect open class Controller() {
 
-    var view:View?
+open class Controller {
 
-    open fun onCreate()
+    var title:String? = null
 
-    open fun onPause()
+    var onViewChangedListener:((rootController:Controller,controller:Controller,view:View?)->Unit)? = null
 
-    open fun onResume()
+    var view:View? = null
 
-    open fun onDestroy()
+    private var rootController:Controller? = null
 
-    open  fun onLowMemory()
+    protected var stack:Stack<Controller>? = null
 
-    open fun onBackPressed()
+    constructor(){
+        rootController = this
+        this.onCreate()
+    }
 
-    open fun presentController(controller: Controller,animation: Animation? = null,completion:(()->Unit)? = null)
+
+    open fun onCreate(){
+
+    }
+
+    open fun onPause() {
+
+    }
+
+    open fun onResume() {
+
+    }
+
+    open fun onDestroy() {
+
+    }
+
+    open fun onLowMemory() {
+
+    }
+
+    open fun onBackPressed():Boolean {
+        return false
+    }
+
+    open fun push(controller: Controller,animation: Animation? = null,completion:(()->Unit)? = null){
+        if(rootController == null){
+            rootController = this
+        }
+        rootController?.pushStack(controller)
+    }
+
+    open fun pop(){
+        if(rootController != this && rootController != null){
+            this.onDestroy()
+            rootController?.pop()
+        }else{
+            val temp = stack?.pop()
+            if(temp != null){
+                onPopController(temp)
+            }
+        }
+    }
+
+    protected fun pushStack(controller: Controller){
+        controller.rootController = rootController
+        if(stack == null){
+            stack = Stack()
+        }
+        val stack = stack!!
+        val last = stack.last()
+        if(last != null){
+            last.onPause()
+        }else{
+            this.onPause()
+        }
+        stack.append(controller)
+        onPushController(controller)
+    }
+
+    private fun onPushController(controller: Controller){
+        onViewChangedListener?.invoke(this,controller,controller.view)
+        controller.onResume()
+    }
+
+    private fun onPopController(controller: Controller){
+        controller.onPause()
+        controller.onDestroy()
+        val stack = stack!!
+        if(stack.isEmpty()){
+            onResume()
+            onViewChangedListener?.invoke(this,this,view)
+        }else{
+            val last = stack.last() as Controller
+            last.onResume()
+            onViewChangedListener?.invoke(this,last,last.view)
+        }
+    }
+
 }

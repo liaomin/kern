@@ -6,9 +6,9 @@ import com.hitales.utils.Frame
 
 actual open class Button :  com.hitales.ui.TextView {
 
-    actual  var onPressListener:((view:View)->Unit)? = null
+    private var onPressListener:((view:View)->Unit)? = null
 
-    actual  var onLongPressListener:((view:View)->Unit)? = null
+    private var onLongPressListener:((view:View)->Unit)? = null
 
     actual constructor(text:CharSequence?,frame: Frame):super(text,frame){
         val widget = getWidget()
@@ -52,6 +52,14 @@ actual open class Button :  com.hitales.ui.TextView {
 
     override fun getDefaultColorList(): StateListColor {
         return StateListColor(Color.WHITE)
+    }
+
+    actual fun setOnPressListener(listener: (iew: View) -> Unit) {
+        onPressListener = listener
+    }
+
+    actual fun setOnLongPressListener(listener: (iew: View) -> Unit) {
+        onLongPressListener = listener
     }
 
 }

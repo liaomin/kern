@@ -22,7 +22,7 @@ actual open class TextView :  View {
         }
 
     actual open var textColor: Int
-        get() = getWidget().currentTextColor
+        get() = textColorList.defaultColor
         set(value) {
             textColorList.setColor(value)
         }

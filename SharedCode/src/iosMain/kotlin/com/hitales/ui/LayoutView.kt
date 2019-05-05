@@ -27,7 +27,6 @@ actual open class LayoutView : View {
             getWidget().insertSubview(widget,index.toLong())
         }
         view.superView = this
-        view.onAttachedToView(this)
     }
 
 

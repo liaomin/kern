@@ -73,11 +73,11 @@ expect open class TextView : View {
 
 expect open class Button : TextView {
     constructor(text:CharSequence? = null,frame: Frame = Frame.zero())
-    var onPressListener:((iew:View)->Unit)?
-    var onLongPressListener:((iew:View)->Unit)?
     open fun setBackgroundColor(color:Int,state: ViewState = ViewState.NORMAL)
     open fun setImage(image:Image,state: ViewState = ViewState.NORMAL)
     open fun setTextColor(color:Int,state: ViewState = ViewState.NORMAL)
+    fun setOnPressListener(listener:(iew:View)->Unit)
+    fun setOnLongPressListener(listener:(iew:View)->Unit)
 }
 
 expect open class ImageView : View {

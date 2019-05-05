@@ -1,4 +1,5 @@
 package com.hitales.ui
+import com.hitales.test.TestController
 import platform.UIKit.UIScreen
 
 import com.hitales.utils.Frame
@@ -25,7 +26,6 @@ class MainLoopDispatcher : CoroutineDispatcher(), Delay {
             }
         }
     }
-
 
 
     @InternalCoroutinesApi
@@ -98,16 +98,17 @@ actual class Platform {
             c.view?.apply {
                 viewController.view = getWidget()
             }
+            c.onResume()
+            c.onViewChangedListener = {_,_,view:View? ->
+                view?.apply {
+                    viewController.view = getWidget()
+                }
+            }
         }
 
         @UseExperimental(kotlinx.coroutines.InternalCoroutinesApi::class)
         private fun getdMainDispatcher():CoroutineDispatcher{
-            try {
-                return MainLoopDispatcher()
-            }catch (e:Exception){
-                println(e)
-            }
-            return Dispatchers.Main
+            return MainLoopDispatcher()
         }
 
     }

@@ -10,11 +10,11 @@ import platform.UIKit.*
 val notificationCenter = NotificationCenter.getInstance()
 
 inline fun Int.toUIColor():UIColor{
-    val a = (this ushr 24 and 0x000000FF) / 255.0
+    val a = this ushr 24 and 0x000000FF
     val r =  this ushr 16 and 0x000000FF
     val g =  this ushr 8 and 0x000000FF
     val b = this and 0x000000FF
-    return UIColor.colorWithRed(r.toDouble(),g.toDouble(),b.toDouble(),a)
+    return UIColor.colorWithRed(r / 255.0 ,g / 255.0,b / 255.0,a / 255.0)
 }
 
 inline fun UIColor.toInt():Int{
@@ -24,7 +24,7 @@ inline fun UIColor.toInt():Int{
         val b= cValuesOf(0.0).getPointer(this)
         val a= cValuesOf(0.0).getPointer(this)
         getRed(r,g,b,a)
-        return ((a[0]*255).toInt() shl 24) or (r[0].toInt() shl 16) or (g[0].toInt() shl 8) or b[0].toInt()
+        return ((a[0]*255).toInt() shl 24) or ((r[0]*255).toInt() shl 16) or ((g[0]*255).toInt() shl 8) or (b[0]*255).toInt()
     }
 }
 
@@ -61,6 +61,8 @@ actual open class View {
 
     actual constructor(frame: Frame){
         this.frame = frame
+//        mWidget.layer.borderColor = Colors.RED.toUIColor().CGColor
+//        mWidget.layer.borderWidth = 2.0
     }
 
     open fun getWidget(): UIView {
@@ -96,7 +98,6 @@ actual open class View {
     }
 
     actual open fun onAttachedToView(layoutView: LayoutView) {
-        println()
     }
 
     actual open fun onDetachedFromView(layoutView: LayoutView) {

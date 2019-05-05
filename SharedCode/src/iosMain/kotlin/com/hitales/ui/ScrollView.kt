@@ -1,18 +1,21 @@
 package com.hitales.ui
 
 import com.hitales.utils.Frame
+import kotlinx.cinterop.ObjCAction
 import platform.CoreGraphics.CGRectMake
 import platform.CoreGraphics.CGRectZero
 import platform.CoreGraphics.CGSizeMake
 import platform.QuartzCore.CALayer
 import platform.UIKit.UIScrollView
 import platform.UIKit.UIView
+import platform.UIKit.layoutSubviews
 import kotlin.math.max
 
-
 class IOSScrollView(private val scrollView: ScrollView) : UIScrollView(CGRectMake(0.0,0.0,0.0,0.0)){
-    override fun layoutSublayersOfLayer(layer: CALayer) {
-        super.layoutSublayersOfLayer(layer)
+
+    @ObjCAction
+    fun layoutSubviews(){
+        println("layoutSubviews")
         var width = scrollView.frame.width
         var height = scrollView.frame.height
         scrollView.children.forEach {
@@ -23,7 +26,6 @@ class IOSScrollView(private val scrollView: ScrollView) : UIScrollView(CGRectMak
         }
         setContentSize(CGSizeMake(width.toDouble(),height.toDouble()))
     }
-
 }
 
 
