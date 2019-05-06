@@ -15,16 +15,12 @@ expect open class View  {
     /**
      * use margin and padding to calculate frame
      */
-    var padding:EdgeInsets
+    var padding:EdgeInsets?
 
     /**
      * use margin and padding to calculate frame
      */
-    var margin:EdgeInsets
-
-    var border:EdgeInsets?
-
-    var borderWith:Float
+    var margin:EdgeInsets?
 
     /**
      * layout params
@@ -47,6 +43,12 @@ expect open class View  {
     open fun onDetachedFromWindow()
     open fun onAttachedToView(layoutView: LayoutView)
     open fun onDetachedFromView(layoutView: LayoutView)
+    open fun setBorderColor(color:Int)
+    open fun setBorderColor(leftColor:Int,topColor: Int,rightColor:Int,bottomColor:Int)
+    open fun setBorderWidth(borderWidth:Float)
+    open fun setBorderWidth(leftWidth:Float,topWidth: Float,rightWidth:Float,bottomWidth:Float)
+    open fun setBorderRadius(radius:Float)
+    open fun setBorderRadius(topLeftRadius:Float,topRightRadius: Float,bottomRightRadius:Float,bottomLeftRadius:Float)
 }
 
 expect open class LayoutView : View {

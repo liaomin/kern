@@ -2,8 +2,12 @@ package liam.hitales.com.android
 
 import android.content.res.Resources
 import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.drawable.StateListDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ScrollView
@@ -72,6 +76,8 @@ class MainActivity : AppCompatActivity() {
 //        }
 //
 //        setContentView(frameLayout)
+        StateListDrawable()
+//        LinearGradient(this)
 
     }
 

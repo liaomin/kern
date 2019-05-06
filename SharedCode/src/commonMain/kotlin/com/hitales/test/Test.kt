@@ -16,28 +16,21 @@ class TestController : BasicController() {
         val rootView = ScrollView(Frame(0f,0f, Platform.windowWidth ,Platform.windowHeight))
         view = rootView
         rootView.setBackgroundColor(Colors.WHITE)
-        val v  = Button("view 测试", Frame(10f,10f, buttonWidth , buttonHeight))
+        var v  = Button("view 背景色测试", Frame(10f,10f, buttonWidth , buttonHeight))
         rootView.addView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
             this.push(ViewController())
         }
-        val v2  = Button("测试2", Frame(0f,200f,100f,100f))
-        rootView.addView(v2)
-        v2.setBackgroundColor(Colors.BLACK)
-        v2.setOnLongPressListener {
-            println("press $it")
+
+        v  = Button("view border测试", Frame(10f,(buttonHeight+10)*1+10f, buttonWidth , buttonHeight))
+        rootView.addView(v)
+        v.setBackgroundColor(Colors.BLUE)
+        v.setOnPressListener {
+            this.push(BorderWidthTestController())
         }
 
-        val v3  = Button("测试3", Frame(0f,400f,100f,100f))
-        rootView.addView(v3)
-        v3.setBackgroundColor(Colors.BLACK)
-        v3.setOnPressListener  {
-            println("press $it")
-        }
-        v3.setOnLongPressListener {
-            println("long press $it")
-        }
+
 
         val v4  = Button("测试4", Frame(0f,4000f,100f,100f))
         rootView.addView(v4)

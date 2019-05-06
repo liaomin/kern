@@ -36,8 +36,8 @@ actual open class View {
         setBackgroundColor(0)
     }
 
-    actual var padding: EdgeInsets = EdgeInsets.zero()
-    actual var margin:EdgeInsets = EdgeInsets.zero()
+    actual var padding: EdgeInsets? = null
+    actual var margin:EdgeInsets? = null
 
     actual open var frame:Frame
         set(value) {
@@ -45,7 +45,7 @@ actual open class View {
             setWidgetFrame(value)
         }
 
-    actual var border:EdgeInsets? =  null
+    actual var borderRadius:EdgeInsets? =  null
 
     actual var borderWith:Float = 0f
 
@@ -106,5 +106,16 @@ actual open class View {
 
     open fun setWidgetFrame(value:Frame){
         getWidget().setFrame(CGRectMake(value.x.toDouble(),value.y.toDouble(),value.width.toDouble(),value.height.toDouble()))
+    }
+
+    actual open fun setBorderColor(color: Int) {
+    }
+
+    actual open fun setBorderColor(
+        leftColor: Int,
+        topColor: Int,
+        rightColor: Int,
+        bottomColor: Int
+    ) {
     }
 }

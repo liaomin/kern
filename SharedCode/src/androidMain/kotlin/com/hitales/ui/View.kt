@@ -29,11 +29,15 @@ open class AndroidView(private val view:View) : android.view.View(Platform.getAp
 
 actual open class View {
     protected val mWidget: android.view.View = createWidget()
+    protected val mBackground:Background = Background()
     init {
-        setBackgroundColor(Color.TRANSPARENT)
+        mWidget.setBackgroundDrawable(mBackground)
+        mWidget.setLayerType(android.view.View.LAYER_TYPE_SOFTWARE,null)
     }
-    actual var padding: EdgeInsets = EdgeInsets.zero()
-    actual var margin:EdgeInsets = EdgeInsets.zero()
+
+    actual var padding: EdgeInsets? = null
+
+    actual var margin:EdgeInsets? = null
 
     actual open var frame:Frame
     set(value) {
@@ -44,10 +48,6 @@ actual open class View {
         mWidget.layoutParams = params
         notificationCenter.notify(NOTIFY_VIEW_LAYOUT_CHANGE,this)
     }
-
-    actual var border:EdgeInsets? =  null
-
-    actual var borderWith:Float = 0f
 
     actual var superView:LayoutView? = null
 
@@ -77,7 +77,7 @@ actual open class View {
 
 
     actual open fun setBackgroundColor(color: Int) {
-        mWidget.setBackgroundColor(color)
+        mBackground.setColorForState(color,ViewState.NORMAL)
     }
 
     protected fun getLayoutParams():FrameLayout.LayoutParams{
@@ -115,5 +115,36 @@ actual open class View {
 
     actual open fun onDetachedFromView(layoutView: LayoutView) {
 
+    }
+
+    actual open fun setBorderColor(color: Int) {
+        mBackground.setBorderColor(color)
+    }
+
+    actual open fun setBorderColor(leftColor: Int, topColor: Int, rightColor: Int, bottomColor: Int
+    ) {
+
+        mBackground.setBorderColor(leftColor,leftColor,leftColor,leftColor)
+    }
+
+    actual open fun setBorderWidth(borderWidth: Float) {
+        mBackground.setBorderWidth(borderWidth)
+    }
+
+    actual open fun setBorderWidth(
+        leftWidth: Float,
+        topWidth: Float,
+        rightWidth: Float,
+        bottomWidth: Float
+    ) {
+        mBackground.setBorderWidth(leftWidth,leftWidth,leftWidth,leftWidth)
+    }
+
+    actual open fun setBorderRadius(radius: Float) {
+        mBackground.setBorderRadius(radius)
+    }
+
+    actual open fun setBorderRadius(topLeftRadius:Float,topRightRadius: Float,bottomRightRadius:Float,bottomLeftRadius:Float) {
+        mBackground.setBorderRadius(topLeftRadius,topLeftRadius,topLeftRadius,topLeftRadius)
     }
 }

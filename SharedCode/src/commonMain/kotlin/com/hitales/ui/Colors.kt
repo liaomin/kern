@@ -6,6 +6,8 @@ class Colors {
 
         const val CLEAR:Int = 0
 
+        const val TRANSPARENT:Int = 0
+
         const val BLACK:Int = 0xff000000.toInt()
 
         const val DARK:Int = 0x54ffffff

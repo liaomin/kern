@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import com.hitales.test.TestController
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame

@@ -6,7 +6,7 @@ import com.hitales.utils.Frame
 open class BasicController : Controller() {
 
     override fun onCreate() {
-        view = ScrollView( Frame(0f,0f,Platform.windowWidth,Platform.windowHeight))
+        view = ScrollView( Frame(0f,0f,Platform.windowWidth,Platform.windowHeight- 30))
         view?.setBackgroundColor(Colors.WHITE)
         val backButton = Button("返回", Frame(0f,0f,80f,48f))
         backButton.setBackgroundColor(0xFFFF0000.toInt())
