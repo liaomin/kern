@@ -3,6 +3,7 @@ package liam.hitales.com.android
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.LinearGradient
+import android.graphics.Path
 import android.graphics.drawable.StateListDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -76,7 +77,6 @@ class MainActivity : AppCompatActivity() {
 //        }
 //
 //        setContentView(frameLayout)
-        StateListDrawable()
 //        LinearGradient(this)
 
     }

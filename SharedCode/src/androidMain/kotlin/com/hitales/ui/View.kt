@@ -28,11 +28,17 @@ open class AndroidView(private val view:View) : android.view.View(Platform.getAp
 
 
 actual open class View {
+
     protected val mWidget: android.view.View = createWidget()
-    protected val mBackground:Background = Background()
+
+    protected val mBackground:Background by lazy {
+       val background = Background()
+       mWidget.setBackgroundDrawable(background)
+        background
+    }
+
     init {
-        mWidget.setBackgroundDrawable(mBackground)
-        mWidget.setLayerType(android.view.View.LAYER_TYPE_SOFTWARE,null)
+        mWidget.setBackgroundColor(Colors.TRANSPARENT)
     }
 
     actual var padding: EdgeInsets? = null
@@ -124,7 +130,7 @@ actual open class View {
     actual open fun setBorderColor(leftColor: Int, topColor: Int, rightColor: Int, bottomColor: Int
     ) {
 
-        mBackground.setBorderColor(leftColor,leftColor,leftColor,leftColor)
+        mBackground.setBorderColor(leftColor,topColor,rightColor,bottomColor)
     }
 
     actual open fun setBorderWidth(borderWidth: Float) {
@@ -137,14 +143,30 @@ actual open class View {
         rightWidth: Float,
         bottomWidth: Float
     ) {
-        mBackground.setBorderWidth(leftWidth,leftWidth,leftWidth,leftWidth)
+        mBackground.setBorderWidth(leftWidth,topWidth,rightWidth,bottomWidth)
+        if(mBackground.clipPath()){
+            setLayerType(android.view.View.LAYER_TYPE_SOFTWARE)
+        }else{
+            setLayerType(android.view.View.LAYER_TYPE_HARDWARE)
+        }
     }
 
     actual open fun setBorderRadius(radius: Float) {
-        mBackground.setBorderRadius(radius)
+        setBorderRadius(radius,radius,radius,radius)
     }
 
     actual open fun setBorderRadius(topLeftRadius:Float,topRightRadius: Float,bottomRightRadius:Float,bottomLeftRadius:Float) {
-        mBackground.setBorderRadius(topLeftRadius,topLeftRadius,topLeftRadius,topLeftRadius)
+        mBackground.setBorderRadius(topLeftRadius,topRightRadius,bottomRightRadius,bottomLeftRadius)
+        if(mBackground.clipPath()){
+            setLayerType(android.view.View.LAYER_TYPE_SOFTWARE)
+        }else{
+            setLayerType(android.view.View.LAYER_TYPE_HARDWARE)
+        }
+    }
+
+    open fun setLayerType(layerType:Int){
+        if(mWidget.layerType != layerType) {
+            mWidget.setLayerType(layerType, null)
+        }
     }
 }

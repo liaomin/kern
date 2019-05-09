@@ -68,7 +68,7 @@ open class ViewController : BasicController() {
 
         val titleWidget = getTilteWidget("$title",Frame(10f,0f,itemWidth,20f))
         titleWidget.textColor = color
-        titleWidget.text = "$title ${color == titleWidget.textColor}"
+        titleWidget.text = "$title"
         group.addView(titleWidget)
 
         (this.view as ScrollView).addView(group)
@@ -95,12 +95,55 @@ class BorderWidthTestController : ViewController(){
 
         var view = View()
         view.setBackgroundColor(bgColor)
-        addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
-        view.setBorderWidth(50f)
-        view.setBorderColor(Colors.BLUE)
+//        addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
+        view.setBorderWidth(60f,2f,20f,5f)
+        view.setBorderColor(Colors.BLUE,Colors.GREEN,Colors.YELLOW,Colors.ORANGE)
+        view.setBorderRadius(10f)
 //        view.setBorderRadius((Platform.windowWidth / 2 - 20) /2)
-        view.setBorderRadius(50f)
+//        view.setBorderRadius(10f,80f,20f,0f)
 
+        view = View()
+        view.setBackgroundColor(bgColor)
+        addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
+        view.setBorderWidth(60f,2f,20f,5f)
+        view.setBorderColor(0x330000ff.toInt(),0x3300ff00.toInt(),0x33ffff00.toInt(),0x3300ff00)
+        view.setBorderRadius(10f,20f,30f,40f)
+        view.setBorderWidth(20f,5f,20f,5f)
+        view.setBorderRadius(30f,40f,30f,40f)
+
+//        view = View()
+//        view.setBackgroundColor(bgColor)
+//        addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
+//        view.setBorderWidth(60f,1f,20f,10f)
+//        view.setBorderColor(Colors.BLUE)
+//
+//
+//        view = View()
+//        view.setBackgroundColor(bgColor)
+//        addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
+//        view.setBorderWidth(60f)
+//        view.setBorderColor(Colors.BLUE,Colors.RED,Colors.YELLOW,Colors.TRANSPARENT)
+//
+//        view = View()
+//        view.setBackgroundColor(bgColor)
+//        addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
+//        view.setBorderWidth(60f,1f,20f,10f)
+//        view.setBorderColor(Colors.BLUE,Colors.RED,Colors.YELLOW,Colors.TRANSPARENT)
+//
+//        view = View()
+//        view.setBackgroundColor(bgColor)
+//        addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
+//        view.setBorderWidth(60f,1f,20f,10f)
+//        view.setBorderColor(Colors.BLUE,Colors.RED,Colors.YELLOW,Colors.ORANGE)
+//
+//        view = View()
+//        view.setBackgroundColor(bgColor)
+//        addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
+//        view.setBorderWidth(0f)
+//        view.setBorderColor(Colors.BLUE,Colors.RED,Colors.YELLOW,Colors.ORANGE)
+//
+//
+//
 //        view = View()
 //        view.setBackgroundColor(bgColor)
 //        addView(view,"测试borderWidth",getIndex(),Colors.BLACK)

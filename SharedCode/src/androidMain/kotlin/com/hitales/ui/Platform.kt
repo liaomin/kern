@@ -4,6 +4,7 @@ package com.hitales.ui
 import android.app.Activity
 import android.app.Application
 import android.graphics.Color
+import android.os.Build
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
@@ -39,7 +40,6 @@ actual class Platform {
 
         fun init(rootActivity: Activity){
             platform = Platform(rootActivity)
-
             var c =  TestController()
             c.onCreate()
             c.onResume()
@@ -79,5 +79,22 @@ actual class Platform {
         val dm = application.resources.displayMetrics
         windowWidth = PixelUtil.toDIPFromPixel( dm.widthPixels.toFloat(),dm)
         windowHeight = PixelUtil.toDIPFromPixel( dm.heightPixels.toFloat(),dm)
+        disableAPIDialog()
+    }
+
+    private fun disableAPIDialog() {
+        if (Build.VERSION.SDK_INT < 28) return
+        try {
+            val clazz = Class.forName("android.app.ActivityThread")
+            val currentActivityThread = clazz.getDeclaredMethod("currentActivityThread")
+            currentActivityThread.isAccessible = true
+            val activityThread = currentActivityThread.invoke(null)
+            val mHiddenApiWarningShown = clazz.getDeclaredField("mHiddenApiWarningShown")
+            mHiddenApiWarningShown.isAccessible = true
+            mHiddenApiWarningShown.setBoolean(activityThread, true)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
     }
 }

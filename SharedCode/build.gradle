@@ -24,8 +24,10 @@ kotlin {
         }
 
         androidMain.dependencies {
+
             api 'org.jetbrains.kotlin:kotlin-stdlib'
-            compileOnly group: 'com.google.android', name: 'android', version: '4.1.1.4'
+            compileOnly group: 'com.google.android', name: 'android', version: '4.4.2_r2'
+//            compileOnly group: 'com.google.android', name: 'android', version: '4.1.1.4'
             api  'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.0'
         }
 

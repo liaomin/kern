@@ -11,8 +11,8 @@ val notificationCenter = NotificationCenter.getInstance()
 
 inline fun Int.toUIColor():UIColor{
     val a = this ushr 24 and 0x000000FF
-    val r =  this ushr 16 and 0x000000FF
-    val g =  this ushr 8 and 0x000000FF
+    val r =  this shr 16 and 0x000000FF
+    val g =  this shr 8 and 0x000000FF
     val b = this and 0x000000FF
     return UIColor.colorWithRed(r / 255.0 ,g / 255.0,b / 255.0,a / 255.0)
 }
