@@ -6,9 +6,30 @@ import android.os.Build
 import com.hitales.ui.utils.PixelUtil
 
 
-open class Background : StateListDrawable() {
+inline fun Int.overlayColor(b:Int):Int{
+    val a = this
+    val alphaA = a.ushr(24)  / 255f
+    val alphaB =  b.ushr(24) / 255f
+    if(alphaA == 1f){
+        return a
+    }
+    if(alphaA == 0f ){
+        return b
+    }
+    val rA = a shr 16 and 0xFF
+    val gA = a shr 8 and 0xFF
+    val bA = a and 0xFF
+    val rB = b shr 16 and 0xFF
+    val gB = b shr 8 and 0xFF
+    val bB = b and 0xFF
+    val alpha = 1-(1-alphaA) * (1-alphaB)
+    val r =  (rA * (1 - alpha) + rB * alpha)
+    val g =  (gA * (1 - alpha) + gB * alpha)
+    val blue =  (bA * (1 - alpha) + bB * alpha)
+    return Color.argb((alpha*255).toInt(),r.toInt(),g.toInt(),blue.toInt())
+}
 
-    val debug = true
+open class Background : StateListDrawable() {
 
     private val mOuterPath:Path by lazy { Path() }
 
@@ -24,60 +45,60 @@ open class Background : StateListDrawable() {
 
     var borderLeftWidth:Float = 0f
         private set(value) {
-            field = PixelUtil.toPixelFromDIP(Math.max(0f,value))
+            field = Math.max(0f,value)
         }
 
     var borderTopWidth:Float = 0f
         private set(value) {
-            field = PixelUtil.toPixelFromDIP(Math.max(0f,value))
+            field = Math.max(0f,value)
         }
 
     var borderRightWidth:Float = 0f
         private set(value) {
-            field = PixelUtil.toPixelFromDIP(Math.max(0f,value))
+            field =Math.max(0f,value)
         }
 
     var borderBottomWidth:Float = 0f
         private set(value) {
-            field = PixelUtil.toPixelFromDIP(Math.max(0f,value))
+            field = Math.max(0f,value)
         }
 
     var borderTopLeftRadius:Float = 0f
         private set(value) {
-            field = PixelUtil.toPixelFromDIP(Math.max(0f,value))
+            field = Math.max(0f,value)
         }
 
     var borderTopRightRadius:Float = 0f
         private set(value) {
-            field = PixelUtil.toPixelFromDIP(Math.max(0f,value))
+            field = Math.max(0f,value)
         }
 
     var borderBottomRightRadius:Float = 0f
         private set(value) {
-            field = PixelUtil.toPixelFromDIP(Math.max(0f,value))
+            field = Math.max(0f,value)
         }
 
     var borderBottomLeftRadius:Float = 0f
         private set(value) {
-            field = PixelUtil.toPixelFromDIP(Math.max(0f,value))
+            field =  Math.max(0f,value)
         }
 
-    var borderLeftColor:Int = Colors.DARK
+    var borderLeftColor:Int = Colors.BLACK
         private set(value) {
              field = value
          }
 
-    var borderTopColor:Int = Colors.DARK
+    var borderTopColor:Int = Colors.BLACK
         private set(value) {
             field = value
         }
 
-    var borderRightColor:Int = Colors.DARK
+    var borderRightColor:Int = Colors.BLACK
         private set(value) {
             field = value
         }
 
-    var borderBottomColor:Int = Colors.DARK
+    var borderBottomColor:Int = Colors.BLACK
         private set(value) {
             field = value
         }
@@ -107,30 +128,31 @@ open class Background : StateListDrawable() {
         if(width <=0 || height <= 0) {
             return
         }
+        mPaint.xfermode = null
+        var borderLeftWidth = PixelUtil.toPixelFromDIP(borderLeftWidth).toInt().toFloat()
+        var borderTopWidth = PixelUtil.toPixelFromDIP(borderTopWidth).toInt().toFloat()
+        var borderRightWidth = PixelUtil.toPixelFromDIP(borderRightWidth).toInt().toFloat()
+        var borderBottomWidth = PixelUtil.toPixelFromDIP(borderBottomWidth).toInt().toFloat()
+        var borderTopLeftRadius = PixelUtil.toPixelFromDIP(borderTopLeftRadius).toInt().toFloat()
+        var borderTopRightRadius = PixelUtil.toPixelFromDIP(borderTopRightRadius).toInt().toFloat()
+        var borderBottomRightRadius = PixelUtil.toPixelFromDIP(borderBottomRightRadius).toInt().toFloat()
+        var borderBottomLeftRadius = PixelUtil.toPixelFromDIP(borderBottomLeftRadius).toInt().toFloat()
         if(haveBorderRadius()){
             //有圆角
             //首先绘制背景色
             mOuterPath.rewind()
-            mOuterPath.moveTo(borderTopLeftRadius,0f)
-            mOuterPath.lineTo(width - borderTopRightRadius, 0f)
-            mOuterPath.quadTo(width,0f,width,borderTopRightRadius)
-            mOuterPath.lineTo(width,height - borderBottomRightRadius)
-            mOuterPath.quadTo(width,height,width - borderBottomRightRadius,height)
-            mOuterPath.lineTo(borderBottomLeftRadius,height)
-            mOuterPath.quadTo(0f,height,0f,height-borderBottomLeftRadius)
-            mOuterPath.lineTo(0f,borderTopLeftRadius)
-            mOuterPath.quadTo(0f,0f,borderTopLeftRadius,0f)
+            mOuterPath.addRoundRect(mTempRectF, floatArrayOf(borderTopLeftRadius,borderTopLeftRadius,borderTopRightRadius,borderTopRightRadius,borderBottomRightRadius,borderBottomRightRadius,borderBottomLeftRadius,borderBottomLeftRadius),Path.Direction.CW)
 
             mPaint.isAntiAlias = true
-            mPaint.style = Paint.Style.FILL
             val backgroundColor = getCurrentColor()
-            mPaint.color = backgroundColor
-            if(backgroundColor ushr 24 != 0){
-//                canvas.drawPath(mOuterPath,mPaint)
-            }
+            mPaint.style = Paint.Style.FILL
             if(haveBorderWidth){
                 val sameBorderColor = sameBorderColor()
                 if(sameBorderColor && borderTopColor ushr 24 == 0){
+                    if(backgroundColor ushr 24 != 0){
+                        mPaint.color = backgroundColor
+                        canvas.drawPath(mOuterPath,mPaint)
+                    }
                     return
                 }
                 var points = floatArrayOf(
@@ -178,89 +200,64 @@ open class Background : StateListDrawable() {
                 }
                 mInnerPath.close()
                 if(sameBorderColor){
-                    if(borderTopColor ushr 24 == 0){
-                        return
-                    }
-                    canvas.save()
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
-                        mOuterPath.op(mInnerPath,Path.Op.DIFFERENCE)
-                        mPaint.color = borderTopColor
-                        canvas.drawPath(mOuterPath,mPaint)
-                    }else{
-                        canvas.clipPath(mOuterPath, Region.Op.INTERSECT)
-                        canvas.clipPath(mInnerPath, Region.Op.DIFFERENCE)
-                        canvas.drawColor(borderTopColor)
-                    }
-                    canvas.restore()
-                }else{
-                    canvas.save()
-                    val halfWidth = width / 2
-                    val halfHeight = height / 2
-
-//                    canvas.clipPath(mOuterPath, Region.Op.INTERSECT)
-//                    canvas.clipPath(mInnerPath, Region.Op.DIFFERENCE)
-
-//                    canvas.drawColor(Colors.RED)
-
-                    mPaint.isAntiAlias = true
                     mPaint.style = Paint.Style.FILL
+                    mPaint.color = backgroundColor
+                    canvas.drawPath(mOuterPath,mPaint)
+                    mPaint.color = borderLeftColor
+                    canvas.drawPath(mOuterPath,mPaint)
+                }else{
+                    mPaint.color = Colors.WHITE
+                    canvas.drawPath(mOuterPath,mPaint)
+                    mPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+
+                    var topLeftX = points[0]
+                    var topLeftY = borderTopWidth
+                    var topRightX = points[2]
+                    var topRightY = borderTopWidth
+                    var bottomRightX =  points[8]
+                    var bottomRightY =  height - borderBottomWidth
+                    var bottomLeftX =  points[10]
+                    var bottomLeftY =  height - borderBottomWidth
+
+                    if(borderLeftWidth > 0){
+                        val k = topLeftX / borderLeftWidth
+                        topLeftY =  borderTopWidth *k
+                        bottomLeftY =  height - borderBottomWidth * k
+                    }
+                    if(borderRightWidth > 0){
+                        val k =  (width - topRightX) /  borderRightWidth
+                        topRightY =  borderTopWidth * k
+                        bottomRightY =  height - borderBottomWidth * k
+                    }
+
                     if(borderTopWidth > 0 && borderTopColor ushr  24 != 0){
-                        var point1X = borderLeftWidth
-                        var point1Y = borderTopWidth
-                        var point2X = width - borderRightWidth
-                        var point2Y = borderTopWidth
-                        if(points[15] > borderTopWidth){
-                            val k = points[15] / borderTopWidth
-                            point1X *= k
-                            point1Y = points[15]
-                            if(point1X > halfWidth){
-                                point1Y *= halfWidth / point1X
-                                point1X = halfWidth
-                            }
-                            if(point1Y > halfHeight){
-                                point1X *= halfHeight / point1Y
-                                point1Y = halfHeight
-                            }
-                        }
-                        if(points[5] > borderTopWidth){
-                            val k = points[4] / borderLeftWidth
-                            point2X =  width - borderRightWidth * k
-                            point2Y = points[5]
-                            if(point2X < halfWidth){
-                                point2Y *= halfWidth / (width-point2X)
-                                point2X = halfWidth
-                            }
-                            if(point2Y > halfHeight){
-                                point2X = width - (width - point2X)*(halfHeight / point2Y)
-                                point2Y = halfHeight
-                            }
-                        }
-                        drawPointsPath(canvas, floatArrayOf(0f,0f,width,0f,point2X,point2Y,point1X,point1Y),borderTopColor)
+                        drawPointsPath(canvas, floatArrayOf(0f,0f,width,0f,topRightX,topRightY,topLeftX,topLeftY),borderTopColor.overlayColor(backgroundColor))
                     }
                     if(borderRightWidth > 0 && borderRightColor ushr  24 != 0){
-                        var point1X = width - borderRightWidth
-                        var point1Y = borderTopWidth
-                        var point2X = width - borderRightWidth
-                        var point2Y = height - borderBottomWidth
-                        if(points[2] < point1X){
-                            val k = (width -points[2])  / borderRightWidth
-                            point1X = width - borderRightWidth * k
-                            point1Y *= k
-                        }
-//                        if(points[5] > borderTopWidth){
-//                            val k = points[0] / borderLeftWidth
-//                            point2X *= k
-//                            point2Y *= k
-//                        }
-                        drawPointsPath(canvas, floatArrayOf(width,0f,width,height,point2X,point2Y,point1X,point1Y),borderRightColor)
+                        drawPointsPath(canvas, floatArrayOf(width,0f,width,height,bottomRightX,bottomRightY,topRightX,topRightY),borderRightColor.overlayColor(backgroundColor))
                     }
                     if(borderBottomWidth > 0){
-                        drawPointsPath(canvas, floatArrayOf(0f,height,width,height,width-borderRightWidth,height-borderBottomWidth,borderLeftWidth,height-borderBottomWidth),borderBottomColor)
+                        drawPointsPath(canvas, floatArrayOf(0f,height,width,height,bottomRightX,bottomRightY,bottomLeftX,bottomLeftY),borderBottomColor.overlayColor(backgroundColor))
                     }
                     if(borderLeftWidth > 0){
-                        drawPointsPath(canvas, floatArrayOf(0f,0f,0f,height,borderLeftWidth,height-borderBottomWidth,borderLeftWidth,borderTopWidth),borderLeftColor)
+                        drawPointsPath(canvas, floatArrayOf(0f,0f,0f,height,bottomLeftX,bottomLeftY,topLeftX,topLeftY),borderLeftColor.overlayColor(backgroundColor))
                     }
-                    canvas.restore()
+                }
+
+                mPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
+//                    //后绘制背景色
+                mPaint.color = Colors.WHITE
+                canvas.drawPath(mInnerPath,mPaint)
+                mPaint.xfermode = null
+                mPaint.color = backgroundColor
+                canvas.drawPath(mInnerPath,mPaint)
+            }
+            else{
+                mPaint.isAntiAlias = false
+                mPaint.style = Paint.Style.FILL
+                mPaint.color = backgroundColor
+                if(backgroundColor ushr 24 != 0){
+                    canvas.drawPath(mOuterPath,mPaint)
                 }
             }
         }else{
@@ -387,8 +384,13 @@ open class Background : StateListDrawable() {
         return borderTopLeftRadius > 0 || borderTopRightRadius > 0 || borderBottomLeftRadius >0 || borderBottomRightRadius > 0
     }
 
+    fun getOutterPath(path: Path,rect: RectF){
+        path.rewind()
+        mOuterPath.addRoundRect(rect, floatArrayOf(borderTopLeftRadius,borderTopLeftRadius,borderTopRightRadius,borderTopRightRadius,borderBottomRightRadius,borderBottomRightRadius,borderBottomLeftRadius,borderBottomLeftRadius),Path.Direction.CW)
+    }
+
     fun clipPath():Boolean{
-        return haveBorderWidth() && haveBorderRadius()
+        return haveBorderWidth() && haveBorderRadius() && !sameBorderColor()
     }
 
 }

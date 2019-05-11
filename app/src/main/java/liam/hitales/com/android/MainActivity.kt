@@ -1,10 +1,12 @@
 package liam.hitales.com.android
 
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Path
 import android.graphics.drawable.StateListDrawable
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -13,6 +15,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import com.hitales.ui.ActivityDelegate
 //import com.hitales.ui.StateListColor
 import com.hitales.ui.ViewState
 
@@ -32,53 +35,41 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
+    var mDelegate: ActivityDelegate? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        disableAPIDialog()
+        mDelegate = Platform.init(this)
+        mDelegate?.onCreate()
+        Color.red(1)
+    }
 
-//        setContentView(R.layout.activity_main)
-//        findViewById<TextView>(R.id.text_test).text = Platform.windowHeight.toString()
+    override fun onResume() {
+        super.onResume()
+        mDelegate?.onResume()
+    }
 
-//        val v  = com.hitales.liam.ui.TextView()
-//        v.setBackgroundColor(Color.RED)
-//        v.text = "dwdw"
-//        setContentView(v)
+    override fun onPause() {
+        super.onPause()
+        mDelegate?.onPause()
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mDelegate?.onDestory()
+    }
 
-        Platform.init(this)
-//        val update = object :Runnable{
-//            override fun run() {
-//                NotificationCenter.getInstance().notify("update")
-//                window.decorView.postDelayed(this,10)
-//            }
-//        }
-//        update.run()
+    override fun onBackPressed() {
+        if(mDelegate != null && mDelegate!!.onBackPressed()){
+            return
+        }
+        super.onBackPressed()
+    }
 
-//        val scrollView = ScrollView(this)
-//        val frameLayout = FrameLayout(this)
-////        scrollView.addView(frameLayout,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT))
-//        for(i in 0 until 1000){
-//            val textView = Button(this)
-//            if(i == 0){
-//                textView.setPadding(100,0,100,0)
-//            }
-////            textView.setBackgroundColor(0)
-//            textView.text = i.toString()
-//            val textColor = StateListColor(Color.RED)
-//            textView.setBackgroundColor(Color.RED)
-//            var layout = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,150)
-//            layout.topMargin = 155 * i
-//            frameLayout.addView(textView,layout)
-//            textColor.setColorForState(Color.BLACK,ViewState.PRESSED)
-//            textView.setTextColor(textColor)
-//            frameLayout.postDelayed({
-//                textColor.setColorForState(Color.GREEN,ViewState.DISABLED)
-////                textView.isEnabled = false
-//            },5000)
-//        }
-//
-//        setContentView(frameLayout)
-//        LinearGradient(this)
-
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        mDelegate?.onActivityResult(requestCode,resultCode,data)
     }
 
 
@@ -90,5 +81,20 @@ class MainActivity : AppCompatActivity() {
             res.updateConfiguration(configuration, res.displayMetrics)
         }
         return res
+    }
+
+    private fun disableAPIDialog() {
+        if (Build.VERSION.SDK_INT < 28) return
+        try {
+            val clazz = Class.forName("android.app.ActivityThread")
+            val currentActivityThread = clazz.getDeclaredMethod("currentActivityThread")
+            currentActivityThread.isAccessible = true
+            val activityThread = currentActivityThread.invoke(null)
+            val mHiddenApiWarningShown = clazz.getDeclaredField("mHiddenApiWarningShown")
+            mHiddenApiWarningShown.isAccessible = true
+            mHiddenApiWarningShown.setBoolean(activityThread, true)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }

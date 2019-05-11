@@ -3,6 +3,7 @@ package com.hitales.ui
 
 import android.app.Activity
 import android.app.Application
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.util.DisplayMetrics
@@ -19,7 +20,8 @@ import kotlin.coroutines.CoroutineContext
 
 
 
-actual class Platform {
+actual class Platform : ActivityDelegate{
+
 
     actual companion object {
 
@@ -38,7 +40,7 @@ actual class Platform {
             return platform!!
         }
 
-        fun init(rootActivity: Activity){
+        fun init(rootActivity: Activity):ActivityDelegate{
             platform = Platform(rootActivity)
             var c =  TestController()
             c.onCreate()
@@ -58,6 +60,7 @@ actual class Platform {
 //                view.superView?.getWidget()?.requestLayout()
 //            }
 //            c.view?.frame = Frame(1f,2f,3f,4f)
+            return  platform!!
         }
 
 
@@ -79,22 +82,28 @@ actual class Platform {
         val dm = application.resources.displayMetrics
         windowWidth = PixelUtil.toDIPFromPixel( dm.widthPixels.toFloat(),dm)
         windowHeight = PixelUtil.toDIPFromPixel( dm.heightPixels.toFloat(),dm)
-        disableAPIDialog()
     }
 
-    private fun disableAPIDialog() {
-        if (Build.VERSION.SDK_INT < 28) return
-        try {
-            val clazz = Class.forName("android.app.ActivityThread")
-            val currentActivityThread = clazz.getDeclaredMethod("currentActivityThread")
-            currentActivityThread.isAccessible = true
-            val activityThread = currentActivityThread.invoke(null)
-            val mHiddenApiWarningShown = clazz.getDeclaredField("mHiddenApiWarningShown")
-            mHiddenApiWarningShown.isAccessible = true
-            mHiddenApiWarningShown.setBoolean(activityThread, true)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+    override fun onBackPressed(): Boolean {
+        return false
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    }
+
+    override fun onCreate() {
+    }
+
+    override fun onResume() {
 
     }
+
+    override fun onPause() {
+
+    }
+
+    override fun onDestory() {
+    }
+
+
 }
