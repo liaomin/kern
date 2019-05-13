@@ -7,11 +7,11 @@ kotlin {
         final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") \
                               ? presets.iosArm64 : presets.iosX64
 
-//        fromPreset(iOSTarget, 'ios') {
-//            binaries {
-//                framework('SharedCode')
-//            }
-//        }
+        fromPreset(iOSTarget, 'ios') {
+            binaries {
+                framework('SharedCode')
+            }
+        }
 
         fromPreset(presets.jvm, 'android')
     }
@@ -31,9 +31,9 @@ kotlin {
             api  'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.0'
         }
 
-//        iosMain.dependencies {
-//            api  'org.jetbrains.kotlinx:kotlinx-coroutines-core-native:1.2.0'
-//        }
+        iosMain.dependencies {
+            api  'org.jetbrains.kotlinx:kotlinx-coroutines-core-native:1.2.0'
+        }
     }
 }
 
@@ -42,22 +42,22 @@ configurations {
     compileClasspath
 }
 
-//task packForXCode(type: Sync) {
-//    final File frameworkDir = new File(buildDir, "xcode-frameworks")
-//    final String mode = project.findProperty("XCODE_CONFIGURATION")?.toUpperCase() ?: 'DEBUG'
-//    final def framework = kotlin.targets.ios.binaries.getFramework("SharedCode", mode)
-//
-//    inputs.property "mode", mode
-//    dependsOn framework.linkTask
-//
-//    from { framework.outputFile.parentFile }
-//    into frameworkDir
-//
-//    doLast {
-//        new File(frameworkDir, 'gradlew').with {
-//            text = "#!/bin/bash\nexport 'JAVA_HOME=${System.getProperty("java.home")}'\ncd '${rootProject.rootDir}'\n./gradlew \$@\n"
-//            setExecutable(true)
-//        }
-//    }
-//}
-//tasks.build.dependsOn packForXCode
+task packForXCode(type: Sync) {
+    final File frameworkDir = new File(buildDir, "xcode-frameworks")
+    final String mode = project.findProperty("XCODE_CONFIGURATION")?.toUpperCase() ?: 'DEBUG'
+    final def framework = kotlin.targets.ios.binaries.getFramework("SharedCode", mode)
+
+    inputs.property "mode", mode
+    dependsOn framework.linkTask
+
+    from { framework.outputFile.parentFile }
+    into frameworkDir
+
+    doLast {
+        new File(frameworkDir, 'gradlew').with {
+            text = "#!/bin/bash\nexport 'JAVA_HOME=${System.getProperty("java.home")}'\ncd '${rootProject.rootDir}'\n./gradlew \$@\n"
+            setExecutable(true)
+        }
+    }
+}
+tasks.build.dependsOn packForXCode

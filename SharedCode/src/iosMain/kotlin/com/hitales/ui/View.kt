@@ -2,12 +2,13 @@ package com.hitales.ui
 
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
-import com.hitales.utils.NotificationCenter
 import kotlinx.cinterop.*
 import platform.CoreGraphics.CGRectMake
+import platform.CoreGraphics.CGSizeMake
 import platform.UIKit.*
+import platform.darwin.NSObject
+import kotlin.math.max
 
-val notificationCenter = NotificationCenter.getInstance()
 
 inline fun Int.toUIColor():UIColor{
     val a = this ushr 24 and 0x000000FF
@@ -28,6 +29,14 @@ inline fun UIColor.toInt():Int{
     }
 }
 
+class IOSView(private val view: View) : UIView(CGRectMake(0.0,0.0,0.0,0.0)){
+
+    fun dealloc(){
+        println("~~~dealloc~~")
+    }
+}
+
+
 actual open class View {
 
     protected val mWidget: UIView = createWidget()
@@ -44,10 +53,6 @@ actual open class View {
             field = value
             setWidgetFrame(value)
         }
-
-    actual var borderRadius:EdgeInsets? =  null
-
-    actual var borderWith:Float = 0f
 
     actual var superView:LayoutView? = null
 
@@ -70,7 +75,7 @@ actual open class View {
     }
 
     open fun createWidget(): UIView {
-       return UIView()
+       return IOSView(this)
     }
 
     open fun getIOSWidget(): UIView {
@@ -117,5 +122,32 @@ actual open class View {
         rightColor: Int,
         bottomColor: Int
     ) {
+    }
+
+    actual open fun setBorderWidth(borderWidth: Float) {
+    }
+
+    actual open fun setBorderWidth(
+        leftWidth: Float,
+        topWidth: Float,
+        rightWidth: Float,
+        bottomWidth: Float
+    ) {
+    }
+
+    actual open fun setBorderRadius(radius: Float) {
+    }
+
+    actual open fun setBorderRadius(
+        topLeftRadius: Float,
+        topRightRadius: Float,
+        bottomRightRadius: Float,
+        bottomLeftRadius: Float
+    ) {
+
+    }
+
+    actual open fun deinit() {
+
     }
 }

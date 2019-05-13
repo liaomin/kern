@@ -2,6 +2,7 @@ package com.hitales.test
 
 import com.hitales.ui.*
 import com.hitales.utils.Frame
+import com.hitales.utils.WeakReference
 
 open class BasicController : Controller() {
 
@@ -10,8 +11,9 @@ open class BasicController : Controller() {
         view?.setBackgroundColor(Colors.WHITE)
         val backButton = Button("返回", Frame(0f,0f,80f,48f))
         backButton.setBackgroundColor(0xFFFF0000.toInt())
+        var l = WeakReference(this)
         backButton.setOnPressListener {
-            this.pop()
+            l.get()?.pop()
         }
         addView(backButton)
     }

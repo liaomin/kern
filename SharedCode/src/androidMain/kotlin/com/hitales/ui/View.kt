@@ -169,4 +169,7 @@ actual open class View {
             mWidget.setLayerType(layerType, null)
         }
     }
+
+    actual open fun deinit() {
+    }
 }

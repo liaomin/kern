@@ -2,6 +2,7 @@ package com.hitales.ui
 
 import com.hitales.utils.Frame
 import kotlinx.cinterop.ObjCAction
+import kotlinx.cinterop.ObjCMethod
 import platform.CoreGraphics.CGRectMake
 import platform.CoreGraphics.CGRectZero
 import platform.CoreGraphics.CGSizeMake
@@ -10,6 +11,7 @@ import platform.UIKit.UIScrollView
 import platform.UIKit.UIView
 import platform.UIKit.layoutSubviews
 import kotlin.math.max
+
 
 class IOSScrollView(private val scrollView: ScrollView) : UIScrollView(CGRectMake(0.0,0.0,0.0,0.0)){
 

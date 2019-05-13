@@ -4,6 +4,10 @@ import android.graphics.*
 import android.graphics.drawable.StateListDrawable
 import android.os.Build
 import com.hitales.ui.utils.PixelUtil
+import android.graphics.Paint.FILTER_BITMAP_FLAG
+import android.graphics.Paint.ANTI_ALIAS_FLAG
+
+
 
 
 inline fun Int.overlayColor(b:Int):Int{
@@ -125,23 +129,39 @@ open class Background : StateListDrawable() {
         mTempRectF.set(bounds)
         val width = mTempRectF.width()
         val height = mTempRectF.height()
+        val halfWidth = width / 2
+        val halfHeight = height / 2
+        val maxRadius = Math.min(halfWidth,halfHeight)
+
         if(width <=0 || height <= 0) {
             return
         }
         mPaint.xfermode = null
-        var borderLeftWidth = PixelUtil.toPixelFromDIP(borderLeftWidth).toInt().toFloat()
-        var borderTopWidth = PixelUtil.toPixelFromDIP(borderTopWidth).toInt().toFloat()
-        var borderRightWidth = PixelUtil.toPixelFromDIP(borderRightWidth).toInt().toFloat()
-        var borderBottomWidth = PixelUtil.toPixelFromDIP(borderBottomWidth).toInt().toFloat()
-        var borderTopLeftRadius = PixelUtil.toPixelFromDIP(borderTopLeftRadius).toInt().toFloat()
-        var borderTopRightRadius = PixelUtil.toPixelFromDIP(borderTopRightRadius).toInt().toFloat()
-        var borderBottomRightRadius = PixelUtil.toPixelFromDIP(borderBottomRightRadius).toInt().toFloat()
-        var borderBottomLeftRadius = PixelUtil.toPixelFromDIP(borderBottomLeftRadius).toInt().toFloat()
+        var borderLeftWidth = Math.min(PixelUtil.toPixelFromDIP(borderLeftWidth).toInt().toFloat(),halfWidth)
+        var borderTopWidth =  Math.min(PixelUtil.toPixelFromDIP(borderTopWidth).toInt().toFloat(),halfHeight)
+        var borderRightWidth = Math.min(PixelUtil.toPixelFromDIP(borderRightWidth).toInt().toFloat(),halfWidth)
+        var borderBottomWidth = Math.min(PixelUtil.toPixelFromDIP(borderBottomWidth).toInt().toFloat(),halfHeight)
+        var borderTopLeftRadius = Math.min(PixelUtil.toPixelFromDIP(borderTopLeftRadius).toInt().toFloat(),maxRadius)
+        var borderTopRightRadius = Math.min(PixelUtil.toPixelFromDIP(borderTopRightRadius).toInt().toFloat(),maxRadius)
+        var borderBottomRightRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomRightRadius).toInt().toFloat(),maxRadius)
+        var borderBottomLeftRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomLeftRadius).toInt().toFloat(),maxRadius)
         if(haveBorderRadius()){
             //有圆角
+            canvas.drawFilter = PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
             //首先绘制背景色
             mOuterPath.rewind()
             mOuterPath.addRoundRect(mTempRectF, floatArrayOf(borderTopLeftRadius,borderTopLeftRadius,borderTopRightRadius,borderTopRightRadius,borderBottomRightRadius,borderBottomRightRadius,borderBottomLeftRadius,borderBottomLeftRadius),Path.Direction.CW)
+//            mOuterPath.rewind()
+//            mOuterPath.moveTo(borderTopLeftRadius,0f)
+//            mOuterPath.lineTo(width - borderTopRightRadius, 0f)
+//            mOuterPath.quadTo(width,0f,width,borderTopRightRadius)
+//            mOuterPath.lineTo(width,height - borderBottomRightRadius)
+//            mOuterPath.quadTo(width,height,width - borderBottomRightRadius,height)
+//            mOuterPath.lineTo(borderBottomLeftRadius,height)
+//            mOuterPath.quadTo(0f,height,0f,height-borderBottomLeftRadius)
+//            mOuterPath.lineTo(0f,borderTopLeftRadius)
+//            mOuterPath.quadTo(0f,0f,borderTopLeftRadius,0f)
+
 
             mPaint.isAntiAlias = true
             val backgroundColor = getCurrentColor()
@@ -170,16 +190,28 @@ open class Background : StateListDrawable() {
                 if(borderTopRightRadius > 0){
                     points[2] = width-Math.max(borderRightWidth,borderTopRightRadius)
                     points[5] = Math.max(borderTopRightRadius,borderTopWidth)
-                    mInnerPath.lineTo( points[2], points[3])
-                    mInnerPath.quadTo(width-borderRightWidth,borderTopWidth, points[4],points[5])
+                    mInnerPath.lineTo(points[2], points[3])
+                    if(borderTopWidth == borderLeftWidth){
+                        //圆形
+                        mTempRectF.set(points[2] - (points[4] - points[2]),points[3],points[4],points[5]+points[5]-points[3])
+                        mInnerPath.arcTo(mTempRectF,-90f,90f,false)
+                    }else{
+                        mInnerPath.quadTo(width-borderRightWidth,borderTopWidth, points[4],points[5])
+                    }
                 }else{
                     mInnerPath.lineTo(width-borderRightWidth,borderTopWidth)
                 }
                 if(borderBottomRightRadius > 0){
                     points[7] = height - Math.max(borderBottomRightRadius,borderBottomWidth)
                     points[8] = width-Math.max(borderRightWidth,borderBottomRightRadius)
+
                     mInnerPath.lineTo( points[6],points[7])
-                    mInnerPath.quadTo(width-borderRightWidth,height - borderBottomWidth, points[8], points[9])
+                    if(borderLeftWidth == borderBottomWidth){
+                        mTempRectF.set(points[8] - (points[6] - points[8]),points[7] - (points[9] - points[7]),points[6],points[9])
+                        mInnerPath.arcTo(mTempRectF,0f,90f,false)
+                    }else{
+                        mInnerPath.quadTo(width-borderRightWidth,height - borderBottomWidth, points[8], points[9])
+                    }
                 }else{
                     mInnerPath.lineTo(width-borderRightWidth,height-borderBottomWidth)
                 }
@@ -187,18 +219,32 @@ open class Background : StateListDrawable() {
                     points[10] = Math.max(borderLeftWidth,borderBottomLeftRadius)
                     points[13] = height - Math.max(borderBottomLeftRadius,borderBottomWidth)
                     mInnerPath.lineTo(points[10],points[11])
-                    mInnerPath.quadTo(borderLeftWidth,height - borderBottomWidth,points[12],points[13])
+                    if(borderBottomWidth == borderLeftWidth){
+                        mTempRectF.set(points[12],points[13]-(points[11]-points[13]),points[10]+points[10]-points[12],points[11])
+                        mInnerPath.arcTo(mTempRectF,90f,90f,false)
+                    }else{
+                        mInnerPath.quadTo(borderLeftWidth,height - borderBottomWidth,points[12],points[13])
+                    }
                 }else{
                     mInnerPath.lineTo(borderLeftWidth,height-borderBottomWidth)
                 }
                 if(borderTopLeftRadius > 0){
                     points[15] = Math.max(borderTopLeftRadius,borderTopWidth)
-                    mInnerPath.lineTo(borderLeftWidth,points[15] )
-                    mInnerPath.quadTo(borderLeftWidth, borderTopWidth,points[0],borderTopWidth)
+                    mInnerPath.lineTo(points[14],points[15] )
+                    if(borderTopWidth == borderLeftWidth){
+                        mTempRectF.set(points[14],points[1],points[0]+points[0]-points[14],points[15] + points[15]-points[1])
+                        mInnerPath.arcTo(mTempRectF,180f,90f,false)
+                    }else {
+                        mInnerPath.quadTo(borderLeftWidth, borderTopWidth, points[0], borderTopWidth)
+                    }
                 }else{
                     mInnerPath.lineTo(borderLeftWidth,borderTopWidth)
                 }
                 mInnerPath.close()
+
+                mTempRectF.set(bounds)
+
+
                 if(sameBorderColor){
                     mPaint.style = Paint.Style.FILL
                     mPaint.color = backgroundColor
@@ -253,7 +299,6 @@ open class Background : StateListDrawable() {
                 canvas.drawPath(mInnerPath,mPaint)
             }
             else{
-                mPaint.isAntiAlias = false
                 mPaint.style = Paint.Style.FILL
                 mPaint.color = backgroundColor
                 if(backgroundColor ushr 24 != 0){

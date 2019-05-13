@@ -67,7 +67,7 @@ open class ViewController : BasicController() {
     }
 
     fun getItemWidth():Float{
-        return  Platform.windowWidth / 2 - 20
+        return  (Platform.windowWidth / 2).toInt().toFloat() - 20
     }
 
     fun getTilteWidget(title:String,frame: Frame): TextView {
@@ -100,11 +100,18 @@ class BorderWidthTestController : ViewController(){
         var view =  View()
         view.setBackgroundColor(bgColor)
         addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
-        view.setBorderWidth(100f)
+        view.setBorderWidth(10f)
         view.setBorderColor(Colors.BLUE,Colors.GREEN,Colors.YELLOW,Colors.ORANGE)
         view.setBorderColor(Colors.BLUE)
-        view.setBorderRadius(getItemWidth()/2f)
-        view.setBorderRadius(287/2f)
+        view.setBorderRadius(getItemWidth())
+//        view.setBorderRadius(287/2f)
+
+        view =  View()
+        view.setBackgroundColor(bgColor)
+        addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
+        view.setBorderWidth(100f)
+        view.setBorderColor(Colors.BLUE,Colors.GREEN,Colors.YELLOW,Colors.ORANGE)
+        view.setBorderRadius(getItemWidth())
 
 
 //        val bgColor = Colors.RED

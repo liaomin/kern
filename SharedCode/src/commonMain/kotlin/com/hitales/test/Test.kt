@@ -42,7 +42,6 @@ class TestController : BasicController() {
             println("long press $it")
         }
 
-
 //        this.v = v
 ////        val v4  = TextView("测试2", Frame(60f,260f,200f,200f))
 ////        rootView.addView(v4)
