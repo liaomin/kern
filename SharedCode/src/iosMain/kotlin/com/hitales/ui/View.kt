@@ -2,6 +2,7 @@ package com.hitales.ui
 
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
+import com.hitales.utils.WeakReference
 import kotlinx.cinterop.*
 import platform.CoreGraphics.CGRectMake
 import platform.CoreGraphics.CGSizeMake
@@ -29,10 +30,18 @@ inline fun UIColor.toInt():Int{
     }
 }
 
-class IOSView(private val view: View) : UIView(CGRectMake(0.0,0.0,0.0,0.0)){
+class IOSView(private val view: WeakReference<View>) : UIView(CGRectMake(0.0,0.0,0.0,0.0)){
 
     fun dealloc(){
+        this.layer.cornerRadius
         println("~~~dealloc~~")
+    }
+
+    companion object {
+        @ObjCAction
+        fun load(){
+            println("~~~load~~")
+        }
     }
 }
 
@@ -75,7 +84,7 @@ actual open class View {
     }
 
     open fun createWidget(): UIView {
-       return IOSView(this)
+       return IOSView(WeakReference(this))
     }
 
     open fun getIOSWidget(): UIView {

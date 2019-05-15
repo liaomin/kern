@@ -42,7 +42,7 @@ open class Controller {
     }
 
     open fun onBackPressed():Boolean {
-        return false
+        return this.pop()
     }
 
     open fun push(controller: Controller,animation: Animation? = null,completion:(()->Unit)? = null){
@@ -52,15 +52,16 @@ open class Controller {
         rootController?.pushStack(controller)
     }
 
-    open fun pop(){
+    open fun pop():Boolean{
         if(rootController != this && rootController != null){
             this.onDestroy()
-            rootController?.pop()
+            return rootController!!.pop()
         }else{
             val temp = stack?.pop()
             if(temp != null){
                 onPopController(temp)
             }
+            return temp != null
         }
     }
 

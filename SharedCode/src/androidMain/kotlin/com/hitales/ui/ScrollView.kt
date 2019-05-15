@@ -4,10 +4,11 @@ import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import com.hitales.ui.android.DampScrollView
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame
 
-open class AndroidScrollView(val view: ScrollView) : android.widget.ScrollView(Platform.getApplication()){
+open class AndroidScrollView(val view: ScrollView) : DampScrollView(Platform.getApplication()){
 
     var frameLayout =  object : FrameLayout(Platform.getApplication()){
         override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

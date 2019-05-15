@@ -1,13 +1,11 @@
-package com.hitales.ui
+package com.hitales.ui.android
 
 import android.graphics.*
 import android.graphics.drawable.StateListDrawable
-import android.os.Build
 import com.hitales.ui.utils.PixelUtil
-import android.graphics.Paint.FILTER_BITMAP_FLAG
-import android.graphics.Paint.ANTI_ALIAS_FLAG
-
-
+import com.hitales.ui.Colors
+import com.hitales.ui.StateListColor
+import com.hitales.ui.ViewState
 
 
 inline fun Int.overlayColor(b:Int):Int{
@@ -43,7 +41,8 @@ open class Background : StateListDrawable() {
       Paint(Paint.ANTI_ALIAS_FLAG)
     }
 
-    private val backgroundColors:StateListColor = StateListColor(Colors.TRANSPARENT)
+    private val backgroundColors: StateListColor =
+        StateListColor(Colors.TRANSPARENT)
 
     private val mTempRectF:RectF by lazy {RectF(0f,0f,0f,0f)}
 
@@ -191,7 +190,7 @@ open class Background : StateListDrawable() {
                     points[2] = width-Math.max(borderRightWidth,borderTopRightRadius)
                     points[5] = Math.max(borderTopRightRadius,borderTopWidth)
                     mInnerPath.lineTo(points[2], points[3])
-                    if(borderTopWidth == borderLeftWidth){
+                    if(borderTopWidth == borderRightWidth){
                         //圆形
                         mTempRectF.set(points[2] - (points[4] - points[2]),points[3],points[4],points[5]+points[5]-points[3])
                         mInnerPath.arcTo(mTempRectF,-90f,90f,false)
@@ -206,7 +205,7 @@ open class Background : StateListDrawable() {
                     points[8] = width-Math.max(borderRightWidth,borderBottomRightRadius)
 
                     mInnerPath.lineTo( points[6],points[7])
-                    if(borderLeftWidth == borderBottomWidth){
+                    if(borderRightWidth == borderBottomWidth){
                         mTempRectF.set(points[8] - (points[6] - points[8]),points[7] - (points[9] - points[7]),points[6],points[9])
                         mInnerPath.arcTo(mTempRectF,0f,90f,false)
                     }else{
@@ -297,6 +296,13 @@ open class Background : StateListDrawable() {
                 mPaint.xfermode = null
                 mPaint.color = backgroundColor
                 canvas.drawPath(mInnerPath,mPaint)
+
+//                mPaint.strokeWidth = 20f
+//                mPaint.color = Color.RED
+//                canvas.drawPoints(points,mPaint)
+//                mPaint.strokeWidth = 5f
+//                canvas.drawLine(halfWidth,0f,halfWidth,height,mPaint)
+//                canvas.drawLine(0f,halfHeight,width,halfHeight,mPaint)
             }
             else{
                 mPaint.style = Paint.Style.FILL

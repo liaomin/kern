@@ -42,24 +42,6 @@ actual class Platform : ActivityDelegate{
 
         fun init(rootActivity: Activity):ActivityDelegate{
             platform = Platform(rootActivity)
-            var c =  TestController()
-            c.onCreate()
-            c.onResume()
-            c.view?.apply {
-                rootActivity.setContentView(getWidget())
-            }
-
-            c.onViewChangedListener = {rootController:Controller,controller:Controller,view: com.hitales.ui.View? ->
-                view?.apply {
-                    rootActivity.setContentView(getWidget())
-                }
-            }
-
-//            notificationCenter.addObserver(NOTIFY_VIEW_LAYOUT_CHANGE){ key: Any, value: Any? ->
-//                val view:com.hitales.liam.ui.View = value as com.hitales.liam.ui.View
-//                view.superView?.getWidget()?.requestLayout()
-//            }
-//            c.view?.frame = Frame(1f,2f,3f,4f)
             return  platform!!
         }
 
@@ -75,6 +57,7 @@ actual class Platform : ActivityDelegate{
     var application:Application
 
     var rootActivity:Activity
+    var c:TestController? = null
 
     private constructor(rootActivity: Activity){
         this.application = rootActivity.application
@@ -85,13 +68,24 @@ actual class Platform : ActivityDelegate{
     }
 
     override fun onBackPressed(): Boolean {
-        return false
+        return c!!.onBackPressed()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     }
 
     override fun onCreate() {
+        c =  TestController()
+        c?.onCreate()
+        c?.onResume()
+        c?.view?.apply {
+            rootActivity.setContentView(getWidget())
+        }
+        c?.onViewChangedListener = {rootController:Controller,controller:Controller,view: com.hitales.ui.View? ->
+            view?.apply {
+                rootActivity.setContentView(getWidget())
+            }
+        }
     }
 
     override fun onResume() {

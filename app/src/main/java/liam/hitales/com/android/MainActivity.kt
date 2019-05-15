@@ -9,6 +9,7 @@ import android.graphics.drawable.StateListDrawable
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.widget.NestedScrollView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -42,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         disableAPIDialog()
         mDelegate = Platform.init(this)
         mDelegate?.onCreate()
-        Color.red(1)
+        NestedScrollView(this)
     }
 
     override fun onResume() {

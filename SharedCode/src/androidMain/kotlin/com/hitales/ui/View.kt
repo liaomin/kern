@@ -1,7 +1,7 @@
 package com.hitales.ui
 
-import android.graphics.Color
 import android.widget.FrameLayout
+import com.hitales.ui.android.Background
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
@@ -31,7 +31,7 @@ actual open class View {
 
     protected val mWidget: android.view.View = createWidget()
 
-    protected val mBackground:Background by lazy {
+    protected val mBackground: Background by lazy {
        val background = Background()
        mWidget.setBackgroundDrawable(background)
         background
