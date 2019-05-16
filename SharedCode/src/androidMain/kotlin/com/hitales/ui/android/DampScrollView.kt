@@ -2,14 +2,16 @@ package com.hitales.ui.android
 
 import android.content.Context
 import android.graphics.Rect
+import android.os.Build
+import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.Interpolator
 import android.view.animation.TranslateAnimation
-import android.widget.ScrollView
+import androidx.core.widget.NestedScrollView
 
 
-open class DampScrollView : ScrollView {
+open class DampScrollView : NestedScrollView {
 
     // y方向上当前触摸点的前一次记录位置
     private var previousY = 0F
@@ -30,16 +32,23 @@ open class DampScrollView : ScrollView {
     private var moveHeight: Float = 0.toFloat()
 
     constructor(context: Context) : super(context) {
-        overScrollMode = View.OVER_SCROLL_NEVER
+//        overScrollMode = View.OVER_SCROLL_NEVER
+        isVerticalScrollBarEnabled  = true
+        isFillViewport = true
+        if(Build.VERSION.SDK_INT >= 16){
+            scrollBarFadeDuration = 2000
+        }
+
     }
 
-//    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
-//
-//    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {}
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
+
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {}
 
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt)
+
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {

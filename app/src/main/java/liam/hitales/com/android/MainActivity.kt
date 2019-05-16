@@ -7,15 +7,15 @@ import android.graphics.LinearGradient
 import android.graphics.Path
 import android.graphics.drawable.StateListDrawable
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.widget.NestedScrollView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.NestedScrollView
 import com.hitales.ui.ActivityDelegate
 //import com.hitales.ui.StateListColor
 import com.hitales.ui.ViewState
@@ -40,10 +40,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        disableAPIDialog()
         mDelegate = Platform.init(this)
         mDelegate?.onCreate()
         NestedScrollView(this)
+
     }
 
     override fun onResume() {
@@ -84,18 +84,4 @@ class MainActivity : AppCompatActivity() {
         return res
     }
 
-    private fun disableAPIDialog() {
-        if (Build.VERSION.SDK_INT < 28) return
-        try {
-            val clazz = Class.forName("android.app.ActivityThread")
-            val currentActivityThread = clazz.getDeclaredMethod("currentActivityThread")
-            currentActivityThread.isAccessible = true
-            val activityThread = currentActivityThread.invoke(null)
-            val mHiddenApiWarningShown = clazz.getDeclaredField("mHiddenApiWarningShown")
-            mHiddenApiWarningShown.isAccessible = true
-            mHiddenApiWarningShown.setBoolean(activityThread, true)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
 }

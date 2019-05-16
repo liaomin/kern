@@ -75,6 +75,7 @@ actual class Platform : ActivityDelegate{
     }
 
     override fun onCreate() {
+        disableAPIDialog()
         c =  TestController()
         c?.onCreate()
         c?.onResume()
@@ -97,6 +98,21 @@ actual class Platform : ActivityDelegate{
     }
 
     override fun onDestory() {
+    }
+
+    private fun disableAPIDialog() {
+        if (Build.VERSION.SDK_INT < 28) return
+        try {
+            val clazz = Class.forName("android.app.ActivityThread")
+            val currentActivityThread = clazz.getDeclaredMethod("currentActivityThread")
+            currentActivityThread.isAccessible = true
+            val activityThread = currentActivityThread.invoke(null)
+            val mHiddenApiWarningShown = clazz.getDeclaredField("mHiddenApiWarningShown")
+            mHiddenApiWarningShown.isAccessible = true
+            mHiddenApiWarningShown.setBoolean(activityThread, true)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 

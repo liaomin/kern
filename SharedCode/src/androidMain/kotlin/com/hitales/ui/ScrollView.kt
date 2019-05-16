@@ -29,7 +29,8 @@ open class AndroidScrollView(val view: ScrollView) : DampScrollView(Platform.get
 
     init {
         frameLayout.setBackgroundColor(Colors.CLEAR)
-        super.addView(frameLayout,-1,FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,FrameLayout.LayoutParams.WRAP_CONTENT))
+        super.addView(frameLayout,-1,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT))
+//        setBackgroundColor(Color.GREEN)
     }
 
     override fun onAttachedToWindow() {
@@ -75,12 +76,12 @@ actual open class ScrollView : LayoutView {
 
     actual constructor(frame: Frame):super(frame)
 
-    override fun createWidget(): android.widget.ScrollView {
+    override fun createWidget(): android.widget.FrameLayout {
         return AndroidScrollView(this)
     }
 
-    override fun getWidget(): android.widget.ScrollView {
-        return super.getWidget() as android.widget.ScrollView
+    override fun getWidget(): android.widget.FrameLayout {
+        return super.getWidget()
     }
 
 }
