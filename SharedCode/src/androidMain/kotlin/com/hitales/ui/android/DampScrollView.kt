@@ -32,13 +32,9 @@ open class DampScrollView : NestedScrollView {
     private var moveHeight: Float = 0.toFloat()
 
     constructor(context: Context) : super(context) {
-//        overScrollMode = View.OVER_SCROLL_NEVER
+        overScrollMode = View.OVER_SCROLL_NEVER
         isVerticalScrollBarEnabled  = true
         isFillViewport = true
-        if(Build.VERSION.SDK_INT >= 16){
-            scrollBarFadeDuration = 2000
-        }
-
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
@@ -48,86 +44,92 @@ open class DampScrollView : NestedScrollView {
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt)
-
+        println("this $this")
     }
 
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (getChildCount() > 0) {
-            childView = getChildAt(0)
-        }
-        if (null == childView) {
-            return super.dispatchTouchEvent(event)
-        }
-
-        when (event.getAction()) {
-            MotionEvent.ACTION_DOWN -> {
-                startY = event.getY()
-                previousY = startY
-
-                // 记录childView的初始位置
-                topRect.set(
-                    childView!!.getLeft(), childView!!.getTop(),
-                    childView!!.getRight(), childView!!.getBottom()
-                )
-                moveHeight = 0f
-            }
-            MotionEvent.ACTION_MOVE -> {
-                currentY = event.getY()
-                deltaY = currentY - previousY
-                previousY = currentY
-
-                //判定是否在顶部或者滑到了底部
-                if (!childView!!.canScrollVertically(-1) && currentY - startY > 0 || !childView!!.canScrollVertically(1) && currentY - startY < 0) {
-                    //计算阻尼
-                    var distance = (currentY - startY).toFloat()
-                    if (distance < 0) {
-                        distance *= -1f
-                    }
-
-                    var damping = 0.5f//阻尼值
-                    val height = getHeight().toFloat()
-                    if (height != 0f) {
-                        if (distance > height) {
-                            damping = 0f
-                        } else {
-                            damping = (height - distance) / height
-                        }
-                    }
-                    if (currentY - startY < 0) {
-                        damping = 1 - damping
-                    }
-
-                    //阻力值限制再0.3-0.5之间，平滑过度
-                    damping *= 0.25f
-                    damping += 0.25f
-
-                    moveHeight = moveHeight + deltaY * damping
-
-                    childView!!.layout(
-                        topRect.left, (topRect.top + moveHeight).toInt(), topRect.right,
-                        (topRect.bottom + moveHeight).toInt()
-                    )
-                }
-            }
-            MotionEvent.ACTION_UP -> {
-                if (!topRect.isEmpty()) {
-                    //开始回移动画
-                    upDownMoveAnimation()
-                    // 子控件回到初始位置
-                    childView!!.layout(
-                        topRect.left, topRect.top, topRect.right,
-                        topRect.bottom
-                    )
-                }
-                //重置一些参数
-                startY = 0f
-                currentY = 0f
-                topRect.setEmpty()
-            }
-        }
-
-        return super.dispatchTouchEvent(event)
+    override fun dispatchNestedFling(velocityX: Float, velocityY: Float, consumed: Boolean): Boolean {
+        return super.dispatchNestedFling(velocityX, velocityY, consumed)
     }
+
+//    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+//        if (getChildCount() > 0) {
+//            childView = getChildAt(0)
+//        }
+//        if (null == childView) {
+//            return super.dispatchTouchEvent(event)
+//        }
+//
+//        when (event.getAction()) {
+//            MotionEvent.ACTION_DOWN -> {
+//                startY = event.getY()
+//                previousY = startY
+//
+//                // 记录childView的初始位置
+//                topRect.set(
+//                    childView!!.getLeft(), childView!!.getTop(),
+//                    childView!!.getRight(), childView!!.getBottom()
+//                )
+//                moveHeight = 0f
+//            }
+//            MotionEvent.ACTION_MOVE -> {
+//                currentY = event.getY()
+//                deltaY = currentY - previousY
+//                previousY = currentY
+//
+//                //判定是否在顶部或者滑到了底部
+//                if (!childView!!.canScrollVertically(-1) && currentY - startY > 0 || !childView!!.canScrollVertically(1) && currentY - startY < 0) {
+//                    //计算阻尼
+//                    var distance = (currentY - startY).toFloat()
+//                    if (distance < 0) {
+//                        distance *= -1f
+//                    }
+//
+//                    var damping = 0.5f//阻尼值
+//                    val height = getHeight().toFloat()
+//                    if (height != 0f) {
+//                        if (distance > height) {
+//                            damping = 0f
+//                        } else {
+//                            damping = (height - distance) / height
+//                        }
+//                    }
+//                    if (currentY - startY < 0) {
+//                        damping = 1 - damping
+//                    }
+//
+//                    //阻力值限制再0.3-0.5之间，平滑过度
+//                    damping *= 0.25f
+//                    damping += 0.25f
+//
+//                    moveHeight = moveHeight + deltaY * damping
+//
+//                    childView!!.layout(
+//                        topRect.left, (topRect.top + moveHeight).toInt(), topRect.right,
+//                        (topRect.bottom + moveHeight).toInt()
+//                    )
+//                }
+//            }
+//            MotionEvent.ACTION_UP -> {
+//                if (!topRect.isEmpty()) {
+//                    //开始回移动画
+//                    upDownMoveAnimation()
+//                    // 子控件回到初始位置
+//                    childView!!.layout(
+//                        topRect.left, topRect.top, topRect.right,
+//                        topRect.bottom
+//                    )
+//                }
+//                //重置一些参数
+//                startY = 0f
+//                currentY = 0f
+//                topRect.setEmpty()
+//            }
+//        }
+//
+//        return super.dispatchTouchEvent(event)
+//    }
+
+
 
     // 初始化上下回弹的动画效果
     private fun upDownMoveAnimation() {

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <com.hitales.ui.android.DampScrollView
+            android:id="@+id/scrollView"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <com.hitales.ui.android.DampScrollView  android:background="#FF0000" android:layout_marginTop="100dp" android:layout_width="match_parent" android:layout_height="200dp">
+            <TextView
+                    android:background="#00ff00"
+                    android:text="dwdwdw"
+                    android:layout_marginTop="1000dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        </com.hitales.ui.android.DampScrollView>
+
+    </com.hitales.ui.android.DampScrollView>
+
+
+</LinearLayout>

@@ -42,8 +42,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mDelegate = Platform.init(this)
         mDelegate?.onCreate()
-        NestedScrollView(this)
 
+        setContentView(R.layout.test)
+//        findViewById<NestedScrollView>(R.id.scrollView).isVerticalScrollBarEnabled = true
     }
 
     override fun onResume() {
