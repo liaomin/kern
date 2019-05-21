@@ -63,7 +63,7 @@ actual open class View {
             setWidgetFrame(value)
         }
 
-    actual var superView:LayoutView? = null
+    actual var superView:ViewGroup? = null
 
     actual open var id:Int
         get() = getWidget().tag.toInt()
@@ -111,10 +111,10 @@ actual open class View {
 
     }
 
-    actual open fun onAttachedToView(layoutView: LayoutView) {
+    actual open fun onAttachedToView(layoutView: ViewGroup) {
     }
 
-    actual open fun onDetachedFromView(layoutView: LayoutView) {
+    actual open fun onDetachedFromView(layoutView: ViewGroup) {
 
     }
 

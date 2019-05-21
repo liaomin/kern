@@ -45,7 +45,7 @@ open class DampScrollView : NestedScrollView {
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt)
-        println("this $this")
+//        println("this $this")
     }
 
 

@@ -35,7 +35,7 @@ class IOSScrollView(private val view: WeakReference<ScrollView>) : UIScrollView(
 }
 
 
-actual open class ScrollView : LayoutView {
+actual open class ScrollView : ViewGroup {
 
 
     actual constructor(frame: Frame):super(frame)

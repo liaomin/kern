@@ -71,7 +71,7 @@ open class AndroidScrollView(val view: ScrollView) : DampScrollView(Platform.get
 
 }
 
-actual open class ScrollView : LayoutView {
+actual open class ScrollView : com.hitales.ui.ViewGroup {
 
 
     actual constructor(frame: Frame):super(frame)

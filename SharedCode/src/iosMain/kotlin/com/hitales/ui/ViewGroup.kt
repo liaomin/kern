@@ -6,7 +6,7 @@ import platform.UIKit.addSubview
 import platform.UIKit.insertSubview
 
 
-actual open class LayoutView : View {
+actual open class ViewGroup : View {
 
     actual constructor(frame: Frame):super(frame){
 

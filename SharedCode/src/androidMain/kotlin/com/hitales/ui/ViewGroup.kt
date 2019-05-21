@@ -18,7 +18,7 @@ open class AndroidFrameLayout(private val view:View) : FrameLayout(Platform.getA
     }
 
 }
-actual open class LayoutView : View {
+actual open class ViewGroup : View {
 
     actual constructor(frame: Frame):super(frame){
         mWidget.isFocusable = true

@@ -55,7 +55,7 @@ actual open class View {
         notificationCenter.notify(NOTIFY_VIEW_LAYOUT_CHANGE,this)
     }
 
-    actual var superView:LayoutView? = null
+    actual var superView:ViewGroup? = null
 
     actual open var id:Int
         get() = mWidget.id
@@ -115,11 +115,11 @@ actual open class View {
 
     }
 
-    actual open fun onAttachedToView(layoutView: LayoutView) {
+    actual open fun onAttachedToView(layoutView: ViewGroup) {
 
     }
 
-    actual open fun onDetachedFromView(layoutView: LayoutView) {
+    actual open fun onDetachedFromView(layoutView: ViewGroup) {
 
     }
 
