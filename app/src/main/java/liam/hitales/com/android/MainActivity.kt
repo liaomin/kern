@@ -16,6 +16,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.RecyclerView
 import com.hitales.ui.ActivityDelegate
 //import com.hitales.ui.StateListColor
 import com.hitales.ui.ViewState

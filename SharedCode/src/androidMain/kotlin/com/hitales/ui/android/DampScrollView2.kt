@@ -1,6 +1,9 @@
 package com.hitales.ui.android
 
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Build
 import android.util.AttributeSet
@@ -8,11 +11,11 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.animation.Interpolator
 import android.view.animation.TranslateAnimation
-import android.widget.ScrollView
 import androidx.core.widget.NestedScrollView
+import com.hitales.ui.utils.PixelUtil
 
 
-open class DampScrollView : NestedScrollView {
+open class DampScrollView2 : NestedScrollView {
 
     // y方向上当前触摸点的前一次记录位置
     private var previousY = 0F
@@ -45,10 +48,38 @@ open class DampScrollView : NestedScrollView {
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt)
-        println("this $this")
+        println("this2 $this")
+    }
+
+    override fun dispatchNestedFling(velocityX: Float, velocityY: Float, consumed: Boolean): Boolean {
+        return super.dispatchNestedFling(velocityX, velocityY, consumed)
+    }
+
+    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+        val s = super.onInterceptTouchEvent(ev)
+        return s
+    }
+
+    override fun onTouchEvent(ev: MotionEvent?): Boolean {
+        val h = PixelUtil.toPixelFromDIP(200f)
+        val mh = measuredHeight
+        val s = super.onTouchEvent(ev)
+        return s
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 
 
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        val h = PixelUtil.toPixelFromDIP(200f)
+        val p = Paint()
+        p.style = Paint.Style.FILL
+        p.color = Color.BLUE
+        canvas.drawRect(0f,0f,canvas.width.toFloat(),h,p)
+    }
 //    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
 //        if (getChildCount() > 0) {
 //            childView = getChildAt(0)

@@ -155,8 +155,4 @@ actual open class View {
     ) {
 
     }
-
-    actual open fun deinit() {
-
-    }
 }
