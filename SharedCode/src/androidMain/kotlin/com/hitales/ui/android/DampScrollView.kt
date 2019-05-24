@@ -5,12 +5,16 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.os.Build
 import android.util.AttributeSet
+import android.util.Xml
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.Interpolator
 import android.view.animation.TranslateAnimation
 import android.widget.ScrollView
 import androidx.core.widget.NestedScrollView
+import android.util.Xml.asAttributeSet
+
+
 
 
 open class DampScrollView : NestedScrollView {
@@ -33,20 +37,22 @@ open class DampScrollView : NestedScrollView {
     //水平移动搞定距离
     private var moveHeight: Float = 0.toFloat()
 
-    constructor(context: Context) : super(context) {
-        overScrollMode = View.OVER_SCROLL_NEVER
-        isVerticalScrollBarEnabled  = true
-        isFillViewport = true
-    }
+    var a:AttributeSet? = null
+
+    constructor(context: Context) : super(context) {}
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
 
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {}
 
+    init {
+        overScrollMode = View.OVER_SCROLL_NEVER
+        isVerticalScrollBarEnabled  = true
+        isFillViewport = true
+    }
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt)
-//        println("this $this")
     }
 
 
@@ -149,6 +155,10 @@ open class DampScrollView : NestedScrollView {
             return 1 - (1 - input) * (1 - input) * (1 - input) * (1 - input) * (1 - input)
         }
 
+    }
+
+    override fun onDrawForeground(canvas: Canvas?) {
+        super.onDrawForeground(canvas)
     }
 
 

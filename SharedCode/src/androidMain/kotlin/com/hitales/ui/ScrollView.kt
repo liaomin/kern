@@ -37,8 +37,6 @@ open class AndroidScrollView(val view: ScrollView) : DampScrollView(Platform.get
             -1,
             FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
         )
-        setVerticalScrollBarEnabled(true)
-//        setBackgroundColor(Color.GREEN)
     }
 
     override fun onAttachedToWindow() {
