@@ -8,28 +8,36 @@ import com.hitales.ui.android.DampScrollView
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame
 
-open class AndroidScrollView(val view: ScrollView) : DampScrollView(Platform.getApplication()){
+open class AndroidScrollView(val view: ScrollView) : DampScrollView(Platform.getApplication()) {
 
-    var frameLayout =  object : FrameLayout(Platform.getApplication()){
+    var frameLayout = object : FrameLayout(Platform.getApplication()) {
         override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
             var maxWidth = 0
             var maxHeight = 0
-            for ( i in 0 until  childCount){
+            for (i in 0 until childCount) {
                 val child = getChildAt(i)
                 val params = child.layoutParams as FrameLayout.LayoutParams
                 val width = params.leftMargin + params.width
                 val height = params.topMargin + params.height
-                maxWidth = Math.max(maxWidth,width)
-                maxHeight = Math.max(maxHeight,height)
+                maxWidth = Math.max(maxWidth, width)
+                maxHeight = Math.max(maxHeight, height)
             }
-            setMeasuredDimension(Math.max(measuredWidth,paddingLeft+paddingRight+maxWidth),Math.max(measuredHeight,paddingTop+paddingBottom+maxHeight))
+            setMeasuredDimension(
+                Math.max(measuredWidth, paddingLeft + paddingRight + maxWidth),
+                Math.max(measuredHeight, paddingTop + paddingBottom + maxHeight)
+            )
         }
     }
 
     init {
         frameLayout.setBackgroundColor(Colors.CLEAR)
-        super.addView(frameLayout,-1,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT))
+        super.addView(
+            frameLayout,
+            -1,
+            FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+        )
+        setVerticalScrollBarEnabled(true)
 //        setBackgroundColor(Color.GREEN)
     }
 
@@ -63,18 +71,12 @@ open class AndroidScrollView(val view: ScrollView) : DampScrollView(Platform.get
         frameLayout.addView(child, index, params)
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-    }
-
-
-
 }
 
 actual open class ScrollView : com.hitales.ui.ViewGroup {
 
 
-    actual constructor(frame: Frame):super(frame)
+    actual constructor(frame: Frame) : super(frame)
 
     override fun createWidget(): android.widget.FrameLayout {
         return AndroidScrollView(this)

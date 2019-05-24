@@ -30,6 +30,7 @@ actual open class TextView :  View {
     actual constructor(text:CharSequence?,frame: Frame):super(frame){
         val widget = getWidget()
         widget.text = text
+        widget.includeFontPadding = false
         widget.setTextColor(textColorList)
     }
 

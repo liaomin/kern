@@ -1,11 +1,12 @@
 package com.hitales.ui
 
+import android.graphics.Canvas
 import android.widget.FrameLayout
 import com.hitales.utils.Frame
 import java.util.ArrayList
 
 
-open class AndroidFrameLayout(private val view:View) : FrameLayout(Platform.getApplication()){
+open class AndroidFrameLayout(private val view:ViewGroup) : FrameLayout(Platform.getApplication()){
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -17,6 +18,10 @@ open class AndroidFrameLayout(private val view:View) : FrameLayout(Platform.getA
         view.onDetachedFromWindow()
     }
 
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+    }
+
 }
 actual open class ViewGroup : View {
 
@@ -25,7 +30,7 @@ actual open class ViewGroup : View {
         mWidget.isFocusableInTouchMode = true
     }
 
-    actual val children: ArrayList<View> = ArrayList<View>()
+    actual val children: ArrayList<View> = ArrayList()
 
     actual open fun addView(
         view: View,
@@ -63,7 +68,7 @@ actual open class ViewGroup : View {
         var focused = false
         var focusedView:android.view.View? = null
         children.forEach {
-            if(it is Input && it.autoFocus){
+            if(it is TextInput && it.autoFocus){
                 if(!focused){
                     focusedView = it.getWidget()
 //                    it.getWidget().requestFocus()
@@ -78,5 +83,6 @@ actual open class ViewGroup : View {
             mWidget.isFocusableInTouchMode = true
         }
     }
+
 
 }

@@ -26,7 +26,6 @@ kotlin {
         androidMain.dependencies {
             compileOnly fileTree(includes: ['*.jar'],dir: 'androidx')
             api 'org.jetbrains.kotlin:kotlin-stdlib'
-            compileOnly group: 'com.google.android', name: 'android', version: '4.4.2_r2'
 //            compileOnly group: 'com.google.android', name: 'android', version: '4.1.1.4'
             api  'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.0'
 //            implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'

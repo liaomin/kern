@@ -51,6 +51,8 @@ class MainActivity : AppCompatActivity() {
 //        )
 //        startActivityForResult(intent, 1234)
 
+//        setContentView(R.layout.test)
+
     }
 
     override fun onResume() {

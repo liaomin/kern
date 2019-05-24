@@ -1,6 +1,7 @@
 package com.hitales.ui.android
 
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Rect
 import android.os.Build
 import android.util.AttributeSet
@@ -149,4 +150,6 @@ open class DampScrollView : NestedScrollView {
         }
 
     }
+
+
 }

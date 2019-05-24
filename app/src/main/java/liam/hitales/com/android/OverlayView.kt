@@ -115,6 +115,7 @@ class OverlayView(context: Context) : View(context),Runnable{
                 if(Build.VERSION.SDK_INT >= 16){
                     totalMem = "${memInfo.totalMem/1024/1024} M"
                 }
+                System.gc()
             }
         }
     }

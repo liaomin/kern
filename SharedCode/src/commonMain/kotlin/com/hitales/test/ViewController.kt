@@ -50,7 +50,7 @@ open class ViewController : BasicController() {
 
     fun addView(view: View, title:String, index:Int,color:Int){
         val itemWidth = getItemWidth()
-        val itemHeight = itemWidth + 20
+        val itemHeight = itemWidth + 40
         val x =  (if(index % 2 == 0) 0f else Platform.windowWidth / 2)
         val y = (index/2) * (itemHeight+10) + 60
 
@@ -90,12 +90,14 @@ inline fun Int.reverseAlpha():Int{
 }
 
 
+
 class BorderWidthTestController : ViewController(){
 
     override fun testView() {
 //        this.view?.setBackgroundColor(Colors.RED)
 
         val bgColor = 0x99FF0000.toInt()
+//        val bgColor = Colors.RED
 
         var view =  View()
         view.setBackgroundColor(bgColor)
@@ -358,7 +360,7 @@ class BorderWidthTestController : ViewController(){
         view.setBorderWidth(10f)
         view.setBorderRadius(getItemWidth() /2)
 
-//        for ( i in 0 .. 800){
+//        for ( i in 0 .. 600){
 //            view = View()
 //            view.setBackgroundColor(bgColor)
 //            addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
@@ -367,4 +369,33 @@ class BorderWidthTestController : ViewController(){
 //        }
     }
 
+}
+
+
+class ShadowTestController : ViewController(){
+
+    override fun testView() {
+//        this.view?.setBackgroundColor(Colors.RED)
+
+        val bgColor = 0x99FF0000.toInt()
+//        val bgColor = Colors.RED
+
+        var view = View()
+        view.setBackgroundColor(bgColor)
+        addView(view, "测试borderWidth", getIndex(), Colors.BLACK)
+        view.setBorderWidth(10f)
+        view.setBorderColor(Colors.BLUE, Colors.GREEN, Colors.YELLOW, Colors.ORANGE)
+        view.setBorderRadius(getItemWidth())
+        view.elevation = 10f
+
+
+        view = View()
+        view.setBackgroundColor(Colors.RED)
+        addView(view, "测试borderWidth", getIndex(), Colors.BLACK)
+//        view.setBorderWidth(10f)
+//        view.setBorderColor(Colors.BLUE, Colors.GREEN, Colors.YELLOW, Colors.ORANGE)
+//        view.setBorderRadius(getItemWidth())
+        view.elevation = 10f
+
+    }
 }

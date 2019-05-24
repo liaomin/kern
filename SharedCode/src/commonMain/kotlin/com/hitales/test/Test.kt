@@ -30,6 +30,12 @@ class TestController : BasicController() {
             this.push(BorderWidthTestController())
         }
 
+        v  = Button("view shadow测试", Frame(10f,(buttonHeight+10)*2+10f, buttonWidth , buttonHeight))
+        rootView.addView(v)
+        v.setBackgroundColor(Colors.BLUE)
+        v.setOnPressListener {
+            this.push(ShadowTestController())
+        }
 
 
         val v4  = Button("测试4", Frame(0f,4000f,100f,100f))

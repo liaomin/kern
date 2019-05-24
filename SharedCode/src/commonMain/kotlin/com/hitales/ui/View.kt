@@ -31,24 +31,35 @@ expect open class View  {
 
     open var tag:Any?
 
+    open var elevation:Float
+
     constructor(frame: Frame = Frame.zero())
 
     var superView:ViewGroup?
-    /**
-     * argb color
-     */
-    open fun setBackgroundColor(color:Int)
+
     open fun removeFromSuperView()
     open fun onAttachedToWindow()
     open fun onDetachedFromWindow()
     open fun onAttachedToView(layoutView: ViewGroup)
     open fun onDetachedFromView(layoutView: ViewGroup)
+
+    /**
+     * background
+     */
+    // argb color
+    open fun setBackgroundColor(color:Int)
     open fun setBorderColor(color:Int)
     open fun setBorderColor(leftColor:Int,topColor: Int,rightColor:Int,bottomColor:Int)
     open fun setBorderWidth(borderWidth:Float)
     open fun setBorderWidth(leftWidth:Float,topWidth: Float,rightWidth:Float,bottomWidth:Float)
     open fun setBorderRadius(radius:Float)
     open fun setBorderRadius(topLeftRadius:Float,topRightRadius: Float,bottomRightRadius:Float,bottomLeftRadius:Float)
+
+
+    fun getBorderLeftWidth():Float
+    fun getBorderTopWidth():Float
+    fun getBorderRightWidth():Float
+    fun getBorderBottomWidth():Float
 }
 
 

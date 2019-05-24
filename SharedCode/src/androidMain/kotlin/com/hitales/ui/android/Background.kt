@@ -110,12 +110,12 @@ open class Background : StateListDrawable() {
         backgroundColors.setColorForState(color,state)
     }
 
-    override fun onStateChange(stateSet: IntArray?): Boolean {
-        return super.onStateChange(stateSet)
-    }
-
     override fun isStateful(): Boolean {
         return true
+    }
+
+    override fun onBoundsChange(bounds: Rect?) {
+        super.onBoundsChange(bounds)
     }
 
     override fun draw(canvas: Canvas) {
@@ -131,10 +131,10 @@ open class Background : StateListDrawable() {
         val halfWidth = width / 2
         val halfHeight = height / 2
         val maxRadius = Math.min(halfWidth,halfHeight)
-
         if(width <=0 || height <= 0) {
             return
         }
+        mPaint.reset()
         mPaint.xfermode = null
         var borderLeftWidth = Math.min(PixelUtil.toPixelFromDIP(borderLeftWidth).toInt().toFloat(),halfWidth)
         var borderTopWidth =  Math.min(PixelUtil.toPixelFromDIP(borderTopWidth).toInt().toFloat(),halfHeight)
@@ -290,7 +290,7 @@ open class Background : StateListDrawable() {
                 }
 
                 mPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
-//                    //后绘制背景色
+                //后绘制背景色
                 mPaint.color = Colors.WHITE
                 canvas.drawPath(mInnerPath,mPaint)
                 mPaint.xfermode = null

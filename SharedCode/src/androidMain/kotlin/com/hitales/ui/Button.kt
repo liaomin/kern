@@ -1,6 +1,7 @@
 package com.hitales.ui
 
 import android.graphics.Color
+import com.hitales.ui.android.AndroidButton
 import com.hitales.utils.Frame
 
 
@@ -29,11 +30,7 @@ actual open class Button :  com.hitales.ui.TextView {
 
 
     override fun createWidget(): android.widget.Button {
-        return  object : android.widget.Button(Platform.getApplication()){
-            override fun drawableStateChanged() {
-                super.drawableStateChanged()
-            }
-        }
+        return AndroidButton(this)
     }
 
     override fun getWidget(): android.widget.Button {
@@ -41,6 +38,11 @@ actual open class Button :  com.hitales.ui.TextView {
     }
 
     actual open fun setBackgroundColor(color: Int, state: ViewState) {
+        if(state == ViewState.NORMAL){
+            super.setBackgroundColor(color)
+        }else{
+            getOrCreateBackground().setColorForState(color,state)
+        }
     }
 
     actual open fun setImage(image: Image, state: ViewState) {
