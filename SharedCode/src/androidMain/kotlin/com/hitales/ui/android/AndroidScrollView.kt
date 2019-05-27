@@ -2,6 +2,7 @@ package com.hitales.ui.android
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -23,7 +24,7 @@ open class AndroidScrollView : DampScrollView {
 
     companion object {
         fun fromXLM(view: ScrollView):AndroidScrollView{
-            val  scrollView = Platform.getInstance().rootActivity.layoutInflater.inflate(R.layout.scroll_view,null) as AndroidScrollView
+            val  scrollView = LayoutInflater.from(Platform.getApplication()).inflate(R.layout.scroll_view,null) as AndroidScrollView
             scrollView.mView = view
             return scrollView
         }
