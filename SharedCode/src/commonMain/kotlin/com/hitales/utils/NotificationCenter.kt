@@ -1,7 +1,6 @@
 package com.hitales.utils
 
 import kotlin.jvm.Synchronized
-import kotlin.native.concurrent.ThreadLocal
 
 class NotificationCenter {
 

@@ -10,7 +10,7 @@ actual open class ScrollView : com.hitales.ui.ViewGroup {
     actual constructor(frame: Frame) : super(frame)
 
     override fun createWidget(): android.widget.FrameLayout {
-        return AndroidScrollView(this)
+        return AndroidScrollView.fromXLM(this)
     }
 
     override fun getWidget(): AndroidScrollView {

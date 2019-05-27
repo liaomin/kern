@@ -1,14 +1,33 @@
 package com.hitales.ui.android
 
+import android.content.Context
+import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import com.hitales.android.R
 import com.hitales.ui.Colors
 import com.hitales.ui.Platform
 import com.hitales.ui.ScrollView
 
 
-open class AndroidScrollView(val view: ScrollView) : DampScrollView(Platform.getApplication()) {
+open class AndroidScrollView : DampScrollView {
+
+    var mView: ScrollView? = null
+
+    constructor(view: ScrollView) : super(Platform.getApplication()) {
+        this.mView = view
+    }
+
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
+
+    companion object {
+        fun fromXLM(view: ScrollView):AndroidScrollView{
+            val  scrollView = Platform.getInstance().rootActivity.layoutInflater.inflate(R.layout.scroll_view,null) as AndroidScrollView
+            scrollView.mView = view
+            return scrollView
+        }
+    }
 
     var frameLayout = object : FrameLayout(Platform.getApplication()) {
         override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -41,12 +60,12 @@ open class AndroidScrollView(val view: ScrollView) : DampScrollView(Platform.get
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        view.onAttachedToWindow()
+        mView?.onAttachedToWindow()
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        view.onDetachedFromWindow()
+        mView?.onDetachedFromWindow()
     }
 
     override fun addView(child: View?) {

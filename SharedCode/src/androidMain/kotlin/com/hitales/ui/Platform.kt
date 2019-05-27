@@ -57,6 +57,7 @@ actual class Platform : ActivityDelegate{
     var application:Application
 
     var rootActivity:Activity
+
     var c:TestController? = null
 
     private constructor(rootActivity: Activity){
