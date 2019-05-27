@@ -30,7 +30,7 @@ open class AndroidScrollView : DampScrollView {
         }
     }
 
-    var frameLayout = object : FrameLayout(Platform.getApplication()) {
+    private var mFrameLayout = object : FrameLayout(Platform.getApplication()) {
         override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
             var maxWidth = 0
@@ -51,12 +51,8 @@ open class AndroidScrollView : DampScrollView {
     }
 
     init {
-        frameLayout.setBackgroundColor(Colors.CLEAR)
-        super.addView(
-            frameLayout,
-            -1,
-            FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
-        )
+        mFrameLayout.setBackgroundColor(Colors.CLEAR)
+        super.addView(mFrameLayout, -1, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
     }
 
     override fun onAttachedToWindow() {
@@ -70,23 +66,23 @@ open class AndroidScrollView : DampScrollView {
     }
 
     override fun addView(child: View?) {
-        frameLayout.addView(child)
+        mFrameLayout.addView(child)
     }
 
     override fun addView(child: View?, params: ViewGroup.LayoutParams?) {
-        frameLayout.addView(child, params)
+        mFrameLayout.addView(child, params)
     }
 
     override fun addView(child: View?, index: Int) {
-        frameLayout.addView(child, index)
+        mFrameLayout.addView(child, index)
     }
 
     override fun addView(child: View?, width: Int, height: Int) {
-        frameLayout.addView(child, width, height)
+        mFrameLayout.addView(child, width, height)
     }
 
     override fun addView(child: View?, index: Int, params: ViewGroup.LayoutParams?) {
-        frameLayout.addView(child, index, params)
+        mFrameLayout.addView(child, index, params)
     }
 
 }

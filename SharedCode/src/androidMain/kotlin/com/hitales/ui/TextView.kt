@@ -1,6 +1,7 @@
 package com.hitales.ui
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.util.TypedValue
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame
@@ -18,6 +19,7 @@ actual open class TextView :  View {
     actual open var textSize: Float
         get() = PixelUtil.toSPFromPixel(getWidget().textSize)
         set(value) {
+            getWidget()
             getWidget().setTextSize(TypedValue.COMPLEX_UNIT_SP,value)
         }
 
@@ -25,6 +27,21 @@ actual open class TextView :  View {
         get() = textColorList.defaultColor
         set(value) {
             textColorList.setColor(value)
+        }
+
+    actual open var bold:Boolean = false
+        set(value) {
+            if(field != value){
+                val widget = getWidget()
+                if(value){
+                    widget.typeface = Typeface.DEFAULT_BOLD
+                    widget.paint.isFakeBoldText = true
+                }else{
+                    widget.typeface = Typeface.DEFAULT
+                    widget.paint.isFakeBoldText = false
+                }
+            }
+            field = value
         }
 
     actual constructor(text:CharSequence?,frame: Frame):super(frame){

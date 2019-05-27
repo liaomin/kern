@@ -2,6 +2,7 @@ package com.hitales.ui
 
 import android.graphics.Canvas
 import android.os.Build
+import android.view.View
 import android.widget.FrameLayout
 import com.hitales.ui.android.AndroidView
 import com.hitales.ui.android.Background
@@ -31,6 +32,17 @@ actual open class View {
             onFrameChanged()
         }
 
+    actual open var hidden: Boolean = false
+        set(value) {
+            field = value
+            if(value){
+                mWidget.visibility = android.view.View.GONE
+            }else{
+                mWidget.visibility = android.view.View.VISIBLE
+            }
+        }
+
+
     actual var superView: ViewGroup? = null
 
     actual open var id: Int
@@ -57,6 +69,12 @@ actual open class View {
                 mWidget.elevation = PixelUtil.toPixelFromDIP(value)
             }
             field = value
+        }
+
+    actual open var borderStyle:BorderStyle = BorderStyle.SOLID
+        set(value) {
+            field = value
+            mBackground?.setBorderStyle(value)
         }
 
     actual constructor(frame: Frame) {
@@ -113,13 +131,13 @@ actual open class View {
     }
 
     actual open fun setBorderWidth(borderWidth: Float) {
-        getOrCreateBackground().setBorderWidth(borderWidth)
+        getOrCreateBackground().setBorderWidth(borderWidth,borderStyle)
     }
 
     actual open fun setBorderWidth(leftWidth: Float, topWidth: Float, rightWidth: Float, bottomWidth: Float
     ) {
         val background = getOrCreateBackground()
-        background.setBorderWidth(leftWidth, topWidth, rightWidth, bottomWidth)
+        background.setBorderWidth(leftWidth, topWidth, rightWidth, bottomWidth,borderStyle)
         if (background.clipPath()) {
             setLayerType(android.view.View.LAYER_TYPE_SOFTWARE)
         } else {

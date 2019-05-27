@@ -11,6 +11,12 @@ enum class ViewState(val value:Int) {
     SELECTED(4),
 }
 
+enum class BorderStyle(val value:Int) {
+    SOLID(0),
+    DOTTED(1),
+    DASHED(2),
+}
+
 expect open class View  {
     /**
      * use margin and padding to calculate frame
@@ -32,6 +38,10 @@ expect open class View  {
     open var tag:Any?
 
     open var elevation:Float
+
+    open var hidden:Boolean
+
+    open var borderStyle:BorderStyle
 
     constructor(frame: Frame = Frame.zero())
 

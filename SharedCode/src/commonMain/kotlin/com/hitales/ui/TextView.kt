@@ -10,4 +10,5 @@ expect open class TextView : View {
      * set all state color
      */
     open var textColor:Int
+    open var bold:Boolean
 }

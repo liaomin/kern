@@ -2,6 +2,7 @@ package com.hitales.ui.android
 
 import android.graphics.*
 import android.graphics.drawable.StateListDrawable
+import com.hitales.ui.BorderStyle
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.ui.Colors
 import com.hitales.ui.StateListColor
@@ -105,6 +106,8 @@ open class Background : StateListDrawable() {
         private set(value) {
             field = value
         }
+
+    private var borderStyle = BorderStyle.SOLID
 
     fun setColorForState(color:Int,state: ViewState){
         backgroundColors.setColorForState(color,state)
@@ -242,14 +245,30 @@ open class Background : StateListDrawable() {
                 mInnerPath.close()
 
                 mTempRectF.set(bounds)
-
-
+                if(sameBorderColor && sameBorderWidth()){
+                    mPaint.style = Paint.Style.FILL
+                    mPaint.color = backgroundColor
+                    canvas.drawPath(mOuterPath,mPaint)
+                    mPaint.color = borderLeftColor
+                    mPaint.pathEffect = getPathEffect()
+                    mPaint.style = Paint.Style.STROKE
+                    mPaint.strokeWidth = borderLeftWidth
+                    val halfBorderWidth = borderLeftWidth/2
+                    mTempRectF.inset(halfBorderWidth,halfBorderWidth)
+                    mOuterPath.rewind()
+                    mOuterPath.addRoundRect(mTempRectF, floatArrayOf(Math.max(borderTopLeftRadius-halfBorderWidth,0f),Math.max(borderTopLeftRadius- halfBorderWidth,0f),Math.max(borderTopRightRadius-halfBorderWidth,0f),Math.max(borderTopRightRadius-halfBorderWidth,0f),Math.max(borderBottomRightRadius-halfBorderWidth,0f),Math.max(borderBottomRightRadius-halfBorderWidth,0f),Math.max(borderBottomLeftRadius-halfBorderWidth,0f),Math.max(borderBottomLeftRadius-halfBorderWidth,0f)),Path.Direction.CW)
+                    canvas.drawPath(mOuterPath,mPaint)
+                    mPaint.pathEffect = null
+                    return
+                }
                 if(sameBorderColor){
                     mPaint.style = Paint.Style.FILL
                     mPaint.color = backgroundColor
                     canvas.drawPath(mOuterPath,mPaint)
                     mPaint.color = borderLeftColor
+                    mPaint.pathEffect = getPathEffect()
                     canvas.drawPath(mOuterPath,mPaint)
+                    mPaint.pathEffect = null
                 }else{
                     mPaint.color = Colors.WHITE
                     canvas.drawPath(mOuterPath,mPaint)
@@ -328,6 +347,7 @@ open class Background : StateListDrawable() {
                     return
                 }
                 if(sameBorderWidth && sameBorderColor){
+                    mPaint.pathEffect = getPathEffect()
                     //大小和颜色一样，直接绘制矩形
                     mPaint.style = Paint.Style.STROKE
                     mPaint.color = borderTopColor
@@ -388,21 +408,18 @@ open class Background : StateListDrawable() {
         invalidateSelf()
     }
 
-   open fun setBorderWidth(borderWidth: Float) {
-       setBorderWidth(borderWidth,borderWidth,borderWidth,borderWidth)
+   open fun setBorderWidth(borderWidth: Float, borderStyle: BorderStyle) {
+       setBorderWidth(borderWidth,borderWidth,borderWidth,borderWidth,borderStyle)
     }
 
-   open fun setBorderWidth(
-        leftWidth: Float,
-        topWidth: Float,
-        rightWidth: Float,
-        bottomWidth: Float
+   open fun setBorderWidth(leftWidth: Float, topWidth: Float, rightWidth: Float, bottomWidth: Float, borderStyle: BorderStyle
     ) {
        val changed = borderLeftWidth != leftWidth ||  borderTopWidth != topWidth || borderRightWidth != rightWidth || borderBottomWidth != bottomWidth
        borderLeftWidth = leftWidth
        borderTopWidth = topWidth
        borderRightWidth = rightWidth
        borderBottomWidth = bottomWidth
+       this.borderStyle = borderStyle
        if(changed){
            invalidateSelf()
        }
@@ -417,6 +434,13 @@ open class Background : StateListDrawable() {
        if(changed){
            invalidateSelf()
        }
+    }
+
+    fun  setBorderStyle(borderStyle: BorderStyle){
+        if(this.borderStyle != borderStyle){
+            this.borderStyle = borderStyle
+            invalidateSelf()
+        }
     }
 
     private fun haveBorderWidth():Boolean{
@@ -444,4 +468,17 @@ open class Background : StateListDrawable() {
         return haveBorderWidth() && haveBorderRadius() && !sameBorderColor()
     }
 
+
+    private fun getPathEffect():PathEffect?{
+        var top = PixelUtil.toPixelFromDIP(borderTopWidth)
+        var right = PixelUtil.toPixelFromDIP(borderRightWidth)
+        var bottom = PixelUtil.toPixelFromDIP(borderBottomWidth)
+        var left = PixelUtil.toPixelFromDIP(borderLeftWidth)
+        when(borderStyle){
+            BorderStyle.SOLID -> return null
+            BorderStyle.DASHED -> return DashPathEffect(floatArrayOf(top*3,right*3,bottom*3,left*3),0f)
+            BorderStyle.DOTTED -> return DashPathEffect(floatArrayOf(top,right,bottom,left),0f)
+        }
+        return null
+    }
 }
