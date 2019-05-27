@@ -1,6 +1,7 @@
-package com.hitales.ui
+package com.hitales.ui.android
 
 import android.content.res.ColorStateList
+import com.hitales.ui.ViewState
 
 
 open class StateListColor(color:Int) : ColorStateList(arrayOf(IntArray(0)), intArrayOf(color)){

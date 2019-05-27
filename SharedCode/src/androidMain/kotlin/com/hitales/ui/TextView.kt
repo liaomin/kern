@@ -3,6 +3,8 @@ package com.hitales.ui
 import android.graphics.Color
 import android.graphics.Typeface
 import android.util.TypedValue
+import androidx.appcompat.widget.AppCompatTextView
+import com.hitales.ui.android.StateListColor
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame
 
@@ -52,13 +54,14 @@ actual open class TextView :  View {
     }
 
     override fun createWidget(): android.widget.TextView {
-        return android.widget.TextView(Platform.getApplication())
+        return AppCompatTextView(Platform.getApplication())
     }
 
     override fun getWidget(): android.widget.TextView {
         return super.getWidget() as android.widget.TextView
     }
 
-    protected open fun getDefaultColorList():StateListColor = StateListColor(Color.BLACK)
+    protected open fun getDefaultColorList(): StateListColor =
+        StateListColor(Color.BLACK)
 
 }

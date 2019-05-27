@@ -2,6 +2,7 @@ package com.hitales.ui
 
 import android.graphics.Color
 import com.hitales.ui.android.AndroidButton
+import com.hitales.ui.android.StateListColor
 import com.hitales.utils.Frame
 
 
@@ -26,8 +27,6 @@ actual open class Button :  com.hitales.ui.TextView {
             return@setOnLongClickListener false
         }
     }
-
-
 
     override fun createWidget(): android.widget.Button {
         return AndroidButton(this)

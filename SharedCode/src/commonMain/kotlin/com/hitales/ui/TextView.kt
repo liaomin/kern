@@ -11,4 +11,5 @@ expect open class TextView : View {
      */
     open var textColor:Int
     open var bold:Boolean
+//    open fun
 }

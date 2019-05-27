@@ -24,7 +24,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import com.hitales.ui.*
-//import com.hitales.ui.StateListColor
+//import com.hitales.ui.android.StateListColor
 
 import com.hitales.utils.Timer
 import kotlinx.coroutines.Dispatchers

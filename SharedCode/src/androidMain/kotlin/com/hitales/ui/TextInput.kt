@@ -1,9 +1,11 @@
 package com.hitales.ui
 
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatImageView
 import com.hitales.utils.Frame
 
 
-open class AndroidEditTextView(private val view:TextInput) : android.widget.EditText(Platform.getApplication()){
+open class AndroidEditTextView(private val view:TextInput) : AppCompatEditText(Platform.getApplication()){
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()

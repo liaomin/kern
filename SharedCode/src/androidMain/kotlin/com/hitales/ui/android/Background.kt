@@ -5,7 +5,6 @@ import android.graphics.drawable.StateListDrawable
 import com.hitales.ui.BorderStyle
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.ui.Colors
-import com.hitales.ui.StateListColor
 import com.hitales.ui.ViewState
 
 

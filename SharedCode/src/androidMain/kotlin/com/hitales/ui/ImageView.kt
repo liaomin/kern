@@ -1,17 +1,18 @@
 package com.hitales.ui
 
+import androidx.appcompat.widget.AppCompatImageView
 import com.hitales.utils.Frame
 
 actual open class ImageView : com.hitales.ui.View {
 
     actual constructor(frame: Frame) : super(frame)
 
-    override fun getWidget(): android.widget.ImageView {
-        return super.getWidget() as android.widget.ImageView
+    override fun getWidget(): AppCompatImageView {
+        return super.getWidget() as AppCompatImageView
     }
 
-    override fun createWidget(): android.widget.ImageView {
-        return android.widget.ImageView(Platform.getApplication())
+    override fun createWidget(): AppCompatImageView {
+        return AppCompatImageView(Platform.getApplication())
     }
 
     actual open var image: Image? = null

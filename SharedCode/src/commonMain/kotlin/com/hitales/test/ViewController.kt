@@ -54,16 +54,17 @@ open class ViewController : BasicController() {
         val x =  (if(index % 2 == 0) 0f else Platform.windowWidth / 2)
         val y = (index/2) * (itemHeight+10) + 60
 
-        val group = FrameViewGroup(Frame(x,y, Platform.windowWidth / 2,itemHeight+2))
-        view.frame = Frame(10f,22f,itemWidth,itemWidth)
-        group.addView(view)
+//        val group = FrameViewGroup(Frame(x,y, Platform.windowWidth / 2,itemHeight+2))
+        view.frame = Frame(10f+x,22f+y,itemWidth,itemWidth)
+//        group.addView(view)
 
-        val titleWidget = getTilteWidget("$title",Frame(10f,0f,itemWidth,20f))
+        val titleWidget = getTilteWidget("$title",Frame(10f+x,0f+y,itemWidth,20f))
         titleWidget.textColor = color
         titleWidget.text = "$title"
-        group.addView(titleWidget)
+//        group.addView(titleWidget)
 
-        (this.view as ScrollView).addView(group)
+        (this.view as ScrollView).addView(titleWidget)
+        (this.view as ScrollView).addView(view)
     }
 
     fun getItemWidth():Float{
