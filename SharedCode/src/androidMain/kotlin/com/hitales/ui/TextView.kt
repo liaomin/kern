@@ -2,8 +2,10 @@ package com.hitales.ui
 
 import android.graphics.Color
 import android.graphics.Typeface
+import android.os.Build
 import android.util.TypedValue
 import androidx.appcompat.widget.AppCompatTextView
+import com.hitales.ui.android.AndroidTextView
 import com.hitales.ui.android.StateListColor
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame
@@ -49,12 +51,11 @@ actual open class TextView :  View {
     actual constructor(text:CharSequence?,frame: Frame):super(frame){
         val widget = getWidget()
         widget.text = text
-        widget.includeFontPadding = false
         widget.setTextColor(textColorList)
     }
 
     override fun createWidget(): android.widget.TextView {
-        return AppCompatTextView(Platform.getApplication())
+        return AndroidTextView(this)
     }
 
     override fun getWidget(): android.widget.TextView {
@@ -63,5 +64,48 @@ actual open class TextView :  View {
 
     protected open fun getDefaultColorList(): StateListColor =
         StateListColor(Color.BLACK)
+
+
+    actual open var lineHeight: Float
+        get() {
+            return getWidget().lineHeight.toFloat()
+        }
+        set(value) {
+            if(Build.VERSION.SDK_INT >= 28){
+                getWidget().lineHeight = PixelUtil.toPixelFromDIP(value).toInt()
+            }else{
+                val widget = getWidget()
+                val fontHeight = widget.paint.getFontMetricsInt(null)
+                val lineHeight = PixelUtil.toPixelFromDIP(value).toInt()
+                if (lineHeight != fontHeight) {
+                    widget.setLineSpacing((lineHeight - fontHeight).toFloat(), 1f)
+                }
+            }
+        }
+
+    /**
+     * default false
+     */
+    actual open var includeFontPadding: Boolean
+        get() {
+            if(Build.VERSION.SDK_INT >= 16){
+                return getWidget().includeFontPadding
+            }
+            return true
+        }
+        set(value) {
+            if(Build.VERSION.SDK_INT >= 16){
+                getWidget().includeFontPadding = value
+            }
+        }
+
+    /**
+     * 自定义字体
+     */
+    actual open fun setFontStyle(fontName: String) {
+    }
+
+    actual open fun setShadow(color: Int, dx: Float, dy: Float, radius: Float) {
+    }
 
 }

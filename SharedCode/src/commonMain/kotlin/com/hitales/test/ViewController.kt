@@ -32,7 +32,7 @@ open class ViewController : BasicController() {
     }
 
 
-    fun addView(view: View, title:String, index:Int){
+    open fun addView(view: View, title:String, index:Int){
         val itemWidth = Platform.windowWidth / 2 - 20
         val itemHeight = itemWidth + 20
         val x =  (if(index % 2 == 0) 0f else Platform.windowWidth / 2)

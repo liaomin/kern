@@ -6,9 +6,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-
 const val PLATFORM_ANDROID = "android"
 const val PLATFORM_IOS = "ios"
+
+@Target(AnnotationTarget.CLASS,AnnotationTarget.FIELD,AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Platfrom(val platfrom:String)
 
 suspend fun test() = coroutineScope {
     launch {

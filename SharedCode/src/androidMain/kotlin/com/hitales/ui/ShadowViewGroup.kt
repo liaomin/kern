@@ -49,24 +49,24 @@ actual open class ShadowViewGroup : ViewGroup {
         mWidget.isFocusableInTouchMode = true
     }
 
-    actual open fun setShadow(shadowColor: Int, shadowOffsetX: Float, shadowOffsetY: Float, shadowRadius: Float) {
-        if (shadowRadius > 0) {
-            this.shadowColor = shadowColor
-            this.shadowOffsetX = shadowOffsetX
-            this.shadowOffsetY = shadowOffsetY
-            this.shadowRadius = shadowRadius
-            shadowOffsetXPixel = PixelUtil.toPixelFromDIP(shadowOffsetX).toInt()
-            shadowOffsetYPixel = PixelUtil.toPixelFromDIP(shadowOffsetY).toInt()
-            shadowRadiusPixel = PixelUtil.toPixelFromDIP(shadowRadius).toInt()
-        } else {
-            this.shadowColor = 0
-            this.shadowOffsetX = 0f
-            this.shadowOffsetY = 0f
-            this.shadowRadius = 0f
-            shadowOffsetXPixel = 0
-            shadowOffsetYPixel = 0
-            shadowRadiusPixel = 0
-        }
+    actual open fun setShadow(color:Int,dx:Float,dy: Float,radius:Float){
+//        if (radius > 0) {
+//            this.shadowColor = shadowColor
+//            this.shadowOffsetX = shadowOffsetX
+//            this.shadowOffsetY = shadowOffsetY
+//            this.shadowRadius = shadowRadius
+//            shadowOffsetXPixel = PixelUtil.toPixelFromDIP(shadowOffsetX).toInt()
+//            shadowOffsetYPixel = PixelUtil.toPixelFromDIP(shadowOffsetY).toInt()
+//            shadowRadiusPixel = PixelUtil.toPixelFromDIP(shadowRadius).toInt()
+//        } else {
+//            this.shadowColor = 0
+//            this.shadowOffsetX = 0f
+//            this.shadowOffsetY = 0f
+//            this.shadowRadius = 0f
+//            shadowOffsetXPixel = 0
+//            shadowOffsetYPixel = 0
+//            shadowRadiusPixel = 0
+//        }
     }
 
 //    fun drawShadow(canvas: Canvas, x:Float, y:Float, width:Float, height:Float){
