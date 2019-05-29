@@ -22,41 +22,19 @@ class TestTextController :ViewController(){
     }
 
     override fun testView() {
-        var view = TextView("测试")
-        view.textColor = Colors.RED
-        addView(view,"测试颜色",getIndex())
-
-
-        view = TextView("测试")
-        view.textColor = Colors.RED
-        view.textSize = 50f
-        addView(view,"测试颜色",getIndex())
-
-
-        view = TextView("测试")
-        view.textColor = Colors.RED
-        view.textSize = 50f
-        view.bold = true
-        addView(view,"测试颜色",getIndex())
-
-
-        view = TextView("测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试")
-        view.textColor = Colors.RED
-        view.textSize = 50f
-        view.bold = true
-        addView(view,"测试颜色",getIndex())
-
-        view = TextView("测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试")
-        view.textColor = Colors.RED
-        view.textSize = 20f
-        view.bold = true
-        addView(view,"测试颜色",getIndex())
-
-        view = TextView("测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试")
-        view.textColor = Colors.RED
-        view.textSize = 20f
-        view.bold = true
-        view.lineHeight = 20f
-        addView(view,"测试颜色",getIndex())
+        addTitleView("测试textSize")
+        var viewHeight = 45f
+        for (i in 0..18){
+            val textSize = 9+i*2
+            var view = TextView("测试文字textSize:$textSize")
+            view.textSize = textSize.toFloat()
+            view.setBackgroundColor(Colors.RED)
+            view.alignment = TextAlignment.RIGHT
+            addView(view,0f,viewHeight)
+        }
+        var view = TextView("测试文字textSize:49.2")
+        view.textSize = 49.2f
+        view.alignment = TextAlignment.CENTER
+        addView(view,0f,viewHeight)
     }
 }

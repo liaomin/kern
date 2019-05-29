@@ -1,10 +1,12 @@
 package com.hitales.ui
 
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Build
+import android.text.TextUtils
 import android.util.TypedValue
-import androidx.appcompat.widget.AppCompatTextView
+import android.view.Gravity
 import com.hitales.ui.android.AndroidTextView
 import com.hitales.ui.android.StateListColor
 import com.hitales.ui.utils.PixelUtil
@@ -49,7 +51,7 @@ actual open class TextView :  View {
         }
 
     actual constructor(text:CharSequence?,frame: Frame):super(frame){
-        val widget = getWidget()
+        val widget = getTextWidget()
         widget.text = text
         widget.setTextColor(textColorList)
     }
@@ -62,19 +64,23 @@ actual open class TextView :  View {
         return super.getWidget() as android.widget.TextView
     }
 
-    protected open fun getDefaultColorList(): StateListColor =
-        StateListColor(Color.BLACK)
+    protected open fun getTextWidget(): android.widget.TextView {
+        return super.getWidget() as android.widget.TextView
+    }
+
+
+    protected open fun getDefaultColorList(): StateListColor = StateListColor(Color.BLACK)
 
 
     actual open var lineHeight: Float
         get() {
-            return getWidget().lineHeight.toFloat()
+            return getTextWidget().lineHeight.toFloat()
         }
         set(value) {
             if(Build.VERSION.SDK_INT >= 28){
-                getWidget().lineHeight = PixelUtil.toPixelFromDIP(value).toInt()
+                getTextWidget().lineHeight = PixelUtil.toPixelFromDIP(value).toInt()
             }else{
-                val widget = getWidget()
+                val widget = getTextWidget()
                 val fontHeight = widget.paint.getFontMetricsInt(null)
                 val lineHeight = PixelUtil.toPixelFromDIP(value).toInt()
                 if (lineHeight != fontHeight) {
@@ -89,13 +95,13 @@ actual open class TextView :  View {
     actual open var includeFontPadding: Boolean
         get() {
             if(Build.VERSION.SDK_INT >= 16){
-                return getWidget().includeFontPadding
+                return getTextWidget().includeFontPadding
             }
             return true
         }
         set(value) {
             if(Build.VERSION.SDK_INT >= 16){
-                getWidget().includeFontPadding = value
+                getTextWidget().includeFontPadding = value
             }
         }
 
@@ -103,9 +109,114 @@ actual open class TextView :  View {
      * 自定义字体
      */
     actual open fun setFontStyle(fontName: String) {
+        getTextWidget().typeface  = Typeface.createFromAsset(Platform.getApplication().assets,fontName)
     }
 
     actual open fun setShadow(color: Int, dx: Float, dy: Float, radius: Float) {
+        getTextWidget().setShadowLayer(PixelUtil.toPixelFromDIP(radius),PixelUtil.toPixelFromDIP(dx),PixelUtil.toPixelFromDIP(dy), color)
     }
+
+    /**
+     * default LEFT
+     */
+    actual open var alignment: TextAlignment = TextAlignment.CENTER
+        set(value) {
+            field = value
+            val textView = getTextWidget()
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+                when(value){
+                    TextAlignment.CENTER -> textView.textAlignment = android.view.View.TEXT_ALIGNMENT_CENTER
+                    TextAlignment.LEFT -> textView.textAlignment = android.view.View.TEXT_ALIGNMENT_TEXT_START
+                    TextAlignment.RIGHT -> textView.textAlignment = android.view.View.TEXT_ALIGNMENT_TEXT_END
+                }
+            }else{
+                when(value){
+                    TextAlignment.CENTER -> textView.gravity = Gravity.CENTER
+                    TextAlignment.LEFT ->  textView.gravity = Gravity.CENTER_VERTICAL or Gravity.LEFT
+                    TextAlignment.RIGHT -> textView.gravity = Gravity.CENTER_VERTICAL or Gravity.RIGHT
+                }
+
+            }
+        }
+    /**
+     * default NONE
+     */
+    actual open var decorationLine: TextDecorationLine = TextDecorationLine.NONE
+        set(value) {
+            field = value
+            val textView = getTextWidget()
+            val paint = textView.paint
+            when(value){
+                TextDecorationLine.NONE -> paint.flags = 0
+                TextDecorationLine.UNDERLINE -> paint.flags = Paint.UNDERLINE_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG
+                TextDecorationLine.LINE_THROUGH ->  paint.flags = Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG
+                TextDecorationLine.UNDERLINE_LINE_THROUGH ->  paint.flags = Paint.UNDERLINE_TEXT_FLAG or Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG
+            }
+        }
+
+    /**
+     * default 0
+     */
+    actual open var letterSpacing: Float = 0f
+        set(value) {
+            field = value
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                getTextWidget().letterSpacing = PixelUtil.toPixelFromDIP(value)
+            }
+        }
+
+    /**
+     * default TAIL
+     */
+    actual open var ellipsizeMode: TextEllipsizeMode = TextEllipsizeMode.TAIL
+        set(value) {
+            field = value
+            when(value){
+                TextEllipsizeMode.HEAD -> getTextWidget().ellipsize = TextUtils.TruncateAt.START
+                TextEllipsizeMode.MIDDLE -> getTextWidget().ellipsize = TextUtils.TruncateAt.MIDDLE
+                TextEllipsizeMode.TAIL -> getTextWidget().ellipsize = TextUtils.TruncateAt.END
+            }
+        }
+
+
+    /**
+     * default true
+     */
+    actual open var selectable: Boolean = true
+        get() {
+            return getTextWidget().isTextSelectable
+        }
+        set(value) {
+            field = value
+            getTextWidget().setTextIsSelectable(value)
+        }
+    /**
+     * default 0
+     */
+    actual open var maxNumberOfLines: Int = 0
+        set(value) {
+            field = value
+            if(value == 1){
+                getTextWidget().setSingleLine(true)
+            }else{
+                getTextWidget().setSingleLine(false)
+            }
+            getTextWidget().maxLines = value
+        }
+    /**
+     * default AUTO
+     */
+    actual open var writingDirection: TextWritingDirection = TextWritingDirection.AUTO
+        set(value) {
+            field = value
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+                val textView = getTextWidget()
+                when(value){
+                    TextWritingDirection.AUTO -> textView.layoutDirection = android.view.View.LAYOUT_DIRECTION_LTR
+                    TextWritingDirection.LTR -> textView.layoutDirection = android.view.View.LAYOUT_DIRECTION_LTR
+                    TextWritingDirection.RTL -> textView.layoutDirection = android.view.View.LAYOUT_DIRECTION_RTL
+                }
+            }
+        }
 
 }

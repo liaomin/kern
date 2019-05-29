@@ -20,6 +20,16 @@ actual open class View {
 
     init {
         mWidget.setBackgroundColor(mBackgroundColor)
+        mWidget.setOnClickListener{
+            onPressListener?.invoke(this)
+        }
+        mWidget.setOnLongClickListener{
+            onLongPressListener?.invoke(this)
+            if(onLongPressListener != null){
+                return@setOnLongClickListener true
+            }
+            return@setOnLongClickListener false
+        }
     }
 
     actual var padding: EdgeInsets? = null
@@ -76,6 +86,11 @@ actual open class View {
             field = value
             mBackground?.setBorderStyle(value)
         }
+
+    private var onPressListener:((view: com.hitales.ui.View)->Unit)? = null
+
+    private var onLongPressListener:((view: com.hitales.ui.View)->Unit)? = null
+
 
     actual constructor(frame: Frame) {
         this.frame = frame
@@ -199,6 +214,14 @@ actual open class View {
     protected open fun onFrameChanged() {
         var params = getLayoutParams()
         mWidget.layoutParams = params
+    }
+
+    actual fun setOnPressListener(listener: (iew: com.hitales.ui.View) -> Unit) {
+        onPressListener = listener
+    }
+
+    actual fun setOnLongPressListener(listener: (iew: com.hitales.ui.View) -> Unit) {
+        onLongPressListener = listener
     }
 
     protected open fun getLayoutParams(): FrameLayout.LayoutParams {

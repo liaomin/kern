@@ -8,24 +8,10 @@ import com.hitales.utils.Frame
 
 actual open class Button :  com.hitales.ui.TextView {
 
-    private var onPressListener:((view:View)->Unit)? = null
-
-    private var onLongPressListener:((view:View)->Unit)? = null
-
     actual constructor(text:CharSequence?,frame: Frame):super(text,frame){
         val widget = getWidget()
         widget.text = text
 //        setTextColor(Color.BLUE)
-        widget.setOnClickListener{
-            onPressListener?.invoke(this)
-        }
-        widget.setOnLongClickListener{
-            onLongPressListener?.invoke(this)
-            if(onLongPressListener != null){
-                return@setOnLongClickListener true
-            }
-            return@setOnLongClickListener false
-        }
     }
 
     override fun createWidget(): android.widget.Button {
@@ -53,14 +39,6 @@ actual open class Button :  com.hitales.ui.TextView {
 
     override fun getDefaultColorList(): StateListColor {
         return StateListColor(Color.WHITE)
-    }
-
-    actual fun setOnPressListener(listener: (iew: View) -> Unit) {
-        onPressListener = listener
-    }
-
-    actual fun setOnLongPressListener(listener: (iew: View) -> Unit) {
-        onLongPressListener = listener
     }
 
 }

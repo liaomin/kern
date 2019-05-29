@@ -6,6 +6,10 @@ import com.hitales.utils.WeakReference
 
 open class BasicController : Controller() {
 
+    var offsetX = 0f
+
+    var offsetY = 0f
+
     override fun onCreate() {
         view = ScrollView( Frame(0f,0f,Platform.windowWidth,Platform.windowHeight- 30))
         view?.setBackgroundColor(Colors.WHITE)
@@ -22,6 +26,28 @@ open class BasicController : Controller() {
     fun addView(view:View){
         (this.view as ScrollView).addView(view)
     }
+
+
+    open fun addView(view: View, with: Float = 0f ,height:Float){
+        var w = with
+        if(with <= 0){
+            w = Platform.windowWidth
+        }
+        view.frame = Frame(offsetX,offsetY,w,height)
+
+        offsetY += height + 10
+
+        (this.view as ScrollView).addView(view)
+    }
+
+
+    open fun addTitleView(title:String ){
+        val title = TextView(title, Frame(10f,offsetY,Platform.windowWidth-20,20f))
+        title.textSize = 18f
+        title.bold = true
+        (this.view as ScrollView).addView(title)
+    }
+
 
 
     override fun onPause() {

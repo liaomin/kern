@@ -11,7 +11,7 @@ const val PLATFORM_IOS = "ios"
 
 @Target(AnnotationTarget.CLASS,AnnotationTarget.FIELD,AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class Platfrom(val platfrom:String)
+annotation class TargetPlatform(val platfrom:String)
 
 suspend fun test() = coroutineScope {
     launch {

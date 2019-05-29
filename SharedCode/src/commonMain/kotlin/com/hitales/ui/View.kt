@@ -54,6 +54,12 @@ expect open class View  {
     open fun onDetachedFromView(layoutView: ViewGroup)
 
     /**
+     * events
+     */
+    fun setOnPressListener(listener:(iew:View)->Unit)
+    fun setOnLongPressListener(listener:(iew:View)->Unit)
+
+    /**
      * background
      */
     // argb color
@@ -64,7 +70,6 @@ expect open class View  {
     open fun setBorderWidth(leftWidth:Float,topWidth: Float,rightWidth:Float,bottomWidth:Float)
     open fun setBorderRadius(radius:Float)
     open fun setBorderRadius(topLeftRadius:Float,topRightRadius: Float,bottomRightRadius:Float,bottomLeftRadius:Float)
-
 
     fun getBorderLeftWidth():Float
     fun getBorderTopWidth():Float
