@@ -8,10 +8,14 @@ open class BasicController : Controller() {
 
     var offsetX = 0f
 
-    var offsetY = 0f
+    var offsetY = 60f
+
+    val buttonWidth = Platform.windowWidth - 20
+
+    val buttonHeight = 50f
 
     override fun onCreate() {
-        view = ScrollView( Frame(0f,0f,Platform.windowWidth,Platform.windowHeight- 30))
+        view = ScrollView( Frame(0f,0f,Platform.windowWidth,Platform.windowHeight - 30))
         view?.setBackgroundColor(Colors.WHITE)
         val backButton = Button("返回", Frame(0f,0f,80f,48f))
         backButton.setBackgroundColor(0xFFFF0000.toInt())
@@ -48,6 +52,13 @@ open class BasicController : Controller() {
         (this.view as ScrollView).addView(title)
     }
 
+    open fun addButton(title:String,onPress: (view: com.hitales.ui.View) -> Unit){
+        val button = Button(title, Frame(10f,offsetY, buttonWidth , buttonHeight))
+        offsetY += buttonHeight + 10
+        button.setOnPressListener(onPress)
+        button.setBackgroundColor(Colors.BLUE)
+        (this.view as ScrollView).addView(button)
+    }
 
 
     override fun onPause() {

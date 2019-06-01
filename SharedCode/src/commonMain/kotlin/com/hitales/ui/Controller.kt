@@ -17,7 +17,6 @@ open class Controller {
 
     constructor(){
         rootController = this
-        this.onCreate()
     }
 
 
@@ -78,6 +77,7 @@ open class Controller {
             this.onPause()
         }
         stack.append(controller)
+        controller.onCreate()
         onPushController(controller)
     }
 

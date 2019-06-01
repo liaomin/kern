@@ -4,13 +4,18 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Build
+import android.text.SpannableString
+import android.text.Spanned
 import android.text.TextUtils
+import android.text.style.StrikethroughSpan
+import android.text.style.UnderlineSpan
 import android.util.TypedValue
 import android.view.Gravity
 import com.hitales.ui.android.AndroidTextView
 import com.hitales.ui.android.StateListColor
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame
+import com.hitales.utils.Size
 
 actual open class TextView :  View {
 
@@ -71,20 +76,33 @@ actual open class TextView :  View {
 
     protected open fun getDefaultColorList(): StateListColor = StateListColor(Color.BLACK)
 
+    private var mHalfLineSpace = 0f
 
-    actual open var lineHeight: Float
+    actual open var lineHeight: Float = 0f
         get() {
-            return getTextWidget().lineHeight.toFloat()
+            if(field != 0f){
+                return field
+            }
+            return PixelUtil.toDIPFromPixel(getTextWidget().lineHeight.toFloat())
         }
         set(value) {
-            if(Build.VERSION.SDK_INT >= 28){
-                getTextWidget().lineHeight = PixelUtil.toPixelFromDIP(value).toInt()
-            }else{
-                val widget = getTextWidget()
-                val fontHeight = widget.paint.getFontMetricsInt(null)
+            val widget = getTextWidget()
+            val fontHeight = widget.paint.getFontMetricsInt(null)
+            if(value > 0){
+                field = value
                 val lineHeight = PixelUtil.toPixelFromDIP(value).toInt()
+                val space = (lineHeight - fontHeight).toFloat()
                 if (lineHeight != fontHeight) {
-                    widget.setLineSpacing((lineHeight - fontHeight).toFloat(), 1f)
+                    if(space >= 0f){
+                        val halfLineSpace= space / 2
+                        mHalfLineSpace = halfLineSpace
+                        val padding = halfLineSpace.toInt()
+                        widget.setLineSpacing(halfLineSpace, 1f)
+                        widget.setPadding(0,padding,0,padding)
+                    }else{
+                        widget.setLineSpacing(space, 1f)
+                        mHalfLineSpace = 0f
+                    }
                 }
             }
         }
@@ -119,7 +137,7 @@ actual open class TextView :  View {
     /**
      * default LEFT
      */
-    actual open var alignment: TextAlignment = TextAlignment.CENTER
+    actual open var alignment: TextAlignment = TextAlignment.LEFT
         set(value) {
             field = value
             val textView = getTextWidget()
@@ -134,9 +152,7 @@ actual open class TextView :  View {
                     TextAlignment.CENTER -> textView.gravity = Gravity.CENTER
                     TextAlignment.LEFT ->  textView.gravity = Gravity.CENTER_VERTICAL or Gravity.LEFT
                     TextAlignment.RIGHT -> textView.gravity = Gravity.CENTER_VERTICAL or Gravity.RIGHT
-                }
-
-            }
+                } }
         }
     /**
      * default NONE
@@ -145,6 +161,26 @@ actual open class TextView :  View {
         set(value) {
             field = value
             val textView = getTextWidget()
+//            val text = textView.text
+//            when(value){
+//                TextDecorationLine.NONE -> textView.text = text
+//                TextDecorationLine.UNDERLINE -> {
+//                    val sp = SpannableString(textView.text)
+//                    sp.setSpan(UnderlineSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                    textView.text = sp
+//                }
+//                TextDecorationLine.LINE_THROUGH -> {
+//                    val sp = SpannableString(textView.text)
+//                    sp.setSpan(StrikethroughSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                    textView.text = sp
+//                }
+//                TextDecorationLine.UNDERLINE_LINE_THROUGH ->  {
+//                    val sp = SpannableString(textView.text)
+//                    sp.setSpan(StrikethroughSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                    sp.setSpan(UnderlineSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                    textView.text = sp
+//                }
+//            }
             val paint = textView.paint
             when(value){
                 TextDecorationLine.NONE -> paint.flags = 0
@@ -218,5 +254,25 @@ actual open class TextView :  View {
                 }
             }
         }
+
+    override fun measureSize(maxWidth: Float, maxHeight: Float): Size {
+        var width = PixelUtil.toPixelFromDIP(maxWidth).toInt()
+        var height = PixelUtil.toPixelFromDIP(maxHeight).toInt()
+        if( width <= 0 ){
+            width = android.view.View.MeasureSpec.makeMeasureSpec(0, android.view.View.MeasureSpec.UNSPECIFIED)
+        }else{
+            width = android.view.View.MeasureSpec.makeMeasureSpec(width, android.view.View.MeasureSpec.AT_MOST)
+        }
+        if( height <= 0 ){
+            height = android.view.View.MeasureSpec.makeMeasureSpec(0, android.view.View.MeasureSpec.UNSPECIFIED)
+        }else{
+            height = android.view.View.MeasureSpec.makeMeasureSpec(height, android.view.View.MeasureSpec.AT_MOST)
+        }
+        mWidget.measure(width,height)
+        val measuredWidth = mWidget.measuredWidth
+        val measuredHeight = mWidget.measuredHeight
+        return Size(PixelUtil.toDIPFromPixel(measuredWidth.toFloat()), PixelUtil.toDIPFromPixel(measuredHeight.toFloat()))
+
+    }
 
 }

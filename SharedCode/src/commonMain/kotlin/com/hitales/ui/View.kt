@@ -2,6 +2,7 @@ package com.hitales.ui
 
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
+import com.hitales.utils.Size
 
 enum class ViewState(val value:Int) {
     NORMAL(0),
@@ -56,7 +57,7 @@ expect open class View  {
     /**
      * events
      */
-    fun setOnPressListener(listener:(iew:View)->Unit)
+    fun setOnPressListener(listener:(view:View)->Unit)
     fun setOnLongPressListener(listener:(iew:View)->Unit)
 
     /**
@@ -75,6 +76,12 @@ expect open class View  {
     fun getBorderTopWidth():Float
     fun getBorderRightWidth():Float
     fun getBorderBottomWidth():Float
+
+    /**
+     * @param maxWidth 最大宽度  如果小于等于0表示无限宽
+     * @param maxHeight 最大高度  如果小于等于0表示无限高
+     */
+    open fun measureSize(maxWidth: Float,maxHeight:Float):Size
 }
 
 

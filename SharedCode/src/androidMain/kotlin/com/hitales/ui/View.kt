@@ -9,6 +9,7 @@ import com.hitales.ui.android.Background
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
+import com.hitales.utils.Size
 
 actual open class View {
 
@@ -216,7 +217,7 @@ actual open class View {
         mWidget.layoutParams = params
     }
 
-    actual fun setOnPressListener(listener: (iew: com.hitales.ui.View) -> Unit) {
+    actual fun setOnPressListener(listener: (view: com.hitales.ui.View) -> Unit) {
         onPressListener = listener
     }
 
@@ -242,8 +243,15 @@ actual open class View {
         return params
     }
 
+    /**
+     * @param maxWidth 最大宽度  如果小于等于0表示无限宽
+     * @param maxHeight 最大高度  如果小于等于0表示无限高
+     */
+    actual open fun measureSize(maxWidth: Float, maxHeight: Float): Size {
+        return Size(frame.width,frame.height)
+    }
+
     override fun toString(): String {
         return "${this::class.java.name}: frame :$frame"
     }
-
 }
