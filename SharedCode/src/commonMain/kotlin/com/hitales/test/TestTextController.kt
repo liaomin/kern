@@ -25,7 +25,82 @@ open class TestTextController :ViewController(){
             push(TestDecorationLine())
         }
 
+        addButton("测试letterSpacing"){
+            push(TestLetterSpacing())
+        }
 
+        addButton("测试ellipsizeMode和numberOfLines"){
+            push(TestEllipsizeMode())
+        }
+    }
+}
+
+
+class TestEllipsizeMode : TestTextController(){
+    override fun testView() {
+        var width = Platform.windowWidth
+        var view = TextView("TAIL测试文字测试文字测试文字测试文测试文字测测试文字测试文字测试文字测试文测试文字测试测试文字测试文字测试文字测试文测试文字测试试")
+        view.textSize = 16f
+        view.numberOfLines = 1
+        view.ellipsizeMode = TextEllipsizeMode.TAIL
+        addView(view, 0f, 20f)
+
+        view = TextView("MIDDLE测试文字测试文字测试文字测试文测试文字测测试文字测试文字测试文字测试文测试文字测试测试文字测试文字测试文字测试文测试文字测试试")
+        view.textSize = 16f
+        view.numberOfLines = 1
+        view.ellipsizeMode = TextEllipsizeMode.MIDDLE
+        addView(view, 0f, 20f)
+
+        view = TextView("HEAD测试文字测试文字测试文字测试文测试文字测测试文字测试文字测试文字测试文测试文字测试测试文字测试文字测试文字测试文测试文字测试试")
+        view.textSize = 16f
+        view.numberOfLines = 1
+        view.ellipsizeMode = TextEllipsizeMode.HEAD
+        addView(view, 0f, 20f)
+
+        view = TextView("TAIL测试文字测试文字测试文字测试文测试文字测测试文字测试文字测试文字测试文测试文字测试测试文字测试文字测试文字测试文测试文字测试试TAIL测试文字测试文字测试文字测试文测试文字测测试文字测试文字测试文字测试文测试文字测试测试文字测试文字测试文字测试文测试文字测试试")
+        view.textSize = 16f
+        view.numberOfLines = 2
+        view.ellipsizeMode = TextEllipsizeMode.TAIL
+        addView(view, 0f, 40f)
+    }
+}
+
+
+class TestLetterSpacing : TestTextController(){
+    override fun testView() {
+        var width = Platform.windowWidth
+        var view = TextView("测试文字测试文字测试文字测试文测试文字测试")
+        view.textSize = 16f
+        var size = view.measureSize(width, 0f)
+        addView(view, 0f, size.height)
+
+        var letterSpacing = 1f
+        view = TextView("letterSpacing:$letterSpacing 测试文字测试文字测试文字测试文测试文字测试")
+        view.textSize = 16f
+        view.letterSpacing = letterSpacing
+        size = view.measureSize(width, 0f)
+        addView(view, 0f, size.height)
+
+        letterSpacing = 2f
+        view = TextView("letterSpacing:$letterSpacing 测试文字测试文字测试文字测试文测试文字测试")
+        view.textSize = 16f
+        view.letterSpacing = letterSpacing
+        size = view.measureSize(width, 0f)
+        addView(view, 0f, size.height)
+
+        letterSpacing = 3f
+        view = TextView("letterSpacing:$letterSpacing letterSpacing")
+        view.textSize = 16f
+        view.letterSpacing = letterSpacing
+        size = view.measureSize(width, 0f)
+        addView(view, 0f, size.height)
+
+        letterSpacing = 4f
+        view = TextView("letterSpacing:$letterSpacing letterSpacing")
+        view.textSize = 16f
+        view.letterSpacing = letterSpacing
+        size = view.measureSize(width, 0f)
+        addView(view, 0f, size.height)
     }
 }
 

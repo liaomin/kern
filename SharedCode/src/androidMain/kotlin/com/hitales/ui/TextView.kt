@@ -25,12 +25,12 @@ actual open class TextView :  View {
         get() = getWidget().text
         set(value) {
             getWidget().text = value
+            onTextValueSet()
         }
 
     actual open var textSize: Float
         get() = PixelUtil.toSPFromPixel(getWidget().textSize)
         set(value) {
-            getWidget()
             getWidget().setTextSize(TypedValue.COMPLEX_UNIT_SP,value)
         }
 
@@ -160,34 +160,14 @@ actual open class TextView :  View {
     actual open var decorationLine: TextDecorationLine = TextDecorationLine.NONE
         set(value) {
             field = value
-            val textView = getTextWidget()
-//            val text = textView.text
+            this.onTextValueSet()
+//            val paint = textView.paint
 //            when(value){
-//                TextDecorationLine.NONE -> textView.text = text
-//                TextDecorationLine.UNDERLINE -> {
-//                    val sp = SpannableString(textView.text)
-//                    sp.setSpan(UnderlineSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-//                    textView.text = sp
-//                }
-//                TextDecorationLine.LINE_THROUGH -> {
-//                    val sp = SpannableString(textView.text)
-//                    sp.setSpan(StrikethroughSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-//                    textView.text = sp
-//                }
-//                TextDecorationLine.UNDERLINE_LINE_THROUGH ->  {
-//                    val sp = SpannableString(textView.text)
-//                    sp.setSpan(StrikethroughSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-//                    sp.setSpan(UnderlineSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-//                    textView.text = sp
-//                }
+//                TextDecorationLine.NONE -> paint.flags = 0
+//                TextDecorationLine.UNDERLINE -> paint.flags = Paint.UNDERLINE_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG
+//                TextDecorationLine.LINE_THROUGH ->  paint.flags = Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG
+//                TextDecorationLine.UNDERLINE_LINE_THROUGH ->  paint.flags = Paint.UNDERLINE_TEXT_FLAG or Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG
 //            }
-            val paint = textView.paint
-            when(value){
-                TextDecorationLine.NONE -> paint.flags = 0
-                TextDecorationLine.UNDERLINE -> paint.flags = Paint.UNDERLINE_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG
-                TextDecorationLine.LINE_THROUGH ->  paint.flags = Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG
-                TextDecorationLine.UNDERLINE_LINE_THROUGH ->  paint.flags = Paint.UNDERLINE_TEXT_FLAG or Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG
-            }
         }
 
     /**
@@ -197,7 +177,7 @@ actual open class TextView :  View {
         set(value) {
             field = value
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                getTextWidget().letterSpacing = PixelUtil.toPixelFromDIP(value)
+                getTextWidget().letterSpacing = value
             }
         }
 
@@ -229,7 +209,7 @@ actual open class TextView :  View {
     /**
      * default 0
      */
-    actual open var maxNumberOfLines: Int = 0
+    actual open var numberOfLines : Int = 0
         set(value) {
             field = value
             if(value == 1){
@@ -239,21 +219,22 @@ actual open class TextView :  View {
             }
             getTextWidget().maxLines = value
         }
-    /**
-     * default AUTO
-     */
-    actual open var writingDirection: TextWritingDirection = TextWritingDirection.AUTO
-        set(value) {
-            field = value
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
-                val textView = getTextWidget()
-                when(value){
-                    TextWritingDirection.AUTO -> textView.layoutDirection = android.view.View.LAYOUT_DIRECTION_LTR
-                    TextWritingDirection.LTR -> textView.layoutDirection = android.view.View.LAYOUT_DIRECTION_LTR
-                    TextWritingDirection.RTL -> textView.layoutDirection = android.view.View.LAYOUT_DIRECTION_RTL
-                }
-            }
-        }
+
+//    /**
+//     * default AUTO
+//     */
+//    actual open var writingDirection: TextWritingDirection = TextWritingDirection.AUTO
+//        set(value) {
+//            field = value
+//            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+//                val textView = getTextWidget()
+//                when(value){
+//                    TextWritingDirection.AUTO -> textView.textDirection = android.view.View.TEXT_DIRECTION_INHERIT
+//                    TextWritingDirection.LTR -> textView.textDirection = android.view.View.TEXT_DIRECTION_LTR
+//                    TextWritingDirection.RTL -> textView.textDirection = android.view.View.TEXT_DIRECTION_RTL
+//                }
+//            }
+//        }
 
     override fun measureSize(maxWidth: Float, maxHeight: Float): Size {
         var width = PixelUtil.toPixelFromDIP(maxWidth).toInt()
@@ -272,7 +253,32 @@ actual open class TextView :  View {
         val measuredWidth = mWidget.measuredWidth
         val measuredHeight = mWidget.measuredHeight
         return Size(PixelUtil.toDIPFromPixel(measuredWidth.toFloat()), PixelUtil.toDIPFromPixel(measuredHeight.toFloat()))
+    }
 
+    private fun onTextValueSet(){
+        val text = text
+        val textView = getTextWidget()
+        if(text != null){
+            when(decorationLine){
+                TextDecorationLine.NONE -> textView.text = text
+                TextDecorationLine.UNDERLINE -> {
+                    val sp = SpannableString(textView.text)
+                    sp.setSpan(UnderlineSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    textView.text = sp
+                }
+                TextDecorationLine.LINE_THROUGH -> {
+                    val sp = SpannableString(textView.text)
+                    sp.setSpan(StrikethroughSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    textView.text = sp
+                }
+                TextDecorationLine.UNDERLINE_LINE_THROUGH ->  {
+                    val sp = SpannableString(textView.text)
+                    sp.setSpan(StrikethroughSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    sp.setSpan(UnderlineSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    textView.text = sp
+                }
+            }
+        }
     }
 
 }

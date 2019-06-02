@@ -21,16 +21,9 @@ enum class TextEllipsizeMode(var value: Int){
     TAIL(2),
 }
 
-enum class TextWritingDirection(var value: Int){
-    AUTO(0),
-    LTR(1),
-    RTL(2),
-}
-
-
 expect open class TextView : View {
 
-    constructor(text:CharSequence? = null,frame: Frame = Frame.zero())
+    constructor(text:CharSequence? = "",frame: Frame = Frame.zero())
 
     open var text:CharSequence?
 
@@ -65,6 +58,7 @@ expect open class TextView : View {
 
     /**
      * default 0
+     * android api >= 21
      */
     open var letterSpacing:Float
 
@@ -74,11 +68,6 @@ expect open class TextView : View {
     open var ellipsizeMode:TextEllipsizeMode
 
     /**
-     * default AUTO
-     */
-    open var writingDirection:TextWritingDirection
-
-    /**
      * default true
      */
     open var selectable:Boolean
@@ -86,7 +75,7 @@ expect open class TextView : View {
     /**
      * default 0
      */
-    open var maxNumberOfLines:Int
+    open var numberOfLines:Int
 
     /**
      * 自定义字体
