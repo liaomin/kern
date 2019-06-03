@@ -1,6 +1,7 @@
 package com.hitales.ui
 
 import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.View
 import android.widget.FrameLayout
@@ -34,6 +35,12 @@ actual open class View {
     }
 
     actual var padding: EdgeInsets? = null
+        set(value) {
+            field = value
+            if(value != null){
+                mWidget.setPadding(PixelUtil.toPixelFromDIP(value.left).toInt(),PixelUtil.toPixelFromDIP(value.top).toInt(),PixelUtil.toPixelFromDIP(value.right).toInt(),PixelUtil.toPixelFromDIP(value.bottom).toInt())
+            }
+        }
 
     actual var margin: EdgeInsets? = null
 
@@ -107,7 +114,7 @@ actual open class View {
 
     actual open fun setBackgroundColor(color: Int) {
         if (mBackground != null) {
-            mBackground?.setColorForState(color, ViewState.NORMAL)
+            mBackground?.setColor(color)
         } else {
             mWidget.setBackgroundColor(color)
         }
@@ -202,7 +209,7 @@ actual open class View {
         if (mBackground == null) {
             mBackground = Background()
             mWidget.setBackgroundDrawable(mBackground)
-            mBackground?.setColorForState(mBackgroundColor, ViewState.NORMAL)
+            mBackground?.setColor(mBackgroundColor)
         }
         return mBackground!!
     }
@@ -249,6 +256,10 @@ actual open class View {
      */
     actual open fun measureSize(maxWidth: Float, maxHeight: Float): Size {
         return Size(frame.width,frame.height)
+    }
+
+    protected open fun setBackgroundDrawable(drawable: Drawable,state: ViewState){
+        getOrCreateBackground().setDrawable(drawable,state)
     }
 
     override fun toString(): String {

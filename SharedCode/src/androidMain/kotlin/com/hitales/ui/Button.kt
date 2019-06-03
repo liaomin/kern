@@ -1,9 +1,12 @@
 package com.hitales.ui
 
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import com.hitales.ui.android.AndroidButton
 import com.hitales.ui.android.StateListColor
+import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
+import com.hitales.utils.Size
 
 
 actual open class Button :  com.hitales.ui.TextView {
@@ -11,7 +14,7 @@ actual open class Button :  com.hitales.ui.TextView {
     actual constructor(text:CharSequence?,frame: Frame):super(text,frame){
         val widget = getWidget()
         widget.text = text
-//        setTextColor(Color.BLUE)
+        padding = EdgeInsets(5f,5f,5f,5f)
     }
 
     override fun createWidget(): android.widget.Button {
@@ -30,7 +33,11 @@ actual open class Button :  com.hitales.ui.TextView {
         }
     }
 
-    actual open fun setImage(image: Image, state: ViewState) {
+    actual open fun setBackgroundImage(image: Image, state: ViewState) {
+        val bitmap = image.bitmap
+        if(bitmap != null){
+            setBackgroundDrawable(BitmapDrawable(bitmap),state)
+        }
     }
 
     actual open fun setTextColor(color: Int, state: ViewState) {
@@ -40,5 +47,6 @@ actual open class Button :  com.hitales.ui.TextView {
     override fun getDefaultColorList(): StateListColor {
         return StateListColor(Color.WHITE)
     }
+
 
 }

@@ -1,6 +1,7 @@
 package com.hitales.ui.android
 
 import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.StateListDrawable
 import com.hitales.ui.BorderStyle
 import com.hitales.ui.utils.PixelUtil
@@ -31,7 +32,11 @@ inline fun Int.overlayColor(b:Int):Int{
     return Color.argb((alpha*255).toInt(),r.toInt(),g.toInt(),blue.toInt())
 }
 
-open class Background : StateListDrawable() {
+open class Background : StateListDrawable {
+
+    constructor():super(){
+
+    }
 
     private val mOuterPath:Path by lazy { Path() }
 
@@ -41,8 +46,7 @@ open class Background : StateListDrawable() {
       Paint(Paint.ANTI_ALIAS_FLAG)
     }
 
-    private val backgroundColors: StateListColor =
-        StateListColor(Colors.TRANSPARENT)
+    private val backgroundColors: StateListColor = StateListColor(Colors.TRANSPARENT)
 
     private val mTempRectF:RectF by lazy {RectF(0f,0f,0f,0f)}
 
@@ -112,20 +116,87 @@ open class Background : StateListDrawable() {
         backgroundColors.setColorForState(color,state)
     }
 
+    fun setColor(color:Int){
+        backgroundColors.setColor(color)
+    }
+
     override fun isStateful(): Boolean {
         return true
     }
 
-    override fun onBoundsChange(bounds: Rect?) {
-        super.onBoundsChange(bounds)
+    private var mDrawables:HashMap<Int,Int>? = null
+
+    private var mDrawablesIndex = 0
+
+    fun setDrawable(drawable: Drawable,state: ViewState){
+        if(mDrawables == null){
+            mDrawables = HashMap()
+        }
+        val stateValue = state.value
+        var states = intArrayOf(android.R.attr.state_enabled)
+        when (state){
+            ViewState.FOCUSED->states = intArrayOf(android.R.attr.state_focused)
+            ViewState.PRESSED->states = intArrayOf(android.R.attr.state_pressed)
+            ViewState.SELECTED->states = intArrayOf(android.R.attr.state_selected)
+        }
+        addState(states,drawable)
+        mDrawables?.set(stateValue,mDrawablesIndex)
+        mDrawablesIndex++
+    }
+
+    override fun onStateChange(stateSet: IntArray?): Boolean {
+        if(stateSet != null && mDrawables != null){
+            var stateValue = ViewState.NORMAL.value
+            var enable = false
+            for ( i in 0 until stateSet.size){
+                var state = stateSet[i]
+                if(state == android.R.attr.state_enabled){
+                    enable = true
+                    continue
+                }
+                when (state){
+                    android.R.attr.state_focused -> stateValue = ViewState.FOCUSED.value
+                    android.R.attr.state_pressed -> stateValue = ViewState.PRESSED.value
+                    android.R.attr.state_selected -> stateValue = ViewState.SELECTED.value
+                }
+            }
+            if(!enable) stateValue = ViewState.DISABLED.value
+            var index = mDrawables?.get(stateValue)
+            if(index != null){
+                return super.selectDrawable(index)
+            }
+        }
+        return super.onStateChange(stateSet)
     }
 
     override fun draw(canvas: Canvas) {
-        drawBorderAndBackground(canvas)
-        super.draw(canvas)
+        onDraw(canvas)
+        if(haveBorderRadius()){
+            canvas.save()
+            canvas.clipPath(getOuterPath(bounds))
+            super.draw(canvas)
+            canvas.restore()
+        }else{
+            super.draw(canvas)
+        }
     }
 
-    private fun drawBorderAndBackground(canvas: Canvas){
+    private fun getOuterPath(bounds: Rect):Path{
+        val width = bounds.width().toFloat()
+        val height = bounds.height().toFloat()
+        val halfWidth = width / 2
+        val halfHeight = height / 2
+        val maxRadius = Math.min(halfWidth,halfHeight)
+        var borderTopLeftRadius = Math.min(PixelUtil.toPixelFromDIP(borderTopLeftRadius).toInt().toFloat(),maxRadius)
+        var borderTopRightRadius = Math.min(PixelUtil.toPixelFromDIP(borderTopRightRadius).toInt().toFloat(),maxRadius)
+        var borderBottomRightRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomRightRadius).toInt().toFloat(),maxRadius)
+        var borderBottomLeftRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomLeftRadius).toInt().toFloat(),maxRadius)
+        mOuterPath.rewind()
+        mOuterPath.addRoundRect(mTempRectF, floatArrayOf(borderTopLeftRadius,borderTopLeftRadius,borderTopRightRadius,borderTopRightRadius,borderBottomRightRadius,borderBottomRightRadius,borderBottomLeftRadius,borderBottomLeftRadius),Path.Direction.CW)
+        return mOuterPath
+    }
+
+    private fun onDraw(canvas: Canvas){
         val haveBorderWidth = haveBorderWidth()
         mTempRectF.set(bounds)
         val width = mTempRectF.width()
@@ -162,7 +233,6 @@ open class Background : StateListDrawable() {
 //            mOuterPath.quadTo(0f,height,0f,height-borderBottomLeftRadius)
 //            mOuterPath.lineTo(0f,borderTopLeftRadius)
 //            mOuterPath.quadTo(0f,0f,borderTopLeftRadius,0f)
-
 
             mPaint.isAntiAlias = true
             val backgroundColor = getCurrentColor()
@@ -458,13 +528,9 @@ open class Background : StateListDrawable() {
         return borderTopLeftRadius > 0 || borderTopRightRadius > 0 || borderBottomLeftRadius >0 || borderBottomRightRadius > 0
     }
 
-    fun getOutterPath(path: Path,rect: RectF){
-        path.rewind()
-        mOuterPath.addRoundRect(rect, floatArrayOf(borderTopLeftRadius,borderTopLeftRadius,borderTopRightRadius,borderTopRightRadius,borderBottomRightRadius,borderBottomRightRadius,borderBottomLeftRadius,borderBottomLeftRadius),Path.Direction.CW)
-    }
-
     fun clipPath():Boolean{
-        return haveBorderWidth() && haveBorderRadius() && !sameBorderColor()
+//        return haveBorderWidth() && haveBorderRadius() && !sameBorderColor()
+        return haveBorderRadius()
     }
 
 

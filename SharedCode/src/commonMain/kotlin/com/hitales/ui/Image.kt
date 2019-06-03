@@ -8,4 +8,5 @@ expect class Image {
     fun getWidth():Int
     fun getHeight():Int
     fun toData():ByteArray?
+    fun release()
 }

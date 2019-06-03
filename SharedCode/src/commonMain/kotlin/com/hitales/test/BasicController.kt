@@ -33,17 +33,21 @@ open class BasicController : Controller() {
 
 
     open fun addView(view: View, with: Float = 0f ,height:Float){
+        addView(view,0f,with, height)
+    }
+
+
+    open fun addView(view: View, x:Float = 0f,with: Float = 0f ,height:Float){
         var w = with
         if(with <= 0){
             w = Platform.windowWidth
         }
-        view.frame = Frame(offsetX,offsetY,w,height)
+        view.frame = Frame(offsetX+x,offsetY,w,height)
 
         offsetY += height + 10
 
         (this.view as ScrollView).addView(view)
     }
-
 
     open fun addTitleView(title:String ){
         val title = TextView(title, Frame(10f,offsetY,Platform.windowWidth-20,20f))

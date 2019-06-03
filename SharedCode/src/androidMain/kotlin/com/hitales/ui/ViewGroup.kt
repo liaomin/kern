@@ -18,16 +18,12 @@ open class AndroidFrameLayout(private val view:ViewGroup) : FrameLayout(Platform
         view.onDetachedFromWindow()
     }
 
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-    }
-
 }
 actual open class ViewGroup : View {
 
     actual constructor(frame: Frame):super(frame){
-        mWidget.isFocusable = true
-        mWidget.isFocusableInTouchMode = true
+//        mWidget.isFocusable = true
+//        mWidget.isFocusableInTouchMode = true
     }
 
     actual val children: ArrayList<View> = ArrayList()
@@ -65,23 +61,26 @@ actual open class ViewGroup : View {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        var focused = false
-        var focusedView:android.view.View? = null
-        children.forEach {
-            if(it is TextInput && it.autoFocus){
-                if(!focused){
-                    focusedView = it.getWidget()
-//                    it.getWidget().requestFocus()
-                    focused = true
-                }
-            }
-        }
-        if(focused){
-            focusedView?.requestFocus()
-        }else{
-            mWidget.isFocusable = true
-            mWidget.isFocusableInTouchMode = true
-        }
+//        var focused = false
+//        var focusedView:android.view.View? = null
+//        children.forEach {
+//            if(it is TextInput && it.autoFocus){
+//                if(!focused){
+//                    focusedView = it.getWidget()
+////                    it.getWidget().requestFocus()
+//                    focused = true
+//                }
+//            }
+//        }
+//        if(focused){
+//            focusedView?.requestFocus()
+//        }else{
+//            mWidget.isFocusable = true
+//            mWidget.isFocusableInTouchMode = true
+//        }
+//
+//        mWidget.isFocusable = false
+//        mWidget.isFocusableInTouchMode = false
     }
 
 

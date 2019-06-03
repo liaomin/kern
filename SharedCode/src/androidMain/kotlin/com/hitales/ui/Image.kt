@@ -1,6 +1,5 @@
 package com.hitales.ui
 
-import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import java.io.ByteArrayOutputStream
@@ -61,5 +60,15 @@ actual class Image {
             return bos.toByteArray()
         }
         return null
+    }
+
+    actual fun release() {
+        if(bitmap != null){
+            val _bitmap = bitmap!!
+            if(!_bitmap.isRecycled){
+                _bitmap.recycle()
+            }
+        }
+        bitmap = null
     }
 }

@@ -16,8 +16,8 @@ import android.util.Xml
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.*
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -53,6 +53,17 @@ class MainActivity : AppCompatActivity() {
 //        startActivityForResult(intent, 1234)
 
 //        setContentView(R.layout.test)
+//
+//        val rootView = findViewById<FrameLayout>(R.id.root)
+//        rootView.postDelayed({
+//            val a = com.hitales.ui.android.AndroidEditTextView(this)
+//            a.setBackgroundColor(Color.RED)
+//            val p = FrameLayout.LayoutParams(400,100)
+//            p.topMargin = 150
+//            rootView.addView(a,p)
+//        },5000)
+
+
 
     }
 

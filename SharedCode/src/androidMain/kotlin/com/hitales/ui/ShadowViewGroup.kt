@@ -9,6 +9,10 @@ import com.hitales.utils.Frame
 
 actual open class ShadowViewGroup : ViewGroup {
 
+    constructor():super(){
+        setLayerType(android.view.View.LAYER_TYPE_HARDWARE)
+    }
+
     var shadowColor = 0
         private set(value) {
             field = value
