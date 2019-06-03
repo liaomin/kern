@@ -18,7 +18,7 @@ actual open class View {
 
     private var mBackgroundColor = Colors.TRANSPARENT
 
-    private var mBackground: Background? = null
+    var mBackground: Background? = null
 
     init {
         mWidget.setBackgroundColor(mBackgroundColor)

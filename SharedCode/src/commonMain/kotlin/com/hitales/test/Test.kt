@@ -65,6 +65,15 @@ class TestController : BasicController() {
             this.push(TestInputController())
         }
 
+        index++
+        v  = Button("imageView 测试", Frame(10f,(buttonHeight+10)*index+10f, buttonWidth , buttonHeight))
+        rootView.addView(v)
+        v.setBackgroundColor(Colors.BLUE)
+        v.setOnPressListener {
+            this.push(TestImageController())
+        }
+
+
 
         index++
         val v4  = Button("测试4", Frame(0f,4000f,100f,100f))

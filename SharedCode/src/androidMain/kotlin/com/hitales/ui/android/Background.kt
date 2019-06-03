@@ -3,6 +3,7 @@ package com.hitales.ui.android
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.StateListDrawable
+import com.hitales.test.TestLineHeight
 import com.hitales.ui.BorderStyle
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.ui.Colors
@@ -173,7 +174,7 @@ open class Background : StateListDrawable {
         onDraw(canvas)
         if(haveBorderRadius()){
             canvas.save()
-            canvas.clipPath(getOuterPath(bounds))
+            canvas.clipPath(getOuterPath(canvas.width.toFloat(),canvas.height.toFloat()))
             super.draw(canvas)
             canvas.restore()
         }else{
@@ -181,9 +182,7 @@ open class Background : StateListDrawable {
         }
     }
 
-    private fun getOuterPath(bounds: Rect):Path{
-        val width = bounds.width().toFloat()
-        val height = bounds.height().toFloat()
+    fun getOuterPath(width:Float,height: Float):Path{
         val halfWidth = width / 2
         val halfHeight = height / 2
         val maxRadius = Math.min(halfWidth,halfHeight)
@@ -192,6 +191,7 @@ open class Background : StateListDrawable {
         var borderBottomRightRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomRightRadius).toInt().toFloat(),maxRadius)
         var borderBottomLeftRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomLeftRadius).toInt().toFloat(),maxRadius)
         mOuterPath.rewind()
+        mTempRectF.set(0f,0f,width,height)
         mOuterPath.addRoundRect(mTempRectF, floatArrayOf(borderTopLeftRadius,borderTopLeftRadius,borderTopRightRadius,borderTopRightRadius,borderBottomRightRadius,borderBottomRightRadius,borderBottomLeftRadius,borderBottomLeftRadius),Path.Direction.CW)
         return mOuterPath
     }
