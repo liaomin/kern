@@ -10,6 +10,7 @@ import com.hitales.android.R
 import com.hitales.ui.Colors
 import com.hitales.ui.Platform
 import com.hitales.ui.ScrollView
+import com.hitales.ui.utils.PixelUtil
 
 
 open class AndroidScrollView : DampScrollView {
@@ -48,11 +49,17 @@ open class AndroidScrollView : DampScrollView {
                 Math.max(measuredHeight, paddingTop + paddingBottom + maxHeight)
             )
         }
+
     }
 
     init {
         mFrameLayout.setBackgroundColor(Colors.CLEAR)
         super.addView(mFrameLayout, -1, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
+    }
+
+    override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
+        super.onScrollChanged(l, t, oldl, oldt)
+        mView?.layoutSubViews(PixelUtil.toDIPFromPixel(l.toFloat()),PixelUtil.toDIPFromPixel(t.toFloat()))
     }
 
     override fun onAttachedToWindow() {

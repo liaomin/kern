@@ -1,11 +1,16 @@
 package com.hitales.ui
 
+import com.hitales.ui.ios.Background
+import com.hitales.ui.ios.IOSView
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
+import com.hitales.utils.Size
 import com.hitales.utils.WeakReference
 import kotlinx.cinterop.*
+import platform.CoreGraphics.CGImageRef
 import platform.CoreGraphics.CGRectMake
 import platform.CoreGraphics.CGSizeMake
+import platform.QuartzCore.CAShapeLayer
 import platform.UIKit.*
 import platform.darwin.NSObject
 import kotlin.math.max
@@ -30,25 +35,32 @@ inline fun UIColor.toInt():Int{
     }
 }
 
-class IOSView(private val view: WeakReference<View>) : UIView(CGRectMake(0.0,0.0,0.0,0.0)){
-
-    fun dealloc(){
-        this.layer.cornerRadius
-        println("~~~dealloc~~")
-    }
-
-    companion object {
-        @ObjCAction
-        fun load(){
-            println("~~~load~~")
-        }
-    }
-}
-
 
 actual open class View {
 
+    actual companion object {
+        val image = UIImage.imageNamed("1.jpg")
+        fun getCGImage():CGImageRef?{
+            return image!!.CGImage
+        }
+        actual fun getCGImage2():Any?{
+            return image!!.CGImage
+        }
+        fun getCGImage3():Any?{
+            return memScoped { image!!.CGImage?.getPointer(this) }
+
+        }
+    }
+
+    protected  var onPressListener:((view:View)->Unit)? = null
+
+    protected  var onLongPressListener:((view:View)->Unit)? = null
+
     protected val mWidget: UIView = createWidget()
+
+    var mBackground:Background? = null
+
+    private var mBorderLayer: CAShapeLayer? = null
 
     init {
         setBackgroundColor(0)
@@ -75,8 +87,6 @@ actual open class View {
 
     actual constructor(frame: Frame){
         this.frame = frame
-//        mWidget.layer.borderColor = Colors.RED.toUIColor().CGColor
-//        mWidget.layer.borderWidth = 2.0
     }
 
     open fun getWidget(): UIView {
@@ -120,9 +130,11 @@ actual open class View {
 
     open fun setWidgetFrame(value:Frame){
         getWidget().setFrame(CGRectMake(value.x.toDouble(),value.y.toDouble(),value.width.toDouble(),value.height.toDouble()))
+        mBorderLayer?.frame = CGRectMake(0.0,0.0,value.width.toDouble(),value.height.toDouble())
     }
 
     actual open fun setBorderColor(color: Int) {
+        getOrCreateBackground().setBorderColor(color)
     }
 
     actual open fun setBorderColor(
@@ -131,9 +143,11 @@ actual open class View {
         rightColor: Int,
         bottomColor: Int
     ) {
+        getOrCreateBackground().setBorderColor(leftColor,topColor, rightColor, bottomColor)
     }
 
     actual open fun setBorderWidth(borderWidth: Float) {
+        getOrCreateBackground().setBorderWidth(borderWidth,borderStyle)
     }
 
     actual open fun setBorderWidth(
@@ -142,9 +156,11 @@ actual open class View {
         rightWidth: Float,
         bottomWidth: Float
     ) {
+        getOrCreateBackground().setBorderWidth(leftWidth, topWidth, rightWidth, bottomWidth, borderStyle)
     }
 
     actual open fun setBorderRadius(radius: Float) {
+        getOrCreateBackground().setBorderRadius(radius,radius,radius,radius)
     }
 
     actual open fun setBorderRadius(
@@ -153,6 +169,56 @@ actual open class View {
         bottomRightRadius: Float,
         bottomLeftRadius: Float
     ) {
+        getOrCreateBackground().setBorderRadius(topLeftRadius,topRightRadius,bottomRightRadius,bottomLeftRadius)
+    }
 
+    actual open var elevation: Float = 0f
+
+    actual open var hidden: Boolean = false
+
+    actual open var borderStyle: BorderStyle = BorderStyle.SOLID
+
+    /**
+     * events
+     */
+    actual fun setOnPressListener(listener: (view: View) -> Unit) {
+        onPressListener = listener
+    }
+
+    actual fun setOnLongPressListener(listener: (iew: View) -> Unit) {
+        onPressListener = listener
+    }
+
+    actual fun getBorderLeftWidth(): Float {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    actual fun getBorderTopWidth(): Float {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    actual fun getBorderRightWidth(): Float {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    actual fun getBorderBottomWidth(): Float {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    /**
+     * @param maxWidth 最大宽度  如果小于等于0表示无限宽
+     * @param maxHeight 最大高度  如果小于等于0表示无限高
+     */
+    actual open fun measureSize(maxWidth: Float, maxHeight: Float): Size {
+        return Size(frame.width,frame.height)
+    }
+
+
+    protected fun getOrCreateBackground(): Background {
+        if (mBackground == null) {
+            mBackground = Background()
+        }
+        mWidget.layer.setNeedsDisplay()
+        return mBackground!!
     }
 }

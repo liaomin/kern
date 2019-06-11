@@ -36,20 +36,34 @@ dependencies {
 }
 
 
+
 kotlin {
+    final def iOSPresetTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") ? presets.iosArm64 : presets.iosX64
+    iosX64('ios'){
+        compilations.main {
+            cinterops {
+                myInterop {
+                    defFile project.file("frameworks/HUI.def")
+//                    compilerOpts '-F./frameworks'
+//                    linkerOpts  '-F/Users/liaomin/Documents/ideaProject/Kotlin/Android/SharedCode/frameworks'
+                    includeDirs("frameworks/HUI.framework/Headers")
+                }
+
+            }
+        }
+    }
+
     android {
 
     }
 
     targets {
-//        final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") \
-//                              ? presets.iosArm64 : presets.iosX64
-//
-//        fromPreset(iOSTarget, 'ios') {
-//            binaries {
-//                framework('SharedCode')
-//            }
-//        }
+
+        fromPreset(iOSPresetTarget, 'ios') {
+            binaries {
+                framework('SharedCode')
+            }
+        }
 
 //        fromPreset(presets.jvm, 'android')
 
@@ -62,40 +76,42 @@ kotlin {
             api  'org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.2.0'
         }
 
-//        androidMain.dependencies {
-//            compileOnly fileTree(includes: ['*.jar'],dir: 'androidx')
-//            api 'org.jetbrains.kotlin:kotlin-stdlib'
-//            api  'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.0'
-//        }
-
-//        iosMain.dependencies {
-//            api  'org.jetbrains.kotlinx:kotlinx-coroutines-core-native:1.2.0'
-//        }
+        iosMain.dependencies {
+            api  'org.jetbrains.kotlinx:kotlinx-coroutines-core-native:1.2.0'
+        }
     }
+
+
 }
 
+
+//components {
+//    target('ios') {
+//        linkerOpts '-L/Users/liaomin/Library/Developer/Xcode/DerivedData/UI-gqmcghgwqjbknffgxjxsccgfcynv/Build/Products/Debug-iphonesimulator/UILib.framework'
+//    }
+//}
 
 configurations {
     compileClasspath
 }
 
-//task packForXCode(type: Sync) {
-//    final File frameworkDir = new File(buildDir, "xcode-frameworks")
-//    final String mode = project.findProperty("XCODE_CONFIGURATION")?.toUpperCase() ?: 'DEBUG'
-//    final def framework = kotlin.targets.ios.binaries.getFramework("SharedCode", mode)
-//
-//    inputs.property "mode", mode
-//    dependsOn framework.linkTask
-//
-//    from { framework.outputFile.parentFile }
-//    into frameworkDir
-//
-//    doLast {
-//        new File(frameworkDir, 'gradlew').with {
-//            text = "#!/bin/bash\nexport 'JAVA_HOME=${System.getProperty("java.home")}'\ncd '${rootProject.rootDir}'\n./gradlew \$@\n"
-//            setExecutable(true)
-//        }
-//    }
-//}
-//
-//tasks.build.dependsOn packForXCode
+task packForXCode(type: Sync) {
+    final File frameworkDir = new File(buildDir, "xcode-frameworks")
+    final String mode = project.findProperty("XCODE_CONFIGURATION")?.toUpperCase() ?: 'DEBUG'
+    final def framework = kotlin.targets.ios.binaries.getFramework("SharedCode", mode)
+
+    inputs.property "mode", mode
+    dependsOn framework.linkTask
+
+    from { framework.outputFile.parentFile }
+    into frameworkDir
+
+    doLast {
+        new File(frameworkDir, 'gradlew').with {
+            text = "#!/bin/bash\nexport 'JAVA_HOME=${System.getProperty("java.home")}'\ncd '${rootProject.rootDir}'\n./gradlew \$@\n"
+            setExecutable(true)
+        }
+    }
+}
+
+tasks.build.dependsOn packForXCode

@@ -9,6 +9,7 @@ import platform.CoreGraphics.CGSizeMake
 import platform.QuartzCore.CALayer
 import platform.UIKit.UIScrollView
 import platform.UIKit.UIView
+import platform.UIKit.UIWindow
 import platform.UIKit.layoutSubviews
 import kotlin.math.max
 import kotlin.native.ref.WeakReference
@@ -18,20 +19,29 @@ class IOSScrollView(private val view: WeakReference<ScrollView>) : UIScrollView(
 
     @ObjCAction
     fun layoutSubviews(){
-        println("layoutSubviews")
+    }
+
+    @ObjCAction
+    fun willMoveToWindow(window:UIWindow?){
         val scrollView = view.get()
         if(scrollView != null){
-            var width = scrollView.frame.width
-            var height = scrollView.frame.height
-            scrollView.children.forEach {
-                val w = it.frame.width + it.frame.x
-                val h = it.frame.height + it.frame.y
-                width = max(width,w)
-                height = max(height,h)
+            if(window != null){
+                scrollView.onAttachedToWindow()
+                var width = scrollView.frame.width
+                var height = scrollView.frame.height
+                scrollView.children.forEach {
+                    val w = it.frame.width + it.frame.x
+                    val h = it.frame.height + it.frame.y
+                    width = max(width,w)
+                    height = max(height,h)
+                }
+                setContentSize(CGSizeMake(width.toDouble(),height.toDouble()))
+            }else{
+                scrollView.onDetachedFromWindow()
             }
-            setContentSize(CGSizeMake(width.toDouble(),height.toDouble()))
         }
     }
+
 }
 
 
@@ -46,6 +56,13 @@ actual open class ScrollView : ViewGroup {
 
     override fun getWidget(): UIScrollView {
         return super.getWidget() as UIScrollView
+    }
+
+    actual open fun layoutSubViews(offsetX: Float, offsetY: Float) {
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
     }
 
 }

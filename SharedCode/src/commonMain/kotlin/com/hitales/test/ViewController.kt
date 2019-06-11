@@ -107,7 +107,13 @@ class BorderWidthTestController : ViewController(){
         view.setBorderColor(Colors.BLUE,Colors.GREEN,Colors.YELLOW,Colors.ORANGE)
         view.setBorderColor(Colors.BLUE)
         view.setBorderRadius(getItemWidth())
-//        view.setBorderRadius(287/2f)
+
+        view =  View()
+        view.setBackgroundColor(bgColor)
+        addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
+        view.setBorderWidth(10f)
+        view.setBorderColor(Colors.BLUE,Colors.GREEN,Colors.YELLOW,Colors.ORANGE)
+        view.setBorderRadius(getItemWidth())
 
 
         view =  View()

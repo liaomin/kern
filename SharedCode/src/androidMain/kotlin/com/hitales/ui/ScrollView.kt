@@ -9,12 +9,15 @@ actual open class ScrollView : com.hitales.ui.ViewGroup {
 
     actual constructor(frame: Frame) : super(frame)
 
-    override fun createWidget(): android.widget.FrameLayout {
+    override fun createWidget(): AndroidScrollView {
         return AndroidScrollView.fromXLM(this)
     }
 
     override fun getWidget(): AndroidScrollView {
         return super.getWidget() as AndroidScrollView
+    }
+
+    actual open fun layoutSubViews(offsetX: Float, offsetY: Float) {
     }
 
 }

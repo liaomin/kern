@@ -1,38 +1,31 @@
 package com.hitales.ui
 
+import kotlinx.cinterop.*
+import platform.UIKit.UIImage
+import platform.UIKit.UIImagePNGRepresentation
+import platform.posix.memccpy
+
 
 actual class Image {
-//
-//    var bitmap:Bitmap? = null
-//
-//    constructor(bitmap: Bitmap){
-//        this.bitmap = bitmap
-//    }
-//
-//    actual private constructor()
-//
-//    actual companion object {
-//
-//        actual fun named(name: String): Image? {
-//            var inputStream:InputStream? = null
-//            try {
-//                inputStream = Platform.getApplication().assets.open(name)
-//                return Image(BitmapFactory.decodeStream(inputStream))
-//            }catch (e:Exception){
-//                e.printStackTrace()
-//            }finally {
-//                if(inputStream != null){
-//                    try {
-//                        inputStream.close()
-//                    }catch (e:Exception){
-//
-//                    }
-//                }
-//            }
-//            return null
-//        }
-//
-//    }
+
+    var mImage:UIImage? = null
+
+    constructor(image: UIImage){
+        this.mImage = image
+    }
+    actual private constructor()
+
+    actual companion object {
+        actual fun named(name: String): Image? {
+            try {
+                return Image(UIImage.imageNamed(name)!!)
+            }catch (e:Exception){
+                e.printStackTrace()
+            }
+            return null
+        }
+    }
+
 //
 //    actual fun getWidth(): Int {
 //       if(bitmap != null){
@@ -57,25 +50,51 @@ actual class Image {
 //        }
 //        return null
 //    }
-    actual companion object {
-        actual fun named(name: String): Image? {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-    }
 
-    private actual constructor() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     actual fun getWidth(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val image = mImage
+        if(image != null){
+            return image.size.useContents {
+                return@useContents this.width.toInt()
+            }
+
+        }
+        return 0
     }
 
     actual fun getHeight(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val image = mImage
+        if(image != null){
+            return image.size.useContents {
+                return@useContents this.width.toInt()
+            }
+        }
+        return 0
     }
 
     actual fun toData(): ByteArray? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val image = mImage
+        if(image != null){
+            val data = UIImagePNGRepresentation(image)
+            if(data != null){
+                val length = data.length.toInt()
+                val bytes = arrayOfNulls<Byte>(length)
+                val cBytes = data.bytes
+                if(cBytes != null){
+                    memScoped {
+                        val point = cBytes?.getPointer(this) as CPointer<ByteVar>
+                        for ( i in 0 until length){
+                            bytes[i] = point.get(i)
+                        }
+                    }
+                }
+                return (bytes as Array<Byte>).toByteArray()
+            }
+        }
+        return null
+    }
+
+    actual fun release() {
     }
 }

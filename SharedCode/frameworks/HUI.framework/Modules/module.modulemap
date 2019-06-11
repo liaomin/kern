@@ -1,0 +1,6 @@
+framework module HUI {
+    umbrella header "HUI.h"
+    
+    export *
+    module * { export * }
+}

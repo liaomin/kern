@@ -10,12 +10,7 @@ import kotlin.system.getTimeMillis
 
 actual open class Button :  com.hitales.ui.TextView {
 
-    private  var onPressListener:((view:View)->Unit)? = null
-
-    private  var onLongPressListener:((view:View)->Unit)? = null
-
     private var touchDownTime:Long = 0
-
 
     actual constructor(text:CharSequence?,frame: Frame):super(text,frame){
         val widget = getIOSWidget()
@@ -73,9 +68,6 @@ actual open class Button :  com.hitales.ui.TextView {
 
     }
 
-    actual open fun setImage(image: Image, state: ViewState) {
-    }
-
     actual open fun setTextColor(color: Int, state: ViewState) {
 //        textColorList.setColorForState(color,state)
     }
@@ -89,12 +81,7 @@ actual open class Button :  com.hitales.ui.TextView {
     }
 
 
-    actual fun setOnPressListener(listener: (iew: View) -> Unit) {
-        onPressListener = listener
-    }
-
-    actual fun setOnLongPressListener(listener: (iew: View) -> Unit) {
-        onLongPressListener = listener
+    actual open fun setBackgroundImage(image: Image, state: ViewState) {
     }
 
 }
