@@ -29,6 +29,8 @@ open class ViewController : BasicController() {
         view.setBackgroundColor(0x33999999)
         addView(view,"测试颜色",getIndex(),0x33999999)
 
+        var de:View? = View()
+        de = null
     }
 
 
@@ -396,13 +398,14 @@ class BorderWidthTestController : ViewController(){
         view.setBorderWidth(10f)
         view.setBorderRadius(getItemWidth() /2)
 
-//        for ( i in 0 .. 600){
-//            view = View()
-//            view.setBackgroundColor(bgColor)
-//            addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
-//            view.setBorderWidth(10f)
-//            view.setBorderRadius(getItemWidth() /2)
-//        }
+        for ( i in 0 .. 600){
+            view =  View()
+            view.setBackgroundColor(bgColor)
+            addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
+            view.setBorderWidth(10f)
+            view.setBorderColor(Colors.BLUE,Colors.GREEN,Colors.YELLOW,Colors.ORANGE)
+            view.setBorderRadius(getItemWidth())
+        }
     }
 
 }

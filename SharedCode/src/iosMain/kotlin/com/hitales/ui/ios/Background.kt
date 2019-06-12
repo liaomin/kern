@@ -5,8 +5,7 @@ import com.hitales.ui.BorderStyle
 import com.hitales.ui.Colors
 import com.hitales.ui.toUIColor
 import com.hitales.utils.Frame
-import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.useContents
+import kotlinx.cinterop.*
 import platform.CoreGraphics.*
 import platform.QuartzCore.CALayer
 import platform.UIKit.*
@@ -91,13 +90,32 @@ class Background {
         path.addLineToPoint(CGPointMake(size.width ,size.height - borderBottomRightRadius))
         path.addArcWithCenter(CGPointMake(size.width - borderBottomRightRadius,size.height - borderBottomRightRadius),borderBottomRightRadius, 0.0,M_PI_2,true)
 
-        path.addLineToPoint(CGPointMake(borderBottomLeftRadius,size.height - borderBottomLeftRadius))
+        path.addLineToPoint(CGPointMake(borderBottomLeftRadius,size.height))
         path.addArcWithCenter(CGPointMake(borderBottomLeftRadius,size.height - borderBottomLeftRadius),borderBottomLeftRadius, M_PI_2,M_PI,true)
         path.closePath()
         return path
     }
 
-    private fun getInnerPath(size: CGSize,borderLeftWidth:Double,borderTopWidth:Double,borderRightWidth:Double,borderBottomWidth:Double,borderTopLeftRadius:Double,borderTopRightRadius:Double,borderBottomRightRadius:Double,borderBottomLeftRadius:Double):UIBezierPath{
+
+    fun toImage(size: CGSize,bgColor:CGColorRef?):UIImage?{
+        if(bgColor == null) {
+            return  null
+        }
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(size.width,size.height),false,0.0)
+        val ctx = UIGraphicsGetCurrentContext()
+        val halfWidth = size.width / 2
+        val halfHeight = size.height / 2
+        val maxRadius = min(halfWidth,halfHeight)
+        var borderLeftWidth = min(borderLeftWidth.toDouble(),halfWidth)
+        var borderTopWidth =  min(borderTopWidth.toDouble(),halfHeight)
+        var borderRightWidth = min(borderRightWidth.toDouble(),halfWidth)
+        var borderBottomWidth = min(borderBottomWidth.toDouble(),halfHeight)
+        var borderTopLeftRadius = min(borderTopLeftRadius.toDouble(),maxRadius)
+        var borderTopRightRadius = min(borderTopRightRadius.toDouble(),maxRadius)
+        var borderBottomRightRadius = min(borderBottomRightRadius.toDouble(),maxRadius)
+        var borderBottomLeftRadius = min(borderBottomLeftRadius.toDouble(),maxRadius)
+        val outerPath = getOuterPath(size,borderLeftWidth,borderTopWidth,borderRightWidth,borderBottomWidth,borderTopLeftRadius,borderTopRightRadius,borderBottomRightRadius,borderBottomLeftRadius)
+
         val path = UIBezierPath.bezierPath()
         val width = size.width
         val height = size.height
@@ -161,38 +179,165 @@ class Background {
             path.addLineToPoint(CGPointMake(borderLeftWidth,borderTopWidth))
         }
         path.closePath()
-        return path
-    }
+        val innerPath = path
 
-    fun toImage(size: CGSize):UIImage?{
-        UIGraphicsBeginImageContextWithOptions(CGSizeMake(size.width,size.height),false,0.0)
-        val ctx = UIGraphicsGetCurrentContext()
-        val halfWidth = size.width / 2
-        val halfHeight = size.height / 2
-        val maxRadius = min(halfWidth,halfHeight)
-        var borderLeftWidth = min(borderLeftWidth.toDouble(),halfWidth)
-        var borderTopWidth =  min(borderTopWidth.toDouble(),halfHeight)
-        var borderRightWidth = min(borderRightWidth.toDouble(),halfWidth)
-        var borderBottomWidth = min(borderBottomWidth.toDouble(),halfHeight)
-        var borderTopLeftRadius = min(borderTopLeftRadius.toDouble(),maxRadius)
-        var borderTopRightRadius = min(borderTopRightRadius.toDouble(),maxRadius)
-        var borderBottomRightRadius = min(borderBottomRightRadius.toDouble(),maxRadius)
-        var borderBottomLeftRadius = min(borderBottomLeftRadius.toDouble(),maxRadius)
-        val outerPath = getOuterPath(size,borderLeftWidth,borderTopWidth,borderRightWidth,borderBottomWidth,borderTopLeftRadius,borderTopRightRadius,borderBottomRightRadius,borderBottomLeftRadius)
-        val innerPath = getInnerPath(size,borderLeftWidth,borderTopWidth,borderRightWidth,borderBottomWidth,borderTopLeftRadius,borderTopRightRadius,borderBottomRightRadius,borderBottomLeftRadius)
 
-        CGContextSetStrokeColorWithColor(ctx,UIColor.greenColor.CGColor)
+        CGContextSetFillColorWithColor(ctx,bgColor)
         CGContextAddPath(ctx, outerPath.CGPath)
-        CGContextStrokePath(ctx)
-//
-        CGContextSetStrokeColorWithColor(ctx,UIColor.blueColor.CGColor)
-        CGContextAddPath(ctx, innerPath.CGPath)
-        CGContextStrokePath(ctx)
-
-
-        CGContextSetFillColorWithColor(ctx,UIColor.blueColor.CGColor)
-        CGContextAddRect(ctx, CGRectMake(30.0,30.0,50.5,50.0))
         CGContextFillPath(ctx)
+
+        CGContextAddPath(ctx, outerPath.CGPath)
+        CGContextAddPath(ctx, innerPath.CGPath)
+        CGContextEOClip(ctx)
+
+        val sameBorderColor = sameBorderColor()
+        if(sameBorderColor){
+            CGContextSetFillColorWithColor(ctx,borderLeftColor.toUIColor().CGColor)
+            CGContextAddRect(ctx, CGRectMake(0.0,0.0,size.width,size.height))
+            CGContextFillPath(ctx)
+        }else{
+            var topLeftX = points[0]
+            var topLeftY = borderTopWidth
+            var topRightX = points[2]
+            var topRightY = borderTopWidth
+            var bottomRightX =  points[8]
+            var bottomRightY =  height - borderBottomWidth
+            var bottomLeftX =  points[10]
+            var bottomLeftY =  height - borderBottomWidth
+
+            if(borderLeftWidth > 0){
+                val k = topLeftX / borderLeftWidth
+                topLeftY =  borderTopWidth *k
+                bottomLeftY =  height - borderBottomWidth * k
+            }
+            if(borderRightWidth > 0){
+                val k =  (width - topRightX) /  borderRightWidth
+                topRightY =  borderTopWidth * k
+                bottomRightY =  height - borderBottomWidth * k
+            }
+
+            var currentColor = borderLeftColor
+            //left
+            CGContextSetFillColorWithColor(ctx,currentColor.toUIColor().CGColor)
+            if(borderLeftWidth > 0 && currentColor ushr  24 != 0){
+                val lines= createValues<CGPoint>(4){ i ->
+                    when (i){
+                        0 -> {
+                            this.x = 0.0
+                            this.y = 0.0
+                        }
+                        1->{
+                            this.x = topLeftX
+                            this.y = topLeftY
+                        }
+                        2->{
+                            this.x = bottomLeftX
+                            this.y = bottomLeftY
+                        }
+                        3->{
+                            this.x = 0.0
+                            this.y = size.height
+                        }
+                    }
+                }
+                CGContextAddLines(ctx,lines,4)
+//                    CGContextAddRect(ctx, CGRectMake(0.0,0.0,halfWidth,size.height))
+            }
+
+            //top
+            if(currentColor != borderTopColor){
+                CGContextFillPath(ctx)
+                currentColor = borderTopColor
+                CGContextSetFillColorWithColor(ctx,currentColor.toUIColor().CGColor)
+            }
+            if(borderTopWidth > 0 && currentColor ushr  24 != 0){
+                val lines= createValues<CGPoint>(4){ i ->
+                    when (i){
+                        0 -> {
+                            this.x = 0.0
+                            this.y = 0.0
+                        }
+                        1->{
+                            this.x = size.width
+                            this.y = 0.0
+                        }
+                        2->{
+                            this.x = topRightX
+                            this.y = topRightY
+                        }
+                        3->{
+                            this.x = topLeftX
+                            this.y = topLeftY
+                        }
+                    }
+                }
+                CGContextAddLines(ctx,lines,4)
+//                    CGContextAddRect(ctx, CGRectMake(0.0,0.0,size.width,halfHeight))
+            }
+
+            //right
+            if(currentColor != borderRightColor){
+                CGContextFillPath(ctx)
+                currentColor = borderRightColor
+                CGContextSetFillColorWithColor(ctx,currentColor.toUIColor().CGColor)
+            }
+            if(borderRightWidth > 0 && currentColor ushr  24 != 0) {
+                val lines= createValues<CGPoint>(4){ i ->
+                    when (i){
+                        0 -> {
+                            this.x = topRightX
+                            this.y = topRightY
+                        }
+                        1->{
+                            this.x = size.width
+                            this.y = 0.0
+                        }
+                        2->{
+                            this.x = size.width
+                            this.y = size.height
+                        }
+                        3->{
+                            this.x = bottomRightX
+                            this.y = bottomRightY
+                        }
+                    }
+                }
+                CGContextAddLines(ctx,lines,4)
+//                    CGContextAddRect(ctx, CGRectMake(halfWidth, 0.0, halfWidth, size.height))
+            }
+
+            //bottom
+            if(currentColor != borderBottomColor){
+                CGContextFillPath(ctx)
+                currentColor = borderBottomColor
+                CGContextSetFillColorWithColor(ctx,currentColor.toUIColor().CGColor)
+            }
+            if(borderBottomWidth > 0 && currentColor ushr  24 != 0) {
+                val lines= createValues<CGPoint>(4){ i ->
+                    when (i){
+                        0 -> {
+                            this.x = bottomLeftX
+                            this.y = bottomLeftY
+                        }
+                        1->{
+                            this.x = bottomRightX
+                            this.y = bottomRightY
+                        }
+                        2->{
+                            this.x = size.width
+                            this.y = size.height
+                        }
+                        3->{
+                            this.x = 0.0
+                            this.y = size.height
+                        }
+                    }
+                }
+                CGContextAddLines(ctx,lines,4)
+//                    CGContextAddRect(ctx, CGRectMake(0.0, halfHeight, size.width, halfHeight))
+            }
+            CGContextFillPath(ctx)
+        }
 
         val image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
@@ -201,7 +346,7 @@ class Background {
 
 
     fun onDraw(layer: CALayer){
-        layer.contents = UIImage.imageNamed("1.jpg")!!.CGImage
+        val bgColor = layer.backgroundColor
         val size = layer.bounds.useContents { this.size }
         val haveBorderWidth = haveBorderWidth()
         if(size.width <= 0 || size.height <= 0){
@@ -210,15 +355,15 @@ class Background {
         if(haveBorderWidth){
             val sameBorderColor = sameBorderColor()
             val sameBorderWidth = sameBorderWidth()
-            val haveBorderRadius = haveBorderRadius()
             val sameBorderRadius = sameBorderRadius()
             if(sameBorderColor && sameBorderWidth && sameBorderRadius){
                 layer.borderColor = borderLeftColor.toUIColor().CGColor
                 layer.borderWidth = borderLeftWidth.toDouble()
                 layer.cornerRadius = min(min(size.width,size.height) / 2 , borderTopLeftRadius.toDouble())
             }else{
-                val image = toImage(size)
+                val image = toImage(size,bgColor)
                 if(image != null){
+                    layer.backgroundColor = null
                     layer.setContentsWithImage(image)
                     layer.contentsScale = image.scale
                     layer.needsDisplayOnBoundsChange = true

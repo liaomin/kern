@@ -44,14 +44,23 @@ kotlin {
             cinterops {
                 myInterop {
                     defFile project.file("frameworks/HUI.def")
-//                    compilerOpts '-F./frameworks'
-//                    linkerOpts  '-F/Users/liaomin/Documents/ideaProject/Kotlin/Android/SharedCode/frameworks'
                     includeDirs("frameworks/HUI.framework/Headers")
                 }
 
             }
         }
     }
+//    iosArm64('ios'){
+//        compilations.main {
+//            cinterops {
+//                myInterop {
+//                    defFile project.file("frameworks/HUI.def")
+//                    includeDirs("frameworks/HUI.framework/Headers")
+//                }
+//
+//            }
+//        }
+//    }
 
     android {
 

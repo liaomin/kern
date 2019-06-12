@@ -38,20 +38,6 @@ inline fun UIColor.toInt():Int{
 
 actual open class View {
 
-    actual companion object {
-        val image = UIImage.imageNamed("1.jpg")
-        fun getCGImage():CGImageRef?{
-            return image!!.CGImage
-        }
-        actual fun getCGImage2():Any?{
-            return image!!.CGImage
-        }
-        fun getCGImage3():Any?{
-            return memScoped { image!!.CGImage?.getPointer(this) }
-
-        }
-    }
-
     protected  var onPressListener:((view:View)->Unit)? = null
 
     protected  var onLongPressListener:((view:View)->Unit)? = null
@@ -64,6 +50,7 @@ actual open class View {
 
     init {
         setBackgroundColor(0)
+        IOSView(WeakReference(this))
     }
 
     actual var padding: EdgeInsets? = null

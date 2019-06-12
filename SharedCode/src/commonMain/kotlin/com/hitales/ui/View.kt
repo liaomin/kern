@@ -19,10 +19,6 @@ enum class BorderStyle(val value:Int) {
 }
 
 expect open class View  {
-    companion object {
-        fun getCGImage2():Any?
-    }
-
     /**
      * use margin and padding to calculate frame
      */
