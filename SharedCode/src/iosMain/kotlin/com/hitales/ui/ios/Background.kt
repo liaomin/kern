@@ -96,11 +96,88 @@ class Background {
         return path
     }
 
+    private fun getDashedInnerPath(size: CGSize,borderLeftWidth:Double,borderTopWidth:Double,borderRightWidth:Double,borderBottomWidth:Double,borderTopLeftRadius:Double,borderTopRightRadius:Double,borderBottomRightRadius:Double,borderBottomLeftRadius:Double):UIBezierPath{
+        val lineWidth = borderLeftWidth
+        val halfWidth = lineWidth / 2
+        val path = UIBezierPath.bezierPath()
 
-    fun toImage(size: CGSize,bgColor:CGColorRef?):UIImage?{
-        if(bgColor == null) {
-            return  null
+        var r = max(0.0, borderTopLeftRadius - halfWidth)
+        if(r > 0){
+            path.moveToPoint(CGPointMake(halfWidth,borderTopLeftRadius))
+            path.addArcWithCenter(CGPointMake(borderTopLeftRadius,borderTopLeftRadius),r, M_PI,3*M_PI_2,true)
+        }else{
+            path.moveToPoint(CGPointMake(halfWidth,halfWidth))
         }
+
+        r = max(0.0, borderTopRightRadius - halfWidth)
+        if(r > 0){
+            path.addLineToPoint(CGPointMake(size.width - borderTopRightRadius,halfWidth))
+            path.addArcWithCenter(CGPointMake(size.width - borderTopRightRadius,borderTopRightRadius),r, 3*M_PI_2,0.0,true)
+        }else{
+            path.addLineToPoint(CGPointMake(size.width - halfWidth,halfWidth))
+        }
+
+        r = max(0.0, borderBottomRightRadius - halfWidth)
+        if(r > 0){
+            path.addLineToPoint(CGPointMake(size.width - halfWidth,size.height - borderBottomRightRadius))
+            path.addArcWithCenter(CGPointMake(size.width - borderBottomRightRadius,size.height - borderBottomRightRadius),r, 0.0,M_PI_2,true)
+        }else{
+            path.addLineToPoint(CGPointMake(size.width - halfWidth,size.height - halfWidth))
+        }
+
+        r = max(0.0, borderBottomLeftRadius - halfWidth)
+        if(r > 0){
+            path.addLineToPoint(CGPointMake(borderBottomLeftRadius,size.height - halfWidth))
+            path.addArcWithCenter(CGPointMake(borderBottomLeftRadius,size.height - borderBottomLeftRadius),r, M_PI_2,M_PI,true)
+        }else{
+            path.addLineToPoint(CGPointMake(halfWidth,size.height - halfWidth))
+        }
+        path.closePath()
+        return path
+    }
+
+
+    fun toDashedImage(size: CGSize,bgColor:Int,dashedScale:Double):UIImage?{
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(size.width,size.height),false,0.0)
+        val ctx = UIGraphicsGetCurrentContext()
+        val halfWidth = size.width / 2
+        val halfHeight = size.height / 2
+        val maxRadius = min(halfWidth,halfHeight)
+        var borderLeftWidth = min(borderLeftWidth.toDouble(),halfWidth)
+        var borderTopWidth =  min(borderTopWidth.toDouble(),halfHeight)
+        var borderRightWidth = min(borderRightWidth.toDouble(),halfWidth)
+        var borderBottomWidth = min(borderBottomWidth.toDouble(),halfHeight)
+        var borderTopLeftRadius = min(borderTopLeftRadius.toDouble(),maxRadius)
+        var borderTopRightRadius = min(borderTopRightRadius.toDouble(),maxRadius)
+        var borderBottomRightRadius = min(borderBottomRightRadius.toDouble(),maxRadius)
+        var borderBottomLeftRadius = min(borderBottomLeftRadius.toDouble(),maxRadius)
+        val outerPath = getOuterPath(size,borderLeftWidth,borderTopWidth,borderRightWidth,borderBottomWidth,borderTopLeftRadius,borderTopRightRadius,borderBottomRightRadius,borderBottomLeftRadius)
+        val innerPath = getDashedInnerPath(size,borderLeftWidth,borderTopWidth,borderRightWidth,borderBottomWidth,borderTopLeftRadius,borderTopRightRadius,borderBottomRightRadius,borderBottomLeftRadius)
+
+
+        CGContextSetFillColorWithColor(ctx,bgColor.toUIColor().CGColor)
+        CGContextAddPath(ctx, outerPath.CGPath)
+        CGContextFillPath(ctx)
+
+//        CGContextAddPath(ctx,  innerPath.CGPath)
+//        CGContextSetStrokeColorWithColor(ctx, Colors.GREEN.toUIColor().CGColor)
+//        CGContextStrokePath(ctx)
+
+        CGContextSetLineWidth(ctx, borderLeftWidth)
+        val dashLengths = createValues<CGFloatVar>(2){
+            this.value = dashedScale * borderLeftWidth
+        }
+        CGContextSetLineDash(ctx, 0.0, dashLengths, 2)
+        CGContextAddPath(ctx,  innerPath.CGPath)
+        CGContextSetStrokeColorWithColor(ctx, borderLeftColor.toUIColor().CGColor)
+        CGContextStrokePath(ctx)
+
+        val image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
+    }
+
+    fun toImage(size: CGSize,bgColor:Int):UIImage?{
         UIGraphicsBeginImageContextWithOptions(CGSizeMake(size.width,size.height),false,0.0)
         val ctx = UIGraphicsGetCurrentContext()
         val halfWidth = size.width / 2
@@ -182,7 +259,7 @@ class Background {
         val innerPath = path
 
 
-        CGContextSetFillColorWithColor(ctx,bgColor)
+        CGContextSetFillColorWithColor(ctx,bgColor.toUIColor().CGColor)
         CGContextAddPath(ctx, outerPath.CGPath)
         CGContextFillPath(ctx)
 
@@ -345,41 +422,60 @@ class Background {
     }
 
 
-    fun onDraw(layer: CALayer){
-        val bgColor = layer.backgroundColor
-        val size = layer.bounds.useContents { this.size }
-        val haveBorderWidth = haveBorderWidth()
-        if(size.width <= 0 || size.height <= 0){
-            return
-        }
-        if(haveBorderWidth){
-            val sameBorderColor = sameBorderColor()
-            val sameBorderWidth = sameBorderWidth()
-            val sameBorderRadius = sameBorderRadius()
-            if(sameBorderColor && sameBorderWidth && sameBorderRadius){
-                layer.borderColor = borderLeftColor.toUIColor().CGColor
-                layer.borderWidth = borderLeftWidth.toDouble()
-                layer.cornerRadius = min(min(size.width,size.height) / 2 , borderTopLeftRadius.toDouble())
-            }else{
-                val image = toImage(size,bgColor)
-                if(image != null){
-                    layer.backgroundColor = null
-                    layer.setContentsWithImage(image)
-                    layer.contentsScale = image.scale
-                    layer.needsDisplayOnBoundsChange = true
-                    layer.mask = null
-                }else{
-                    layer.contents = null
-                    layer.needsDisplayOnBoundsChange = false
-                    layer.mask = null
-                }
-            }
-        }else{
-            layer.contents = null
-            layer.needsDisplayOnBoundsChange = false
-            layer.mask = null
-        }
-
+    fun onDraw(layer: CALayer,bgColor: Int){
+         layer.bounds.useContents {
+             val size = this.size
+             val haveBorderWidth = haveBorderWidth()
+             if(size.width <= 0 || size.height <= 0){
+                 return
+             }
+             if(haveBorderWidth){
+                 val sameBorderColor = sameBorderColor()
+                 val sameBorderWidth = sameBorderWidth()
+                 val sameBorderRadius = sameBorderRadius()
+                 var borderImage:UIImage? = null
+                 var useImage = false
+                 when (borderStyle){
+                     BorderStyle.SOLID -> {
+                         if(sameBorderColor && sameBorderWidth && sameBorderRadius){
+                             layer.borderColor = borderLeftColor.toUIColor().CGColor
+                             val halfWidth = size.width / 2
+                             val halfHeight = size.height / 2
+                             val maxRadius = min(halfWidth,halfHeight)
+                             layer.borderWidth = min(borderLeftWidth.toDouble(),maxRadius)
+                             layer.cornerRadius = min(maxRadius , borderTopLeftRadius.toDouble())
+                         }else{
+                             borderImage = toImage(size,bgColor)
+                             useImage = true
+                         }
+                     }
+                     BorderStyle.DASHED ->{
+                         borderImage = toDashedImage(size,bgColor,3.0)
+                         useImage = true
+                     }
+                     BorderStyle.DOTTED ->{
+                         borderImage = toDashedImage(size,bgColor,1.0)
+                         useImage = true
+                     }
+                 }
+                 if(useImage && borderImage != null){
+                     layer.backgroundColor = null
+                     layer.setContentsWithImage(borderImage)
+                     layer.contentsScale = borderImage.scale
+                     layer.needsDisplayOnBoundsChange = true
+                     layer.mask = null
+                 }else{
+                     layer.contents = null
+                     layer.backgroundColor = bgColor.toUIColor().CGColor
+                     layer.needsDisplayOnBoundsChange = false
+                     layer.mask = null
+                 }
+             }else{
+                 layer.contents = null
+                 layer.needsDisplayOnBoundsChange = false
+                 layer.mask = null
+             }
+         }
     }
 
 
@@ -420,7 +516,7 @@ class Background {
         borderBottomLeftRadius = bottomLeftRadius
     }
 
-    fun  setBorderStyle(borderStyle: BorderStyle){
+    fun setBorderStyle(borderStyle: BorderStyle){
         if(this.borderStyle != borderStyle){
             this.borderStyle = borderStyle
         }

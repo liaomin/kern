@@ -44,13 +44,12 @@ actual open class View {
 
     protected val mWidget: UIView = createWidget()
 
-    var mBackground:Background? = null
+    var mBackgroundColor = Colors.CLEAR
 
-    private var mBorderLayer: CAShapeLayer? = null
+    var mBackground:Background? = null
 
     init {
         setBackgroundColor(0)
-        IOSView(WeakReference(this))
     }
 
     actual var padding: EdgeInsets? = null
@@ -89,6 +88,7 @@ actual open class View {
     }
 
     actual open fun setBackgroundColor(color: Int) {
+        mBackgroundColor = color
         getWidget().backgroundColor = color.toUIColor()
     }
 
@@ -117,7 +117,6 @@ actual open class View {
 
     open fun setWidgetFrame(value:Frame){
         getWidget().setFrame(CGRectMake(value.x.toDouble(),value.y.toDouble(),value.width.toDouble(),value.height.toDouble()))
-        mBorderLayer?.frame = CGRectMake(0.0,0.0,value.width.toDouble(),value.height.toDouble())
     }
 
     actual open fun setBorderColor(color: Int) {
@@ -164,6 +163,10 @@ actual open class View {
     actual open var hidden: Boolean = false
 
     actual open var borderStyle: BorderStyle = BorderStyle.SOLID
+        set(value) {
+            field = value
+            getOrCreateBackground().setBorderStyle(value)
+        }
 
     /**
      * events
@@ -177,19 +180,19 @@ actual open class View {
     }
 
     actual fun getBorderLeftWidth(): Float {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return mBackground?.borderLeftWidth?:0f
     }
 
     actual fun getBorderTopWidth(): Float {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return mBackground?.borderTopWidth?:0f
     }
 
     actual fun getBorderRightWidth(): Float {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return mBackground?.borderRightWidth?:0f
     }
 
     actual fun getBorderBottomWidth(): Float {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return mBackground?.borderBottomWidth?:0f
     }
 
     /**
@@ -199,7 +202,6 @@ actual open class View {
     actual open fun measureSize(maxWidth: Float, maxHeight: Float): Size {
         return Size(frame.width,frame.height)
     }
-
 
     protected fun getOrCreateBackground(): Background {
         if (mBackground == null) {

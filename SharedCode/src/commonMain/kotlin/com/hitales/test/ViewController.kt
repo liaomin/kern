@@ -138,10 +138,28 @@ class BorderWidthTestController : ViewController(){
         view =  View()
         view.setBackgroundColor(bgColor)
         addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
+        view.setBorderWidth(10f,20F,30F,40F)
+        view.setBorderRadius(10f,20F,30F,40F)
+        view.setBorderColor(Colors.BLUE)
+        view.borderStyle = BorderStyle.DOTTED
+
+        view =  View()
+        view.setBackgroundColor(bgColor)
+        addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
         view.setBorderWidth(10f)
         view.setBorderColor(Colors.BLUE,Colors.GREEN,Colors.YELLOW,Colors.ORANGE)
         view.setBorderColor(Colors.BLUE)
         view.setBorderRadius(10f)
+        view.borderStyle = BorderStyle.DOTTED
+
+
+        view =  View()
+        view.setBackgroundColor(bgColor)
+        addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
+        view.setBorderWidth(10f)
+        view.setBorderColor(Colors.BLUE,Colors.GREEN,Colors.YELLOW,Colors.ORANGE)
+        view.setBorderColor(Colors.BLUE)
+        view.setBorderRadius(40f)
         view.borderStyle = BorderStyle.DOTTED
 
 
@@ -397,15 +415,15 @@ class BorderWidthTestController : ViewController(){
         addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
         view.setBorderWidth(10f)
         view.setBorderRadius(getItemWidth() /2)
-
-        for ( i in 0 .. 600){
-            view =  View()
-            view.setBackgroundColor(bgColor)
-            addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
-            view.setBorderWidth(10f)
-            view.setBorderColor(Colors.BLUE,Colors.GREEN,Colors.YELLOW,Colors.ORANGE)
-            view.setBorderRadius(getItemWidth())
-        }
+//
+//        for ( i in 0 .. 600){
+//            view =  View()
+//            view.setBackgroundColor(bgColor)
+//            addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
+//            view.setBorderWidth(10f)
+//            view.setBorderColor(Colors.BLUE,Colors.GREEN,Colors.YELLOW,Colors.ORANGE)
+//            view.setBorderRadius(getItemWidth())
+//        }
     }
 
 }
