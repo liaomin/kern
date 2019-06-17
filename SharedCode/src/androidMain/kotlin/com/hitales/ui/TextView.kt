@@ -21,8 +21,8 @@ actual open class TextView :  View {
 
     protected val textColorList = getDefaultColorList()
 
-    actual open var text:CharSequence?
-        get() = getWidget().text
+    actual open var text:CharSequence
+        get() = getWidget().text?:""
         set(value) {
             getWidget().text = value
             onTextValueSet()

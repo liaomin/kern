@@ -25,7 +25,7 @@ expect open class TextView : View {
 
     constructor(text:CharSequence? = "",frame: Frame = Frame.zero())
 
-    open var text:CharSequence?
+    open var text:CharSequence
 
     open var textSize:Float
 

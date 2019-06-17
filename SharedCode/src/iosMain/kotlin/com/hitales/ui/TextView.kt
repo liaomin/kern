@@ -1,19 +1,20 @@
 package com.hitales.ui
+import com.hitales.ios.ui.Convert
 import com.hitales.ui.ios.IOSTextView
 import com.hitales.utils.Frame
 import com.hitales.utils.Size
 import com.hitales.utils.WeakReference
-import platform.Foundation.NSMutableAttributedString
-import platform.Foundation.NSString
-import platform.Foundation.initWithString
+import kotlinx.cinterop.useContents
+import platform.CoreGraphics.CGSizeMake
+import platform.Foundation.*
 import platform.UIKit.*
 
 actual open class TextView :  View {
 
-    actual open var text:CharSequence?
-        get() = getTextWidget().text
+    actual open var text:CharSequence = ""
         set(value) {
-            getTextWidget().text = value.toString()
+            field = value
+            getTextWidget().attributedText = getAttributedString()
         }
 
     actual open var textSize: Float
@@ -35,6 +36,7 @@ actual open class TextView :  View {
     open fun initWidget(text:CharSequence?,frame: Frame){
         val widget = getTextWidget()
         widget.text = text?.toString()
+        widget.lineBreakMode = NSLineBreakByTruncatingTail
         widget.setTextColor(0xFF000000.toInt().toUIColor())
     }
 
@@ -55,17 +57,27 @@ actual open class TextView :  View {
      */
     actual open var bold: Boolean = false
         set(value) {
+            field = value
             val widget = getTextWidget()
-            widget.font = UIFont.boldSystemFontOfSize(widget.font().pointSize)
+            if(value){
+                widget.font = UIFont.boldSystemFontOfSize(widget.font().pointSize)
+            }else{
+                widget.font = UIFont.systemFontOfSize(widget.font().pointSize)
+            }
         }
 
     actual open var lineHeight: Float = 0f
         set(value) {
             field = value
-//            getTextWidget().setAttributedText()
-            val widget = getTextWidget()
-            val t = NSMutableAttributedString()
+            var attr  = getTextWidget().attributedText
+            if(attr != null){
+                attr = (attr as NSMutableAttributedString)
+                val range = NSMakeRange(0,text.length.toULong())
+
+            }
         }
+
+
     /**
      * default false
      */
@@ -74,40 +86,76 @@ actual open class TextView :  View {
     /**
      * default LEFT
      */
-    actual open var alignment: TextAlignment
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
+    actual open var alignment: TextAlignment = TextAlignment.LEFT
+        set(value) {
+            field = value
+            when (alignment){
+                TextAlignment.RIGHT ->  getTextWidget().textAlignment = NSTextAlignmentRight
+                TextAlignment.CENTER ->  getTextWidget().textAlignment = NSTextAlignmentCenter
+                TextAlignment.LEFT ->  getTextWidget().textAlignment = NSTextAlignmentLeft
+            }
+        }
+
     /**
      * default NONE
      */
-    actual open var decorationLine: TextDecorationLine
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
+    actual open var decorationLine: TextDecorationLine = TextDecorationLine.NONE
+        set(value) {
+            field = value
+            var attr  = getTextWidget().attributedText
+            if(attr != null){
+                attr = (attr as NSMutableAttributedString)
+                val range = NSMakeRange(0,text.length.toULong())
+                when (value){
+                    TextDecorationLine.UNDERLINE ->  attr.addAttribute(NSUnderlineStyleAttributeName,NSUnderlineStyleSingle,range)
+                    TextDecorationLine.LINE_THROUGH ->  attr.addAttribute(NSStrikethroughStyleAttributeName,NSUnderlineStyleSingle,range)
+                    TextDecorationLine.UNDERLINE_LINE_THROUGH ->  {
+                        attr.addAttribute(NSStrikethroughStyleAttributeName,NSUnderlineStyleSingle,range)
+                        attr.addAttribute(NSUnderlineStyleAttributeName,NSUnderlineStyleSingle,range)
+                    }
+                }
+            }
+        }
+
     /**
      * default 0
      * android api >= 21
      */
-    actual open var letterSpacing: Float
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
+    actual open var letterSpacing: Float = 0f
+        set(value) {
+            field = value
+            val attr  = getTextWidget().attributedText
+            if(attr != null){
+                (attr as NSMutableAttributedString).addAttribute(NSKernAttributeName, value,NSMakeRange(0,text.length.toULong()))
+            }
+        }
+
     /**
      * default TAIL
      */
-    actual open var ellipsizeMode: TextEllipsizeMode
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
+    actual open var ellipsizeMode: TextEllipsizeMode = TextEllipsizeMode.TAIL
+        set(value) {
+            field = value
+            when (value){
+                TextEllipsizeMode.TAIL -> getTextWidget().lineBreakMode = NSLineBreakByTruncatingTail
+                TextEllipsizeMode.HEAD -> getTextWidget().lineBreakMode = NSLineBreakByTruncatingHead
+                TextEllipsizeMode.MIDDLE -> getTextWidget().lineBreakMode = NSLineBreakByTruncatingMiddle
+            }
+        }
+
     /**
      * default true
      */
-    actual open var selectable: Boolean
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
+    actual open var selectable: Boolean = true
+
     /**
      * default 0
      */
     actual open var numberOfLines: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
+        get() { return  getTextWidget().numberOfLines.toInt() }
+        set(value) {
+            getTextWidget().numberOfLines = value.toLong()
+        }
 
     /**
      * 自定义字体
@@ -117,6 +165,7 @@ actual open class TextView :  View {
 
     actual open fun setShadow(color: Int, dx: Float, dy: Float, radius: Float) {
     }
+
 
     override fun measureSize(maxWidth: Float, maxHeight: Float): Size {
         val text = this.text
@@ -129,10 +178,10 @@ actual open class TextView :  View {
             if(height <= 0){
                 height = Float.MAX_VALUE
             }
-            val str = text.toString()
-//            val s  = NSString(str)
-//            s.boundingRectWithSize()
-            return Size(width,maxHeight)
+            return getAttributedString().boundingRectWithSize(CGSizeMake(width.toDouble(),height.toDouble()),
+                NSStringDrawingUsesLineFragmentOrigin or NSStringDrawingUsesFontLeading,null).useContents {
+                return Size(this.size.width.toFloat(),this.size.height.toFloat())
+            }
         }else{
             return super.measureSize(maxWidth, maxHeight)
         }
@@ -140,8 +189,32 @@ actual open class TextView :  View {
 
 
     protected fun getAttributedString():NSMutableAttributedString{
-        val attr = NSMutableAttributedString()
-//        attr.setAttributes()
+        val textWidget = getTextWidget()
+        val text = this.text
+        val attr =  Convert.newNSMutableAttributedString(text.toString())
+        val range = NSMakeRange(0,text.length.toULong())
+        attr.addAttribute(NSFontAttributeName,textWidget.font,range)
+        val style = NSMutableParagraphStyle()
+        if(lineHeight >= 0){
+            style.setLineSpacing(lineHeight - textWidget.font.pointSize)
+            when (alignment){
+                TextAlignment.RIGHT ->  style.setAlignment(NSTextAlignmentRight)
+                TextAlignment.CENTER ->  style.setAlignment(NSTextAlignmentCenter)
+                TextAlignment.LEFT ->  style.setAlignment(NSTextAlignmentLeft)
+            }
+        }
+        attr.addAttribute(NSParagraphStyleAttributeName,style,range)
+        if(letterSpacing >= 0){
+            attr.addAttribute(NSKernAttributeName,letterSpacing,range)
+        }
+        when (decorationLine){
+            TextDecorationLine.UNDERLINE ->  attr.addAttribute(NSUnderlineStyleAttributeName,NSUnderlineStyleSingle,range)
+            TextDecorationLine.LINE_THROUGH ->  attr.addAttribute(NSStrikethroughStyleAttributeName,NSUnderlineStyleSingle,range)
+            TextDecorationLine.UNDERLINE_LINE_THROUGH ->  {
+                attr.addAttribute(NSStrikethroughStyleAttributeName,NSUnderlineStyleSingle,range)
+                attr.addAttribute(NSUnderlineStyleAttributeName,NSUnderlineStyleSingle,range)
+            }
+        }
         return attr
     }
 }
