@@ -35,8 +35,11 @@ actual open class TextView :  View {
 
     open fun initWidget(text:CharSequence?,frame: Frame){
         val widget = getTextWidget()
-        widget.text = text?.toString()
+        if(text != null){
+            this.text = text!!
+        }
         widget.lineBreakMode = NSLineBreakByTruncatingTail
+        widget.numberOfLines = 0
         widget.setTextColor(0xFF000000.toInt().toUIColor())
     }
 
