@@ -2,10 +2,7 @@ package com.hitales.ui
 
 import com.hitales.ui.ios.Background
 import com.hitales.ui.ios.IOSView
-import com.hitales.utils.EdgeInsets
-import com.hitales.utils.Frame
-import com.hitales.utils.Size
-import com.hitales.utils.WeakReference
+import com.hitales.utils.*
 import kotlinx.cinterop.*
 import platform.CoreGraphics.CGImageRef
 import platform.CoreGraphics.CGRectMake
@@ -13,7 +10,9 @@ import platform.CoreGraphics.CGSizeMake
 import platform.QuartzCore.CAShapeLayer
 import platform.UIKit.*
 import platform.darwin.NSObject
+import platform.objc.sel_registerName
 import kotlin.math.max
+import kotlin.system.getTimeMillis
 
 
 inline fun Int.toUIColor():UIColor{
@@ -40,7 +39,13 @@ actual open class View {
 
     protected  var onPressListener:((view:View)->Unit)? = null
 
+    protected var pressGestureRecognizer:UIGestureRecognizer? = null
+
+    private var lastPressEventTime = 0.toLong()
+
     protected  var onLongPressListener:((view:View)->Unit)? = null
+
+    protected var longPressGestureRecognizer:UIGestureRecognizer? = null
 
     protected val mWidget: UIView = createWidget()
 
@@ -173,12 +178,39 @@ actual open class View {
      */
     actual fun setOnPressListener(listener: (view: View) -> Unit) {
         onPressListener = listener
+        if(pressGestureRecognizer == null){
+            val gestureRecognizer = UITapGestureRecognizer(this, sel_registerName("onPress"))
+            gestureRecognizer.cancelsTouchesInView = false
+            mWidget.addGestureRecognizer(gestureRecognizer)
+            pressGestureRecognizer = gestureRecognizer
+        }
     }
 
     actual fun setOnLongPressListener(listener: (iew: View) -> Unit) {
-        onPressListener = listener
+        onLongPressListener = listener
+        if(longPressGestureRecognizer == null){
+            val gestureRecognizer = UILongPressGestureRecognizer(this, sel_registerName("onLongPress"))
+            gestureRecognizer.cancelsTouchesInView = false
+            mWidget.addGestureRecognizer(gestureRecognizer)
+            longPressGestureRecognizer = gestureRecognizer
+        }
     }
 
+    fun onPress(){
+        onPressListener?.invoke(this)
+        lastPressEventTime = getTimeMillis()
+    }
+
+    fun onLongPress(){
+        onLongPressListener?.invoke(this)
+        if(longPressGestureRecognizer?.state  == UIGestureRecognizerStateBegan && ((getTimeMillis() - lastPressEventTime) >= 1000)){
+            lastPressEventTime = getTimeMillis()
+        }
+    }
+
+    /**
+     * border
+     */
     actual fun getBorderLeftWidth(): Float {
         return mBackground?.borderLeftWidth?:0f
     }

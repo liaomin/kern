@@ -16,9 +16,9 @@ actual open class Button :  com.hitales.ui.TextView {
         val widget = getIOSWidget()
         widget.setTitle(text?.toString(),UIControlStateNormal)
         setTextColor(0xFF0000FF.toInt())
-        widget.addTarget(this, sel_registerName("touchDown"),UIControlEventTouchDown)
-        widget.addTarget(this, sel_registerName("touchUpInside"),UIControlEventTouchUpInside)
-        widget.addTarget(this, sel_registerName("touchUpOutside"),UIControlEventTouchUpOutside)
+//        widget.addTarget(this, sel_registerName("touchDown"),UIControlEventTouchDown)
+//        widget.addTarget(this, sel_registerName("touchUpInside"),UIControlEventTouchUpInside)
+//        widget.addTarget(this, sel_registerName("touchUpOutside"),UIControlEventTouchUpOutside)
     }
 
     fun touchDown(){

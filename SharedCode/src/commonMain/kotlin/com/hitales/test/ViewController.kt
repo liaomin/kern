@@ -29,8 +29,6 @@ open class ViewController : BasicController() {
         view.setBackgroundColor(0x33999999)
         addView(view,"测试颜色",getIndex(),0x33999999)
 
-        var de:View? = View()
-        de = null
     }
 
 
@@ -83,16 +81,12 @@ open class ViewController : BasicController() {
     fun getIndex():Int{
         return index++
     }
-
 }
-
 
 inline fun Int.reverseAlpha():Int{
     val alpha = this shl 24
     return  this.and(0xffffff) or ((255 - alpha).shl(24))
 }
-
-
 
 class BorderWidthTestController : ViewController(){
 

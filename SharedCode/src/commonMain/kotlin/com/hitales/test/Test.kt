@@ -24,6 +24,9 @@ class TestController : BasicController() {
             this.push(ViewController())
         }
 
+        v.setOnLongPressListener {
+
+        }
 
         index++
         v  = Button("view border测试", Frame(10f,(buttonHeight+10)*1+10f, buttonWidth , buttonHeight))
