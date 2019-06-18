@@ -1,6 +1,6 @@
 package com.hitales.utils
 
-open class Frame(var x:Float = 0f,var y:Float = 0f, var width:Float = 0f,var height:Float = 0f) {
+open class Frame(var x:Float = 0f,var y:Float = 0f, var width:Float = 0f,var height:Float = 0f){
 
     companion object {
         fun zero():Frame{
@@ -14,6 +14,10 @@ open class Frame(var x:Float = 0f,var y:Float = 0f, var width:Float = 0f,var hei
 
     fun getCenterY():Float{
         return y + height / 2f
+    }
+
+    fun clone():Frame{
+        return Frame(x,y,width, height)
     }
 
     override fun equals(other: Any?): Boolean {

@@ -67,19 +67,8 @@ actual open class TextView :  View {
             }else{
                 widget.font = UIFont.systemFontOfSize(widget.font().pointSize)
             }
+            onFontChanged()
         }
-
-    actual open var lineHeight: Float = 0f
-        set(value) {
-            field = value
-            var attr  = getTextWidget().attributedText
-            if(attr != null){
-                attr = (attr as NSMutableAttributedString)
-                val range = NSMakeRange(0,text.length.toULong())
-
-            }
-        }
-
 
     /**
      * default false
@@ -117,21 +106,48 @@ actual open class TextView :  View {
                         attr.addAttribute(NSUnderlineStyleAttributeName,NSUnderlineStyleSingle,range)
                     }
                 }
+                getTextWidget().attributedText = attr
             }
         }
 
     /**
      * default 0
-     * android api >= 21
      */
     actual open var letterSpacing: Float = 0f
         set(value) {
             field = value
-            val attr  = getTextWidget().attributedText
-            if(attr != null){
-                (attr as NSMutableAttributedString).addAttribute(NSKernAttributeName, value,NSMakeRange(0,text.length.toULong()))
-            }
+            onFontChanged()
         }
+
+    actual open var lineHeight: Float = 0f
+        set(value) {
+            field = value
+            onFontChanged()
+        }
+
+    private fun onFontChanged(){
+        val textWidget = getTextWidget()
+        var attr  = textWidget.attributedText
+        if(attr != null){
+            attr = (attr as NSMutableAttributedString)
+            val range = NSMakeRange(0,text.length.toULong())
+            val style = NSMutableParagraphStyle()
+            if(letterSpacing >= 0){
+                attr.addAttribute(NSKernAttributeName,textWidget.font.pointSize*letterSpacing,range)
+            }
+            if(lineHeight > textWidget.font.lineHeight){
+                style.setMaximumLineHeight(lineHeight.toDouble())
+                style.setMinimumLineHeight(lineHeight.toDouble())
+                val baseLineOffset =  (lineHeight - textWidget.font.lineHeight)/ 4.0
+                println("$lineHeight ${textWidget.font.lineHeight} $baseLineOffset")
+                attr.addAttribute(NSBaselineOffsetAttributeName,baseLineOffset,range)
+            }else{
+                attr.addAttribute(NSBaselineOffsetAttributeName,0,range)
+            }
+            attr.addAttribute(NSParagraphStyleAttributeName,style,range)
+            getTextWidget().attributedText = attr
+        }
+    }
 
     /**
      * default TAIL
@@ -194,21 +210,25 @@ actual open class TextView :  View {
     protected fun getAttributedString():NSMutableAttributedString{
         val textWidget = getTextWidget()
         val text = this.text
-        val attr =  Convert.newNSMutableAttributedString(text.toString())
+        val attr =  NSMutableAttributedString.create(text.toString())
         val range = NSMakeRange(0,text.length.toULong())
         attr.addAttribute(NSFontAttributeName,textWidget.font,range)
         val style = NSMutableParagraphStyle()
-        if(lineHeight >= 0){
-            style.setLineSpacing(lineHeight - textWidget.font.pointSize)
-            when (alignment){
-                TextAlignment.RIGHT ->  style.setAlignment(NSTextAlignmentRight)
-                TextAlignment.CENTER ->  style.setAlignment(NSTextAlignmentCenter)
-                TextAlignment.LEFT ->  style.setAlignment(NSTextAlignmentLeft)
-            }
+        if(lineHeight >= textWidget.font.lineHeight){
+//            style.setLineSpacing(lineHeight - textWidget.font.pointSize)
+            style.setMaximumLineHeight(lineHeight.toDouble())
+            style.setMinimumLineHeight(lineHeight.toDouble())
+            val baseLineOffset =  (lineHeight - textWidget.font.lineHeight)/ 2.0
+            attr.addAttribute(NSBaselineOffsetAttributeName,baseLineOffset,range)
+        }
+        when (alignment){
+            TextAlignment.RIGHT ->  style.setAlignment(NSTextAlignmentRight)
+            TextAlignment.CENTER ->  style.setAlignment(NSTextAlignmentCenter)
+            TextAlignment.LEFT ->  style.setAlignment(NSTextAlignmentLeft)
         }
         attr.addAttribute(NSParagraphStyleAttributeName,style,range)
         if(letterSpacing >= 0){
-            attr.addAttribute(NSKernAttributeName,letterSpacing,range)
+            attr.addAttribute(NSKernAttributeName,textWidget.font.pointSize*letterSpacing,range)
         }
         when (decorationLine){
             TextDecorationLine.UNDERLINE ->  attr.addAttribute(NSUnderlineStyleAttributeName,NSUnderlineStyleSingle,range)

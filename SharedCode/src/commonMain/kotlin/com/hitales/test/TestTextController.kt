@@ -169,20 +169,33 @@ class TestBorderAndTextColor : TestTextController(){
 class TestLineHeight : TestTextController(){
 
     override fun testView() {
+        val text = "测试文字测试文字测试文字测试文测试文字测试测试文字测试文字测试文字测试文测试文字测试"
         var width = Platform.windowWidth
-        var view = TextView("normal 测试文字测试文字测试文字测试文测试文字测试")
+        var view = TextView("normal $text")
         view.textSize = 16f
         view.setBackgroundColor(Colors.RED)
         val size = view.measureSize(width,0f)
         addView(view,0f,size.height)
         for (i in 0 .. 40){
             val lineHeight = i.toFloat()+16
-            view = TextView("lineHeight:$lineHeight 测试文字测试文字测试文字测试文测试文字测试")
+            view = TextView("lineHeight:$lineHeight $text")
             view.textSize = 16f
             view.lineHeight = lineHeight
             view.setBackgroundColor(Colors.RED)
             val size = view.measureSize(width,0f)
             addView(view,0f,size.height)
+            if( i == 40){
+                var frame = view.frame.clone()
+                frame.height = 56f
+                var temp = View(frame)
+                temp.setBackgroundColor(0xaa00FF00.toInt())
+                (this.view as ScrollView).addView(temp)
+                 frame = frame.clone()
+                frame.y += 56f
+                temp = View(frame)
+                temp.setBackgroundColor(0xaa0000FF.toInt())
+                (this.view as ScrollView).addView(temp)
+            }
         }
     }
 }
@@ -223,19 +236,19 @@ class TestAlignment: TestTextController(){
         view.setBackgroundColor(Colors.RED)
         addView(view,0f,50f)
 
-        view = TextView("LEFT测试文字测试文字测试文字测试文字")
+        view = TextView("LEFT测试文字测试文字测试文字测试文字测试文字")
         view.textSize = 20f
         view.alignment = TextAlignment.LEFT
         view.setBackgroundColor(Colors.RED)
         addView(view,0f,100f)
 
-        view = TextView("RIGHT测试文字测试文字测试文字测试文字")
+        view = TextView("RIGHT测试文字测试文字测试文字测试文字测试文字")
         view.textSize = 20f
         view.alignment = TextAlignment.RIGHT
         view.setBackgroundColor(Colors.RED)
         addView(view,0f,100f)
 
-        view = TextView("CENTER测试文字测试文字测试文字测试文字")
+        view = TextView("CENTER测试文字测试文字测试文字测试文字测试文字")
         view.textSize = 20f
         view.alignment = TextAlignment.CENTER
         view.setBackgroundColor(Colors.RED)

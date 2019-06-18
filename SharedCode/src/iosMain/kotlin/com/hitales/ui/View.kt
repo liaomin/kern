@@ -88,10 +88,6 @@ actual open class View {
        return IOSView(WeakReference(this))
     }
 
-    open fun getIOSWidget(): UIView {
-        return mWidget
-    }
-
     actual open fun setBackgroundColor(color: Int) {
         mBackgroundColor = color
         getWidget().backgroundColor = color.toUIColor()

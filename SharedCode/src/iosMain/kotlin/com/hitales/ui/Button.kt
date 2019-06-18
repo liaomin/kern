@@ -13,7 +13,7 @@ actual open class Button :  com.hitales.ui.TextView {
     private var touchDownTime:Long = 0
 
     actual constructor(text:CharSequence?,frame: Frame):super(text,frame){
-        val widget = getIOSWidget()
+        val widget = getWidget()
         widget.setTitle(text?.toString(),UIControlStateNormal)
         setTextColor(0xFF0000FF.toInt())
 //        widget.addTarget(this, sel_registerName("touchDown"),UIControlEventTouchDown)
@@ -56,32 +56,41 @@ actual open class Button :  com.hitales.ui.TextView {
         return UIButton.buttonWithType(UIButtonTypeCustom)
     }
 
-    override fun getWidget(): UILabel {
-        return getIOSWidget().titleLabel!!
-    }
-
-    override fun getIOSWidget(): UIButton {
+    override fun getWidget(): UIButton {
         return mWidget as UIButton
     }
 
-    actual open fun setBackgroundColor(color: Int, state: ViewState) {
+    override fun getTextWidget(): UILabel {
+        return getWidget().titleLabel!!
+    }
 
+    actual open fun setBackgroundColor(color: Int, state: ViewState) {
+        when (state){
+            ViewState.NORMAL -> getWidget().setBackgroundColor(color.toUIColor())
+        }
     }
 
     actual open fun setTextColor(color: Int, state: ViewState) {
 //        textColorList.setColorForState(color,state)
     }
 
-    override fun setWidgetFrame(value: Frame) {
-        getIOSWidget().setFrame(CGRectMake(value.x.toDouble(),value.y.toDouble(),value.width.toDouble(),value.height.toDouble()))
-    }
-
-    override fun setBackgroundColor(color: Int) {
-        getIOSWidget().backgroundColor = color.toUIColor()
-    }
+//    override fun setWidgetFrame(value: Frame) {
+//        getIOSWidget().setFrame(CGRectMake(value.x.toDouble(),value.y.toDouble(),value.width.toDouble(),value.height.toDouble()))
+//    }
+//
+//    override fun setBackgroundColor(color: Int) {
+//        super.setBackgroundColor(color)
+//    }
 
 
     actual open fun setBackgroundImage(image: Image, state: ViewState) {
+        when (state){
+            ViewState.NORMAL -> getWidget().setBackgroundImage(image.mImage, UIControlStateNormal)
+            ViewState.PRESSED -> getWidget().setBackgroundImage(image.mImage, UIControlStateHighlighted)
+            ViewState.FOCUSED -> getWidget().setBackgroundImage(image.mImage, UIControlStateFocused)
+            ViewState.DISABLED -> getWidget().setBackgroundImage(image.mImage, UIControlStateDisabled)
+            ViewState.SELECTED -> getWidget().setBackgroundImage(image.mImage, UIControlStateSelected)
+        }
     }
 
 }

@@ -18,7 +18,7 @@ actual open class ViewGroup : View {
         view: View,
         index: Int
     ) {
-        val widget = view.getIOSWidget()
+        val widget = view.getWidget()
         if(index < 0){
             children.add(view)
             getWidget().addSubview(widget)
