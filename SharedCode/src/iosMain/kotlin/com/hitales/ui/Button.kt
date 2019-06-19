@@ -1,7 +1,8 @@
 package com.hitales.ui
 
-import com.hitales.utils.Frame
-import com.hitales.utils.runOnUiThread
+import com.hitales.ui.ios.IOSButtonView
+import com.hitales.ui.ios.StateListColor
+import com.hitales.utils.*
 import platform.CoreGraphics.CGRectMake
 import platform.UIKit.*
 import platform.objc.sel_registerName
@@ -10,50 +11,24 @@ import kotlin.system.getTimeMillis
 
 actual open class Button :  com.hitales.ui.TextView {
 
-    private var touchDownTime:Long = 0
+    val bgColorList = StateListColor(Colors.BLUE)
 
-    actual constructor(text:CharSequence?,frame: Frame):super(text,frame){
+    override open var textColor: Int = Colors.WHITE
+        set(value) {
+            field = value
+            setTextColor(value)
+        }
+
+    actual constructor(text:CharSequence?,frame: Frame):super(text,frame) {
         val widget = getWidget()
-        widget.setTitle(text?.toString(),UIControlStateNormal)
-        setTextColor(0xFF0000FF.toInt())
-//        widget.addTarget(this, sel_registerName("touchDown"),UIControlEventTouchDown)
-//        widget.addTarget(this, sel_registerName("touchUpInside"),UIControlEventTouchUpInside)
-//        widget.addTarget(this, sel_registerName("touchUpOutside"),UIControlEventTouchUpOutside)
-    }
-
-    fun touchDown(){
-        touchDownTime = getTimeMillis()
-        runOnUiThread(800){
-            if(touchDownTime > 0 && onLongPressListener != null){
-                //点击事件没有释放
-                releaseTouchEvent()
-                onLongPressListener?.invoke(this)
-            }
-        }
-    }
-
-    fun touchUpInside(){
-        if(touchDownTime > 0){
-            onPressListener?.invoke(this)
-        }
-        releaseTouchEvent()
-    }
-
-    fun touchUpOutside(){
-        releaseTouchEvent()
-    }
-
-    private fun releaseTouchEvent(){
-        touchDownTime = 0
-    }
-
-
-    override fun initWidget(text: CharSequence?, frame: Frame) {
-
+        widget.setTitle(text?.toString(), UIControlStateNormal)
+        setTextColor(Colors.WHITE)
+        padding = EdgeInsets(5f, 5f, 5f, 5f)
+        widget.clipsToBounds = true
     }
 
     override fun createWidget(): UIView {
-        return UIButton.buttonWithType(UIButtonTypeCustom)
+        return IOSButtonView(WeakReference(this))
     }
 
     override fun getWidget(): UIButton {
@@ -65,22 +40,23 @@ actual open class Button :  com.hitales.ui.TextView {
     }
 
     actual open fun setBackgroundColor(color: Int, state: ViewState) {
-        when (state){
-            ViewState.NORMAL -> getWidget().setBackgroundColor(color.toUIColor())
-        }
+        bgColorList.setColorForState(color,state)
     }
 
     actual open fun setTextColor(color: Int, state: ViewState) {
-//        textColorList.setColorForState(color,state)
+        getWidget()
+        when (state){
+            ViewState.NORMAL -> getWidget().setTitleColor(color.toUIColor(), UIControlStateNormal)
+            ViewState.PRESSED -> getWidget().setTitleColor(color.toUIColor(), UIControlStateHighlighted)
+            ViewState.FOCUSED -> getWidget().setTitleColor(color.toUIColor(), UIControlStateFocused)
+            ViewState.DISABLED -> getWidget().setTitleColor(color.toUIColor(), UIControlStateDisabled)
+            ViewState.SELECTED -> getWidget().setTitleColor(color.toUIColor(), UIControlStateSelected)
+        }
     }
 
-//    override fun setWidgetFrame(value: Frame) {
-//        getIOSWidget().setFrame(CGRectMake(value.x.toDouble(),value.y.toDouble(),value.width.toDouble(),value.height.toDouble()))
-//    }
-//
-//    override fun setBackgroundColor(color: Int) {
-//        super.setBackgroundColor(color)
-//    }
+    open fun onIOSStateChange(state:UIControlState){
+        mWidget.setBackgroundColor(bgColorList.getColorForState(state).toUIColor())
+    }
 
 
     actual open fun setBackgroundImage(image: Image, state: ViewState) {
@@ -92,5 +68,17 @@ actual open class Button :  com.hitales.ui.TextView {
             ViewState.SELECTED -> getWidget().setBackgroundImage(image.mImage, UIControlStateSelected)
         }
     }
+
+    override fun measureSize(maxWidth: Float, maxHeight: Float): Size {
+        val size = super.measureSize(maxWidth, maxHeight)
+        val p = padding
+        if( p != null){
+            size.width += p.left + p.right
+            size.height += p.top + p.bottom
+        }
+        return size
+    }
+
+
 
 }

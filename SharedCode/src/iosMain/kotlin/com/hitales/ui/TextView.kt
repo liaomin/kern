@@ -30,13 +30,9 @@ actual open class TextView :  View {
         }
 
     actual constructor(text:CharSequence?,frame: Frame):super(frame){
-        initWidget(text,frame)
-    }
-
-    open fun initWidget(text:CharSequence?,frame: Frame){
         val widget = getTextWidget()
         if(text != null){
-            this.text = text!!
+            this.text = text
         }
         widget.lineBreakMode = NSLineBreakByTruncatingTail
         widget.numberOfLines = 0
@@ -205,7 +201,6 @@ actual open class TextView :  View {
             return super.measureSize(maxWidth, maxHeight)
         }
     }
-
 
     protected fun getAttributedString():NSMutableAttributedString{
         val textWidget = getTextWidget()

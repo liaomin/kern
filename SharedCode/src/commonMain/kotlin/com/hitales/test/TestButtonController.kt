@@ -23,6 +23,16 @@ open class TestButtonController :ViewController(){
         size = view.measureSize(width,0f)
         addView(view, 10f,size.width, size.height)
 
+        view = Button("bold")
+        view.setBackgroundColor(Colors.BLUE)
+        view.textSize = 16f
+        view.bold = true
+        view.setBorderRadius(5f)
+        view.numberOfLines = 1
+        view.ellipsizeMode = TextEllipsizeMode.TAIL
+        size = view.measureSize(width,0f)
+        addView(view, 10f,size.width, size.height)
+
         view = Button("textColor")
         view.setBackgroundColor(Colors.BLUE)
         view.textSize = 16f

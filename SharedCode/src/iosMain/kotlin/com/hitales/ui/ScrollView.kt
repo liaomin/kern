@@ -1,6 +1,8 @@
 package com.hitales.ui
 
+import com.hitales.ui.ios.IOSScrollView
 import com.hitales.utils.Frame
+import com.hitales.utils.WeakReference
 import kotlinx.cinterop.ObjCAction
 import kotlinx.cinterop.ObjCMethod
 import platform.CoreGraphics.CGRectMake
@@ -12,37 +14,7 @@ import platform.UIKit.UIView
 import platform.UIKit.UIWindow
 import platform.UIKit.layoutSubviews
 import kotlin.math.max
-import kotlin.native.ref.WeakReference
 
-
-class IOSScrollView(private val view: WeakReference<ScrollView>) : UIScrollView(CGRectMake(0.0,0.0,0.0,0.0)){
-
-    @ObjCAction
-    fun layoutSubviews(){
-    }
-
-    @ObjCAction
-    fun willMoveToWindow(window:UIWindow?){
-        val scrollView = view.get()
-        if(scrollView != null){
-            if(window != null){
-                scrollView.onAttachedToWindow()
-                var width = scrollView.frame.width
-                var height = scrollView.frame.height
-                scrollView.children.forEach {
-                    val w = it.frame.width + it.frame.x
-                    val h = it.frame.height + it.frame.y
-                    width = max(width,w)
-                    height = max(height,h)
-                }
-                setContentSize(CGSizeMake(width.toDouble(),height.toDouble()))
-            }else{
-                scrollView.onDetachedFromWindow()
-            }
-        }
-    }
-
-}
 
 
 actual open class ScrollView : ViewGroup {
@@ -63,6 +35,16 @@ actual open class ScrollView : ViewGroup {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        val scrollView = getWidget()
+        var width = frame.width
+        var height = frame.height
+        children.forEach {
+            val w = it.frame.width + it.frame.x
+            val h = it.frame.height + it.frame.y
+            width = max(width,w)
+            height = max(height,h)
+        }
+        scrollView.setContentSize(CGSizeMake(width.toDouble(),height.toDouble()))
     }
 
 }

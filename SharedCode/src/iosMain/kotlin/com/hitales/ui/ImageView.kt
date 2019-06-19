@@ -1,6 +1,10 @@
 package com.hitales.ui
 
+import com.hitales.ui.ios.IOSImageView
 import com.hitales.utils.Frame
+import com.hitales.utils.Size
+import com.hitales.utils.WeakReference
+import kotlinx.cinterop.useContents
 import platform.UIKit.*
 
 actual open class ImageView : com.hitales.ui.View {
@@ -25,7 +29,7 @@ actual open class ImageView : com.hitales.ui.View {
     actual constructor(frame: Frame):super(frame)
 
     override fun createWidget(): UIImageView {
-        val imageView = UIImageView()
+        val imageView = IOSImageView(WeakReference(this))
         imageView.clipsToBounds = true
         return imageView
     }
@@ -58,5 +62,11 @@ actual open class ImageView : com.hitales.ui.View {
                 ImageResizeMode.SCALE_CENTER_CROP -> getWidget().contentMode = UIViewContentMode.UIViewContentModeScaleAspectFill
             }
         }
+
+    override fun measureSize(maxWidth: Float, maxHeight: Float): Size {
+        return image?.mImage?.size?.useContents {
+            return@useContents Size(this.width.toFloat(),this.height.toFloat())
+        }?:super.measureSize(maxWidth, maxHeight)
+    }
 
 }

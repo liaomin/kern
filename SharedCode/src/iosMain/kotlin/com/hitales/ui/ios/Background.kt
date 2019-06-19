@@ -177,7 +177,7 @@ class Background {
         return image
     }
 
-    fun toImage(size: CGSize,bgColor:Int):UIImage?{
+    fun toImage(size: CGSize,bgColor:Int,image:UIImage?):UIImage?{
         UIGraphicsBeginImageContextWithOptions(CGSizeMake(size.width,size.height),false,0.0)
         val ctx = UIGraphicsGetCurrentContext()
         val halfWidth = size.width / 2
@@ -415,6 +415,9 @@ class Background {
             }
             CGContextFillPath(ctx)
         }
+        if(image != null){
+            CGContextDrawImage(ctx, CGRectMake(0.0,0.0,size.width,size.height),image.CGImage)
+        }
 
         val image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
@@ -422,19 +425,18 @@ class Background {
     }
 
 
-    fun onDraw(layer: CALayer,bgColor: Int){
+    fun onDraw(layer: CALayer,bgColor: Int,image:UIImage? = null){
          layer.bounds.useContents {
              val size = this.size
-             val haveBorderWidth = haveBorderWidth()
              if(size.width <= 0 || size.height <= 0){
                  return
              }
-             if(haveBorderWidth){
+             val sameBorderRadius = sameBorderRadius()
+             val haveBorderWidth = haveBorderWidth()
+             if(haveBorderWidth || sameBorderRadius){
                  val sameBorderColor = sameBorderColor()
                  val sameBorderWidth = sameBorderWidth()
-                 val sameBorderRadius = sameBorderRadius()
                  var borderImage:UIImage? = null
-                 var useImage = false
                  when (borderStyle){
                      BorderStyle.SOLID -> {
                          if(sameBorderColor && sameBorderWidth && sameBorderRadius){
@@ -445,33 +447,38 @@ class Background {
                              layer.borderWidth = min(borderLeftWidth.toDouble(),maxRadius)
                              layer.cornerRadius = min(maxRadius , borderTopLeftRadius.toDouble())
                          }else{
-                             borderImage = toImage(size,bgColor)
-                             useImage = true
+                             borderImage = toImage(size,bgColor,image)
                          }
                      }
                      BorderStyle.DASHED ->{
                          borderImage = toDashedImage(size,bgColor,3.0)
-                         useImage = true
                      }
                      BorderStyle.DOTTED ->{
                          borderImage = toDashedImage(size,bgColor,1.0)
-                         useImage = true
                      }
                  }
-                 if(useImage && borderImage != null){
+                 if(borderImage != null){
                      layer.backgroundColor = null
                      layer.setContentsWithImage(borderImage)
                      layer.contentsScale = borderImage.scale
                      layer.needsDisplayOnBoundsChange = true
                      layer.mask = null
                  }else{
-                     layer.contents = null
+                     if(image != null){
+                         layer.setContentsWithImage(image)
+                     }else{
+                         layer.contents = null
+                     }
                      layer.backgroundColor = bgColor.toUIColor().CGColor
                      layer.needsDisplayOnBoundsChange = false
                      layer.mask = null
                  }
              }else{
-                 layer.contents = null
+                 if(image != null){
+                     layer.setContentsWithImage(image)
+                 }else{
+                     layer.contents = null
+                 }
                  layer.needsDisplayOnBoundsChange = false
                  layer.mask = null
              }
