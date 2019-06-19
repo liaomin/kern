@@ -30,6 +30,10 @@ actual open class TextView :  View {
         }
 
     actual constructor(text:CharSequence?,frame: Frame):super(frame){
+        this.initLabel(text)
+    }
+
+    protected open fun initLabel(text:CharSequence?){
         val widget = getTextWidget()
         if(text != null){
             this.text = text
@@ -202,7 +206,7 @@ actual open class TextView :  View {
         }
     }
 
-    protected fun getAttributedString():NSMutableAttributedString{
+    protected open fun getAttributedString():NSMutableAttributedString{
         val textWidget = getTextWidget()
         val text = this.text
         val attr =  NSMutableAttributedString.create(text.toString())
