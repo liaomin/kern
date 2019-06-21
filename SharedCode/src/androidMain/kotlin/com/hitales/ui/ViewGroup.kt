@@ -2,7 +2,10 @@ package com.hitales.ui
 
 import android.graphics.Canvas
 import android.widget.FrameLayout
+import com.hitales.ui.layout.FrameLayoutManager
+import com.hitales.ui.layout.LayoutManager
 import com.hitales.utils.Frame
+import com.hitales.utils.WeakReference
 import java.util.ArrayList
 
 
@@ -18,12 +21,28 @@ open class AndroidFrameLayout(private val view:ViewGroup) : FrameLayout(Platform
         view.onDetachedFromWindow()
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        view.layout()
+    }
+
 }
 actual open class ViewGroup : View {
 
+    protected actual var mLayoutManager: LayoutManager
+        set(value) {
+            field = value
+            layout()
+        }
+
     actual constructor(frame: Frame):super(frame){
+        mLayoutManager = createLayoutManage()
 //        mWidget.isFocusable = true
 //        mWidget.isFocusableInTouchMode = true
+    }
+
+    actual open fun createLayoutManage():LayoutManager{
+        return FrameLayoutManager()
     }
 
     actual val children: ArrayList<View> = ArrayList()
@@ -83,5 +102,8 @@ actual open class ViewGroup : View {
 //        mWidget.isFocusableInTouchMode = false
     }
 
+    actual open fun layout(){
+        mLayoutManager?.layoutSubviews(this)
+    }
 
 }

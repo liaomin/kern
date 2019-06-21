@@ -1,7 +1,7 @@
 package com.hitales.test
 import com.hitales.ui.*
 
-open class TestTextController :ViewController(){
+open class TestTextControllerTest :TestViewController(){
 
     override fun testView() {
 
@@ -36,7 +36,7 @@ open class TestTextController :ViewController(){
 }
 
 
-class TestEllipsizeMode : TestTextController(){
+class TestEllipsizeMode : TestTextControllerTest(){
     override fun testView() {
         var width = Platform.windowWidth
         var view = TextView("TAIL测试文字测试文字测试文字测试文测试文字测测试文字测试文字测试文字测试文测试文字测试测试文字测试文字测试文字测试文测试文字测试试")
@@ -66,7 +66,7 @@ class TestEllipsizeMode : TestTextController(){
 }
 
 
-class TestLetterSpacing : TestTextController(){
+class TestLetterSpacing : TestTextControllerTest(){
     override fun testView() {
         var width = Platform.windowWidth
         var view = TextView("测试文字测试文字测试文字测试文测试文字测试")
@@ -104,7 +104,7 @@ class TestLetterSpacing : TestTextController(){
     }
 }
 
-class TestDecorationLine : TestTextController(){
+class TestDecorationLine : TestTextControllerTest(){
 
     override fun testView() {
         var width = Platform.windowWidth
@@ -140,7 +140,7 @@ class TestDecorationLine : TestTextController(){
 }
 
 
-class TestBorderAndTextColor : TestTextController(){
+class TestBorderAndTextColor : TestTextControllerTest(){
 
     override fun testView() {
         var width = Platform.windowWidth
@@ -166,7 +166,7 @@ class TestBorderAndTextColor : TestTextController(){
     }
 }
 
-class TestLineHeight : TestTextController(){
+class TestLineHeight : TestTextControllerTest(){
 
     override fun testView() {
         val text = "测试文字测试文字测试文字测试文测试文字测试测试文字测试文字测试文字测试文测试文字测试"
@@ -200,7 +200,7 @@ class TestLineHeight : TestTextController(){
     }
 }
 
-class TestFontSize : TestTextController(){
+class TestFontSize : TestTextControllerTest(){
 
     override fun testView() {
         var width = Platform.windowWidth
@@ -215,7 +215,7 @@ class TestFontSize : TestTextController(){
     }
 }
 
-class TestAlignment: TestTextController(){
+class TestAlignment: TestTextControllerTest(){
 
     override fun testView() {
         var view = TextView("LEFT测试文字")

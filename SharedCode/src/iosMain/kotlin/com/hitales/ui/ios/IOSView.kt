@@ -2,6 +2,7 @@ package com.hitales.ui.ios
 
 import com.hitales.ios.ui.HView
 import com.hitales.ui.View
+import com.hitales.ui.ViewGroup
 import com.hitales.utils.WeakReference
 import kotlinx.cinterop.ObjCAction
 import kotlinx.cinterop.memScoped
@@ -34,6 +35,14 @@ class IOSView(protected val mView: WeakReference<View>) : UIView(CGRectMake(0.0,
         }else{
             view?.onAttachedToWindow()
             this.layer.setNeedsDisplay()
+        }
+    }
+
+    @ObjCAction
+    fun layoutSubviews() {
+        val view = mView.get()
+        if(view != null && view is ViewGroup){
+            view.layout()
         }
     }
 

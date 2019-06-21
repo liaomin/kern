@@ -3,7 +3,7 @@ package com.hitales.test
 import com.hitales.ui.*
 import com.hitales.utils.Frame
 
-open class ViewController : BasicController() {
+open class TestViewController : BasicController() {
 
     override fun onCreate() {
         super.onCreate()
@@ -88,7 +88,7 @@ inline fun Int.reverseAlpha():Int{
     return  this.and(0xffffff) or ((255 - alpha).shl(24))
 }
 
-class BorderWidthTestController : ViewController(){
+class BorderWidthTestControllerTest : TestViewController(){
 
     override fun testView() {
 //        this.view?.setBackgroundColor(Colors.RED)
@@ -423,7 +423,7 @@ class BorderWidthTestController : ViewController(){
 }
 
 
-class ShadowTestController : ViewController(){
+class ShadowTestControllerTest : TestViewController(){
 
     override fun testView() {
 //        this.view?.setBackgroundColor(Colors.RED)

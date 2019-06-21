@@ -2,7 +2,7 @@ package com.hitales.test
 import com.hitales.ui.*
 import com.hitales.utils.Timer
 
-open class TestInputController :ViewController(){
+open class TestInputControllerTest : TestViewController(){
 
     override fun testView() {
 

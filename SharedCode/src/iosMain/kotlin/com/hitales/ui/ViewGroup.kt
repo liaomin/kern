@@ -1,6 +1,10 @@
 package com.hitales.ui
 
+import com.hitales.ui.ios.IOSView
+import com.hitales.ui.layout.FrameLayoutManager
+import com.hitales.ui.layout.LayoutManager
 import com.hitales.utils.Frame
+import com.hitales.utils.WeakReference
 import platform.UIKit.UIView
 import platform.UIKit.addSubview
 import platform.UIKit.insertSubview
@@ -9,8 +13,18 @@ import platform.UIKit.removeFromSuperview
 
 actual open class ViewGroup : View {
 
-    actual constructor(frame: Frame):super(frame){
+    protected actual var mLayoutManager: LayoutManager
+        set(value) {
+            field = value
+            layout()
+        }
 
+    actual constructor(frame: Frame):super(frame){
+        mLayoutManager = createLayoutManage()
+    }
+
+    actual open fun createLayoutManage():LayoutManager{
+        return FrameLayoutManager()
     }
 
     actual val children: ArrayList<View> = ArrayList<View>()
@@ -33,7 +47,7 @@ actual open class ViewGroup : View {
 
 
     override fun createWidget(): UIView {
-        return UIView()
+        return IOSView(WeakReference(this))
     }
 
     actual open fun removeView(view:View){
@@ -44,5 +58,8 @@ actual open class ViewGroup : View {
         }
     }
 
+    actual open fun layout() {
+        mLayoutManager?.layoutSubviews(this)
+    }
 
 }

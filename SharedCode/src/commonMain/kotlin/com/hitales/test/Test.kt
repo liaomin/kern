@@ -1,5 +1,6 @@
 package com.hitales.test
 
+import com.hitales.test.layout.TestLayout
 import com.hitales.ui.*
 import com.hitales.utils.Frame
 import com.hitales.utils.assertUI
@@ -21,7 +22,7 @@ class TestController : BasicController() {
         rootView.addView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
-            this.push(ViewController())
+            this.push(TestViewController())
         }
 
         v.setOnLongPressListener {
@@ -33,7 +34,7 @@ class TestController : BasicController() {
         rootView.addView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
-            this.push(BorderWidthTestController())
+            this.push(BorderWidthTestControllerTest())
         }
 
         index++
@@ -41,7 +42,7 @@ class TestController : BasicController() {
         rootView.addView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
-            this.push(ShadowTestController())
+            this.push(ShadowTestControllerTest())
         }
 
         index++
@@ -49,7 +50,7 @@ class TestController : BasicController() {
         rootView.addView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
-            this.push(TestTextController())
+            this.push(TestTextControllerTest())
         }
 
         index++
@@ -57,7 +58,7 @@ class TestController : BasicController() {
         rootView.addView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
-            this.push(TestButtonController())
+            this.push(TestButtonControllerTest())
         }
 
         index++
@@ -65,7 +66,7 @@ class TestController : BasicController() {
         rootView.addView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
-            this.push(TestInputController())
+            this.push(TestInputControllerTest())
         }
 
         index++
@@ -73,9 +74,16 @@ class TestController : BasicController() {
         rootView.addView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
-            this.push(TestImageController())
+            this.push(TestImageControllerTest())
         }
 
+        index++
+        v  = Button("Layout 测试", Frame(10f,(buttonHeight+10)*index+10f, buttonWidth , buttonHeight))
+        rootView.addView(v)
+        v.setBackgroundColor(Colors.BLUE)
+        v.setOnPressListener {
+            this.push(TestLayout())
+        }
 
 
         index++

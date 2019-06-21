@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mDelegate = Platform.init(this)
         mDelegate?.onCreate()
+        LinearLayout(this).orientation
 //        val intent = Intent(
 //            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
 //            Uri.parse("package:$packageName")
