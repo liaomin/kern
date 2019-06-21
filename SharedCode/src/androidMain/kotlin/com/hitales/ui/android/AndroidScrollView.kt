@@ -32,24 +32,23 @@ open class AndroidScrollView : DampScrollView {
     }
 
     private var mFrameLayout = object : FrameLayout(Platform.getApplication()) {
-        override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-            var maxWidth = 0
-            var maxHeight = 0
-            for (i in 0 until childCount) {
-                val child = getChildAt(i)
-                val params = child.layoutParams as FrameLayout.LayoutParams
-                val width = params.leftMargin + params.width
-                val height = params.topMargin + params.height
-                maxWidth = Math.max(maxWidth, width)
-                maxHeight = Math.max(maxHeight, height)
-            }
-            setMeasuredDimension(
-                Math.max(measuredWidth, paddingLeft + paddingRight + maxWidth),
-                Math.max(measuredHeight, paddingTop + paddingBottom + maxHeight)
-            )
-        }
-
+//        override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+//            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+//            var maxWidth = 0
+//            var maxHeight = 0
+//            for (i in 0 until childCount) {
+//                val child = getChildAt(i)
+//                val params = child.layoutParams as FrameLayout.LayoutParams
+//                val width = params.leftMargin + params.width + params.rightMargin
+//                val height = params.topMargin + params.height + params.bottomMargin
+//                maxWidth = Math.max(maxWidth, width)
+//                maxHeight = Math.max(maxHeight, height)
+//            }
+//            setMeasuredDimension(
+//                Math.max(measuredWidth, paddingLeft + paddingRight + maxWidth),
+//                Math.max(measuredHeight, paddingTop + paddingBottom + maxHeight)
+//            )
+//        }
     }
 
     init {
@@ -70,6 +69,11 @@ open class AndroidScrollView : DampScrollView {
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         mView?.onDetachedFromWindow()
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        mView?.layout()
     }
 
     override fun addView(child: View?) {

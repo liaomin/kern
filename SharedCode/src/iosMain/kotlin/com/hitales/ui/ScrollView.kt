@@ -19,7 +19,6 @@ import kotlin.math.max
 
 actual open class ScrollView : ViewGroup {
 
-
     actual constructor(frame: Frame):super(frame)
 
     override fun createWidget(): UIScrollView {
@@ -33,8 +32,17 @@ actual open class ScrollView : ViewGroup {
     actual open fun layoutSubViews(offsetX: Float, offsetY: Float) {
     }
 
+    override fun layout() {
+        super.layout()
+        calculateContentSize()
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        layout()
+    }
+
+    protected open fun calculateContentSize(){
         val scrollView = getWidget()
         var width = frame.width
         var height = frame.height
@@ -45,6 +53,14 @@ actual open class ScrollView : ViewGroup {
             height = max(height,h)
         }
         scrollView.setContentSize(CGSizeMake(width.toDouble(),height.toDouble()))
+    }
+
+    override fun getContentHeight(): Float {
+        return Float.MAX_VALUE
+    }
+
+    override fun getContentWidth(): Float {
+        return Float.MAX_VALUE
     }
 
 }

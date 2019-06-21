@@ -13,14 +13,14 @@ import platform.UIKit.removeFromSuperview
 
 actual open class ViewGroup : View {
 
-    protected actual var mLayoutManager: LayoutManager
+    actual var layoutManager: LayoutManager
         set(value) {
             field = value
             layout()
         }
 
     actual constructor(frame: Frame):super(frame){
-        mLayoutManager = createLayoutManage()
+        layoutManager = createLayoutManage()
     }
 
     actual open fun createLayoutManage():LayoutManager{
@@ -59,7 +59,14 @@ actual open class ViewGroup : View {
     }
 
     actual open fun layout() {
-        mLayoutManager?.layoutSubviews(this)
+        layoutManager?.layoutSubviews(this)
     }
 
+    actual open fun getContentWidth(): Float {
+        return frame.width
+    }
+
+    actual open fun getContentHeight(): Float {
+        return frame.height
+    }
 }

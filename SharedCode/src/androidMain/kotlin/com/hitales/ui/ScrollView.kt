@@ -6,7 +6,6 @@ import com.hitales.utils.Frame
 
 actual open class ScrollView : com.hitales.ui.ViewGroup {
 
-
     actual constructor(frame: Frame) : super(frame)
 
     override fun createWidget(): AndroidScrollView {
@@ -18,6 +17,15 @@ actual open class ScrollView : com.hitales.ui.ViewGroup {
     }
 
     actual open fun layoutSubViews(offsetX: Float, offsetY: Float) {
+        getWidget()
+    }
+
+    override fun getContentWidth(): Float {
+        return Float.MAX_VALUE
+    }
+
+    override fun getContentHeight(): Float {
+        return Float.MAX_VALUE
     }
 
 }

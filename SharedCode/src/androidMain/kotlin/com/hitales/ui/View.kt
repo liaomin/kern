@@ -37,9 +37,7 @@ actual open class View {
     actual var padding: EdgeInsets? = null
         set(value) {
             field = value
-            if(value != null){
-                mWidget.setPadding(PixelUtil.toPixelFromDIP(value.left).toInt(),PixelUtil.toPixelFromDIP(value.top).toInt(),PixelUtil.toPixelFromDIP(value.right).toInt(),PixelUtil.toPixelFromDIP(value.bottom).toInt())
-            }
+            onPaddingSet(value)
         }
 
     actual var margin: EdgeInsets? = null
@@ -222,6 +220,14 @@ actual open class View {
     protected open fun onFrameChanged() {
         var params = getLayoutParams()
         mWidget.layoutParams = params
+    }
+
+    protected open fun onPaddingSet(padding:EdgeInsets?){
+        if(padding != null){
+            mWidget.setPadding(PixelUtil.toPixelFromDIP(padding.left).toInt(),PixelUtil.toPixelFromDIP(padding.top).toInt(),PixelUtil.toPixelFromDIP(padding.right).toInt(),PixelUtil.toPixelFromDIP(padding.bottom).toInt())
+        }else{
+            mWidget.setPadding(0,0,0,0)
+        }
     }
 
     actual fun setOnPressListener(listener: (view: com.hitales.ui.View) -> Unit) {

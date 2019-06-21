@@ -14,6 +14,7 @@ import android.view.Gravity
 import com.hitales.ui.android.AndroidTextView
 import com.hitales.ui.android.StateListColor
 import com.hitales.ui.utils.PixelUtil
+import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
 import com.hitales.utils.Size
 
@@ -76,7 +77,7 @@ actual open class TextView :  View {
 
     protected open fun getDefaultColorList(): StateListColor = StateListColor(Color.BLACK)
 
-    private var mHalfLineSpace = 0f
+    private var linePadding = 0
 
     actual open var lineHeight: Float = 0f
         get() {
@@ -88,24 +89,39 @@ actual open class TextView :  View {
         set(value) {
             val widget = getTextWidget()
             val fontHeight = widget.paint.getFontMetricsInt(null)
+//            if(Build.VERSION.SDK_INT >= 28){
+//                widget.lineHeight = PixelUtil.toPixelFromDIP(value).toInt()
+//                return
+//            }
+            field = value
+            val lineHeight = PixelUtil.toPixelFromDIP(value).toInt()
+            linePadding = 0
             if(value > 0){
-                field = value
-                val lineHeight = PixelUtil.toPixelFromDIP(value).toInt()
                 val space = (lineHeight - fontHeight).toFloat()
                 if (lineHeight != fontHeight) {
                     if(space >= 0f){
                         val halfLineSpace= space / 2
-                        mHalfLineSpace = halfLineSpace
-                        val padding = halfLineSpace.toInt()
-                        widget.setLineSpacing(halfLineSpace, 1f)
-                        widget.setPadding(0,padding,0,padding)
+                        linePadding = halfLineSpace.toInt()
+                        widget.setLineSpacing(space, 1f)
+                        widget.setPadding(0,linePadding,0,linePadding)
                     }else{
                         widget.setLineSpacing(space, 1f)
-                        mHalfLineSpace = 0f
                     }
                 }
+            }else{
+                widget.setLineSpacing(0f, 1f)
+                widget.setPadding(0,0,0,0)
             }
         }
+
+    override fun onPaddingSet(padding: EdgeInsets?) {
+        if(padding != null){
+            mWidget.setPadding(PixelUtil.toPixelFromDIP(padding.left).toInt(),PixelUtil.toPixelFromDIP(padding.top).toInt()+linePadding,PixelUtil.toPixelFromDIP(padding.right).toInt(),PixelUtil.toPixelFromDIP(padding.bottom).toInt()+linePadding)
+        }else{
+            mWidget.setPadding(0,0,0,0)
+        }
+    }
+
 
     /**
      * default false

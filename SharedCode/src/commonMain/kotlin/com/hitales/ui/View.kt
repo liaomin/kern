@@ -4,6 +4,10 @@ import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
 import com.hitales.utils.Size
 
+enum class Orientation{
+    VERTICAL,
+    HORIZONTAL
+}
 
 enum class ViewState(val value:Int) {
     NORMAL(0),
