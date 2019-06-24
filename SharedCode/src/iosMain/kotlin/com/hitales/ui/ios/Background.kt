@@ -263,6 +263,10 @@ class Background {
         CGContextAddPath(ctx, outerPath.CGPath)
         CGContextFillPath(ctx)
 
+        if(image != null){
+            CGContextDrawImage(ctx, CGRectMake(0.0,0.0,size.width,size.height),image.CGImage)
+        }
+
         CGContextAddPath(ctx, outerPath.CGPath)
         CGContextAddPath(ctx, innerPath.CGPath)
         CGContextEOClip(ctx)
@@ -414,9 +418,6 @@ class Background {
 //                    CGContextAddRect(ctx, CGRectMake(0.0, halfHeight, size.width, halfHeight))
             }
             CGContextFillPath(ctx)
-        }
-        if(image != null){
-            CGContextDrawImage(ctx, CGRectMake(0.0,0.0,size.width,size.height),image.CGImage)
         }
 
         val image = UIGraphicsGetImageFromCurrentImageContext()

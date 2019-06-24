@@ -64,9 +64,19 @@ actual open class ImageView : com.hitales.ui.View {
         }
 
     override fun measureSize(maxWidth: Float, maxHeight: Float): Size {
-        return image?.mImage?.size?.useContents {
-            return@useContents Size(this.width.toFloat(),this.height.toFloat())
-        }?:super.measureSize(maxWidth, maxHeight)
+        val size = super.measureSize(maxWidth, maxHeight)
+        image?.mImage?.apply {
+            val scale = this.scale
+            this.size.useContents {
+                val w = this.width * scale
+                val h = this.height * scale
+                val screenScale = UIScreen.mainScreen.scale
+                size.width = (w / screenScale).toFloat()
+                size.height = (h / screenScale).toFloat()
+            }
+        }
+        return size
+
     }
 
 }

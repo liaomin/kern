@@ -29,21 +29,17 @@ open class AndroidFrameLayout(private val view:ViewGroup) : FrameLayout(Platform
 }
 actual open class ViewGroup : View {
 
-    actual var layoutManager: LayoutManager
+    actual var layoutManager: LayoutManager? = null
         set(value) {
             field = value
             layout()
         }
 
     actual constructor(frame: Frame):super(frame){
-        layoutManager = createLayoutManage()
 //        mWidget.isFocusable = true
 //        mWidget.isFocusableInTouchMode = true
     }
 
-    actual open fun createLayoutManage():LayoutManager{
-        return FrameLayoutManager()
-    }
 
     actual val children: ArrayList<View> = ArrayList()
 

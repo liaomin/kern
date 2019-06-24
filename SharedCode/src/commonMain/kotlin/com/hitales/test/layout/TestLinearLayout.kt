@@ -12,6 +12,7 @@ class TestLinearLayout : TestViewController(){
 
     var timer:Timer? = null
 
+
     override fun onCreate() {
         view = FrameViewGroup( Frame(0f,0f,Platform.windowWidth,Platform.windowHeight - 30))
         view?.setBackgroundColor(Colors.WHITE)
@@ -96,11 +97,11 @@ class TestLinearLayout : TestViewController(){
         image.image = image1
         linearViewGroup.addView(image)
 
-        timer = Timer.schedule(1000,1){
+//        timer = Timer.schedule(1000,1){
 //            val frame = linearViewGroup.frame
 //            frame.width -= 1
 //            linearViewGroup.frame = frame
-        }
+//        }
 
         (view as ViewGroup).addView(linearViewGroup)
     }

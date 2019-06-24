@@ -13,9 +13,8 @@ open class LinearViewGroup : ViewGroup {
             layout()
         }
 
-    constructor(frame: Frame = Frame.zero()):super(frame)
-
-    override fun createLayoutManage(): LayoutManager {
-        return LinearLayoutManager()
+    constructor(frame: Frame = Frame.zero()):super(frame){
+        layoutManager = LinearLayoutManager()
     }
+
 }

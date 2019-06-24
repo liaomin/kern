@@ -5,7 +5,7 @@ import com.hitales.utils.Frame
 
 expect open class ViewGroup : View {
 
-    var layoutManager:LayoutManager
+    var layoutManager:LayoutManager?
 
     constructor(frame: Frame = Frame.zero())
 
@@ -16,8 +16,6 @@ expect open class ViewGroup : View {
     open fun removeView(view:View)
 
     open fun layout()
-
-    actual open fun createLayoutManage():LayoutManager
 
     open fun getContentWidth():Float
 

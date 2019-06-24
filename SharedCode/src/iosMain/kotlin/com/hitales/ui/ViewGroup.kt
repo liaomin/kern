@@ -13,19 +13,13 @@ import platform.UIKit.removeFromSuperview
 
 actual open class ViewGroup : View {
 
-    actual var layoutManager: LayoutManager
+    actual var layoutManager: LayoutManager? = null
         set(value) {
             field = value
             layout()
         }
 
-    actual constructor(frame: Frame):super(frame){
-        layoutManager = createLayoutManage()
-    }
-
-    actual open fun createLayoutManage():LayoutManager{
-        return FrameLayoutManager()
-    }
+    actual constructor(frame: Frame):super(frame){}
 
     actual val children: ArrayList<View> = ArrayList<View>()
 
