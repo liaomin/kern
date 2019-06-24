@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.HorizontalScrollView
 import com.hitales.android.R
 import com.hitales.ui.Colors
 import com.hitales.ui.Platform
@@ -13,23 +14,23 @@ import com.hitales.ui.ScrollView
 import com.hitales.ui.utils.PixelUtil
 
 
-open class AndroidScrollView : DampScrollView {
+open class AndroidHorizontalScrollView : HorizontalScrollView {
 
-    var mView: ScrollView? = null
+    var mView: com.hitales.ui.HorizontalScrollView? = null
 
-    constructor(view: ScrollView) : super(Platform.getApplication()) {
+    constructor(view: com.hitales.ui.HorizontalScrollView) : super(Platform.getApplication()) {
         this.mView = view
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
 
-    companion object {
-        fun fromXLM(view: ScrollView):AndroidScrollView{
-            val  scrollView = LayoutInflater.from(Platform.getApplication()).inflate(R.layout.scroll_view,null) as AndroidScrollView
-            scrollView.mView = view
-            return scrollView
-        }
-    }
+//    companion object {
+//        fun fromXLM(view: ScrollView):AndroidHorizontalScrollView{
+//            val  scrollView = LayoutInflater.from(Platform.getApplication()).inflate(R.layout.scroll_view,null) as AndroidHorizontalScrollView
+//            scrollView.mView = view
+//            return scrollView
+//        }
+//    }
 
     private var mFrameLayout = FrameLayout(Platform.getApplication())
 

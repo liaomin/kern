@@ -11,7 +11,7 @@ import platform.UIKit.UIScrollView
 import platform.UIKit.UIWindow
 import kotlin.math.max
 
-class IOSScrollView(protected val mView: WeakReference<ScrollView>) : UIScrollView(CGRectMake(0.0,0.0,0.0,0.0)) {
+class IOSScrollView(protected val mView: WeakReference<ViewGroup>) : UIScrollView(CGRectMake(0.0,0.0,0.0,0.0)) {
 
     @ObjCAction
     fun willMoveToWindow(window: UIWindow?){

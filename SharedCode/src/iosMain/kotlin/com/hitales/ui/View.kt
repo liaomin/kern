@@ -161,7 +161,11 @@ actual open class View {
 
     actual open var elevation: Float = 0f
 
-    actual open var hidden: Boolean = false
+    actual open var hidden: Boolean
+        get() = mWidget.hidden
+        set(value) {
+            mWidget.hidden = value
+        }
 
     actual open var borderStyle: BorderStyle = BorderStyle.SOLID
         set(value) {

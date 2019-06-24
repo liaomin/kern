@@ -9,3 +9,14 @@ expect open class ScrollView : ViewGroup {
     open fun layoutSubViews(offsetX:Float,offsetY:Float)
 
 }
+
+
+expect open class HorizontalScrollView : ViewGroup {
+
+    constructor(frame: Frame = Frame.zero())
+
+    open fun layoutSubViews(offsetX:Float,offsetY:Float)
+
+}
+
+
