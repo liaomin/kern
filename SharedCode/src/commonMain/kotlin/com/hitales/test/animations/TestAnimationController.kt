@@ -14,6 +14,13 @@ open class TestAnimationController :TestViewController(), Animation.AnimationDel
 
     override fun testView() {
 
+        val button = Button("测试插值器", Frame(70f,00f,60f,48f))
+        button.setBackgroundColor(Colors.RED)
+        button.setOnPressListener {
+            this.push(TestAnimationInterpolatorController())
+        }
+        (this.view as ScrollView).addView(button)
+
         var image1 = Image.named("1.jpg")!!
 
         var index = 0
@@ -42,7 +49,7 @@ open class TestAnimationController :TestViewController(), Animation.AnimationDel
 
         addButton("tY"){
             val animation = Animation()
-            animation.setToTranslate(0f,0f,100f)
+            animation.setToTranslate(0f,100f)
             animation.duration = 3000f
             animation.delegate = this
             view.startAnimation(animation)

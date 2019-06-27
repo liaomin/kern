@@ -3,6 +3,7 @@ package com.hitales.ui.animation
 import android.graphics.Camera
 import android.view.animation.AlphaAnimation
 import android.view.animation.Transformation
+import androidx.core.view.animation.PathInterpolatorCompat
 import com.hitales.ui.Animation
 import com.hitales.ui.utils.PixelUtil
 
@@ -28,6 +29,8 @@ open class AndroidAnimation : AlphaAnimation(1f,1f){
             }else{
                 androidAnimation.repeatMode = RESTART
             }
+            val i = animation.interpolator
+            androidAnimation.interpolator = PathInterpolatorCompat.create(i.x1,i.y1,i.x2,i.y2)
             return androidAnimation
         }
     }

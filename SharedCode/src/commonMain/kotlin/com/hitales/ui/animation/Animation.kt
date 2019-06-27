@@ -1,5 +1,8 @@
 package com.hitales.ui
 
+import com.hitales.ui.animation.BezierInterpolator
+import com.hitales.ui.animation.LinearInterpolator
+
 
 open class Animation {
 
@@ -10,6 +13,11 @@ open class Animation {
         fun onAnimationFinish(animation: Animation)
 
     }
+
+    /**
+     * 插值器，默认LinearInterpolator
+     */
+    var interpolator:BezierInterpolator = LinearInterpolator()
 
     /**
      * 回调
@@ -132,13 +140,13 @@ open class Animation {
      */
     var toScaleY = 1f
 
-    fun setFromTranslate(x:Float,y:Float,z:Float){
+    fun setFromTranslate(x:Float,y:Float,z:Float = 0f){
         fromTranslateX = x
         fromTranslateY = y
         fromTranslateZ = z
     }
 
-    fun setToTranslate(x:Float,y:Float,z:Float){
+    fun setToTranslate(x:Float,y:Float,z:Float = 0f){
         toTranslateX = x
         toTranslateY = y
         toTranslateZ = z
@@ -165,4 +173,6 @@ open class Animation {
         toScaleX = x
         toScaleY = y
     }
+
+
 }

@@ -7,6 +7,7 @@ import platform.Foundation.numberWithDouble
 import platform.Foundation.numberWithFloat
 import platform.QuartzCore.CAAnimationGroup
 import platform.QuartzCore.CABasicAnimation
+import platform.QuartzCore.CAMediaTimingFunction
 import platform.QuartzCore.kCAFillModeForwards
 import platform.posix.M_PI
 import platform.posix.M_PI_2
@@ -59,5 +60,7 @@ fun transAnimation(animation:Animation):CAAnimationGroup{
     animationGroup.setAutoreverses(animation.autoreverses)
     animationGroup.setRepeatCount(animation.repeatCount.toFloat())
     animationGroup.setDuration(animation.duration/1000.0)
+    val i = animation.interpolator
+    animationGroup.setTimingFunction(CAMediaTimingFunction.functionWithControlPoints(i.x1,i.y1,i.x2,i.y2))
     return animationGroup
 }

@@ -23,6 +23,7 @@ import android.widget.ImageView
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.animation.PathInterpolatorCompat
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import com.hitales.ui.*
@@ -73,6 +74,8 @@ class MainActivity : AppCompatActivity() {
 
 //        println("~~$m，${c.locationX}, ${c.locationZ}")
 
+
+//        PathInterpolatorCompat.create()
 
 //        RecyclerView(this).startAnimation(ScaleAnimation)
     }
