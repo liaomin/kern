@@ -7,11 +7,14 @@ import com.hitales.ui.Platform
 
 open class AndroidImageView : ImageView {
 
+    val mViewHelper:ViewHelper
+
     private val mView:com.hitales.ui.ImageView
 
     constructor(view:com.hitales.ui.ImageView):super(Platform.getApplication()){
         scaleType = ScaleType.FIT_CENTER
         mView = view
+        mViewHelper = ViewHelper(this,mView)
     }
 
     override fun draw(canvas: Canvas) {
@@ -24,6 +27,20 @@ open class AndroidImageView : ImageView {
         }else{
             super.draw(canvas)
         }
+        mViewHelper.draw(canvas)
+    }
+
+
+
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        mViewHelper.onAttachedToWindow()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        mViewHelper.onDetachedFromWindow()
     }
 
 

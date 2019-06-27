@@ -10,25 +10,21 @@ import com.hitales.ui.View
 
 open class AndroidView(val mView: View) : android.view.View(Platform.getApplication()){
 
-//    protected val mViewHelper = ViewHelper(this,mView)
-
+    val mViewHelper = ViewHelper(this,mView)
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        mView.onAttachedToWindow()
+        mViewHelper.onAttachedToWindow()
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        mView.onDetachedFromWindow()
-    }
-
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        return super.onTouchEvent(event)
+        mViewHelper.onDetachedFromWindow()
     }
 
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
+        mViewHelper.draw(canvas)
     }
 
 }

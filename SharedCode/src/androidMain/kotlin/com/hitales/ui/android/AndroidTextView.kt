@@ -1,5 +1,6 @@
 package com.hitales.ui.android
 
+import android.graphics.Canvas
 import android.os.Build
 import android.text.TextUtils
 import android.view.Gravity
@@ -22,13 +23,22 @@ open class AndroidTextView(protected val mView: TextView) : AppCompatTextView(Pl
         ellipsize = TextUtils.TruncateAt.END
     }
 
+
+    val mViewHelper = ViewHelper(this,mView)
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        mView.onAttachedToWindow()
+        mViewHelper.onAttachedToWindow()
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        mView.onDetachedFromWindow()
+        mViewHelper.onDetachedFromWindow()
     }
+
+    override fun draw(canvas: Canvas) {
+        super.draw(canvas)
+        mViewHelper.draw(canvas)
+    }
+
 }
