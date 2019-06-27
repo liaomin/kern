@@ -46,6 +46,7 @@ open class TestViewController : BasicController() {
         group.addView(getTilteWidget(title,titleFrame))
 
         (this.view as ScrollView).addView(group)
+        offsetY += group.frame.height + 10f
     }
 
     fun addView(view: View, title:String, index:Int,color:Int){

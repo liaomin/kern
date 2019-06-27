@@ -1,7 +1,7 @@
 package com.hitales.test
 import com.hitales.ui.*
 
-open class TestButtonControllerTest :TestViewController(){
+open class TestButtonController :TestViewController(){
 
     override fun testView() {
 

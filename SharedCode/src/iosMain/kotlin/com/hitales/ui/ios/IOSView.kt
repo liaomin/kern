@@ -1,6 +1,5 @@
 package com.hitales.ui.ios
 
-import com.hitales.ios.ui.HView
 import com.hitales.ui.View
 import com.hitales.ui.ViewGroup
 import com.hitales.utils.WeakReference

@@ -6,4 +6,4 @@ headers = HUI.h
 #excludeDependentModules = true
 
 compilerOpts = -framework HUI
-linkerOpts = -framework HUI   -F./frameworks
+linkerOpts = -framework HUI  -F./frameworks

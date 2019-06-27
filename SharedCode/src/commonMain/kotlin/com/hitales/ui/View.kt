@@ -87,6 +87,9 @@ expect open class View  {
      * @param maxHeight 最大高度  如果小于等于0表示无限高
      */
     open fun measureSize(maxWidth: Float,maxHeight:Float):Size
+
+
+    open fun startAnimation(animation: Animation,completion:(()->Unit)? = null)
 }
 
 

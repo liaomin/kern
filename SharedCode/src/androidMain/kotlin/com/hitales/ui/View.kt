@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.FrameLayout
 import com.hitales.ui.android.AndroidView
 import com.hitales.ui.android.Background
+import com.hitales.ui.animation.AndroidAnimation
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
@@ -270,5 +271,27 @@ actual open class View {
 
     override fun toString(): String {
         return "${this::class.java.name}: frame :$frame"
+    }
+
+
+    actual open fun startAnimation(animation: Animation, completion: (() -> Unit)?) {
+        val a = AndroidAnimation.fromAnimation(animation)
+        a.setAnimationListener(object :android.view.animation.Animation.AnimationListener {
+
+            override fun onAnimationRepeat(animation_a: android.view.animation.Animation?) {
+
+            }
+
+            override fun onAnimationEnd(animation_a: android.view.animation.Animation?) {
+                completion?.invoke()
+                animation.delegate?.onAnimationFinish(animation)
+            }
+
+            override fun onAnimationStart(animation_a: android.view.animation.Animation?) {
+                animation.delegate?.onAnimationStart(animation)
+            }
+
+        })
+        mWidget.startAnimation(a)
     }
 }

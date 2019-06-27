@@ -1,5 +1,7 @@
 package com.hitales.ui
 
+import com.hitales.ios.ui.setTransformM34
+import com.hitales.ui.animation.transAnimation
 import com.hitales.ui.ios.Background
 import com.hitales.ui.ios.IOSView
 import com.hitales.utils.*
@@ -7,7 +9,7 @@ import kotlinx.cinterop.*
 import platform.CoreGraphics.CGImageRef
 import platform.CoreGraphics.CGRectMake
 import platform.CoreGraphics.CGSizeMake
-import platform.QuartzCore.CAShapeLayer
+import platform.QuartzCore.*
 import platform.UIKit.*
 import platform.darwin.NSObject
 import platform.objc.sel_registerName
@@ -242,4 +244,24 @@ actual open class View {
         mWidget.layer.setNeedsDisplay()
         return mBackground!!
     }
+
+    actual open fun startAnimation(animation: Animation, completion: (() -> Unit)?) {
+        mWidget.layer.setTransformM34(animation.m34)
+        val iosAnimation = transAnimation(animation)
+        iosAnimation.delegate = object : NSObject(),CAAnimationDelegateProtocol{
+
+            override fun animationDidStart(anim: CAAnimation) {
+                animation.delegate?.onAnimationStart(animation)
+            }
+
+            override fun animationDidStop(anim: CAAnimation, finished: Boolean) {
+                completion?.invoke()
+                animation.delegate?.onAnimationFinish(animation)
+
+            }
+        }
+        mWidget.layer.addAnimation(iosAnimation,"animation")
+    }
+
+
 }

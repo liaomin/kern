@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)setContentsWithImage:(UIImage*) image;
 
+-(void)setTransformM34:(CGFloat) m34;
+
 @end
 
 NS_ASSUME_NONNULL_END

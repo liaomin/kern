@@ -3,10 +3,7 @@ package liam.hitales.com.android
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
-import android.graphics.Color
-import android.graphics.LinearGradient
-import android.graphics.Path
-import android.graphics.PixelFormat
+import android.graphics.*
 import android.graphics.drawable.StateListDrawable
 import android.net.Uri
 import android.os.Build
@@ -16,14 +13,21 @@ import android.util.Xml
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import android.view.animation.ScaleAnimation
+import android.view.animation.Transformation
 import android.widget.*
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import com.hitales.ui.*
+import com.hitales.ui.animation.AndroidAnimation
+import com.hitales.ui.utils.PixelUtil
 //import com.hitales.ui.android.StateListColor
 
 import com.hitales.utils.Timer
@@ -64,8 +68,13 @@ class MainActivity : AppCompatActivity() {
 //            rootView.addView(a,p)
 //        },5000)
 
+//        setContentView(fr)
 
 
+//        println("~~$m，${c.locationX}, ${c.locationZ}")
+
+
+//        RecyclerView(this).startAnimation(ScaleAnimation)
     }
 
     override fun onResume() {

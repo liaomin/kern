@@ -58,7 +58,7 @@ class TestController : BasicController() {
         rootView.addView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
-            this.push(TestButtonControllerTest())
+            this.push(TestButtonController())
         }
 
         index++
@@ -66,7 +66,7 @@ class TestController : BasicController() {
         rootView.addView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
-            this.push(TestInputControllerTest())
+            this.push(TestInputController())
         }
 
         index++
@@ -74,7 +74,7 @@ class TestController : BasicController() {
         rootView.addView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
-            this.push(TestImageControllerTest())
+            this.push(TestImageController())
         }
 
         index++
@@ -84,6 +84,15 @@ class TestController : BasicController() {
         v.setOnPressListener {
             this.push(TestLayout())
         }
+
+        index++
+        v  = Button("animation 测试", Frame(10f,(buttonHeight+10)*index+10f, buttonWidth , buttonHeight))
+        rootView.addView(v)
+        v.setBackgroundColor(Colors.BLUE)
+        v.setOnPressListener {
+            this.push(TestAnimationController())
+        }
+
 
 
         index++

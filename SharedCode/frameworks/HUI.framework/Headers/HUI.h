@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-#import "HView.h"
 #import "CALayer+Image.h"
 #import "Convert.h"
 
