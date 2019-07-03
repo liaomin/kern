@@ -19,17 +19,17 @@ actual open class HorizontalScrollView : ViewGroup {
         return super.getWidget() as UIScrollView
     }
 
-    actual open fun layoutSubViews(offsetX: Float, offsetY: Float) {
+    actual open fun layoutSubviews(offsetX: Float, offsetY: Float) {
     }
 
-    override fun layout() {
-        super.layout()
+    override fun layoutSubviews() {
+        super.layoutSubviews()
         calculateContentSize()
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        layout()
+        layoutSubviews()
     }
 
     protected open fun calculateContentSize() {

@@ -41,7 +41,7 @@ class IOSView(protected val mView: WeakReference<View>) : UIView(CGRectMake(0.0,
     fun layoutSubviews() {
         val view = mView.get()
         if(view != null && view is ViewGroup){
-            view.layout()
+            view.layoutSubviews()
         }
     }
 

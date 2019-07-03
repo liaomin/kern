@@ -15,7 +15,7 @@ expect open class ViewGroup : View {
 
     open fun removeView(view:View)
 
-    open fun layout()
+    open fun layoutSubviews()
 
     open fun getContentWidth():Float
 

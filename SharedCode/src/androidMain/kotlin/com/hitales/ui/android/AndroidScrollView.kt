@@ -54,7 +54,7 @@ open class AndroidScrollView : DampScrollView {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        mView?.layout()
+        mView?.layoutSubviews()
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 

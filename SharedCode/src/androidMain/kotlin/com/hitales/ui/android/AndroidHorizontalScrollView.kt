@@ -41,7 +41,7 @@ open class AndroidHorizontalScrollView : HorizontalScrollView {
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt)
-        mView?.layoutSubViews(PixelUtil.toDIPFromPixel(l.toFloat()),PixelUtil.toDIPFromPixel(t.toFloat()))
+        mView?.layoutSubviews(PixelUtil.toDIPFromPixel(l.toFloat()),PixelUtil.toDIPFromPixel(t.toFloat()))
     }
 
     override fun onAttachedToWindow() {
@@ -55,7 +55,7 @@ open class AndroidHorizontalScrollView : HorizontalScrollView {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        mView?.layout()
+        mView?.layoutSubviews()
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 

@@ -17,7 +17,7 @@ actual open class HorizontalScrollView : com.hitales.ui.ViewGroup {
         return super.getWidget() as AndroidScrollView
     }
 
-    actual open fun layoutSubViews(offsetX: Float, offsetY: Float) {
+    actual open fun layoutSubviews(offsetX: Float, offsetY: Float) {
         getWidget()
     }
 

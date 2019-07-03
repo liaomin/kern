@@ -10,7 +10,7 @@ open class LinearViewGroup : ViewGroup {
         get() = (layoutManager as LinearLayoutManager).orientation
         set(value) {
             (layoutManager as LinearLayoutManager).orientation = value
-            layout()
+            layoutSubviews()
         }
 
     constructor(frame: Frame = Frame.zero()):super(frame){

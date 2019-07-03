@@ -30,7 +30,7 @@ class TestLinearLayout : TestViewController(){
         button.setBorderRadius(5f)
         button.setOnPressListener {
             linearLayoutManager.orientation = Orientation.HORIZONTAL
-            linearViewGroup.layout()
+            linearViewGroup.layoutSubviews()
         }
         linearViewGroup.addView(button)
 
@@ -39,7 +39,7 @@ class TestLinearLayout : TestViewController(){
         button.setBorderRadius(5f)
         button.setOnPressListener {
             linearLayoutManager.orientation = Orientation.VERTICAL
-            linearViewGroup.layout()
+            linearViewGroup.layoutSubviews()
         }
         linearViewGroup.addView(button)
 

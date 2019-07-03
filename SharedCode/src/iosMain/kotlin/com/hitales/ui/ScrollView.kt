@@ -32,14 +32,14 @@ actual open class ScrollView : ViewGroup {
     actual open fun layoutSubViews(offsetX: Float, offsetY: Float) {
     }
 
-    override fun layout() {
-        super.layout()
+    override fun layoutSubviews() {
+        super.layoutSubviews()
         calculateContentSize()
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        layout()
+        layoutSubviews()
     }
 
     protected open fun calculateContentSize(){

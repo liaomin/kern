@@ -16,7 +16,7 @@ actual open class ViewGroup : View {
     actual var layoutManager: LayoutManager? = null
         set(value) {
             field = value
-            layout()
+            layoutSubviews()
         }
 
     actual constructor(frame: Frame):super(frame){}
@@ -52,7 +52,7 @@ actual open class ViewGroup : View {
         }
     }
 
-    actual open fun layout() {
+    actual open fun layoutSubviews() {
         layoutManager?.layoutSubviews(this)
     }
 

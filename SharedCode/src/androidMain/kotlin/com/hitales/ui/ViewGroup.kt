@@ -23,7 +23,7 @@ open class AndroidFrameLayout(private val view:ViewGroup) : FrameLayout(Platform
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        view.layout()
+        view.layoutSubviews()
     }
 
 }
@@ -32,7 +32,7 @@ actual open class ViewGroup : View {
     actual var layoutManager: LayoutManager? = null
         set(value) {
             field = value
-            layout()
+            layoutSubviews()
         }
 
     actual constructor(frame: Frame):super(frame){
@@ -98,7 +98,7 @@ actual open class ViewGroup : View {
 //        mWidget.isFocusableInTouchMode = false
     }
 
-    actual open fun layout(){
+    actual open fun layoutSubviews(){
         layoutManager?.layoutSubviews(this)
     }
 
