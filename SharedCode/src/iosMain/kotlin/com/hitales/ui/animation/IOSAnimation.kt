@@ -16,7 +16,6 @@ fun transAnimation(animation:Animation):CAAnimationGroup{
     val animationGroup = CAAnimationGroup()
     val tx = CABasicAnimation.animationWithKeyPath("transform.translation.x")
     val ty = CABasicAnimation.animationWithKeyPath("transform.translation.y")
-    val tz = CABasicAnimation.animationWithKeyPath("transform.translation.z")
     val rx = CABasicAnimation.animationWithKeyPath("transform.rotation.x")
     val ry = CABasicAnimation.animationWithKeyPath("transform.rotation.y")
     val rz = CABasicAnimation.animationWithKeyPath("transform.rotation.z")
@@ -40,9 +39,6 @@ fun transAnimation(animation:Animation):CAAnimationGroup{
     ty.fromValue = NSNumber.numberWithFloat(animation.fromTranslateY)
     ty.toValue = NSNumber.numberWithFloat(animation.toTranslateY)
 
-    tz.fromValue = NSNumber.numberWithFloat(animation.fromTranslateZ)
-    tz.toValue = NSNumber.numberWithFloat(animation.toTranslateZ)
-
     rx.fromValue =  NSNumber.numberWithDouble(animation.fromRotateX/180f* M_PI)
     rx.toValue =  NSNumber.numberWithDouble(animation.toRotateX/180f* M_PI)
 
@@ -52,7 +48,7 @@ fun transAnimation(animation:Animation):CAAnimationGroup{
     rz.fromValue =  NSNumber.numberWithDouble(animation.fromRotateZ/180f* M_PI)
     rz.toValue =  NSNumber.numberWithDouble(animation.toRotateZ/180f* M_PI)
 
-    animationGroup.setAnimations(arrayListOf(tx,ty,tz,rx,ry,rz,op,sx,sy))
+    animationGroup.setAnimations(arrayListOf(tx,ty,rx,ry,rz,op,sx,sy))
     animationGroup.setRemovedOnCompletion(false)
     if(animation.fillAfter){
         animationGroup.setFillMode(kCAFillModeForwards)

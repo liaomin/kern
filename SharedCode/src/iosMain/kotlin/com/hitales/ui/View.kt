@@ -9,10 +9,15 @@ import kotlinx.cinterop.*
 import platform.CoreGraphics.CGImageRef
 import platform.CoreGraphics.CGRectMake
 import platform.CoreGraphics.CGSizeMake
+import platform.Foundation.NSNumber
+import platform.Foundation.numberWithFloat
+import platform.Foundation.setValue
+import platform.Foundation.valueForKeyPath
 import platform.QuartzCore.*
 import platform.UIKit.*
 import platform.darwin.NSObject
 import platform.objc.sel_registerName
+import platform.posix.M_PI
 import kotlin.math.max
 import kotlin.system.getTimeMillis
 
@@ -55,11 +60,8 @@ actual open class View {
 
     var mBackground:Background? = null
 
-    init {
-        setBackgroundColor(0)
-    }
-
     actual var padding: EdgeInsets? = null
+
     actual var margin:EdgeInsets? = null
 
     actual open var frame:Frame
@@ -78,8 +80,68 @@ actual open class View {
 
     actual open var tag:Any? = null
 
+    /**
+     * 透明度 0~1
+     */
+    actual open var opacity: Float
+        get() = getWidget().alpha.toFloat()
+        set(value) {
+            getWidget().alpha = value.toDouble()
+        }
+
+    private fun getLayerValueForPath(path:String):Float{
+        return (getWidget().layer.valueForKeyPath(path) as NSNumber).floatValue
+    }
+
+    private fun setLayerValueForPath(value:Float,path:String){
+        getWidget().layer.setValue(NSNumber.numberWithFloat(value),forKeyPath = path)
+    }
+
+    actual open var translateX: Float
+        get() = getLayerValueForPath("transform.translation.x")
+        set(value) {
+            setLayerValueForPath(value,"transform.translation.x")
+        }
+
+    actual open var translateY: Float
+        get() = getLayerValueForPath("transform.translation.y")
+        set(value) {
+            setLayerValueForPath(value,"transform.translation.y")
+        }
+
+    actual open var rotateX: Float
+        get() = getLayerValueForPath("transform.rotation.x")
+        set(value) {
+            setLayerValueForPath(value,"transform.rotation.x")
+        }
+
+    actual open var rotateY: Float
+        get() = getLayerValueForPath("transform.rotation.y")
+        set(value) {
+            setLayerValueForPath(value,"transform.rotation.y")
+        }
+
+    actual open var rotateZ: Float
+        get() = getLayerValueForPath("transform.rotation.z")
+        set(value) {
+            setLayerValueForPath(value,"transform.rotation.z")
+        }
+
+    actual open var scaleX: Float
+        get() = getLayerValueForPath("transform.scale.x")
+        set(value) {
+            setLayerValueForPath(value,"transform.scale.x")
+        }
+
+    actual open var scaleY: Float
+        get() = getLayerValueForPath("transform.scale.y")
+        set(value) {
+            setLayerValueForPath(value,"transform.scale.y")
+        }
+
     actual constructor(frame: Frame){
         this.frame = frame
+        setBackgroundColor(0)
     }
 
     open fun getWidget(): UIView {
@@ -248,20 +310,19 @@ actual open class View {
     actual open fun startAnimation(animation: Animation, completion: (() -> Unit)?) {
         mWidget.layer.setTransformM34(animation.m34)
         val iosAnimation = transAnimation(animation)
+        val weakSelf = WeakReference(this)
         iosAnimation.delegate = object : NSObject(),CAAnimationDelegateProtocol{
 
             override fun animationDidStart(anim: CAAnimation) {
-                animation.delegate?.onAnimationStart(animation)
+                animation.delegate?.onAnimationStart(animation,weakSelf.get())
             }
 
             override fun animationDidStop(anim: CAAnimation, finished: Boolean) {
                 completion?.invoke()
-                animation.delegate?.onAnimationFinish(animation)
+                animation.delegate?.onAnimationStop(animation,weakSelf.get())
 
             }
         }
         mWidget.layer.addAnimation(iosAnimation,"animation")
     }
-
-
 }

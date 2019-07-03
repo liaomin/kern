@@ -1,13 +1,18 @@
 package com.hitales.ui
 
+import android.animation.Animator
+import android.animation.AnimatorSet
 import android.graphics.Canvas
+import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.View
+import android.view.animation.Transformation
 import android.widget.FrameLayout
 import com.hitales.ui.android.AndroidView
 import com.hitales.ui.android.Background
-import com.hitales.ui.animation.AndroidAnimation
+import com.hitales.ui.animation.AnimationInfo
+import com.hitales.ui.animation.setAnimation
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
@@ -92,6 +97,57 @@ actual open class View {
         set(value) {
             field = value
             mBackground?.setBorderStyle(value)
+        }
+
+    /**
+     * 透明度 0~1
+     */
+    actual open var opacity: Float
+        get() = getWidget().alpha
+        set(value) {
+            getWidget().alpha = value
+        }
+
+    actual open var translateX: Float
+        get() = getWidget().translationX
+        set(value) {
+            getWidget().translationX = value
+        }
+
+    actual open var translateY: Float
+        get() = getWidget().translationY
+        set(value) {
+            getWidget().translationY = value
+        }
+
+    actual open var rotateX: Float
+        get() = getWidget().rotationX
+        set(value) {
+            getWidget().rotationX = value
+        }
+
+    actual open var rotateY: Float
+        get() = getWidget().rotationY
+        set(value) {
+            getWidget().rotationY = value
+        }
+
+    actual open var rotateZ: Float
+        get() = getWidget().rotation
+        set(value) {
+            getWidget().rotation = value
+        }
+
+    actual open var scaleX: Float
+        get() = getWidget().scaleX
+        set(value) {
+            getWidget().scaleX = value
+        }
+
+    actual open var scaleY: Float
+        get() = getWidget().scaleY
+        set(value) {
+            getWidget().scaleY = value
         }
 
     private var onPressListener:((view: com.hitales.ui.View)->Unit)? = null
@@ -273,25 +329,31 @@ actual open class View {
         return "${this::class.java.name}: frame :$frame"
     }
 
-
     actual open fun startAnimation(animation: Animation, completion: (() -> Unit)?) {
-        val a = AndroidAnimation.fromAnimation(animation)
-        a.setAnimationListener(object :android.view.animation.Animation.AnimationListener {
-
-            override fun onAnimationRepeat(animation_a: android.view.animation.Animation?) {
-
+        val animatorSet = setAnimation(animation)
+        val animationInfo = AnimationInfo(getWidget())
+        animatorSet.addListener(object : Animator.AnimatorListener{
+            override fun onAnimationRepeat(animation: Animator?) {
             }
 
-            override fun onAnimationEnd(animation_a: android.view.animation.Animation?) {
+            override fun onAnimationEnd(animator: Animator?) {
+                if(!animation.fillAfter){
+                    animationInfo.resotre()
+                }
                 completion?.invoke()
-                animation.delegate?.onAnimationFinish(animation)
+                animation.delegate?.onAnimationStop(animation,this@View)
             }
 
-            override fun onAnimationStart(animation_a: android.view.animation.Animation?) {
-                animation.delegate?.onAnimationStart(animation)
+            override fun onAnimationCancel(animator: Animator?) {
+
+            }
+
+            override fun onAnimationStart(animator: Animator?) {
+                animation.delegate?.onAnimationStart(animation,this@View)
             }
 
         })
-        mWidget.startAnimation(a)
+        animatorSet.start()
     }
+
 }

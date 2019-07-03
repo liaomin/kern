@@ -1,6 +1,7 @@
 package com.hitales.ui.android
 
 import android.graphics.Canvas
+import android.graphics.Rect
 import android.graphics.drawable.RippleDrawable
 import android.view.MotionEvent
 import android.view.ViewGroup

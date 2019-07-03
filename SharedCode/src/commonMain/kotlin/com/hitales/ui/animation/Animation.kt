@@ -4,13 +4,16 @@ import com.hitales.ui.animation.BezierInterpolator
 import com.hitales.ui.animation.LinearInterpolator
 
 
+/**
+ * 动画属性都在这了，还要什么组合动画
+ */
 open class Animation {
 
     interface AnimationDelegate{
 
-        fun onAnimationStart(animation: Animation)
+        fun onAnimationStart(animation: Animation,view: View?)
 
-        fun onAnimationFinish(animation: Animation)
+        fun onAnimationStop(animation: Animation,view: View?)
 
     }
 
@@ -25,9 +28,9 @@ open class Animation {
     var delegate:AnimationDelegate? = null
 
     /**
-     * 报错结束后的位置
+     * 保存结束后的位置
      */
-    var fillAfter:Boolean = true
+    var fillAfter:Boolean = false
 
     /**
      * 重复次数
@@ -73,16 +76,6 @@ open class Animation {
      * y方向的位移
      */
     var toTranslateY = 0f
-
-    /**
-     * z方向的位移
-     */
-    var fromTranslateZ = 0f
-
-    /**
-     * z方向的位移
-     */
-    var toTranslateZ = 0f
 
     /**
      * x方向的旋转度数 0~360
@@ -140,16 +133,14 @@ open class Animation {
      */
     var toScaleY = 1f
 
-    fun setFromTranslate(x:Float,y:Float,z:Float = 0f){
+    fun setFromTranslate(x:Float,y:Float){
         fromTranslateX = x
         fromTranslateY = y
-        fromTranslateZ = z
     }
 
-    fun setToTranslate(x:Float,y:Float,z:Float = 0f){
+    fun setToTranslate(x:Float,y:Float){
         toTranslateX = x
         toTranslateY = y
-        toTranslateZ = z
     }
 
     fun setFromRotate(x:Float,y:Float,z:Float){

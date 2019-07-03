@@ -5,11 +5,11 @@ import com.hitales.utils.Frame
 
 open class TestAnimationInterpolatorController :TestViewController(), Animation.AnimationDelegate {
 
-    override fun onAnimationStart(animation: Animation) {
+    override fun onAnimationStart(animation: Animation, view: View?) {
         println("onAnimationStart")
     }
 
-    override fun onAnimationFinish(animation: Animation) {
+    override fun onAnimationStop(animation: Animation, view: View?) {
         println("onAnimationFinish")
     }
 
@@ -64,7 +64,6 @@ open class TestAnimationInterpolatorController :TestViewController(), Animation.
             animation.delegate = this
             animation.interpolator = EaseInOutInterpolator()
             view.startAnimation(animation)
-
 
             animation = Animation()
             animation.setToTranslate(Platform.windowWidth - 50f,0f)

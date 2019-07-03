@@ -1,11 +1,67 @@
 package com.hitales.ui.animation
 
+import android.animation.AnimatorSet
 import android.graphics.Camera
 import android.view.animation.AlphaAnimation
 import android.view.animation.Transformation
 import androidx.core.view.animation.PathInterpolatorCompat
 import com.hitales.ui.Animation
+import com.hitales.ui.View
 import com.hitales.ui.utils.PixelUtil
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
+
+
+
+inline fun View.setAnimation(animation: Animation):AnimatorSet{
+    val widget = this.getWidget()
+
+    val tx = ObjectAnimator.ofFloat(widget, "translationX", PixelUtil.toPixelFromDIP(animation.fromTranslateX), PixelUtil.toPixelFromDIP(animation.toTranslateX))
+    val ty = ObjectAnimator.ofFloat(widget, "translationY", PixelUtil.toPixelFromDIP(animation.fromTranslateY), PixelUtil.toPixelFromDIP(animation.toTranslateY))
+    val rx = ObjectAnimator.ofFloat(widget, "rotationX", animation.fromRotateX, animation.toRotateX)
+    val ry = ObjectAnimator.ofFloat(widget, "rotationY", animation.fromRotateX, animation.toRotateY)
+    val rz = ObjectAnimator.ofFloat(widget, "rotation", animation.fromRotateZ, animation.toRotateZ)
+    val op = ObjectAnimator.ofFloat(widget, "alpha", animation.fromOpacity, animation.toOpacity)
+    val sx = ObjectAnimator.ofFloat(widget, "scaleX", animation.fromScaleX, animation.toScaleX)
+    val sy = ObjectAnimator.ofFloat(widget, "scaleY", animation.fromScaleY, animation.toScaleY)
+    val animationSet = AnimatorSet()
+    val animations = listOf(tx,ty,rx,ry,rz,op,sx,sy)
+    animationSet.playTogether(animations)
+    animationSet.duration = animation.duration.toLong()
+
+    if(animation.repeatCount > 0){
+        animations.forEach {
+            it.repeatCount = animation.repeatCount
+            if(animation.autoreverses){
+                it.repeatMode = ValueAnimator.REVERSE
+            }
+        }
+    }
+    val i = animation.interpolator
+    animationSet.interpolator = PathInterpolatorCompat.create(i.x1,i.y1,i.x2,i.y2)
+    return animationSet
+}
+
+open class AnimationInfo(val view: android.view.View){
+    val translationX = view.translationX
+    val translationY = view.translationY
+    val rotationX = view.rotationX
+    val rotationY = view.rotationY
+    val rotation = view.rotation
+    val alpha = view.alpha
+    val scaleX = view.scaleX
+    val scaleY = view.scaleY
+    fun resotre(){
+        view.translationX = translationX
+        view.translationY = translationY
+        view.rotationX = rotationX
+        view.rotationY = rotationY
+        view.rotation = rotation
+        view.alpha = alpha
+        view.scaleX = scaleX
+        view.scaleY = scaleY
+    }
+}
 
 
 open class AndroidAnimation : AlphaAnimation(1f,1f){
@@ -15,8 +71,6 @@ open class AndroidAnimation : AlphaAnimation(1f,1f){
             val androidAnimation = AndroidAnimation()
             androidAnimation.setFromRotate(animation.fromRotateX,animation.fromRotateY,animation.fromRotateZ)
             androidAnimation.setToRotate(animation.toRotateX,animation.toRotateY,animation.toRotateZ)
-            androidAnimation.setFromTranslate(animation.fromTranslateX,animation.fromTranslateY,animation.fromTranslateZ)
-            androidAnimation.setToTranslate(animation.toTranslateX,animation.toTranslateY,animation.toTranslateZ)
             androidAnimation.setFromScale(animation.fromScaleX,animation.fromScaleY)
             androidAnimation.setToScale(animation.toScaleX,animation.toScaleY)
             androidAnimation.fromOpacity = animation.fromOpacity
@@ -197,6 +251,10 @@ open class AndroidAnimation : AlphaAnimation(1f,1f){
         matrix.postTranslate(centerX,centerY)
         camera.restore()
         t.alpha = fromOpacity + (toOpacity - fromOpacity) * interpolatedTime
+    }
+
+    fun getEndTransformation(t: Transformation){
+        applyTransformation(1f,t)
     }
 
     override fun initialize(width: Int, height: Int, parentWidth: Int, parentHeight: Int) {

@@ -1,5 +1,6 @@
 package liam.hitales.com.android
 
+import android.animation.Animator
 import android.animation.AnimatorSet
 import android.content.Context
 import android.content.Intent
@@ -73,9 +74,10 @@ class MainActivity : AppCompatActivity() {
 
 //        println("~~$m，${c.locationX}, ${c.locationZ}")
 
+
 //        PathInterpolatorCompat.create()
         val s = AnimationSet(true)
-
+        View(this).animate()
 //        RecyclerView(this).startAnimation(ScaleAnimation)
     }
 

@@ -1,14 +1,15 @@
 package com.hitales.test
 import com.hitales.ui.*
+import com.hitales.ui.animation.EaseOutInterpolator
 import com.hitales.utils.Frame
 
 open class TestAnimationController :TestViewController(), Animation.AnimationDelegate {
 
-    override fun onAnimationStart(animation: Animation) {
+    override fun onAnimationStart(animation: Animation,view: View?) {
         println("onAnimationStart")
     }
 
-    override fun onAnimationFinish(animation: Animation) {
+    override fun onAnimationStop(animation: Animation,view: View?) {
         println("onAnimationFinish")
     }
 
@@ -17,7 +18,12 @@ open class TestAnimationController :TestViewController(), Animation.AnimationDel
         val button = Button("测试插值器", Frame(70f,00f,60f,48f))
         button.setBackgroundColor(Colors.RED)
         button.setOnPressListener {
-            this.push(TestAnimationInterpolatorController())
+            val animation = Animation()
+            animation.setFromTranslate(Platform.windowWidth,0f)
+            animation.setToTranslate(0f,0f)
+            animation.duration = 500f
+            animation.interpolator = EaseOutInterpolator()
+            this.push(TestAnimationInterpolatorController(),animation)
         }
         (this.view as ScrollView).addView(button)
 
@@ -39,14 +45,6 @@ open class TestAnimationController :TestViewController(), Animation.AnimationDel
 
 //        offsetY = 250f
 
-        addButton("tZ"){
-            val animation = Animation()
-            animation.setToTranslate(0f,0f,100f)
-            animation.duration = 3000f
-            animation.delegate = this
-            view.startAnimation(animation)
-        }
-
         addButton("tY"){
             val animation = Animation()
             animation.setToTranslate(0f,100f)
@@ -57,7 +55,7 @@ open class TestAnimationController :TestViewController(), Animation.AnimationDel
 
         addButton("translate"){
             val animation = Animation()
-            animation.setToTranslate(100f,100f,100f)
+            animation.setToTranslate(100f,100f)
             animation.duration = 3000f
             animation.delegate = this
             view.startAnimation(animation)
@@ -117,7 +115,7 @@ open class TestAnimationController :TestViewController(), Animation.AnimationDel
 
         addButton("组合测试2"){
             val animation = Animation()
-            animation.setToTranslate(100f,100f,100f)
+            animation.setToTranslate(100f,100f)
             animation.fromOpacity = 1f
             animation.toOpacity = 0f
             animation.duration = 3000f
@@ -128,7 +126,7 @@ open class TestAnimationController :TestViewController(), Animation.AnimationDel
         addButton("组合测试2"){
             val animation = Animation()
             animation.setToRotate(360f,360f,360f)
-            animation.setToTranslate(100f,100f,100f)
+            animation.setToTranslate(100f,100f)
             animation.setToScale(2f,2f)
             animation.fromOpacity = 1f
             animation.toOpacity = 0f

@@ -13,7 +13,7 @@ actual open class Button :  com.hitales.ui.TextView {
 
     val bgColorList = StateListColor(Colors.BLUE)
 
-    override open var textColor: Int = Colors.WHITE
+    override var textColor: Int = Colors.WHITE
         set(value) {
             field = value
             setTextColor(value)
@@ -25,6 +25,11 @@ actual open class Button :  com.hitales.ui.TextView {
         setTextColor(Colors.WHITE)
         padding = EdgeInsets(5f, 5f, 5f, 5f)
         widget.clipsToBounds = true
+    }
+
+    override fun setBackgroundColor(color: Int) {
+        super.setBackgroundColor(color)
+        bgColorList?.setColor(color)
     }
 
     override fun createWidget(): UIView {

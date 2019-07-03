@@ -45,10 +45,13 @@ open class Controller {
     }
 
     open fun push(controller: Controller,animation: Animation? = null,completion:(()->Unit)? = null){
-        if(rootController == null){
-            rootController = this
+        val root=  rootController
+        if(root != null){
+            root.pushStack(controller)
         }
-        rootController?.pushStack(controller)
+        if(animation != null){
+            controller.view?.startAnimation(animation,completion)
+        }
     }
 
     open fun pop():Boolean{

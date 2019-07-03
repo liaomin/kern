@@ -49,6 +49,25 @@ expect open class View  {
 
     open var borderStyle:BorderStyle
 
+    /**
+     * 透明度 0~1
+     */
+    open var opacity:Float
+
+    open var translateX:Float
+
+    open var translateY:Float
+
+    open var rotateX:Float
+
+    open var rotateY:Float
+
+    open var rotateZ:Float
+
+    open var scaleX:Float
+
+    open var scaleY:Float
+
     constructor(frame: Frame = Frame.zero())
 
     var superView:ViewGroup?
