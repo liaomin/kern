@@ -1,9 +1,12 @@
 package com.hitales.ui
 
 import com.hitales.ui.ios.IOSInputView
+import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
 import com.hitales.utils.Size
 import com.hitales.utils.WeakReference
+import kotlinx.cinterop.useContents
+import platform.CoreGraphics.CGSizeMake
 import platform.Foundation.*
 import platform.UIKit.*
 
@@ -58,7 +61,7 @@ actual open class TextInput : com.hitales.ui.TextView {
     override var ellipsizeMode: TextEllipsizeMode = TextEllipsizeMode.TAIL
 
     actual constructor(text: CharSequence?, frame: Frame):super(text, frame) {
-
+        padding = EdgeInsets(8f,8f,8f,8f)
     }
 
     override fun createWidget(): IOSInputView {
@@ -84,6 +87,7 @@ actual open class TextInput : com.hitales.ui.TextView {
         set(value) {}
 
     actual open fun focus() {
+
     }
 
     actual open fun setTextColor(color: Int, state: ViewState) {
@@ -91,6 +95,26 @@ actual open class TextInput : com.hitales.ui.TextView {
 
     actual open fun cleanFocus() {
 
+    }
+
+    override fun measureSize(maxWidth: Float, maxHeight: Float): Size {
+        var width = maxWidth
+        var height = maxHeight
+        if(width <= 0){
+            width = Float.MAX_VALUE
+        }
+        if(height <= 0){
+            height = Float.MAX_VALUE
+        }
+        return getAttributedString().boundingRectWithSize(
+            CGSizeMake(width.toDouble(),height.toDouble()),
+            NSStringDrawingUsesLineFragmentOrigin or NSStringDrawingUsesFontLeading,null).useContents {
+            val p = padding
+            if(p != null){
+                return Size(this.size.width.toFloat() + p.left + p.right,this.size.height.toFloat() + p.top + p.bottom)
+            }
+            return Size(this.size.width.toFloat(),this.size.height.toFloat())
+        }
     }
 
     override fun getAttributedString(): NSMutableAttributedString {

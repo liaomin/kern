@@ -12,10 +12,8 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 
 
-
 inline fun View.setAnimation(animation: Animation):AnimatorSet{
     val widget = this.getWidget()
-
     val tx = ObjectAnimator.ofFloat(widget, "translationX", PixelUtil.toPixelFromDIP(animation.fromTranslateX), PixelUtil.toPixelFromDIP(animation.toTranslateX))
     val ty = ObjectAnimator.ofFloat(widget, "translationY", PixelUtil.toPixelFromDIP(animation.fromTranslateY), PixelUtil.toPixelFromDIP(animation.toTranslateY))
     val rx = ObjectAnimator.ofFloat(widget, "rotationX", animation.fromRotateX, animation.toRotateX)
@@ -40,27 +38,6 @@ inline fun View.setAnimation(animation: Animation):AnimatorSet{
     val i = animation.interpolator
     animationSet.interpolator = PathInterpolatorCompat.create(i.x1,i.y1,i.x2,i.y2)
     return animationSet
-}
-
-open class AnimationInfo(val view: android.view.View){
-    val translationX = view.translationX
-    val translationY = view.translationY
-    val rotationX = view.rotationX
-    val rotationY = view.rotationY
-    val rotation = view.rotation
-    val alpha = view.alpha
-    val scaleX = view.scaleX
-    val scaleY = view.scaleY
-    fun resotre(){
-        view.translationX = translationX
-        view.translationY = translationY
-        view.rotationX = rotationX
-        view.rotationY = rotationY
-        view.rotation = rotation
-        view.alpha = alpha
-        view.scaleX = scaleX
-        view.scaleY = scaleY
-    }
 }
 
 

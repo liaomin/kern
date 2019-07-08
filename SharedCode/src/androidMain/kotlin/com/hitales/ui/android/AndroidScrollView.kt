@@ -11,11 +11,16 @@ import com.hitales.ui.Colors
 import com.hitales.ui.Platform
 import com.hitales.ui.ScrollView
 import com.hitales.ui.utils.PixelUtil
+import android.view.MotionEvent
+
+
 
 
 open class AndroidScrollView : DampScrollView {
 
     var mView: ScrollView? = null
+
+    var scrollEnabled = true
 
     constructor(view: ScrollView) : super(Platform.getApplication()) {
         this.mView = view
@@ -36,6 +41,8 @@ open class AndroidScrollView : DampScrollView {
     init {
         mFrameLayout.setBackgroundColor(Colors.CLEAR)
         super.addView(mFrameLayout, -1, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
+        mFrameLayout.isFocusable = true
+        mFrameLayout.isFocusableInTouchMode = true
     }
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
@@ -76,6 +83,25 @@ open class AndroidScrollView : DampScrollView {
 
     override fun addView(child: View?, index: Int, params: ViewGroup.LayoutParams?) {
         mFrameLayout.addView(child, index, params)
+    }
+
+    override fun onTouchEvent(ev: MotionEvent): Boolean {
+        when (ev.action) {
+            MotionEvent.ACTION_DOWN -> {
+                // if we can scroll pass the event to the superclass
+                return if (scrollEnabled) super.onTouchEvent(ev) else scrollEnabled
+                // only continue to handle the touch event if scrolling enabled
+                // scrollable is always false at this point
+            }
+            else -> return super.onTouchEvent(ev)
+        }
+    }
+
+    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+        return if (!scrollEnabled)
+            false
+        else
+            super.onInterceptTouchEvent(ev)
     }
 
 }

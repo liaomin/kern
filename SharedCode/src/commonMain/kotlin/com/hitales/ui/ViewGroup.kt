@@ -7,6 +7,10 @@ expect open class ViewGroup : View {
 
     var layoutManager:LayoutManager?
 
+    var scrollX:Float
+
+    var scrollY:Float
+
     constructor(frame: Frame = Frame.zero())
 
     val children:ArrayList<View>
@@ -20,5 +24,7 @@ expect open class ViewGroup : View {
     open fun getContentWidth():Float
 
     open fun getContentHeight():Float
+
+    open fun getVisibleFrame(frame: Frame)
 
 }

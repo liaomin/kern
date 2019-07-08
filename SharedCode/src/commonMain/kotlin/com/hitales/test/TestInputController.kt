@@ -13,7 +13,7 @@ open class TestInputController : TestViewController(){
         view.autoFocus = true
 //        view.ellipsizeMode = TextEllipsizeMode.TAIL
         var size = view.measureSize(width,0f)
-        addView(view, 10f,size.width, size.height)
+        addView(view, 10f,Platform.windowWidth - 20, size.height)
         Timer.schedule(1000){
             view.focus()
         }

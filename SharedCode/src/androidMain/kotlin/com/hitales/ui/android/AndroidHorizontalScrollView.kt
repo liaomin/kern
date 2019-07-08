@@ -3,6 +3,7 @@ package com.hitales.ui.android
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -15,6 +16,8 @@ import com.hitales.ui.utils.PixelUtil
 
 
 open class AndroidHorizontalScrollView : HorizontalScrollView {
+
+    var scrollEnabled = true
 
     var mView: com.hitales.ui.HorizontalScrollView? = null
 
@@ -41,7 +44,7 @@ open class AndroidHorizontalScrollView : HorizontalScrollView {
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt)
-        mView?.layoutSubviews(PixelUtil.toDIPFromPixel(l.toFloat()),PixelUtil.toDIPFromPixel(t.toFloat()))
+//        mView?.layoutSubviews(PixelUtil.toDIPFromPixel(l.toFloat()),PixelUtil.toDIPFromPixel(t.toFloat()))
     }
 
     override fun onAttachedToWindow() {
@@ -77,6 +80,25 @@ open class AndroidHorizontalScrollView : HorizontalScrollView {
 
     override fun addView(child: View?, index: Int, params: ViewGroup.LayoutParams?) {
         mFrameLayout.addView(child, index, params)
+    }
+
+    override fun onTouchEvent(ev: MotionEvent): Boolean {
+        when (ev.action) {
+            MotionEvent.ACTION_DOWN -> {
+                // if we can scroll pass the event to the superclass
+                return if (scrollEnabled) super.onTouchEvent(ev) else scrollEnabled
+                // only continue to handle the touch event if scrolling enabled
+                // scrollable is always false at this point
+            }
+            else -> return super.onTouchEvent(ev)
+        }
+    }
+
+    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+        return if (!scrollEnabled)
+            false
+        else
+            super.onInterceptTouchEvent(ev)
     }
 
 }

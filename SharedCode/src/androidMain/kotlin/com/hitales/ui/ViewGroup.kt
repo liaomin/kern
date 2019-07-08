@@ -4,7 +4,9 @@ import android.graphics.Canvas
 import android.widget.FrameLayout
 import com.hitales.ui.layout.FrameLayoutManager
 import com.hitales.ui.layout.LayoutManager
+import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame
+import com.hitales.utils.Size
 import com.hitales.utils.WeakReference
 import java.util.ArrayList
 
@@ -28,6 +30,18 @@ open class AndroidFrameLayout(private val view:ViewGroup) : FrameLayout(Platform
 
 }
 actual open class ViewGroup : View {
+
+    actual var scrollX: Float
+        get() = PixelUtil.toDIPFromPixel(getWidget().scrollX.toFloat())
+        set(value) {
+            getWidget().scrollX = PixelUtil.toPixelFromDIP(value).toInt()
+        }
+
+    actual var scrollY: Float
+        get() = PixelUtil.toDIPFromPixel(getWidget().scrollY.toFloat())
+        set(value) {
+            getWidget().scrollY = PixelUtil.toPixelFromDIP(value).toInt()
+        }
 
     actual var layoutManager: LayoutManager? = null
         set(value) {
@@ -59,7 +73,7 @@ actual open class ViewGroup : View {
     }
 
 
-    override fun createWidget(): FrameLayout {
+    override fun createWidget(): android.view.View {
         return AndroidFrameLayout(this)
     }
 
@@ -109,5 +123,14 @@ actual open class ViewGroup : View {
     actual open fun getContentHeight(): Float {
         return frame.height
     }
+
+    actual open fun getVisibleFrame(frame: Frame) {
+        frame.x = 0f
+        frame.y = 0f
+        frame.width = this.frame.width
+        frame.height = this.frame.height
+    }
+
+
 
 }

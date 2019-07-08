@@ -199,6 +199,10 @@ actual open class TextView :  View {
             }
             return getAttributedString().boundingRectWithSize(CGSizeMake(width.toDouble(),height.toDouble()),
                 NSStringDrawingUsesLineFragmentOrigin or NSStringDrawingUsesFontLeading,null).useContents {
+                val p = padding
+                if(p != null){
+                    return Size(this.size.width.toFloat() + p.left + p.right,this.size.height.toFloat() + p.top + p.bottom)
+                }
                 return Size(this.size.width.toFloat(),this.size.height.toFloat())
             }
         }else{

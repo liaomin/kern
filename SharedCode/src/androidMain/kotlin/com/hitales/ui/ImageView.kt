@@ -38,7 +38,7 @@ actual open class ImageView : com.hitales.ui.View {
         }
 
 
-    override fun measureSize(maxWidth: Float, maxHeight: Float): Size {
+    override fun measureSize(maxWidth: Float, maxHeight: Float,size: Size) {
         var width = PixelUtil.toPixelFromDIP(maxWidth).toInt()
         var height = PixelUtil.toPixelFromDIP(maxHeight).toInt()
         if( width <= 0 ){
@@ -54,6 +54,6 @@ actual open class ImageView : com.hitales.ui.View {
         mWidget.measure(width,height)
         val measuredWidth = mWidget.measuredWidth
         val measuredHeight = mWidget.measuredHeight
-        return Size(PixelUtil.toDIPFromPixel(measuredWidth.toFloat()), PixelUtil.toDIPFromPixel(measuredHeight.toFloat()))
+        size.set(PixelUtil.toDIPFromPixel(measuredWidth.toFloat()), PixelUtil.toDIPFromPixel(measuredHeight.toFloat()))
     }
 }

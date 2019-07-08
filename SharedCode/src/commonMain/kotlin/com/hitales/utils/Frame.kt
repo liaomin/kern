@@ -16,6 +16,22 @@ open class Frame(var x:Float = 0f,var y:Float = 0f, var width:Float = 0f,var hei
         return y + height / 2f
     }
 
+    fun getLeft():Float{
+        return x
+    }
+
+    fun getRight():Float{
+        return x + width
+    }
+
+    fun getTop():Float{
+        return y
+    }
+
+    fun getBottom():Float{
+        return y + height
+    }
+
     fun clone():Frame{
         return Frame(x,y,width, height)
     }

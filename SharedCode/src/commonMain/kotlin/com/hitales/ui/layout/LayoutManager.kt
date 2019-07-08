@@ -3,6 +3,7 @@ package com.hitales.ui.layout
 import com.hitales.ui.ViewGroup
 
 abstract class LayoutManager {
+
     /**
      * calculate children frame
      */

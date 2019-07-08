@@ -5,8 +5,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import com.hitales.ui.android.AndroidEditTextView
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
-
-
+import com.hitales.utils.Size
 
 
 actual open class TextInput : com.hitales.ui.TextView {

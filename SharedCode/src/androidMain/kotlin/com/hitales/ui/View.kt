@@ -11,12 +11,12 @@ import android.view.animation.Transformation
 import android.widget.FrameLayout
 import com.hitales.ui.android.AndroidView
 import com.hitales.ui.android.Background
-import com.hitales.ui.animation.AnimationInfo
 import com.hitales.ui.animation.setAnimation
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
 import com.hitales.utils.Size
+import com.hitales.utils.WeakReference
 
 actual open class View {
 
@@ -318,7 +318,28 @@ actual open class View {
      * @param maxHeight 最大高度  如果小于等于0表示无限高
      */
     actual open fun measureSize(maxWidth: Float, maxHeight: Float): Size {
-        return Size(frame.width,frame.height)
+        val size =  Size()
+        measureSize(maxWidth,maxHeight,size)
+        return size
+    }
+
+    actual open fun measureSize(maxWidth: Float, maxHeight: Float,size: Size){
+        var width = PixelUtil.toPixelFromDIP(maxWidth).toInt()
+        var height = PixelUtil.toPixelFromDIP(maxHeight).toInt()
+        if( width <= 0 ){
+            width = android.view.View.MeasureSpec.makeMeasureSpec(0, android.view.View.MeasureSpec.UNSPECIFIED)
+        }else{
+            width = android.view.View.MeasureSpec.makeMeasureSpec(width, android.view.View.MeasureSpec.AT_MOST)
+        }
+        if( height <= 0 ){
+            height = android.view.View.MeasureSpec.makeMeasureSpec(0, android.view.View.MeasureSpec.UNSPECIFIED)
+        }else{
+            height = android.view.View.MeasureSpec.makeMeasureSpec(height, android.view.View.MeasureSpec.AT_MOST)
+        }
+        mWidget.measure(width,height)
+        val measuredWidth = mWidget.measuredWidth
+        val measuredHeight = mWidget.measuredHeight
+        size.set(PixelUtil.toDIPFromPixel(measuredWidth.toFloat()), PixelUtil.toDIPFromPixel(measuredHeight.toFloat()))
     }
 
     protected open fun setBackgroundDrawable(drawable: Drawable,state: ViewState){
@@ -331,14 +352,22 @@ actual open class View {
 
     actual open fun startAnimation(animation: Animation, completion: (() -> Unit)?) {
         val animatorSet = setAnimation(animation)
-        val animationInfo = AnimationInfo(getWidget())
+        val widget = WeakReference<android.view.View>(mWidget)
         animatorSet.addListener(object : Animator.AnimatorListener{
             override fun onAnimationRepeat(animation: Animator?) {
             }
 
             override fun onAnimationEnd(animator: Animator?) {
-                if(!animation.fillAfter){
-                    animationInfo.resotre()
+                val view = widget.get()
+                if(!animation.fillAfter && view != null){
+                    view.translationX = 0f
+                    view.translationY = 0f
+                    view.rotationX = 0f
+                    view.rotationY = 0f
+                    view.rotation = 0f
+                    view.alpha = 1f
+                    view.scaleX = 1f
+                    view.scaleY = 1f
                 }
                 completion?.invoke()
                 animation.delegate?.onAnimationStop(animation,this@View)

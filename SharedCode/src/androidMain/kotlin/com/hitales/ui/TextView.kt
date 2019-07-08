@@ -252,24 +252,6 @@ actual open class TextView :  View {
 //            }
 //        }
 
-    override fun measureSize(maxWidth: Float, maxHeight: Float): Size {
-        var width = PixelUtil.toPixelFromDIP(maxWidth).toInt()
-        var height = PixelUtil.toPixelFromDIP(maxHeight).toInt()
-        if( width <= 0 ){
-            width = android.view.View.MeasureSpec.makeMeasureSpec(0, android.view.View.MeasureSpec.UNSPECIFIED)
-        }else{
-            width = android.view.View.MeasureSpec.makeMeasureSpec(width, android.view.View.MeasureSpec.AT_MOST)
-        }
-        if( height <= 0 ){
-            height = android.view.View.MeasureSpec.makeMeasureSpec(0, android.view.View.MeasureSpec.UNSPECIFIED)
-        }else{
-            height = android.view.View.MeasureSpec.makeMeasureSpec(height, android.view.View.MeasureSpec.AT_MOST)
-        }
-        mWidget.measure(width,height)
-        val measuredWidth = mWidget.measuredWidth
-        val measuredHeight = mWidget.measuredHeight
-        return Size(PixelUtil.toDIPFromPixel(measuredWidth.toFloat()), PixelUtil.toDIPFromPixel(measuredHeight.toFloat()))
-    }
 
     private fun onTextValueSet(){
         val text = text

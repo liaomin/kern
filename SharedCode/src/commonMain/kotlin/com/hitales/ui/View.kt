@@ -107,6 +107,8 @@ expect open class View  {
      */
     open fun measureSize(maxWidth: Float,maxHeight:Float):Size
 
+    open fun measureSize(maxWidth: Float,maxHeight:Float,size: Size)
+
 
     open fun startAnimation(animation: Animation,completion:(()->Unit)? = null)
 }
