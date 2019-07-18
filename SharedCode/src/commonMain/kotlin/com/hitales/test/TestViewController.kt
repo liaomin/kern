@@ -13,21 +13,49 @@ open class TestViewController : BasicController() {
     open fun testView(){
         var view = View()
         view.setBackgroundColor(Colors.RED)
+//        addView(view,"测试颜色",getIndex(),Colors.RED)
+//        view.setBorderColor(Colors.BLUE)
+//
+//
+//        view = View()
+//        view.setBackgroundColor(Colors.BLUE)
+//        addView(view,"测试颜色",getIndex(),Colors.BLUE)
+//
+//        view = View()
+//        view.setBackgroundColor(0xFF999999.toInt())
+//        addView(view,"测试颜色",getIndex(),0xFF999999.toInt())
+//
+//        view = View()
+//        view.setBackgroundColor(0x33999999)
+//        addView(view,"测试颜色",getIndex(),0x33999999)
+
+
+        view = View()
+        view.setBackgroundColor(Colors.RED)
+        view.setShadow(9f,0f,0f,Colors.BLUE)
         addView(view,"测试颜色",getIndex(),Colors.RED)
+        view.setBorderWidth(1f)
+        view.setBorderRadius(50f)
         view.setBorderColor(Colors.BLUE)
 
+        addButton("ces"){
+            val animation = Animation()
+            animation.duration = 300f
+            animation.toTranslateX = 100f
+            view.startAnimation(animation)
+        }
 
-        view = View()
-        view.setBackgroundColor(Colors.BLUE)
-        addView(view,"测试颜色",getIndex(),Colors.BLUE)
-
-        view = View()
-        view.setBackgroundColor(0xFF999999.toInt())
-        addView(view,"测试颜色",getIndex(),0xFF999999.toInt())
-
-        view = View()
-        view.setBackgroundColor(0x33999999)
-        addView(view,"测试颜色",getIndex(),0x33999999)
+//        view = View()
+//        view.setBackgroundColor(Colors.BLUE)
+//        addView(view,"测试颜色",getIndex(),Colors.BLUE)
+//
+//        view = View()
+//        view.setBackgroundColor(0xFF999999.toInt())
+//        addView(view,"测试颜色",getIndex(),0xFF999999.toInt())
+//
+//        view = View()
+//        view.setBackgroundColor(0x33999999)
+//        addView(view,"测试颜色",getIndex(),0x33999999)
 
     }
 

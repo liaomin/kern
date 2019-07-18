@@ -1,6 +1,6 @@
 package com.hitales.ui
 
-expect class Image {
+expect open class Image {
     companion object {
         fun named(name: String):Image?
     }

@@ -1,7 +1,9 @@
 package com.hitales.ui
 
 import android.graphics.Canvas
+import android.view.MotionEvent
 import android.widget.FrameLayout
+import com.hitales.ui.android.ViewHelper
 import com.hitales.ui.layout.FrameLayoutManager
 import com.hitales.ui.layout.LayoutManager
 import com.hitales.ui.utils.PixelUtil
@@ -13,19 +15,35 @@ import java.util.ArrayList
 
 open class AndroidFrameLayout(private val view:ViewGroup) : FrameLayout(Platform.getApplication()){
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        view.onAttachedToWindow()
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        view.onDetachedFromWindow()
-    }
+    val mViewHelper = ViewHelper(this,view)
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         view.layoutSubviews()
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        mViewHelper.onAttachedToWindow()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        mViewHelper.onDetachedFromWindow()
+    }
+
+    override fun draw(canvas: Canvas) {
+        super.draw(canvas)
+        mViewHelper.draw(canvas)
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        return mViewHelper.dispatchTouchEvent(event) || super.dispatchTouchEvent(event)
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        mViewHelper.onTouchEvent(event)
+        return super.onTouchEvent(event)
     }
 
 }
@@ -132,5 +150,12 @@ actual open class ViewGroup : View {
     }
 
 
+    override fun releaseResource() {
+        super.releaseResource()
+        children.forEach {
+            it.releaseResource()
+        }
+        children.clear()
+    }
 
 }

@@ -179,6 +179,7 @@ actual open class View {
 
     actual open fun removeFromSuperView() {
         superView?.removeView(this)
+        superView = null
     }
 
     actual open fun onAttachedToWindow() {
@@ -324,6 +325,10 @@ actual open class View {
     }
 
     actual open fun measureSize(maxWidth: Float, maxHeight: Float,size: Size){
+        if(!frame.valid()){
+            size.set(frame.width,frame.height)
+            return
+        }
         var width = PixelUtil.toPixelFromDIP(maxWidth).toInt()
         var height = PixelUtil.toPixelFromDIP(maxHeight).toInt()
         if( width <= 0 ){
@@ -385,4 +390,38 @@ actual open class View {
         animatorSet.start()
     }
 
+    actual open fun releaseResource() {
+        superView = null
+    }
+
+    /**
+     * touches
+     */
+    actual open fun dispatchTouchEvent(touches: Touches): Boolean {
+        return onInterceptTouchEvent(touches)
+    }
+
+    actual open fun onInterceptTouchEvent(touches: Touches): Boolean {
+        return false
+    }
+
+    actual open fun touchesBegan(touches: Touches) {
+        println("touchesBegan")
+    }
+
+    actual open fun touchesMoved(touches: Touches) {
+        println("touchesMoved")
+    }
+
+    actual open fun touchesEnded(touches: Touches) {
+        println("touchesEnded")
+    }
+
+    actual open fun touchesCancelled(touches: Touches) {
+        println("touchesCancelled")
+    }
+
+    actual open fun setShadow(radius: Float, dx: Float, dy: Float, color: Int) {
+        getOrCreateBackground().setShadow(radius,dx, dy, color)
+    }
 }

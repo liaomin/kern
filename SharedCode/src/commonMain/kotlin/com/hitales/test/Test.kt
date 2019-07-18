@@ -3,6 +3,7 @@ package com.hitales.test
 import com.hitales.test.layout.TestLayout
 import com.hitales.ui.*
 import com.hitales.utils.Frame
+import com.hitales.utils.Size
 import com.hitales.utils.assertUI
 
 class TestController : BasicController() {
@@ -105,6 +106,8 @@ class TestController : BasicController() {
         v4.setOnLongPressListener {
             println("long press $it")
         }
+
+        rootView.contentSize = Size(Platform.windowWidth,4100f)
 
     }
 //

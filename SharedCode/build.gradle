@@ -39,17 +39,18 @@ dependencies {
 
 kotlin {
     final def iOSPresetTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") ? presets.iosArm64 : presets.iosX64
-    iosX64('ios'){
-        compilations.main {
-            cinterops {
-                myInterop {
-                    defFile project.file("frameworks/HUI.def")
-                    includeDirs("frameworks/HUI.framework/Headers")
-                }
+//    iosX64('ios'){
+//        compilations.main {
+//            cinterops {
+//                myInterop {
+//                    defFile project.file("frameworks/HUI.def")
+//                    includeDirs("frameworks/HUI.framework/Headers")
+//                }
+//
+//            }
+//        }
+//    }
 
-            }
-        }
-    }
 //    iosArm64('ios'){
 //        compilations.main {
 //            cinterops {
@@ -68,11 +69,11 @@ kotlin {
 
     targets {
 
-        fromPreset(iOSPresetTarget, 'ios') {
-            binaries {
-                framework('SharedCode')
-            }
-        }
+//        fromPreset(iOSPresetTarget, 'ios') {
+//            binaries {
+//                framework('SharedCode')
+//            }
+//        }
 
 //        fromPreset(presets.jvm, 'android')
 

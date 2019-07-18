@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 
-actual class Image {
+actual open class Image {
 
     var bitmap:Bitmap? = null
 

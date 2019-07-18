@@ -5,7 +5,7 @@ import android.widget.ImageView
 import com.hitales.ui.Image
 import com.hitales.ui.Platform
 
-open class AndroidImageView : ImageView {
+class AndroidImageView : ImageView {
 
     val mViewHelper:ViewHelper
 

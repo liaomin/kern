@@ -77,6 +77,7 @@ expect open class View  {
     open fun onDetachedFromWindow()
     open fun onAttachedToView(layoutView: ViewGroup)
     open fun onDetachedFromView(layoutView: ViewGroup)
+    open fun releaseResource()
 
     /**
      * events
@@ -95,6 +96,8 @@ expect open class View  {
     open fun setBorderWidth(leftWidth:Float,topWidth: Float,rightWidth:Float,bottomWidth:Float)
     open fun setBorderRadius(radius:Float)
     open fun setBorderRadius(topLeftRadius:Float,topRightRadius: Float,bottomRightRadius:Float,bottomLeftRadius:Float)
+    open fun setShadow(radius:Float, dx:Float, dy:Float, color:Int)
+
 
     fun getBorderLeftWidth():Float
     fun getBorderTopWidth():Float
@@ -106,11 +109,21 @@ expect open class View  {
      * @param maxHeight 最大高度  如果小于等于0表示无限高
      */
     open fun measureSize(maxWidth: Float,maxHeight:Float):Size
-
     open fun measureSize(maxWidth: Float,maxHeight:Float,size: Size)
 
-
     open fun startAnimation(animation: Animation,completion:(()->Unit)? = null)
+
+
+    /**
+     * touches
+     */
+    open fun dispatchTouchEvent(touches: Touches):Boolean
+    open fun onInterceptTouchEvent(touches: Touches):Boolean
+    open fun touchesBegan(touches: Touches)
+    open fun touchesMoved(touches: Touches)
+    open fun touchesEnded(touches: Touches)
+    open fun touchesCancelled(touches: Touches)
+
 }
 
 

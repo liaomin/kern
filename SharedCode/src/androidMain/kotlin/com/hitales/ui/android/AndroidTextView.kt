@@ -12,7 +12,7 @@ import com.hitales.ui.Button
 import com.hitales.ui.Platform
 import com.hitales.ui.TextView
 
-open class AndroidTextView(protected val mView: TextView) : AppCompatTextView(Platform.getApplication()){
+class AndroidTextView(protected val mView: TextView) : AppCompatTextView(Platform.getApplication()){
 
     init {
         gravity = Gravity.CENTER_VERTICAL

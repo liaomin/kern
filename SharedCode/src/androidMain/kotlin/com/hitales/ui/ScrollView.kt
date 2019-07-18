@@ -1,10 +1,19 @@
 package com.hitales.ui
 
+import android.widget.FrameLayout
 import com.hitales.ui.android.AndroidScrollView
 import com.hitales.utils.Frame
+import com.hitales.utils.Size
 
 
 actual open class ScrollView : com.hitales.ui.ViewGroup {
+
+    actual open var contentSize: Size
+        get() = getWidget().contentSize
+        set(value) {
+            getWidget().contentSize = value
+        }
+
 
     actual constructor(frame: Frame) : super(frame)
 
@@ -12,15 +21,19 @@ actual open class ScrollView : com.hitales.ui.ViewGroup {
         return AndroidScrollView.fromXLM(this)
     }
 
+    override fun getWidget(): AndroidScrollView {
+        return super.getWidget() as AndroidScrollView
+    }
+
     actual open fun layoutSubViews(offsetX: Float, offsetY: Float) {
     }
 
     override fun getContentWidth(): Float {
-        return frame.width
+        return contentSize.width
     }
 
     override fun getContentHeight(): Float {
-        return Float.MAX_VALUE
+        return contentSize.height
     }
 
     /**
@@ -46,6 +59,10 @@ actual open class ScrollView : com.hitales.ui.ViewGroup {
         frame.width = this.frame.width
         frame.height = this.frame.height
         super.getVisibleFrame(frame)
+    }
+
+    actual open fun onScroll(offsetX: Float, offsetY: Float) {
+        layoutSubViews(offsetX,offsetY)
     }
 
 }

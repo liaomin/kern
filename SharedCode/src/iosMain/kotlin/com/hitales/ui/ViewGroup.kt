@@ -49,6 +49,7 @@ actual open class ViewGroup : View {
             children.remove(view)
             view.getWidget().removeFromSuperview()
             view.onDetachedFromView(this)
+            view.superView = null
         }
     }
 

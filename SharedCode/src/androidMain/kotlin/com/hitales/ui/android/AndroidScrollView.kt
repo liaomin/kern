@@ -1,6 +1,7 @@
 package com.hitales.ui.android
 
 import android.content.Context
+import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -12,18 +13,21 @@ import com.hitales.ui.Platform
 import com.hitales.ui.ScrollView
 import com.hitales.ui.utils.PixelUtil
 import android.view.MotionEvent
+import com.hitales.utils.Size
+import com.hitales.utils.Timer
 
 
-
-
-open class AndroidScrollView : DampScrollView {
-
-    var mView: ScrollView? = null
+class AndroidScrollView : DampScrollView {
 
     var scrollEnabled = true
 
+    var mView: ScrollView? = null
+
+    var mViewHelper :ViewHelper? = null
+
     constructor(view: ScrollView) : super(Platform.getApplication()) {
-        this.mView = view
+        mView = view
+        mViewHelper = ViewHelper(this,view)
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
@@ -32,11 +36,27 @@ open class AndroidScrollView : DampScrollView {
         fun fromXLM(view: ScrollView):AndroidScrollView{
             val  scrollView = LayoutInflater.from(Platform.getApplication()).inflate(R.layout.scroll_view,null) as AndroidScrollView
             scrollView.mView = view
+            scrollView.mViewHelper = ViewHelper(scrollView,view)
             return scrollView
         }
     }
 
-    private var mFrameLayout = FrameLayout(Platform.getApplication())
+    var contentSize: Size = Size()
+        set(value) {
+            field = value
+            mFrameLayout.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+        }
+
+    private var mFrameLayout = object:FrameLayout(Platform.getApplication()){
+
+        override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+            if(contentSize.width > 0 && contentSize.height > 0){
+                setMeasuredDimension(PixelUtil.toPixelFromDIP(contentSize.width).toInt(),PixelUtil.toPixelFromDIP(contentSize.height).toInt())
+            }
+        }
+
+    }
 
     init {
         mFrameLayout.setBackgroundColor(Colors.CLEAR)
@@ -47,17 +67,9 @@ open class AndroidScrollView : DampScrollView {
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt)
-        mView?.layoutSubViews(PixelUtil.toDIPFromPixel(l.toFloat()),PixelUtil.toDIPFromPixel(t.toFloat()))
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        mView?.onAttachedToWindow()
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        mView?.onDetachedFromWindow()
+        val scrollX = PixelUtil.toDIPFromPixel(l.toFloat())
+        val scrollY = PixelUtil.toDIPFromPixel(t.toFloat())
+        mView?.onScroll(scrollX,scrollY)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -85,7 +97,12 @@ open class AndroidScrollView : DampScrollView {
         mFrameLayout.addView(child, index, params)
     }
 
+    override fun removeView(view: View?) {
+        mFrameLayout.removeView(view)
+    }
+
     override fun onTouchEvent(ev: MotionEvent): Boolean {
+        mViewHelper?.onTouchEvent(ev)
         when (ev.action) {
             MotionEvent.ACTION_DOWN -> {
                 // if we can scroll pass the event to the superclass
@@ -102,6 +119,25 @@ open class AndroidScrollView : DampScrollView {
             false
         else
             super.onInterceptTouchEvent(ev)
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        mViewHelper?.onAttachedToWindow()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        mViewHelper?.onDetachedFromWindow()
+    }
+
+    override fun draw(canvas: Canvas) {
+        super.draw(canvas)
+        mViewHelper?.draw(canvas)
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        return mViewHelper!!.dispatchTouchEvent(event) || super.dispatchTouchEvent(event)
     }
 
 }

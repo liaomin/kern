@@ -1,13 +1,14 @@
 package com.hitales.ui.layout
 
 import com.hitales.ui.Orientation
+import com.hitales.ui.View
 import com.hitales.ui.ViewGroup
 
 open class LinearLayoutManager : LayoutManager(){
 
     var orientation =  Orientation.VERTICAL
 
-    override fun layoutSubviews(viewGroup: ViewGroup) {
+    override fun layoutSubviews(viewGroup: ViewGroup, subviews: ArrayList<View>) {
         val with = viewGroup.getContentWidth()
         val height = viewGroup.getContentHeight()
         if(with <=0 || height <= 0){
@@ -15,20 +16,20 @@ open class LinearLayoutManager : LayoutManager(){
         }
         when (orientation){
             Orientation.HORIZONTAL -> {
-                layoutHorizontalSubviews(viewGroup,with,height)
+                layoutHorizontalSubviews(viewGroup,with,height,subviews)
             }
             Orientation.VERTICAL -> {
-                layoutVerticalSubviews(viewGroup,with,height)
+                layoutVerticalSubviews(viewGroup,with,height,subviews)
             }
         }
     }
 
-    open fun layoutHorizontalSubviews(viewGroup: ViewGroup,width:Float,height:Float){
+    open fun layoutHorizontalSubviews(viewGroup: ViewGroup,width:Float,height:Float,subviews: ArrayList<View>){
         var offsetX = 0f
         var emptyWidth = width
-        for ( i in 0 until viewGroup.children.size){
+        for ( i in 0 until subviews.size){
             var measureHeight = width
-            val child = viewGroup.children[i]
+            val child = subviews[i]
             val frame = child.frame
             frame.x = offsetX
             frame.y = 0f
@@ -54,12 +55,12 @@ open class LinearLayoutManager : LayoutManager(){
         }
     }
 
-    open fun layoutVerticalSubviews(viewGroup: ViewGroup,width:Float,height:Float){
+    open fun layoutVerticalSubviews(viewGroup: ViewGroup,width:Float,height:Float, subviews: ArrayList<View>){
         var offsetY = 0f
         var emptyHeight = height
-        for ( i in 0 until viewGroup.children.size){
+        for ( i in 0 until subviews.size){
             var measureWidth = width
-            val child = viewGroup.children[i]
+            val child = subviews[i]
             val frame = child.frame
             frame.x = 0f
             frame.y = offsetY

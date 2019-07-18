@@ -33,6 +33,7 @@ open class Controller {
     }
 
     open fun onDestroy() {
+        view?.releaseResource()
 
     }
 
@@ -102,5 +103,4 @@ open class Controller {
             onViewChangedListener?.invoke(this,last,last.view)
         }
     }
-
 }

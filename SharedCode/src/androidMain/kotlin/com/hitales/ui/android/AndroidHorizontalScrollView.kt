@@ -15,7 +15,7 @@ import com.hitales.ui.ScrollView
 import com.hitales.ui.utils.PixelUtil
 
 
-open class AndroidHorizontalScrollView : HorizontalScrollView {
+class AndroidHorizontalScrollView : HorizontalScrollView {
 
     var scrollEnabled = true
 

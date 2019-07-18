@@ -6,7 +6,7 @@ import androidx.appcompat.widget.AppCompatButton
 import com.hitales.ui.Button
 import com.hitales.ui.Platform
 
-open class AndroidButton(protected val mView: Button) : AppCompatButton(Platform.getApplication()){
+class AndroidButton(protected val mView: Button) : AppCompatButton(Platform.getApplication()){
 
     protected val mViewHelper = ViewHelper(this,mView)
 

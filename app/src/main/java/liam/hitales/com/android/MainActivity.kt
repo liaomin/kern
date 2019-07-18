@@ -2,6 +2,7 @@ package liam.hitales.com.android
 
 import android.animation.Animator
 import android.animation.AnimatorSet
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
@@ -20,11 +21,13 @@ import android.view.animation.Animation
 import android.widget.*
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ListView
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.animation.PathInterpolatorCompat
 import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hitales.ui.*
 import com.hitales.ui.animation.AndroidAnimation
@@ -43,7 +46,7 @@ import java.util.*
 //import kotlinx.coroutines.delay
 //import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : Activity() {
 
     var mDelegate: ActivityDelegate? = null
 
@@ -51,7 +54,44 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mDelegate = Platform.init(this)
         mDelegate?.onCreate()
-        LinearLayout(this).orientation
+
+//        val listView = object:ListView(this){
+//            override fun onDraw(canvas: Canvas?) {
+//                println("on   draw")
+//                super.onDraw(canvas)
+//            }
+//        }
+//        listView.isVerticalScrollBarEnabled = false
+//        listView.adapter = object:BaseAdapter(){
+//            override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+//                if(position == 0){
+//                    println()
+//                }
+//                val textView = (convertView?:TextView(this@MainActivity)) as TextView
+//                textView.setText("position $position")
+//                return textView
+//            }
+//
+//            override fun getItem(position: Int): Any {
+//                return position
+//            }
+//
+//            override fun getItemId(position: Int): Long {
+//               return position.toLong()
+//            }
+//
+//            override fun getViewTypeCount(): Int {
+//                return super.getViewTypeCount()
+//            }
+//
+//            override fun getCount(): Int {
+//               return 5000
+//            }
+//
+//        }
+//        setContentView(listView)
+
+
 //        val intent = Intent(
 //            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
 //            Uri.parse("package:$packageName")
@@ -74,11 +114,6 @@ class MainActivity : AppCompatActivity() {
 
 //        println("~~$m，${c.locationX}, ${c.locationZ}")
 
-
-//        PathInterpolatorCompat.create()
-        val s = AnimationSet(true)
-        View(this).animate()
-//        RecyclerView(this).startAnimation(ScaleAnimation)
     }
 
     override fun onResume() {

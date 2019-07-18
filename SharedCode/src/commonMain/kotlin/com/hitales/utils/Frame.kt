@@ -8,6 +8,13 @@ open class Frame(var x:Float = 0f,var y:Float = 0f, var width:Float = 0f,var hei
         }
     }
 
+    fun set(x:Float,y:Float,width: Float,height: Float){
+        this.x = x
+        this.y = y
+        this.width = width
+        this.height = height
+    }
+
     fun getCenterX():Float{
         return x + width / 2f
     }
@@ -34,6 +41,14 @@ open class Frame(var x:Float = 0f,var y:Float = 0f, var width:Float = 0f,var hei
 
     fun clone():Frame{
         return Frame(x,y,width, height)
+    }
+
+    fun intersect(frame: Frame):Boolean{
+        return getLeft() < frame.getRight() && frame.getLeft() < getRight() && getTop() < frame.getBottom() && frame.getTop() < getBottom()
+    }
+
+    fun valid():Boolean{
+        return width <= 0 || height <= 0
     }
 
     override fun equals(other: Any?): Boolean {

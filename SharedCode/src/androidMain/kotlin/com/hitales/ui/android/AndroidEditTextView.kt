@@ -6,7 +6,7 @@ import com.hitales.ui.Platform
 import com.hitales.ui.TextInput
 
 
-open class AndroidEditTextView : EditText {
+class AndroidEditTextView : EditText {
 //    open class AndroidEditTextView(private val view: TextInput) : AppCompatEditText(Platform.getApplication()){
 
     var mView: TextInput? = null

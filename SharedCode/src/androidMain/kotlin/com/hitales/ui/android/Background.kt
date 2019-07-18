@@ -33,7 +33,7 @@ inline fun Int.overlayColor(b:Int):Int{
     return Color.argb((alpha*255).toInt(),r.toInt(),g.toInt(),blue.toInt())
 }
 
-open class Background : StateListDrawable {
+class Background : StateListDrawable {
 
     constructor():super(){
 
@@ -43,7 +43,9 @@ open class Background : StateListDrawable {
 
     private val mInnerPath:Path by lazy { Path() }
 
-    private val mPaint:Paint by lazy {
+    val shadowPath:Path by lazy { Path() }
+
+    val mPaint:Paint by lazy {
       Paint(Paint.ANTI_ALIAS_FLAG)
     }
 
@@ -108,6 +110,26 @@ open class Background : StateListDrawable {
 
     var borderBottomColor:Int = Colors.BLACK
         private set(value) {
+            field = value
+        }
+
+    var shadowRadius: Float = 0f
+        private set(value){
+            field = value
+        }
+
+    var shadowDx: Float = 0f
+        private set(value){
+            field = value
+        }
+
+    var shadowDy: Float = 0f
+        private set(value){
+            field = value
+        }
+
+    var shadowColor: Int = 0
+        private set(value){
             field = value
         }
 
@@ -217,6 +239,16 @@ open class Background : StateListDrawable {
         var borderTopRightRadius = Math.min(PixelUtil.toPixelFromDIP(borderTopRightRadius).toInt().toFloat(),maxRadius)
         var borderBottomRightRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomRightRadius).toInt().toFloat(),maxRadius)
         var borderBottomLeftRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomLeftRadius).toInt().toFloat(),maxRadius)
+
+//        shadowPath.rewind()
+//        shadowPath.addRoundRect(mTempRectF, floatArrayOf(borderTopLeftRadius,borderTopLeftRadius,borderTopRightRadius,borderTopRightRadius,borderBottomRightRadius,borderBottomRightRadius,borderBottomLeftRadius,borderBottomLeftRadius),Path.Direction.CW)
+//        val paint = this.mPaint
+//        paint.setShadowLayer(PixelUtil.toPixelFromDIP(shadowRadius),PixelUtil.toPixelFromDIP(shadowDx),PixelUtil.toPixelFromDIP(shadowDy),shadowColor)
+//        paint.style = Paint.Style.FILL
+//        paint.color = Colors.RED
+//        canvas.drawPath(shadowPath,mPaint)
+//        paint.clearShadowLayer()
+
         if(haveBorderRadius()){
             //有圆角
             canvas.drawFilter = PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
@@ -391,8 +423,7 @@ open class Background : StateListDrawable {
 //                mPaint.strokeWidth = 5f
 //                canvas.drawLine(halfWidth,0f,halfWidth,height,mPaint)
 //                canvas.drawLine(0f,halfHeight,width,halfHeight,mPaint)
-            }
-            else{
+            } else{
                 mPaint.style = Paint.Style.FILL
                 mPaint.color = backgroundColor
                 if(backgroundColor ushr 24 != 0){
@@ -512,6 +543,14 @@ open class Background : StateListDrawable {
         }
     }
 
+    fun setShadow(radius: Float, dx: Float, dy: Float, color: Int){
+        shadowRadius = radius
+        shadowDx = dx
+        shadowDy = dy
+        shadowColor = color
+        invalidateSelf()
+    }
+
     private fun haveBorderWidth():Boolean{
         return borderLeftWidth > 0 || borderTopWidth > 0 || borderRightWidth >0 || borderBottomWidth > 0
     }
@@ -531,6 +570,7 @@ open class Background : StateListDrawable {
     fun clipPath():Boolean{
 //        return haveBorderWidth() && haveBorderRadius() && !sameBorderColor()
         return haveBorderRadius()
+//        return false
     }
 
 
@@ -545,5 +585,9 @@ open class Background : StateListDrawable {
             BorderStyle.DOTTED -> return DashPathEffect(floatArrayOf(top,right,bottom,left),0f)
         }
         return null
+    }
+
+    fun isProjected():Boolean{
+        return shadowRadius > 0f
     }
 }
