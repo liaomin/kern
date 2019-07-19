@@ -1,5 +1,6 @@
 package com.hitales.ui.android
 
+import android.graphics.Canvas
 import android.view.Gravity
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatButton
@@ -16,11 +17,30 @@ class AndroidButton(protected val mView: Button) : AppCompatButton(Platform.getA
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        mView.onAttachedToWindow()
+        mViewHelper.onAttachedToWindow()
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        mView.onDetachedFromWindow()
+        mViewHelper.onDetachedFromWindow()
     }
+
+    override fun dispatchDraw(canvas: Canvas) {
+        mViewHelper.dispatchDraw(canvas)
+        super.dispatchDraw(canvas)
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if(mViewHelper.interceptTouchEvent(event)){
+            return false
+        }
+        return mViewHelper.dispatchTouchEvent(event) || super.dispatchTouchEvent(event)
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        mViewHelper.onTouchEvent(event)
+        return super.onTouchEvent(event)
+    }
+
+
 }

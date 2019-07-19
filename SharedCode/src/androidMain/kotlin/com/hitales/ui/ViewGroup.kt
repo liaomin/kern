@@ -32,9 +32,9 @@ open class AndroidFrameLayout(private val view:ViewGroup) : FrameLayout(Platform
         mViewHelper.onDetachedFromWindow()
     }
 
-    override fun draw(canvas: Canvas) {
-        super.draw(canvas)
-        mViewHelper.draw(canvas)
+    override fun dispatchDraw(canvas: Canvas) {
+        mViewHelper.dispatchDraw(canvas)
+        super.dispatchDraw(canvas)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {

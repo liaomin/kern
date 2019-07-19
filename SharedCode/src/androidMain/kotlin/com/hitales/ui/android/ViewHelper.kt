@@ -26,15 +26,36 @@ class ViewHelper {
         mView.onDetachedFromWindow()
     }
 
-    fun draw(canvas: Canvas) {
-        if(mView is ViewGroup){
-            drawShadow(mView as ViewGroup,canvas)
-        }
+    fun dispatchDraw(canvas: Canvas) {
+
     }
 
     fun dispatchTouchEvent(ev:MotionEvent):Boolean{
+        val padding = mView.innerPadding
+        if(padding != null && ev.action == MotionEvent.ACTION_DOWN){
+            val x = ev.x
+            val y = ev.y
+            val widget = mView.getWidget()
+            if( x < -padding.left || x > widget.right - padding.right || y < -padding.top || y > widget.bottom - padding.bottom){
+                return false
+            }
+        }
         val touches = Touches(ev)
         return mView.dispatchTouchEvent(touches)
+    }
+
+
+    fun interceptTouchEvent(ev: MotionEvent): Boolean {
+        val padding = mView.innerPadding
+        if(padding != null && ev.action == MotionEvent.ACTION_DOWN){
+            val x = ev.x
+            val y = ev.y
+            val widget = mView.getWidget()
+            if( x < -padding.left || x > widget.right - padding.right || y < -padding.top || y > widget.bottom - padding.bottom){
+                return true
+            }
+        }
+        return false
     }
 
     fun onTouchEvent(ev:MotionEvent){
@@ -47,22 +68,4 @@ class ViewHelper {
         }
     }
 
-
-    fun drawShadow(viewGroup: ViewGroup,canvas: Canvas){
-//        viewGroup.children.forEach {
-//            val background = it.mBackground
-//            if(background != null && background.shadowRadius > 0f){
-//                val x = it.getWidget().left.toFloat()
-//                val y = it.getWidget().top.toFloat()
-//                canvas.translate(x,y)
-//                val paint = background.mPaint
-//                paint.setShadowLayer(PixelUtil.toPixelFromDIP(background.shadowRadius),PixelUtil.toPixelFromDIP(background.shadowDx),PixelUtil.toPixelFromDIP(background.shadowDy),background.shadowColor)
-//                paint.style = Paint.Style.FILL
-//                paint.color = Colors.RED
-//                canvas.drawPath(background.shadowPath,background.mPaint)
-//                paint.clearShadowLayer()
-//                canvas.translate(-x,-y)
-//            }
-//        }
-    }
 }

@@ -114,14 +114,10 @@ actual open class TextView :  View {
             }
         }
 
-    override fun onPaddingSet(padding: EdgeInsets?) {
-        if(padding != null){
-            mWidget.setPadding(PixelUtil.toPixelFromDIP(padding.left).toInt(),PixelUtil.toPixelFromDIP(padding.top).toInt()+linePadding,PixelUtil.toPixelFromDIP(padding.right).toInt(),PixelUtil.toPixelFromDIP(padding.bottom).toInt()+linePadding)
-        }else{
-            mWidget.setPadding(0,0,0,0)
-        }
+    override fun getPadding(padding: EdgeInsets) {
+        super.getPadding(padding)
+        padding.top += linePadding
     }
-
 
     /**
      * default false

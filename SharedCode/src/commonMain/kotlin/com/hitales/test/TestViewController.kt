@@ -30,20 +30,45 @@ open class TestViewController : BasicController() {
 //        addView(view,"测试颜色",getIndex(),0x33999999)
 
 
-        view = View()
+//        view = View()
+//        view.setBackgroundColor(Colors.RED)
+//        view.setShadow(9f,0f,0f,Colors.BLUE)
+//        addView(view,"测试颜色",getIndex(),Colors.RED)
+//        view.setBorderWidth(1f)
+//        view.setBorderRadius(50f)
+//        view.setBorderColor(Colors.BLUE)
+//
+//        addButton("ces"){
+//            val animation = Animation()
+//            animation.duration = 300f
+//            animation.toTranslateX = 100f
+//            view.startAnimation(animation)
+//        }
+
+//        view = View()
+//        view.setBackgroundColor(Colors.RED)
+//        view.setShadow(9f,5f,5f,Colors.BLUE)
+//        addView(view,"测试颜色",getIndex(),Colors.BLUE)
+//        view.setBorderWidth(1f)
+//        view.setBorderRadius(50f)
+//        view.setBorderColor(Colors.BLUE)
+
+        view = TextView("文本")
         view.setBackgroundColor(Colors.RED)
-        view.setShadow(9f,0f,0f,Colors.BLUE)
-        addView(view,"测试颜色",getIndex(),Colors.RED)
+        view.setShadow(9f,5f,5f,Colors.BLUE)
+        addView(view,"测试颜色",getIndex(),Colors.BLUE)
         view.setBorderWidth(1f)
         view.setBorderRadius(50f)
         view.setBorderColor(Colors.BLUE)
 
-        addButton("ces"){
-            val animation = Animation()
-            animation.duration = 300f
-            animation.toTranslateX = 100f
-            view.startAnimation(animation)
-        }
+
+        view = TextView("文本")
+        view.setBackgroundColor(Colors.RED)
+        view.setShadow(30f,-20f,30f,Colors.BLUE)
+        addView(view,"测试颜色",getIndex(),Colors.BLUE)
+        view.setBorderWidth(1f)
+        view.setBorderRadius(50f)
+        view.setBorderColor(Colors.BLUE)
 
 //        view = View()
 //        view.setBackgroundColor(Colors.BLUE)
@@ -131,6 +156,7 @@ class BorderWidthTestControllerTest : TestViewController(){
         view.setBorderWidth(10f)
         view.setBorderColor(Colors.BLUE,Colors.GREEN,Colors.YELLOW,Colors.ORANGE)
         view.setBorderColor(Colors.BLUE)
+        view.setShadow(9f,5f,5f,Colors.BLUE)
         view.setBorderRadius(getItemWidth())
 
         view =  View()

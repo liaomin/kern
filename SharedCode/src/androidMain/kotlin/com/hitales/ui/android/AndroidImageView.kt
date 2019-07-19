@@ -1,6 +1,7 @@
 package com.hitales.ui.android
 
 import android.graphics.Canvas
+import android.view.MotionEvent
 import android.widget.ImageView
 import com.hitales.ui.Image
 import com.hitales.ui.Platform
@@ -27,11 +28,7 @@ class AndroidImageView : ImageView {
         }else{
             super.draw(canvas)
         }
-        mViewHelper.draw(canvas)
     }
-
-
-
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -41,6 +38,23 @@ class AndroidImageView : ImageView {
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         mViewHelper.onDetachedFromWindow()
+    }
+
+    override fun dispatchDraw(canvas: Canvas) {
+        mViewHelper.dispatchDraw(canvas)
+        super.dispatchDraw(canvas)
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if(mViewHelper.interceptTouchEvent(event)){
+            return false
+        }
+        return mViewHelper.dispatchTouchEvent(event) || super.dispatchTouchEvent(event)
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        mViewHelper.onTouchEvent(event)
+        return super.onTouchEvent(event)
     }
 
 

@@ -20,12 +20,15 @@ class AndroidView(val mView: View) : android.view.View(Platform.getApplication()
         mViewHelper.onDetachedFromWindow()
     }
 
-    override fun draw(canvas: Canvas) {
-        super.draw(canvas)
-        mViewHelper.draw(canvas)
+    override fun dispatchDraw(canvas: Canvas) {
+        mViewHelper.dispatchDraw(canvas)
+        super.dispatchDraw(canvas)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if(mViewHelper.interceptTouchEvent(event)){
+            return false
+        }
         return mViewHelper.dispatchTouchEvent(event) || super.dispatchTouchEvent(event)
     }
 

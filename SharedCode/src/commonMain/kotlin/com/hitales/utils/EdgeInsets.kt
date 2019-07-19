@@ -22,4 +22,13 @@ data class EdgeInsets( var top:Float = 0f , var left:Float = 0f ,var bottom:Floa
         }
         return super.equals(other)
     }
+
+    fun add(other: EdgeInsets?) {
+        if(other != null){
+            top += other.top
+            left += other.left
+            bottom += other.bottom
+            right += other.right
+        }
+    }
 }

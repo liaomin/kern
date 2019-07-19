@@ -40,10 +40,16 @@ actual open class View {
         }
     }
 
+    var innerPadding : EdgeInsets? = null
+        set(value) {
+            field = value
+            onPaddingSet()
+        }
+
     actual var padding: EdgeInsets? = null
         set(value) {
             field = value
-            onPaddingSet(value)
+            onPaddingSet()
         }
 
     actual var margin: EdgeInsets? = null
@@ -280,11 +286,26 @@ actual open class View {
         mWidget.layoutParams = params
     }
 
-    protected open fun onPaddingSet(padding:EdgeInsets?){
-        if(padding != null){
-            mWidget.setPadding(PixelUtil.toPixelFromDIP(padding.left).toInt(),PixelUtil.toPixelFromDIP(padding.top).toInt(),PixelUtil.toPixelFromDIP(padding.right).toInt(),PixelUtil.toPixelFromDIP(padding.bottom).toInt())
-        }else{
-            mWidget.setPadding(0,0,0,0)
+    protected open fun onPaddingSet(){
+        val padding = EdgeInsets.zero()
+        getPadding(padding)
+        mWidget.setPadding(padding.left.toInt(),padding.top.toInt(),padding.right.toInt(),padding.bottom.toInt())
+    }
+
+    protected open fun getPadding(padding:EdgeInsets){
+        val tPadding = this.padding
+        if(tPadding != null){
+            padding.left += PixelUtil.toPixelFromDIP(tPadding.left)
+            padding.right += PixelUtil.toPixelFromDIP(tPadding.right)
+            padding.top += PixelUtil.toPixelFromDIP(tPadding.top)
+            padding.bottom += PixelUtil.toPixelFromDIP(tPadding.bottom)
+        }
+        val innerPadding = this.innerPadding
+        if(innerPadding != null){
+            padding.left -= innerPadding.left
+            padding.right += innerPadding.right
+            padding.top -= innerPadding.top
+            padding.bottom += innerPadding.bottom
         }
     }
 
@@ -302,11 +323,36 @@ actual open class View {
         var left = PixelUtil.toPixelFromDIP(frame.x).toInt()
         var width = PixelUtil.toPixelFromDIP(frame.width).toInt()
         var height = PixelUtil.toPixelFromDIP(frame.height).toInt()
+        var right = left + width
+        var bottom = top + height
+        val background = mBackground
+        if(background != null && background.shadowRadius > 0){
+            val radius =background.shadowRadius
+            val dx= background.shadowDx
+            val dy= background.shadowDy
+            val l = (left + dx - radius).toInt()
+            val t = (top + dy - radius).toInt()
+            val r = (right + dx + radius).toInt()
+            val b = (bottom + dy + radius).toInt()
+            val ol = left.toFloat()
+            val ot = top.toFloat()
+            val ob = bottom.toFloat()
+            val or = right.toFloat()
+            left = Math.min(l,left)
+            top = Math.min(t,top)
+            right = Math.max(right,r)
+            bottom = Math.max(bottom,b)
+            background.offset = Frame(left - ol,top - ot,width.toFloat(),height.toFloat())
+            innerPadding = EdgeInsets(top - ot,left - ol,bottom - ob,right - or)
+        }else{
+            background?.offset = null
+            innerPadding = null
+        }
         if (params == null || params !is FrameLayout.LayoutParams) {
-            params = FrameLayout.LayoutParams(width, height)
+            params = FrameLayout.LayoutParams(right - left, bottom - top)
         } else {
-            params.width = width
-            params.height = height
+            params.width = right - left
+            params.height = bottom - top
         }
         params.topMargin = top
         params.leftMargin = left
@@ -406,22 +452,23 @@ actual open class View {
     }
 
     actual open fun touchesBegan(touches: Touches) {
-        println("touchesBegan")
+        println("$this touchesBegan")
     }
 
     actual open fun touchesMoved(touches: Touches) {
-        println("touchesMoved")
+        println("$this touchesMoved")
     }
 
     actual open fun touchesEnded(touches: Touches) {
-        println("touchesEnded")
+        println("$this touchesEnded")
     }
 
     actual open fun touchesCancelled(touches: Touches) {
-        println("touchesCancelled")
+        println("$this touchesCancelled")
     }
 
     actual open fun setShadow(radius: Float, dx: Float, dy: Float, color: Int) {
         getOrCreateBackground().setShadow(radius,dx, dy, color)
+        onFrameChanged()
     }
 }
