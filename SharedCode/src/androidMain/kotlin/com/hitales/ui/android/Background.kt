@@ -216,7 +216,17 @@ class Background : StateListDrawable {
         }
     }
 
-    fun getOuterPath(width:Float,height: Float):Path{
+    fun getOuterPath(w:Float,h: Float):Path{
+        var width = w
+        var height = h
+        val off = offset
+        mOuterPath.rewind()
+        mTempRectF.set(0f,0f,width,height)
+        if(off != null){
+            width = off.width
+            height = off.height
+            mTempRectF.set(-off.x,-off.y,-off.x + off.width,-off.y+off.height)
+        }
         val halfWidth = width / 2
         val halfHeight = height / 2
         val maxRadius = Math.min(halfWidth,halfHeight)
@@ -224,8 +234,6 @@ class Background : StateListDrawable {
         var borderTopRightRadius = Math.min(PixelUtil.toPixelFromDIP(borderTopRightRadius).toInt().toFloat(),maxRadius)
         var borderBottomRightRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomRightRadius).toInt().toFloat(),maxRadius)
         var borderBottomLeftRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomLeftRadius).toInt().toFloat(),maxRadius)
-        mOuterPath.rewind()
-        mTempRectF.set(0f,0f,width,height)
         mOuterPath.addRoundRect(mTempRectF, floatArrayOf(borderTopLeftRadius,borderTopLeftRadius,borderTopRightRadius,borderTopRightRadius,borderBottomRightRadius,borderBottomRightRadius,borderBottomLeftRadius,borderBottomLeftRadius),Path.Direction.CW)
         return mOuterPath
     }
@@ -258,7 +266,7 @@ class Background : StateListDrawable {
         mOuterPath.rewind()
         mOuterPath.addRoundRect(mTempRectF, floatArrayOf(borderTopLeftRadius,borderTopLeftRadius,borderTopRightRadius,borderTopRightRadius,borderBottomRightRadius,borderBottomRightRadius,borderBottomLeftRadius,borderBottomLeftRadius),Path.Direction.CW)
         val paint = this.mPaint
-        paint.setShadowLayer(shadowRadius,shadowDx,shadowDy,shadowColor)
+        paint.setShadowLayer(shadowRadius / 1.5f,shadowDx,shadowDy,shadowColor)
         paint.style = Paint.Style.FILL
         paint.color = backgroundColor
         canvas.drawPath(mOuterPath,mPaint)
@@ -558,7 +566,7 @@ class Background : StateListDrawable {
     }
 
     fun setShadow(radius: Float, dx: Float, dy: Float, color: Int){
-        shadowRadius = radius
+        shadowRadius = radius * 1.5f
         shadowDx = dx
         shadowDy = dy
         shadowColor = color
@@ -577,14 +585,18 @@ class Background : StateListDrawable {
         return borderLeftColor ==  borderTopColor && borderTopColor ==  borderLeftColor && borderLeftColor == borderBottomColor
     }
 
-    private fun haveBorderRadius():Boolean{
+    fun haveBorderRadius():Boolean{
         return borderTopLeftRadius > 0 || borderTopRightRadius > 0 || borderBottomLeftRadius >0 || borderBottomRightRadius > 0
     }
 
     fun clipPath():Boolean{
 //        return haveBorderWidth() && haveBorderRadius() && !sameBorderColor()
-        return haveBorderRadius()
-//        return false
+//        return haveBorderRadius()
+        return true
+    }
+
+    fun haveShadow():Boolean{
+        return shadowRadius > 0f
     }
 
 
@@ -601,7 +613,8 @@ class Background : StateListDrawable {
         return null
     }
 
-    fun isProjected():Boolean{
-        return shadowRadius > 0f
-    }
+//    fun isProjected():Boolean{
+////        return shadowRadius > 0f
+//        return false
+//    }
 }

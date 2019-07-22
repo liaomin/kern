@@ -32,7 +32,7 @@ actual open class ImageView : com.hitales.ui.View {
             when(value){
                 ImageResizeMode.SCALE_FIT -> getWidget().scaleType = ImageView.ScaleType.FIT_CENTER
                 ImageResizeMode.SCALE_FILL -> getWidget().scaleType = ImageView.ScaleType.FIT_XY
-                ImageResizeMode.CENTER -> getWidget().scaleType = ImageView.ScaleType.CENTER
+                ImageResizeMode.CENTER -> getWidget().scaleType = ImageView.ScaleType.CENTER_INSIDE
                 ImageResizeMode.SCALE_CENTER_CROP -> getWidget().scaleType = ImageView.ScaleType.CENTER_CROP
             }
         }

@@ -20,6 +20,7 @@ open class TestImageController :TestViewController(){
         view.setBackgroundColor(Colors.BLUE)
         view.image = image1
         view.setBorderRadius(5f)
+        view.setShadow(10f,3f,3f,Colors.RED)
         view.resizeMode = ImageResizeMode.SCALE_FIT
         addView(view, "SCALE_FIT",index++)
 
@@ -27,6 +28,7 @@ open class TestImageController :TestViewController(){
         view.setBackgroundColor(Colors.BLUE)
         view.image = image1
         view.setBorderRadius(5f)
+        view.setShadow(10f,0f,0f,Colors.RED)
         view.resizeMode = ImageResizeMode.CENTER
         addView(view, "CENTER",index++)
 
@@ -34,6 +36,7 @@ open class TestImageController :TestViewController(){
         view.setBackgroundColor(Colors.BLUE)
         view.image = image1
         view.setBorderRadius(5f)
+        view.setShadow(10f,0f,0f,Colors.RED)
         view.resizeMode = ImageResizeMode.SCALE_FILL
         addView(view, "SCALE_FILL",index++)
 

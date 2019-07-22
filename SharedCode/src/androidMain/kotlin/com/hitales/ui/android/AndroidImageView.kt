@@ -1,6 +1,7 @@
 package com.hitales.ui.android
 
 import android.graphics.Canvas
+import android.graphics.Color
 import android.view.MotionEvent
 import android.widget.ImageView
 import com.hitales.ui.Image
@@ -18,15 +19,15 @@ class AndroidImageView : ImageView {
         mViewHelper = ViewHelper(this,mView)
     }
 
-    override fun draw(canvas: Canvas) {
+    override fun onDraw(canvas: Canvas) {
         val bg = mView.mBackground
-        if(bg != null && bg.clipPath()){
+        if(bg != null && (bg.haveBorderRadius() || bg.shadowRadius >= 0f)){
             val saveCount = canvas.save()
             canvas.clipPath(bg.getOuterPath(canvas.width.toFloat(),canvas.height.toFloat()))
-            super.draw(canvas)
+            super.onDraw(canvas)
             canvas.restoreToCount(saveCount)
         }else{
-            super.draw(canvas)
+            super.onDraw(canvas)
         }
     }
 

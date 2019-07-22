@@ -92,13 +92,12 @@ open class TestViewController : BasicController() {
         val y = (index/2) * (itemHeight+10) + 60
 
         val group = FrameViewGroup(Frame(x,y, Platform.windowWidth / 2,itemHeight+2))
-        view.frame = Frame(10f,22f,itemWidth,itemWidth)
-        group.addView(view)
+        view.frame = Frame(x+10f,y+22f,itemWidth,itemWidth)
 
-        val titleFrame = Frame(10f,0f,itemWidth,20f)
-        group.addView(getTilteWidget(title,titleFrame))
+        val titleFrame = Frame(x+10f,y+0f,itemWidth,20f)
 
-        (this.view as ScrollView).addView(group)
+        (this.view as ScrollView).addView(view)
+        (this.view as ScrollView).addView(getTilteWidget(title,titleFrame))
         offsetY += group.frame.height + 10f
     }
 

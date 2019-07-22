@@ -326,7 +326,7 @@ actual open class View {
         var right = left + width
         var bottom = top + height
         val background = mBackground
-        if(background != null && background.shadowRadius > 0){
+        if(background != null && background.haveShadow()){
             val radius =background.shadowRadius
             val dx= background.shadowDx
             val dy= background.shadowDy
