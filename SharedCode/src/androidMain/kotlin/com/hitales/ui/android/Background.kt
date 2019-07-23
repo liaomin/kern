@@ -591,8 +591,8 @@ class Background : StateListDrawable {
 
     fun clipPath():Boolean{
 //        return haveBorderWidth() && haveBorderRadius() && !sameBorderColor()
-//        return haveBorderRadius()
-        return true
+        return haveBorderRadius() || haveShadow()
+//        return true
     }
 
     fun haveShadow():Boolean{

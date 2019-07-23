@@ -3,6 +3,7 @@ package com.hitales.ui
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.graphics.Canvas
+import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -19,6 +20,10 @@ import com.hitales.utils.Size
 import com.hitales.utils.WeakReference
 
 actual open class View {
+
+    companion object {
+        val tempRect = Rect()
+    }
 
     protected val mWidget: android.view.View = createWidget()
 
@@ -223,11 +228,7 @@ actual open class View {
     ) {
         val background = getOrCreateBackground()
         background.setBorderWidth(leftWidth, topWidth, rightWidth, bottomWidth,borderStyle)
-        if (background.clipPath()) {
-            setLayerType(android.view.View.LAYER_TYPE_SOFTWARE)
-        } else {
-            setLayerType(android.view.View.LAYER_TYPE_HARDWARE)
-        }
+        this.checkLayerType()
     }
 
     actual open fun setBorderRadius(radius: Float) {
@@ -238,6 +239,11 @@ actual open class View {
     ) {
         val background = getOrCreateBackground()
         background.setBorderRadius(topLeftRadius, topRightRadius, bottomRightRadius, bottomLeftRadius)
+        this.checkLayerType()
+    }
+
+    fun checkLayerType(){
+        val background = getOrCreateBackground()
         if (background.clipPath()) {
             setLayerType(android.view.View.LAYER_TYPE_SOFTWARE)
         } else {
@@ -470,5 +476,11 @@ actual open class View {
     actual open fun setShadow(radius: Float, dx: Float, dy: Float, color: Int) {
         getOrCreateBackground().setShadow(radius,dx, dy, color)
         onFrameChanged()
+        this.checkLayerType()
+    }
+
+    actual open fun getVisibleFrame(frame: Frame) {
+        getWidget().getLocalVisibleRect(tempRect)
+        frame.set(PixelUtil.toDIPFromPixel(tempRect.left.toFloat()),PixelUtil.toDIPFromPixel(tempRect.top.toFloat()),PixelUtil.toDIPFromPixel(tempRect.width().toFloat()),PixelUtil.toDIPFromPixel(tempRect.height().toFloat()))
     }
 }

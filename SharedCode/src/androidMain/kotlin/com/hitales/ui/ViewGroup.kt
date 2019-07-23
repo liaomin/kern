@@ -142,14 +142,6 @@ actual open class ViewGroup : View {
         return frame.height
     }
 
-    actual open fun getVisibleFrame(frame: Frame) {
-        frame.x = 0f
-        frame.y = 0f
-        frame.width = this.frame.width
-        frame.height = this.frame.height
-    }
-
-
     override fun releaseResource() {
         super.releaseResource()
         children.forEach {

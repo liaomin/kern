@@ -124,6 +124,7 @@ expect open class View  {
     open fun touchesEnded(touches: Touches)
     open fun touchesCancelled(touches: Touches)
 
+    open fun getVisibleFrame(frame: Frame)
 }
 
 

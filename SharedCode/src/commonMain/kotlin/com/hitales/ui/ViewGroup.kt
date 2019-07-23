@@ -24,7 +24,4 @@ expect open class ViewGroup : View {
     open fun getContentWidth():Float
 
     open fun getContentHeight():Float
-
-    open fun getVisibleFrame(frame: Frame)
-
 }
