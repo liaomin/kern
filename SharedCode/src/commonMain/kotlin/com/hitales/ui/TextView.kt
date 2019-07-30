@@ -81,7 +81,7 @@ expect open class TextView : View {
      * 自定义字体
      */
     open fun setFontStyle(fontName:String)
-    open fun setShadow(color:Int,dx:Float,dy: Float,radius:Float)
+    open fun setTextShadow(color:Int,dx:Float,dy: Float,radius:Float)
 
 
 

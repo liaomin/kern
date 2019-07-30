@@ -55,7 +55,7 @@ open class TestViewController : BasicController() {
 
         view = TextView("文本")
         view.setBackgroundColor(Colors.RED)
-        view.setShadow(9f,5f,5f,Colors.BLUE)
+        view.setShadow(Colors.BLUE,9f,5f,5f)
         addView(view,"测试颜色",getIndex(),Colors.BLUE)
         view.setBorderWidth(1f)
         view.setBorderRadius(50f)
@@ -64,7 +64,7 @@ open class TestViewController : BasicController() {
 
         view = TextView("文本")
         view.setBackgroundColor(Colors.RED)
-        view.setShadow(30f,-20f,30f,Colors.BLUE)
+        view.setShadow(Colors.BLUE,30f,-20f,30f)
         addView(view,"测试颜色",getIndex(),Colors.BLUE)
         view.setBorderWidth(1f)
         view.setBorderRadius(50f)
@@ -96,8 +96,8 @@ open class TestViewController : BasicController() {
 
         val titleFrame = Frame(x+10f,y+0f,itemWidth,20f)
 
-        (this.view as ScrollView).addView(view)
-        (this.view as ScrollView).addView(getTilteWidget(title,titleFrame))
+        (this.view as ScrollView).addSubView(view)
+        (this.view as ScrollView).addSubView(getTilteWidget(title,titleFrame))
         offsetY += group.frame.height + 10f
     }
 
@@ -116,8 +116,8 @@ open class TestViewController : BasicController() {
         titleWidget.text = "$title"
 //        group.addView(titleWidget)
 
-        (this.view as ScrollView).addView(titleWidget)
-        (this.view as ScrollView).addView(view)
+        (this.view as ScrollView).addSubView(titleWidget)
+        (this.view as ScrollView).addSubView(view)
     }
 
     fun getItemWidth():Float{
@@ -155,7 +155,7 @@ class BorderWidthTestControllerTest : TestViewController(){
         view.setBorderWidth(10f)
         view.setBorderColor(Colors.BLUE,Colors.GREEN,Colors.YELLOW,Colors.ORANGE)
         view.setBorderColor(Colors.BLUE)
-        view.setShadow(9f,5f,5f,Colors.BLUE)
+        view.setShadow(Colors.BLUE,9f,5f,5f)
         view.setBorderRadius(getItemWidth())
 
         view =  View()

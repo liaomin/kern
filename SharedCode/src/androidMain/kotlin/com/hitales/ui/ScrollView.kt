@@ -18,7 +18,7 @@ actual open class ScrollView : com.hitales.ui.ViewGroup {
     actual constructor(frame: Frame) : super(frame)
 
     override fun createWidget(): android.view.View {
-        return AndroidScrollView.fromXLM(this)
+        return AndroidScrollView.createFromXLM(this)
     }
 
     override fun getWidget(): AndroidScrollView {
@@ -49,9 +49,9 @@ actual open class ScrollView : com.hitales.ui.ViewGroup {
      * default true
      */
     actual open var scrollEnabled: Boolean
-        get() = (getWidget() as AndroidScrollView).scrollEnabled
+        get() = getWidget().scrollEnabled
         set(value) {
-            (getWidget() as AndroidScrollView).scrollEnabled = value
+            getWidget().scrollEnabled = value
         }
 
 

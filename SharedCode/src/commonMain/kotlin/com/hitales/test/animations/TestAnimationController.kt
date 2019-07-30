@@ -25,7 +25,7 @@ open class TestAnimationController :TestViewController(), Animation.AnimationDel
             animation.interpolator = EaseOutInterpolator()
             this.push(TestAnimationInterpolatorController(),animation)
         }
-        (this.view as ScrollView).addView(button)
+        (this.view as ScrollView).addSubView(button)
 
         var image1 = Image.named("1.jpg")!!
 
@@ -40,7 +40,7 @@ open class TestAnimationController :TestViewController(), Animation.AnimationDel
         view.frame = Frame(100f,50f,itemWidth,itemHeight)
         view.setBorderRadius(5f)
         view.resizeMode = ImageResizeMode.SCALE_FIT
-        (this.view as ScrollView).addView(view)
+        (this.view as ScrollView).addSubView(view)
         offsetY += view.frame.height + 30
 
 //        offsetY = 250f

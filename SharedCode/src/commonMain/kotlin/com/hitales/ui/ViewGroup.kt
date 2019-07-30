@@ -15,9 +15,9 @@ expect open class ViewGroup : View {
 
     val children:ArrayList<View>
 
-    open fun addView(view: View, index:Int = -1)
+    open fun addSubView(view: View, index:Int = -1)
 
-    open fun removeView(view:View)
+    open fun removeSubView(view:View)
 
     open fun layoutSubviews()
 

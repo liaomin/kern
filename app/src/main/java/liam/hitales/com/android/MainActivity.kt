@@ -1,43 +1,20 @@
 package liam.hitales.com.android
 
-import android.animation.Animator
-import android.animation.AnimatorSet
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.graphics.*
-import android.graphics.drawable.StateListDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Xml
 import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
-import android.view.animation.*
-import android.view.animation.Animation
-import android.widget.*
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.ListView
-import android.widget.ScrollView
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.animation.PathInterpolatorCompat
-import androidx.core.widget.NestedScrollView
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hitales.ui.*
-import com.hitales.ui.animation.AndroidAnimation
+import com.hitales.ui.android.ViewStyle
 import com.hitales.ui.utils.PixelUtil
+import com.hitales.utils.Frame
 //import com.hitales.ui.android.StateListColor
-
-import com.hitales.utils.Timer
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import java.util.*
 
 //import com.hitales.ui.View
 //import com.hitales.utils.NotificationCenter
@@ -46,6 +23,7 @@ import java.util.*
 //import kotlinx.coroutines.delay
 //import kotlinx.coroutines.launch
 
+
 class MainActivity : Activity() {
 
     var mDelegate: ActivityDelegate? = null
@@ -53,67 +31,63 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mDelegate = Platform.init(this)
-        mDelegate?.onCreate()
+//        mDelegate?.onCreate()
 
-//        val listView = object:ListView(this){
-//            override fun onDraw(canvas: Canvas?) {
-//                println("on   draw")
-//                super.onDraw(canvas)
-//            }
+
+
+
+        val s = com.hitales.ui.android.scrollview.ScrollView.createFromXLM()
+//        for ( i in 0 .. 100){
+//            val text = TextView(this)
+//            text.layoutParams = FrameLayout.LayoutParams(200,20)
+//            text.setText("$i")
+//            s.addSubView(text)
 //        }
-//        listView.isVerticalScrollBarEnabled = false
-//        listView.adapter = object:BaseAdapter(){
-//            override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-//                if(position == 0){
-//                    println()
-//                }
-//                val textView = (convertView?:TextView(this@MainActivity)) as TextView
-//                textView.setText("position $position")
-//                return textView
-//            }
+//        val image = ImageView(this)
+//        image.setImageBitmap(Image.named("1.jpg")?.bitmap)
+//        s.addSubView(image)
+
+        var f:com.hitales.ui.TextView? = null
+        for ( i in 0 .. 50){
+            val text = com.hitales.ui.TextView("$i", Frame(0f,20f*i,200f,18f))
+            if( i == 0){
+                f = text
+            }
+            text.setBackgroundColor(Color.RED)
+            s.addSubView(text.getWidget())
+        }
+
+
+
+        val bu = com.hitales.ui.Button("dd",Frame(300f,320f,500f,100f))
+        bu.setBackgroundColor(Color.RED)
+        bu.setBackgroundColor(Color.BLUE,ViewState.PRESSED)
+        bu.setShadow(Color.BLUE,20f)
+        s.addSubView(bu.getWidget())
+
+//        s.style = ViewStyle.IOS
+//        s.style = ViewStyle.ANDROID
+
+        setContentView(s)
+        s.setPadding(50,50,50,50)
+        s.postDelayed({
+//            s.removeSubView(f!!.getWidget())
+//            val imageView = com.hitales.ui.ImageView(Frame(0f,720f,200f,100f))
+//            imageView.image = Image.named("1.jpg")
+//            s.addSubView(imageView.getWidget())
+//            s.postDelayed({
+//                s.scrollBy(50,50)
+//            },2000)
+        },4000)
+
+//        val v = View(this)
+//        val lp = RecyclerView.LayoutParams(PixelUtil.toPixelFromDIP(500f).toInt(),PixelUtil.toPixelFromDIP(100f).toInt())
+//        lp.topMargin = PixelUtil.toPixelFromDIP(130f).toInt()
+//        lp.leftMargin = PixelUtil.toPixelFromDIP(300f).toInt()
+//        v.layoutParams = lp
 //
-//            override fun getItem(position: Int): Any {
-//                return position
-//            }
-//
-//            override fun getItemId(position: Int): Long {
-//               return position.toLong()
-//            }
-//
-//            override fun getViewTypeCount(): Int {
-//                return super.getViewTypeCount()
-//            }
-//
-//            override fun getCount(): Int {
-//               return 5000
-//            }
-//
-//        }
-//        setContentView(listView)
-
-
-//        val intent = Intent(
-//            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-//            Uri.parse("package:$packageName")
-//        )
-//        startActivityForResult(intent, 1234)
-
-//        setContentView(R.layout.test)
-//
-//        val rootView = findViewById<FrameLayout>(R.id.root)
-//        rootView.postDelayed({
-//            val a = com.hitales.ui.android.AndroidEditTextView(this)
-//            a.setBackgroundColor(Color.RED)
-//            val p = FrameLayout.LayoutParams(400,100)
-//            p.topMargin = 150
-//            rootView.addView(a,p)
-//        },5000)
-
-//        setContentView(fr)
-
-
-//        println("~~$m，${c.locationX}, ${c.locationZ}")
-
+//        v.setBackgroundColor(Colors.RED)
+//        s.addSubView(v)
     }
 
     override fun onResume() {

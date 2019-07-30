@@ -149,7 +149,7 @@ open class SectionList : ScrollView {
         }
     }
 
-    override fun addView(view: View, index: Int) {
+    override fun addSubView(view: View, index: Int) {
         throw RuntimeException("ListView not support addView method, instead of set adapter ")
     }
 
@@ -159,7 +159,7 @@ open class SectionList : ScrollView {
         val frame = view.frame
         frame.set(0f,offset-size.height,frame.width,size.height)
         view.frame = frame
-        super.addView(view,-1)
+        super.addSubView(view,-1)
     }
 
     override fun layoutSubViews(offsetX: Float, offsetY: Float) {

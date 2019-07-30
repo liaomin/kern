@@ -75,7 +75,7 @@ actual open class ViewGroup : View {
 
     actual val children: ArrayList<View> = ArrayList()
 
-    actual open fun addView(
+    actual open fun addSubView(
         view: View,
         index: Int
     ) {
@@ -99,7 +99,7 @@ actual open class ViewGroup : View {
         return super.getWidget() as FrameLayout
     }
 
-    actual open fun removeView(view:View){
+    actual open fun removeSubView(view:View){
         if(children.remove(view)){
             view.onDetachedFromView(this)
         }

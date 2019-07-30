@@ -32,7 +32,7 @@ class TestLinearLayout : TestViewController(){
             linearLayoutManager.orientation = Orientation.HORIZONTAL
             linearViewGroup.layoutSubviews()
         }
-        linearViewGroup.addView(button)
+        linearViewGroup.addSubView(button)
 
         button = Button("测试V", Frame(100f,20f, 60f,60f))
         button.setBackgroundColor(Colors.BLUE)
@@ -41,7 +41,7 @@ class TestLinearLayout : TestViewController(){
             linearLayoutManager.orientation = Orientation.VERTICAL
             linearViewGroup.layoutSubviews()
         }
-        linearViewGroup.addView(button)
+        linearViewGroup.addSubView(button)
 
         button = Button("返回", Frame(100f,20f, 60f,60f))
         button.setBackgroundColor(Colors.BLUE)
@@ -49,53 +49,53 @@ class TestLinearLayout : TestViewController(){
         button.setOnPressListener {
            pop()
         }
-        linearViewGroup.addView(button)
+        linearViewGroup.addSubView(button)
 
         var text = TextView("测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字")
         text.setBackgroundColor(Colors.BLUE)
         text.margin = EdgeInsets(10f,left = 20f,right = 20f,bottom = 20f)
-        linearViewGroup.addView(text)
+        linearViewGroup.addSubView(text)
 
         text = TextView("margin{top:10} 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字")
         text.margin = EdgeInsets(10f)
         text.setBackgroundColor(Colors.BLUE)
-        linearViewGroup.addView(text)
+        linearViewGroup.addSubView(text)
 
         text = TextView("margin{top:10,left:20} 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字")
         text.margin = EdgeInsets(10f,left = 20f)
         text.setBackgroundColor(Colors.BLUE)
-        linearViewGroup.addView(text)
+        linearViewGroup.addSubView(text)
 
         text = TextView("margin{top:10,left:20,right:10} 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字")
         text.margin = EdgeInsets(10f,left = 20f,right = 20f)
         text.setBackgroundColor(Colors.BLUE)
-        linearViewGroup.addView(text)
+        linearViewGroup.addSubView(text)
 
         text = TextView("margin{top:10,left:20,right:10,bottom:20} 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字")
         text.margin = EdgeInsets(10f,left = 20f,right = 20f,bottom = 20f)
         text.setBackgroundColor(Colors.BLUE)
-        linearViewGroup.addView(text)
+        linearViewGroup.addSubView(text)
 
         text = TextView("margin{top:10,left:20,right:10,bottom:20} 测试文字测试文字")
         text.lineHeight = 50f
         text.margin = EdgeInsets(10f,left = 20f,right = 20f,bottom = 20f)
         text.setBackgroundColor(Colors.BLUE)
-        linearViewGroup.addView(text)
+        linearViewGroup.addSubView(text)
 
         val image1 =  Image.named("1.jpg")
         val image2 =  Image.named("2.jpg")
         var image = ImageView()
         image.image = image1
-        linearViewGroup.addView(image)
+        linearViewGroup.addSubView(image)
 
         image = ImageView()
         image.margin = EdgeInsets(10f,left = 20f,right = 20f)
         image.image = image2
-        linearViewGroup.addView(image)
+        linearViewGroup.addSubView(image)
 
         image = ImageView()
         image.image = image1
-        linearViewGroup.addView(image)
+        linearViewGroup.addSubView(image)
 
 //        timer = Timer.schedule(1000,1){
 //            val frame = linearViewGroup.frame
@@ -103,7 +103,7 @@ class TestLinearLayout : TestViewController(){
 //            linearViewGroup.frame = frame
 //        }
 
-        (view as ViewGroup).addView(linearViewGroup)
+        (view as ViewGroup).addSubView(linearViewGroup)
     }
 
     override fun onDestroy() {

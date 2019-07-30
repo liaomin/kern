@@ -96,7 +96,7 @@ expect open class View  {
     open fun setBorderWidth(leftWidth:Float,topWidth: Float,rightWidth:Float,bottomWidth:Float)
     open fun setBorderRadius(radius:Float)
     open fun setBorderRadius(topLeftRadius:Float,topRightRadius: Float,bottomRightRadius:Float,bottomLeftRadius:Float)
-    open fun setShadow(radius:Float, dx:Float, dy:Float, color:Int)
+    open fun setShadow(color: Int,radius: Float, dx: Float = 0f, dy: Float = 0f)
 
 
     fun getBorderLeftWidth():Float

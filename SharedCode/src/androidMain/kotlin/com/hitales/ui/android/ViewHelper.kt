@@ -9,6 +9,13 @@ import com.hitales.ui.View
 import com.hitales.ui.ViewGroup
 import com.hitales.ui.utils.PixelUtil
 
+
+enum class ViewStyle{
+    ANDROID,
+    IOS
+}
+
+
 class ViewHelper {
 
     var mView:View
@@ -16,6 +23,10 @@ class ViewHelper {
     constructor(androidView: android.view.View,view:View){
         mView = view
         androidView.setBackgroundColor(Colors.TRANSPARENT)
+        androidView.tag = view
+        if(androidView is android.view.ViewGroup){
+            androidView.clipToPadding = false
+        }
     }
 
     fun onAttachedToWindow() {

@@ -20,7 +20,7 @@ open class TestAnimationInterpolatorController :TestViewController(), Animation.
         view.setBackgroundColor(Colors.BLUE)
         view.frame = Frame(0f,50f,50f,50f)
         view.setBorderRadius(25f)
-        (this.view as ScrollView).addView(view)
+        (this.view as ScrollView).addSubView(view)
         offsetY = view.frame.y + view.frame.height
 
         var linear = Button("linear")
@@ -28,7 +28,7 @@ open class TestAnimationInterpolatorController :TestViewController(), Animation.
         linear.setBackgroundColor(Colors.BLUE)
         linear.frame = Frame(0f,offsetY,50f,50f)
         linear.setBorderRadius(25f)
-        (this.view as ScrollView).addView(linear)
+        (this.view as ScrollView).addSubView(linear)
         offsetY += linear.frame.height
 
         var EaseIn = Button("EaseIn")
@@ -36,7 +36,7 @@ open class TestAnimationInterpolatorController :TestViewController(), Animation.
         EaseIn.setBackgroundColor(Colors.BLUE)
         EaseIn.frame = Frame(0f,offsetY,50f,50f)
         EaseIn.setBorderRadius(25f)
-        (this.view as ScrollView).addView(EaseIn)
+        (this.view as ScrollView).addSubView(EaseIn)
         offsetY += EaseIn.frame.height
 
         var EaseOut = Button("EaseOut")
@@ -44,7 +44,7 @@ open class TestAnimationInterpolatorController :TestViewController(), Animation.
         EaseOut.setBackgroundColor(Colors.BLUE)
         EaseOut.frame = Frame(0f,offsetY,50f,50f)
         EaseOut.setBorderRadius(25f)
-        (this.view as ScrollView).addView(EaseOut)
+        (this.view as ScrollView).addSubView(EaseOut)
         offsetY += EaseOut.frame.height
 
         var custom = Button("custom")
@@ -52,7 +52,7 @@ open class TestAnimationInterpolatorController :TestViewController(), Animation.
         custom.setBackgroundColor(Colors.BLUE)
         custom.frame = Frame(0f,offsetY,50f,50f)
         custom.setBorderRadius(25f)
-        (this.view as ScrollView).addView(custom)
+        (this.view as ScrollView).addSubView(custom)
         offsetY += custom.frame.height
 
 

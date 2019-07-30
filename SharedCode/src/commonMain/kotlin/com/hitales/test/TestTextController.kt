@@ -189,12 +189,12 @@ class TestLineHeight : TestTextControllerTest(){
                 frame.height = 56f
                 var temp = View(frame)
                 temp.setBackgroundColor(0xaa00FF00.toInt())
-                (this.view as ScrollView).addView(temp)
+                (this.view as ScrollView).addSubView(temp)
                  frame = frame.clone()
                 frame.y += 56f
                 temp = View(frame)
                 temp.setBackgroundColor(0xaa0000FF.toInt())
-                (this.view as ScrollView).addView(temp)
+                (this.view as ScrollView).addSubView(temp)
             }
         }
     }

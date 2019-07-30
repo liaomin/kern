@@ -20,7 +20,7 @@ class TestController : BasicController() {
         view = rootView
         rootView.setBackgroundColor(Colors.WHITE)
         var v  = Button("view 背景色测试", Frame(10f,10f, buttonWidth , buttonHeight))
-        rootView.addView(v)
+        rootView.addSubView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
             this.push(TestViewController())
@@ -32,7 +32,7 @@ class TestController : BasicController() {
 
         index++
         v  = Button("view border测试", Frame(10f,(buttonHeight+10)*1+10f, buttonWidth , buttonHeight))
-        rootView.addView(v)
+        rootView.addSubView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
             this.push(BorderWidthTestControllerTest())
@@ -40,7 +40,7 @@ class TestController : BasicController() {
 
         index++
         v  = Button("view shadow测试", Frame(10f,(buttonHeight+10)*2+10f, buttonWidth , buttonHeight))
-        rootView.addView(v)
+        rootView.addSubView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
             this.push(ShadowTestControllerTest())
@@ -48,7 +48,7 @@ class TestController : BasicController() {
 
         index++
         v  = Button("text view 测试", Frame(10f,(buttonHeight+10)*index+10f, buttonWidth , buttonHeight))
-        rootView.addView(v)
+        rootView.addSubView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
             this.push(TestTextControllerTest())
@@ -56,7 +56,7 @@ class TestController : BasicController() {
 
         index++
         v  = Button("button 测试", Frame(10f,(buttonHeight+10)*index+10f, buttonWidth , buttonHeight))
-        rootView.addView(v)
+        rootView.addSubView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
             this.push(TestButtonController())
@@ -64,7 +64,7 @@ class TestController : BasicController() {
 
         index++
         v  = Button("input 测试", Frame(10f,(buttonHeight+10)*index+10f, buttonWidth , buttonHeight))
-        rootView.addView(v)
+        rootView.addSubView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
             this.push(TestInputController())
@@ -72,7 +72,7 @@ class TestController : BasicController() {
 
         index++
         v  = Button("imageView 测试", Frame(10f,(buttonHeight+10)*index+10f, buttonWidth , buttonHeight))
-        rootView.addView(v)
+        rootView.addSubView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
             this.push(TestImageController())
@@ -80,7 +80,7 @@ class TestController : BasicController() {
 
         index++
         v  = Button("Layout 测试", Frame(10f,(buttonHeight+10)*index+10f, buttonWidth , buttonHeight))
-        rootView.addView(v)
+        rootView.addSubView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
             this.push(TestLayout())
@@ -88,7 +88,7 @@ class TestController : BasicController() {
 
         index++
         v  = Button("animation 测试", Frame(10f,(buttonHeight+10)*index+10f, buttonWidth , buttonHeight))
-        rootView.addView(v)
+        rootView.addSubView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setOnPressListener {
             this.push(TestAnimationController())
@@ -98,7 +98,7 @@ class TestController : BasicController() {
 
         index++
         val v4  = Button("测试4", Frame(0f,4000f,100f,100f))
-        rootView.addView(v4)
+        rootView.addSubView(v4)
         v4.setBackgroundColor(Colors.BLACK)
         v4.setOnPressListener  {
             println("press $it")

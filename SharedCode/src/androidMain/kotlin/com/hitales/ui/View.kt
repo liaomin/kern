@@ -84,11 +84,7 @@ actual open class View {
             mWidget.id = value
         }
 
-    actual open var tag: Any?
-        get() = mWidget.tag
-        set(value) {
-            mWidget.tag = value
-        }
+    actual open var tag: Any? = null
 
     actual open var elevation:Float = 0f
         get() {
@@ -189,7 +185,7 @@ actual open class View {
 
 
     actual open fun removeFromSuperView() {
-        superView?.removeView(this)
+        superView?.removeSubView(this)
         superView = null
     }
 
@@ -323,7 +319,7 @@ actual open class View {
         onLongPressListener = listener
     }
 
-    protected open fun getLayoutParams(): FrameLayout.LayoutParams {
+    protected open fun getLayoutParams(): android.view.ViewGroup.LayoutParams {
         var params = mWidget.layoutParams
         var top = PixelUtil.toPixelFromDIP(frame.y).toInt()
         var left = PixelUtil.toPixelFromDIP(frame.x).toInt()
@@ -354,15 +350,16 @@ actual open class View {
             background?.offset = null
             innerPadding = null
         }
-        if (params == null || params !is FrameLayout.LayoutParams) {
+        if (params == null || params !is android.view.ViewGroup.MarginLayoutParams) {
             params = FrameLayout.LayoutParams(right - left, bottom - top)
         } else {
             params.width = right - left
             params.height = bottom - top
         }
-        params.topMargin = top
-        params.leftMargin = left
-
+        if(params is android.view.ViewGroup.MarginLayoutParams){
+            params.topMargin = top
+            params.leftMargin = left
+        }
         return params
     }
 
@@ -473,7 +470,7 @@ actual open class View {
         println("$this touchesCancelled")
     }
 
-    actual open fun setShadow(radius: Float, dx: Float, dy: Float, color: Int) {
+    actual open fun setShadow(color: Int,radius: Float, dx: Float, dy: Float) {
         getOrCreateBackground().setShadow(radius,dx, dy, color)
         onFrameChanged()
         this.checkLayerType()

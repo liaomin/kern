@@ -27,7 +27,7 @@ open class BasicController : Controller() {
 
 
     fun addView(view:View){
-        (this.view as ScrollView).addView(view)
+        (this.view as ScrollView).addSubView(view)
     }
 
 
@@ -45,14 +45,14 @@ open class BasicController : Controller() {
 
         offsetY += height + 10
 
-        (this.view as ScrollView).addView(view)
+        (this.view as ScrollView).addSubView(view)
     }
 
     open fun addTitleView(title:String ){
         val title = TextView(title, Frame(10f,offsetY,Platform.windowWidth-20,20f))
         title.textSize = 18f
         title.bold = true
-        (this.view as ScrollView).addView(title)
+        (this.view as ScrollView).addSubView(title)
     }
 
     open fun addButton(title:String,onPress: (view: com.hitales.ui.View) -> Unit){
@@ -60,7 +60,7 @@ open class BasicController : Controller() {
         offsetY += buttonHeight + 10
         button.setOnPressListener(onPress)
         button.setBackgroundColor(Colors.BLUE)
-        (this.view as ScrollView).addView(button)
+        (this.view as ScrollView).addSubView(button)
     }
 
 

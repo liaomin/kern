@@ -142,7 +142,7 @@ actual open class TextView :  View {
         getTextWidget().typeface  = Typeface.createFromAsset(Platform.getApplication().assets,fontName)
     }
 
-    actual open fun setShadow(color: Int, dx: Float, dy: Float, radius: Float) {
+    actual open fun setTextShadow(color: Int, dx: Float, dy: Float, radius: Float) {
         getTextWidget().setShadowLayer(PixelUtil.toPixelFromDIP(radius),PixelUtil.toPixelFromDIP(dx),PixelUtil.toPixelFromDIP(dy), color)
     }
 

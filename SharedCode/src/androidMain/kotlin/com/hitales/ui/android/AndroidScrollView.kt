@@ -33,7 +33,7 @@ class AndroidScrollView : DampScrollView {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
 
     companion object {
-        fun fromXLM(view: ScrollView):AndroidScrollView{
+        fun createFromXLM(view: ScrollView):AndroidScrollView{
             val  scrollView = LayoutInflater.from(Platform.getApplication()).inflate(R.layout.scroll_view,null) as AndroidScrollView
             scrollView.mView = view
             scrollView.mViewHelper = ViewHelper(scrollView,view)
@@ -105,20 +105,14 @@ class AndroidScrollView : DampScrollView {
         mViewHelper?.onTouchEvent(ev)
         when (ev.action) {
             MotionEvent.ACTION_DOWN -> {
-                // if we can scroll pass the event to the superclass
                 return if (scrollEnabled) super.onTouchEvent(ev) else scrollEnabled
-                // only continue to handle the touch event if scrolling enabled
-                // scrollable is always false at this point
             }
             else -> return super.onTouchEvent(ev)
         }
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
-        return if (!scrollEnabled)
-            false
-        else
-            super.onInterceptTouchEvent(ev)
+        return if (!scrollEnabled) false else super.onInterceptTouchEvent(ev)
     }
 
     override fun onAttachedToWindow() {
