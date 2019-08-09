@@ -31,17 +31,22 @@ actual open class View {
 
     var mBackground: Background? = null
 
+    actual var delegate:WeakReference<ViewDelegate>? = null
+
     init {
         mWidget.setBackgroundColor(mBackgroundColor)
         mWidget.setOnClickListener{
             onPressListener?.invoke(this)
+            delegate?.get()?.onPress(this)
         }
         mWidget.setOnLongClickListener{
             onLongPressListener?.invoke(this)
-            if(onLongPressListener != null){
-                return@setOnLongClickListener true
-            }
-            return@setOnLongClickListener false
+            delegate?.get()?.onLongPress(this)
+            return@setOnLongClickListener true
+//            if(onLongPressListener != null){
+//                return@setOnLongClickListener true
+//            }
+//            return@setOnLongClickListener false
         }
     }
 

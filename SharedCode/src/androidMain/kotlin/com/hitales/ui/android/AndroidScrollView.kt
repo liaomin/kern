@@ -14,23 +14,22 @@ import com.hitales.ui.ScrollView
 import com.hitales.ui.utils.PixelUtil
 import android.view.MotionEvent
 import com.hitales.utils.Size
-import com.hitales.utils.Timer
 
 
-class AndroidScrollView : DampScrollView {
-
-    var scrollEnabled = true
+open class AndroidScrollView : com.hitales.ui.android.scrollview.ScrollView {
 
     var mView: ScrollView? = null
 
     var mViewHelper :ViewHelper? = null
 
-    constructor(view: ScrollView) : super(Platform.getApplication()) {
+    constructor(view: ScrollView) : super() {
         mView = view
         mViewHelper = ViewHelper(this,view)
     }
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+
+    }
 
     companion object {
         fun createFromXLM(view: ScrollView):AndroidScrollView{
@@ -44,25 +43,15 @@ class AndroidScrollView : DampScrollView {
     var contentSize: Size = Size()
         set(value) {
             field = value
-            mFrameLayout.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+//            mFrameLayout.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
         }
 
-    private var mFrameLayout = object:FrameLayout(Platform.getApplication()){
-
-        override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-            if(contentSize.width > 0 && contentSize.height > 0){
-                setMeasuredDimension(PixelUtil.toPixelFromDIP(contentSize.width).toInt(),PixelUtil.toPixelFromDIP(contentSize.height).toInt())
-            }
-        }
-
-    }
 
     init {
-        mFrameLayout.setBackgroundColor(Colors.CLEAR)
-        super.addView(mFrameLayout, -1, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
-        mFrameLayout.isFocusable = true
-        mFrameLayout.isFocusableInTouchMode = true
+//        mFrameLayout.setBackgroundColor(Colors.CLEAR)
+//        super.addView(mFrameLayout, -1, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
+//        mFrameLayout.isFocusable = true
+//        mFrameLayout.isFocusableInTouchMode = true
     }
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
@@ -73,32 +62,8 @@ class AndroidScrollView : DampScrollView {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        mView?.layoutSubviews()
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-    }
-
-    override fun addView(child: View?) {
-        mFrameLayout.addView(child)
-    }
-
-    override fun addView(child: View?, params: ViewGroup.LayoutParams?) {
-        mFrameLayout.addView(child, params)
-    }
-
-    override fun addView(child: View?, index: Int) {
-        mFrameLayout.addView(child, index)
-    }
-
-    override fun addView(child: View?, width: Int, height: Int) {
-        mFrameLayout.addView(child, width, height)
-    }
-
-    override fun addView(child: View?, index: Int, params: ViewGroup.LayoutParams?) {
-        mFrameLayout.addView(child, index, params)
-    }
-
-    override fun removeView(view: View?) {
-        mFrameLayout.removeView(view)
+        mViewHelper?.onMeasure(measuredWidth,measuredHeight)
     }
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {

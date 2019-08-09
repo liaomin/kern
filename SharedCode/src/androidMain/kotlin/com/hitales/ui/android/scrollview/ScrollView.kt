@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.hitales.android.R
+import com.hitales.ui.Colors
 import com.hitales.ui.Platform
 import com.hitales.ui.android.ViewStyle
 
@@ -35,7 +36,7 @@ open class ScrollView : RecyclerView {
 
     protected var frameLayout: FrameLayout? = null
 
-    open class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    open class ViewHolder(val view: View,val v:com.hitales.ui.View? = null) : RecyclerView.ViewHolder(view) {
 
     }
 
@@ -93,6 +94,7 @@ open class ScrollView : RecyclerView {
         val lp = LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT)
         frameLayout.layoutParams = lp
         this.frameLayout = frameLayout
+        frameLayout.setBackgroundColor(Colors.CLEAR)
         adapter = object : Adapter<ViewHolder>(){
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
                 return ViewHolder(frameLayout)

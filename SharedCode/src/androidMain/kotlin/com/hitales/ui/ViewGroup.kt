@@ -3,9 +3,8 @@ package com.hitales.ui
 import android.graphics.Canvas
 import android.view.MotionEvent
 import android.widget.FrameLayout
+import com.hitales.ui.android.AndroidScrollView
 import com.hitales.ui.android.ViewHelper
-import com.hitales.ui.layout.FrameLayoutManager
-import com.hitales.ui.layout.LayoutManager
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame
 import com.hitales.utils.Size
@@ -49,23 +48,6 @@ open class AndroidFrameLayout(private val view:ViewGroup) : FrameLayout(Platform
 }
 actual open class ViewGroup : View {
 
-    actual var scrollX: Float
-        get() = PixelUtil.toDIPFromPixel(getWidget().scrollX.toFloat())
-        set(value) {
-            getWidget().scrollX = PixelUtil.toPixelFromDIP(value).toInt()
-        }
-
-    actual var scrollY: Float
-        get() = PixelUtil.toDIPFromPixel(getWidget().scrollY.toFloat())
-        set(value) {
-            getWidget().scrollY = PixelUtil.toPixelFromDIP(value).toInt()
-        }
-
-    actual var layoutManager: LayoutManager? = null
-        set(value) {
-            field = value
-            layoutSubviews()
-        }
 
     actual constructor(frame: Frame):super(frame){
 //        mWidget.isFocusable = true
@@ -79,11 +61,20 @@ actual open class ViewGroup : View {
         view: View,
         index: Int
     ) {
+        val widget = getWidget()
         if(index < 0){
-            getWidget().addView(view.getWidget())
+            if(widget is AndroidScrollView){
+                widget.addSubView(view.getWidget())
+            }else{
+                widget.addView(view.getWidget())
+            }
             children.add(view)
         }else{
-            getWidget().addView(view.getWidget(),index)
+            if(widget is AndroidScrollView){
+                widget.addSubView(view.getWidget(),index)
+            }else{
+                widget.addView(view.getWidget(),index)
+            }
             children.add(index,view)
         }
         view.superView = this
@@ -95,8 +86,8 @@ actual open class ViewGroup : View {
         return AndroidFrameLayout(this)
     }
 
-    override fun getWidget(): FrameLayout {
-        return super.getWidget() as FrameLayout
+    override fun getWidget(): android.view.ViewGroup {
+        return super.getWidget() as android.view.ViewGroup
     }
 
     actual open fun removeSubView(view:View){
@@ -131,16 +122,9 @@ actual open class ViewGroup : View {
     }
 
     actual open fun layoutSubviews(){
-        layoutManager?.layoutSubviews(this)
+
     }
 
-    actual open fun getContentWidth(): Float {
-       return frame.width
-    }
-
-    actual open fun getContentHeight(): Float {
-        return frame.height
-    }
 
     override fun releaseResource() {
         super.releaseResource()

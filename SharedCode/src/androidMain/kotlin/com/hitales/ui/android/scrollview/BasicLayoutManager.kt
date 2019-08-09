@@ -126,6 +126,12 @@ open class BasicLayoutManager  : RecyclerView.LayoutManager {
             }
             layoutDecorated(scrap, l , t , r, b)
         }
+        if(scrollX != 0){
+            offsetChildrenHorizontal(-scrollX)
+        }
+        if(scrollY != 0){
+            offsetChildrenVertical(-scrollY)
+        }
         contextSize.set(maxWidth ,maxHeight)
     }
 
@@ -137,13 +143,18 @@ open class BasicLayoutManager  : RecyclerView.LayoutManager {
         return contextSize.width > width
     }
 
+    open fun onScrollChange(recycler: RecyclerView.Recycler,dx:Int,dy:Int){
+
+    }
+
     override fun scrollHorizontallyBy(dx: Int, recycler: RecyclerView.Recycler, state: RecyclerView.State): Int {
         scrollBy(scrollX,dx,getMaxScrollX(),recycler,state)
         var used = tempArray[0]
         var unused = tempArray[1]
         scrollX += used
         if(used != 0){
-            offsetChildrenHorizontal(-used )
+            offsetChildrenHorizontal( -used )
+            onScrollChange(recycler,unused,0)
         }
         return used
     }
@@ -159,6 +170,7 @@ open class BasicLayoutManager  : RecyclerView.LayoutManager {
         scrollY += used
         if(used != 0){
             offsetChildrenVertical( -used )
+            onScrollChange(recycler,0,unused)
         }
 //        if(unused != 0 && damp != null){
 //            val temp = unused
@@ -168,6 +180,8 @@ open class BasicLayoutManager  : RecyclerView.LayoutManager {
 //        }
         return used
     }
+
+
 
    open fun scrollBy(currentOffset:Int, offset: Int, maxOffset:Int, recycler: RecyclerView.Recycler, state: RecyclerView.State){
         var used = 0

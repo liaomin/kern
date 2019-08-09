@@ -3,6 +3,7 @@ package com.hitales.ui
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
 import com.hitales.utils.Size
+import com.hitales.utils.WeakReference
 
 enum class Orientation{
     VERTICAL,
@@ -23,7 +24,13 @@ enum class BorderStyle(val value:Int) {
     DASHED(2),
 }
 
+interface ViewDelegate{
+    fun onPress(view: View)
+    fun onLongPress(view: View)
+}
+
 expect open class View  {
+    var delegate:WeakReference<ViewDelegate>?
     /**
      * use margin and padding to calculate frame
      */

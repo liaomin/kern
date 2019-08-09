@@ -25,12 +25,5 @@ actual open class HorizontalScrollView : com.hitales.ui.ScrollView {
         return AndroidHorizontalScrollView(this)
     }
 
-    override fun getContentWidth(): Float {
-        return Float.MAX_VALUE
-    }
-
-    override fun getContentHeight(): Float {
-        return Float.MAX_VALUE
-    }
 
 }

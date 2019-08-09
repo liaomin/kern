@@ -12,6 +12,16 @@ open class Size(var width:Float = 0f, var height:Float = 0f) {
         this.height = height.toFloat()
     }
 
+    fun set(o:Size){
+        this.width = o.width
+        this.height = o.height
+    }
+
+    fun scale(scale:Float){
+        width *= scale
+        height *= scale
+    }
+
     fun reset(){
         width = 0f
         height = 0f

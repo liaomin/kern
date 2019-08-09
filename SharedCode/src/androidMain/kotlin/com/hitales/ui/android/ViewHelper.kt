@@ -41,6 +41,11 @@ class ViewHelper {
 
     }
 
+    fun onMeasure(width:Int,height:Int){
+        mView.frame.width = PixelUtil.toDIPFromPixel(width.toFloat())
+        mView.frame.height = PixelUtil.toDIPFromPixel(height.toFloat())
+    }
+
     fun dispatchTouchEvent(ev:MotionEvent):Boolean{
         val padding = mView.innerPadding
         if(padding != null && ev.action == MotionEvent.ACTION_DOWN){

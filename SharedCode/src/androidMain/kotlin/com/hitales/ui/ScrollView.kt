@@ -2,6 +2,7 @@ package com.hitales.ui
 
 import android.widget.FrameLayout
 import com.hitales.ui.android.AndroidScrollView
+import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame
 import com.hitales.utils.Size
 
@@ -17,6 +18,18 @@ actual open class ScrollView : com.hitales.ui.ViewGroup {
 
     actual constructor(frame: Frame) : super(frame)
 
+    actual var scrollX: Float
+        get() = PixelUtil.toDIPFromPixel(getWidget().scrollX.toFloat())
+        set(value) {
+            getWidget().scrollX = PixelUtil.toPixelFromDIP(value).toInt()
+        }
+
+    actual var scrollY: Float
+        get() = PixelUtil.toDIPFromPixel(getWidget().scrollY.toFloat())
+        set(value) {
+            getWidget().scrollY = PixelUtil.toPixelFromDIP(value).toInt()
+        }
+
     override fun createWidget(): android.view.View {
         return AndroidScrollView.createFromXLM(this)
     }
@@ -25,15 +38,7 @@ actual open class ScrollView : com.hitales.ui.ViewGroup {
         return super.getWidget() as AndroidScrollView
     }
 
-    actual open fun layoutSubViews(offsetX: Float, offsetY: Float) {
-    }
-
-    override fun getContentWidth(): Float {
-        return contentSize.width
-    }
-
-    override fun getContentHeight(): Float {
-        return contentSize.height
+    actual open fun layoutSubViews() {
     }
 
     /**
@@ -62,7 +67,6 @@ actual open class ScrollView : com.hitales.ui.ViewGroup {
     }
 
     actual open fun onScroll(offsetX: Float, offsetY: Float) {
-        layoutSubViews(offsetX,offsetY)
     }
 
 }

@@ -15,6 +15,27 @@ open class Frame(var x:Float = 0f,var y:Float = 0f, var width:Float = 0f,var hei
         this.height = height
     }
 
+    fun set(other: Frame){
+        this.x = other.x
+        this.y = other.y
+        this.width = other.width
+        this.height = other.height
+    }
+
+    fun scale(scale: Float){
+        this.x *= scale
+        this.y *= scale
+        this.width *= scale
+        this.height *= scale
+    }
+
+    fun reset(){
+        x = 0f
+        y = 0f
+        width = 0f
+        height = 0f
+    }
+
     fun getCenterX():Float{
         return x + width / 2f
     }
@@ -45,6 +66,10 @@ open class Frame(var x:Float = 0f,var y:Float = 0f, var width:Float = 0f,var hei
 
     fun intersect(frame: Frame):Boolean{
         return getLeft() < frame.getRight() && frame.getLeft() < getRight() && getTop() < frame.getBottom() && frame.getTop() < getBottom()
+    }
+
+    fun contains(o:Frame):Boolean{
+        return x <= o.x && y <= o.y && getRight() >= o.getRight() && getBottom() >= o.getBottom()
     }
 
     fun valid():Boolean{

@@ -18,6 +18,9 @@ class PixelUtil {
             return value / displayMetrics.density
         }
 
+        fun getScale(displayMetrics : DisplayMetrics = Platform.displayMetrics):Float{
+            return displayMetrics.density
+        }
 
         fun toPixelFromSP(value:Float):Float{
             if(value == 0f) return value

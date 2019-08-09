@@ -27,10 +27,10 @@ actual open class Button :  com.hitales.ui.TextView {
     }
 
     actual open fun setBackgroundColor(color: Int, state: ViewState) {
-        if(state == ViewState.NORMAL){
-            super.setBackgroundColor(color)
+        if(mBackground != null){
+            mBackground?.setColorForState(color,state)
         }else{
-            getOrCreateBackground().setColorForState(color,state)
+            super.setBackgroundColor(color)
         }
     }
 

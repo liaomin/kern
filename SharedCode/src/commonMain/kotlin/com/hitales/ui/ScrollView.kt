@@ -17,9 +17,13 @@ expect open class ScrollView : ViewGroup {
 
     open var contentSize:Size
 
+    var scrollX:Float
+
+    var scrollY:Float
+
     constructor(frame: Frame = Frame.zero())
 
-    open fun layoutSubViews(offsetX:Float,offsetY:Float)
+    open fun layoutSubViews()
 
     open fun onScroll(offsetX:Float,offsetY:Float)
 

@@ -152,6 +152,8 @@ class Background : StateListDrawable {
 
     private var mDrawablesIndex = 0
 
+    private var lastState = ViewState.NORMAL.value
+
     fun setDrawable(drawable: Drawable,state: ViewState){
         if(mDrawables == null){
             mDrawables = HashMap()
@@ -169,7 +171,7 @@ class Background : StateListDrawable {
     }
 
     override fun onStateChange(stateSet: IntArray?): Boolean {
-        if(stateSet != null && mDrawables != null){
+        if(stateSet != null){
             var stateValue = ViewState.NORMAL.value
             var enable = false
             for ( i in 0 until stateSet.size){
@@ -186,6 +188,10 @@ class Background : StateListDrawable {
             }
             if(!enable) stateValue = ViewState.DISABLED.value
             var index = mDrawables?.get(stateValue)
+            if(lastState != stateValue){
+                invalidateSelf()
+            }
+            lastState = stateValue
             if(index != null){
                 return super.selectDrawable(index)
             }
@@ -237,7 +243,6 @@ class Background : StateListDrawable {
         mOuterPath.addRoundRect(mTempRectF, floatArrayOf(borderTopLeftRadius,borderTopLeftRadius,borderTopRightRadius,borderTopRightRadius,borderBottomRightRadius,borderBottomRightRadius,borderBottomLeftRadius,borderBottomLeftRadius),Path.Direction.CW)
         return mOuterPath
     }
-
 
     private fun onDraw(canvas: Canvas,w:Float,h:Float){
         val haveBorderWidth = haveBorderWidth()
