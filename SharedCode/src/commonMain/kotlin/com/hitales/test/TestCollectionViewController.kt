@@ -22,7 +22,7 @@ open class TestCollectionViewController : Controller() {
             }
 
             override fun haveFooterView(collectionView: CollectionView, section: Int): Boolean {
-                return true
+                return false
             }
 
             override fun getSectionHeaderViewSize(collectionView: CollectionView, section: Int, size: Size) {
@@ -70,22 +70,22 @@ open class TestCollectionViewController : Controller() {
             }
 
             override fun getItemViewSize(collectionView: CollectionView, section: Int, row: Int,type:Int, size: Size) {
-                size.set((itemWidth * random()).toFloat(),(itemWidth * random()).toFloat() )
+//                size.set((itemWidth * random()).toFloat(),(itemWidth * random()).toFloat() )
                 size.set(itemWidth ,itemWidth)
             }
 
             override fun getNumberOfItem(view: CollectionView, section: Int): Int {
-                return 12
+                return 4
             }
 
             override fun getNumberOfSection(collectionView: CollectionView): Int {
-                return 2000
+                return 2
             }
 
         }
         collectionView.padding = EdgeInsets(20f,20f,20f,20f)
         (collectionView.layout as DefaultCollectionViewLayout).minimumInteritemSpacing = 20f
-//        (collectionView.layout as DefaultCollectionViewLayout).headerAndFooterAddLineSpace = true
+        (collectionView.layout as DefaultCollectionViewLayout).headerAndFooterAddLineSpace = true
 //        collectionView.layout.maxColumns = 1
         collectionView.adapter = adapter
 //        collectionView.orientation = Orientation.HORIZONTAL

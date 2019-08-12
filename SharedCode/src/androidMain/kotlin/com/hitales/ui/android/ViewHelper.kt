@@ -22,7 +22,7 @@ class ViewHelper {
 
     constructor(androidView: android.view.View,view:View){
         mView = view
-        androidView.setBackgroundColor(Colors.TRANSPARENT)
+//        androidView.setBackgroundColor(Colors.WHITE)
         androidView.tag = view
         if(androidView is android.view.ViewGroup){
             androidView.clipToPadding = false

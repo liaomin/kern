@@ -1,5 +1,6 @@
 package com.hitales.ui.recycler
 
+import com.hitales.utils.max
 import com.hitales.utils.min
 
 class VerticalLayoutHelper : LayoutHelper() {
@@ -31,12 +32,14 @@ class VerticalLayoutHelper : LayoutHelper() {
         var frameEndY =  viewFrame.height
         var endX = viewFrame.width - paddingRight + 1
         var rowHeight = 0f
+        var kind = ElementKindNone
         var sectionIndex = 0
         var rowIndex = 0
         val frameWidth = viewFrame.width - paddingRight - paddingLeft
         val attributes = nextPage.attributes
         var position = 0
         val sectionCount = adapter.getNumberOfSection(collectionView)
+        var haveHeader = false
         if(!currentPage.isEmpty()){
             frameStartY = currentPage.frame.getBottom()
             frameEndY += frameStartY
@@ -44,88 +47,78 @@ class VerticalLayoutHelper : LayoutHelper() {
             offsetY = last.frame.getBottom()
             position = last.position + 1
             sectionIndex = last.section
-            val sectionCount = adapter.getNumberOfSection(collectionView)
             rowIndex = last.row
-            val rowCount = adapter.getNumberOfItem(collectionView,sectionIndex)
-
-            if(sectionCount > 0 && (rowIndex == rowCount - 1 || last.elementKind == ElementKindFooter)){
-                //上一页结束一个section
-                if(sectionIndex < sectionCount - 1 ){
-                    //开启新section
-                    sectionIndex += 1
-                    rowIndex = 0
-
-                    val section = sectionIndex - 1
-                    if(last.elementKind != ElementKindFooter && adapter.haveFooterView(collectionView,section)){
-                        //上一个section有footer
-                        if(headerAndFooterAddLineSpace){
-                            offsetY += minimumLineSpacing
-                        }
-                        adapter.getSectionFooterViewSize(collectionView,section,tempSize)
-                        val attribute = layout.getCacheAttribute()
-                        attribute.position = position
-                        attribute.frame.set(paddingLeft,offsetY,frameWidth,tempSize.height)
-                        attribute.section = section
-                        attribute.elementKind = ElementKindFooter
-                        attribute.zIndex = 99
-                        attributes.add(attribute)
-                        position++
-                        offsetY += tempSize.height
-                        if( offsetY >=  frameEndY){
-                            return
-                        }
+            kind = last.elementKind!!
+            if(rowIndex < 0){
+                //上一个是header或者footer
+                rowIndex = 0
+                if(kind == ElementKindHeader){
+                    haveHeader = true
+                    if(headerAndFooterAddLineSpace){
+                        offsetY += minimumLineSpacing
                     }
-                }else{
-                    val frame = nextPage.frame
-                    frame.set(0f,frameStartY,viewFrame.width,0f)
-                    return
+                }else if(kind == ElementKindFooter){
+                    val nextSection = sectionIndex + 1
+                    if(nextSection > sectionCount - 1){
+                        val frame = nextPage.frame
+                        frame.set(0f,frameStartY,viewFrame.width,0f)
+                        return
+                    }else{
+                        sectionIndex = nextSection
+                        rowIndex = 0
+                    }
                 }
-            }else if(last.elementKind == ElementKindHeader){
-                if(headerAndFooterAddLineSpace){
-                    offsetY += minimumLineSpacing
-                }
-                rowIndex = -1
-            }else{
-                offsetY += minimumLineSpacing
-                rowIndex ++
+            }else {
+                haveHeader = true
             }
         }
         val frame = nextPage.frame
         frame.set(0f,frameStartY,viewFrame.width,frameEndY - frameStartY)
         for (i in sectionIndex until sectionCount){
             var section = i
-            var row = rowIndex
-            if(row < 0){ row = 0 }
             var number = adapter.getNumberOfItem(collectionView,section)
-            if(((position == 0 || row == 0 ) && rowIndex>= 0) && adapter.haveHeaderView(collectionView,section)){
-                adapter.getSectionHeaderViewSize(collectionView,section,tempSize)
-                if(sectionIndex != 0 && headerAndFooterAddLineSpace){
-                    offsetY += minimumLineSpacing
-                }
-                val attribute = layout.getCacheAttribute()
-                attribute.position = position
-                attribute.frame.set(paddingLeft,offsetY,frameWidth,tempSize.height)
-                attribute.section = section
-                attribute.elementKind = ElementKindHeader
-                attribute.zIndex = 99
-                attributes.add(attribute)
-                position++
-                offsetY += tempSize.height
-                offsetX = paddingLeft
-                if(headerAndFooterAddLineSpace){
-                    offsetY += minimumLineSpacing
-                }
-                if( offsetY >=  frameEndY){
-                    return
+            //step 1：判断是否有header
+            if((rowIndex == 0 && !haveHeader)){
+                if(adapter.haveHeaderView(collectionView,section)){
+                    adapter.getSectionHeaderViewSize(collectionView,section,tempSize)
+                    if(section != 0 && headerAndFooterAddLineSpace){
+                        offsetY += minimumLineSpacing
+                    }
+                    val attribute = layout.getCacheAttribute()
+                    attribute.position = position
+                    attribute.frame.set(paddingLeft,offsetY,frameWidth,tempSize.height)
+                    attribute.section = section
+                    kind = ElementKindHeader
+                    attribute.elementKind = kind
+                    attribute.zIndex = 99
+                    attributes.add(attribute)
+                    position++
+                    offsetY += tempSize.height
+                    offsetX = paddingLeft
+                    if(headerAndFooterAddLineSpace){
+                        offsetY += minimumLineSpacing
+                    }
+                    if( offsetY >=  frameEndY){
+                        return
+                    }
+                }else{
+                    if(headerAndFooterAddLineSpace){
+                        offsetY += minimumLineSpacing
+                    }
                 }
             }
             rows.clear()
             rowHeight = 0f
-            if(rowIndex < 0){ rowIndex = 0 }
+            if(rowIndex < 0){
+                rowIndex = 0
+            }else if(kind == ElementKindCell){
+                rowIndex ++
+                offsetY += minimumLineSpacing
+            }
             for ( j in rowIndex until number){
-                row = j
-                val viewType = adapter.getItemType(collectionView,section,row)
-                adapter.getItemViewSize(collectionView,section,row,viewType,tempSize)
+                rowIndex = j
+                val viewType = adapter.getItemType(collectionView,section,rowIndex)
+                adapter.getItemViewSize(collectionView,section,rowIndex,viewType,tempSize)
                 val attribute = layout.getCacheAttribute()
                 attribute.position = position
                 val height = tempSize.height
@@ -149,9 +142,10 @@ class VerticalLayoutHelper : LayoutHelper() {
                 }
                 attribute.frame.set(offsetX,offsetY,tempSize.width,height)
                 attribute.section = section
-                attribute.row = row
+                attribute.row = rowIndex
                 attribute.position = position
-                attribute.elementKind = ElementKindCell
+                kind = ElementKindCell
+                attribute.elementKind = kind
                 offsetX += width + minimumInteritemSpacing
                 rows.add(attribute)
                 position++
@@ -161,12 +155,13 @@ class VerticalLayoutHelper : LayoutHelper() {
                 adjustRow(rows,paddingLeft,offsetY,rowHeight)
                 attributes.addAll(rows)
                 rows.clear()
-                offsetY += rowHeight
+                offsetY += rowHeight + minimumLineSpacing
                 if( offsetY >=  frameEndY){
                     return
                 }
             }
 
+            offsetY -= minimumLineSpacing
             offsetX = paddingLeft
 
             if(adapter.haveFooterView(collectionView,section)){
@@ -178,7 +173,8 @@ class VerticalLayoutHelper : LayoutHelper() {
                 attribute.position = position
                 attribute.frame.set(paddingLeft,offsetY,frameWidth,tempSize.height)
                 attribute.section = section
-                attribute.elementKind = ElementKindFooter
+                kind = ElementKindFooter
+                attribute.elementKind = kind
                 attribute.zIndex = 99
                 attributes.add(attribute)
                 position++
@@ -189,8 +185,10 @@ class VerticalLayoutHelper : LayoutHelper() {
             }else if(sectionIndex == sectionCount -1){
                 offsetY += paddingBottom
                 frame.height = offsetY - frame.y
+                nextPage.isEnd = true
             }
             rowIndex = 0
+            haveHeader = false
         }
     }
 
@@ -203,6 +201,11 @@ class VerticalLayoutHelper : LayoutHelper() {
 
 
     override fun adjustRow(row: ArrayList<LayoutAttribute>, offsetX: Float, offsetY: Float, maxRowHeight: Float) {
-
+        row.forEach {
+            val frameHeight = it.frame.height
+            if(frameHeight < maxRowHeight){
+                it.frame.y += ( maxRowHeight - frameHeight) / 2f
+            }
+        }
     }
 }

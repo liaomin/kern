@@ -11,3 +11,7 @@ actual fun min(a:Float,b:Float):Float {
 actual fun max(a:Float,b:Float):Float {
     return Math.max(a,b)
 }
+
+actual fun max(a:Int,b:Int):Int {
+    return Math.max(a,b)
+}

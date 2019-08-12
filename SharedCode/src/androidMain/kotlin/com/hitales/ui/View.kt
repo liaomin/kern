@@ -27,7 +27,7 @@ actual open class View {
 
     protected val mWidget: android.view.View = createWidget()
 
-    private var mBackgroundColor = Colors.TRANSPARENT
+    private var mBackgroundColor = Colors.WHITE
 
     var mBackground: Background? = null
 

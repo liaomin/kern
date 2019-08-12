@@ -18,7 +18,7 @@ open class AndroidFrameLayout(private val view:ViewGroup) : FrameLayout(Platform
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        view.layoutSubviews()
+        mViewHelper.onMeasure(measuredWidth,measuredHeight)
     }
 
     override fun onAttachedToWindow() {

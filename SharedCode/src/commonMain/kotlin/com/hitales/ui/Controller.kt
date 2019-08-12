@@ -7,7 +7,7 @@ open class Controller {
 
     var title:String? = null
 
-    var onViewChangedListener:((rootController:Controller,controller:Controller,view:View?)->Unit)? = null
+    var onControllerChangedListener:((rootController:Controller,pushController:Controller?,removeController:Controller?)->Unit)? = null
 
     var view:View? = null
 
@@ -86,21 +86,21 @@ open class Controller {
     }
 
     private fun onPushController(controller: Controller){
-        onViewChangedListener?.invoke(this,controller,controller.view)
+        onControllerChangedListener?.invoke(this,controller,null)
         controller.onResume()
     }
 
     private fun onPopController(controller: Controller){
         controller.onPause()
+        onControllerChangedListener?.invoke(this,null,controller)
         controller.onDestroy()
         val stack = stack!!
         if(stack.isEmpty()){
             onResume()
-            onViewChangedListener?.invoke(this,this,view)
         }else{
             val last = stack.last() as Controller
             last.onResume()
-            onViewChangedListener?.invoke(this,last,last.view)
+            onControllerChangedListener?.invoke(this,null,last)
         }
     }
 }

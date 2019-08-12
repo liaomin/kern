@@ -30,6 +30,8 @@ actual class Platform : ActivityDelegate{
         actual val windowWidth:Float by lazy { platform!!.windowWidth }
         actual val windowHeight:Float by lazy { platform!!.windowHeight }
 
+        actual val rootView:com.hitales.ui.ViewGroup by lazy { FrameViewGroup() }
+
         val displayMetrics : DisplayMetrics by lazy { platform!!.application.resources.displayMetrics }
 
         actual val os:String = PLATFORM_ANDROID
@@ -42,6 +44,7 @@ actual class Platform : ActivityDelegate{
 
         fun init(rootActivity: Activity):ActivityDelegate{
             platform = Platform(rootActivity)
+            rootActivity.setContentView(rootView.getWidget())
             return  platform!!
         }
 
@@ -81,11 +84,14 @@ actual class Platform : ActivityDelegate{
         c?.onCreate()
         c?.onResume()
         c?.view?.apply {
-            rootActivity.setContentView(getWidget())
+            rootView.addSubView(this)
         }
-        c?.onViewChangedListener = {rootController:Controller,controller:Controller,view: com.hitales.ui.View? ->
-            view?.apply {
-                rootActivity.setContentView(getWidget())
+        c?.onControllerChangedListener = {rootController:Controller,pushControll:Controller?,removeControll:Controller? ->
+            pushControll?.view?.apply {
+                rootView.addSubView(this)
+            }
+            removeControll?.view?.apply {
+                rootView.removeSubView(this)
             }
         }
     }

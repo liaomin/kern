@@ -10,6 +10,7 @@ val ElementKindFooter:String = "CollectionViewFooter"
 
 val ElementKindCell:String = "CollectionViewCell"
 
+val ElementKindNone:String = "CollectionViewNone"
 
 open class LayoutAttribute(var frame: Frame = Frame.zero(), var section:Int = -1, var row:Int = -1) {
 
@@ -37,7 +38,7 @@ open class LayoutAttribute(var frame: Frame = Frame.zero(), var section:Int = -1
     }
 
     open fun reset(){
-        elementKind = null
+        elementKind = ElementKindNone
         transform = null
         opacity = 1f
         zIndex = 0
