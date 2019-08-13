@@ -8,32 +8,36 @@ open class Frame(var x:Float = 0f,var y:Float = 0f, var width:Float = 0f,var hei
         }
     }
 
-    fun set(x:Float,y:Float,width: Float,height: Float){
+    fun set(x:Float,y:Float,width: Float,height: Float):Frame{
         this.x = x
         this.y = y
         this.width = width
         this.height = height
+        return this
     }
 
-    fun set(other: Frame){
+    fun set(other: Frame):Frame{
         this.x = other.x
         this.y = other.y
         this.width = other.width
         this.height = other.height
+        return this
     }
 
-    fun scale(scale: Float){
+    fun scale(scale: Float):Frame{
         this.x *= scale
         this.y *= scale
         this.width *= scale
         this.height *= scale
+        return this
     }
 
-    fun reset(){
+    fun reset():Frame{
         x = 0f
         y = 0f
         width = 0f
         height = 0f
+        return this
     }
 
     fun getCenterX():Float{

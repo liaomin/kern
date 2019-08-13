@@ -27,6 +27,7 @@ actual open class CollectionView : ScrollView {
         this.layout = layout
         layout.collectionViewRef = WeakReference(this)
         getWidget().setup1()
+        getWidget().recycledViewPool.setMaxRecycledViews(0,100)
     }
 
     var adapterHelper:AdapterHelper? = null
@@ -116,7 +117,7 @@ actual open class CollectionView : ScrollView {
                         val startY = cFrame.y*scale
                         val endY = (cFrame.getBottom() - cFrame.height/2) *scale
                         val bottom = visibleFrame.getBottom()
-                        if(bottom + dy > endY){
+                        if(bottom + dy > endY && !nextPageLayoutInfo.isEmpty()){
                             val temp = lastPageLayoutInfo
                             resetPage(recycler,lastPageLayoutInfo)
                             lastPageLayoutInfo = currentPageLayoutInfo
@@ -147,17 +148,24 @@ actual open class CollectionView : ScrollView {
             }
 
             open fun layoutPage(recycler: RecyclerView.Recycler,pageInfo: CollectionViewLayout.PageLayoutInfo){
-                val scale = PixelUtil.getScale()
+//                val scale = PixelUtil.getScale()
                 if(!pageInfo.isLayout){
                     pageInfo.attributes.forEach {
                         val frame = it.frame
 //                        frame.scale(scale)
                         val scrap = recycler.getViewForPosition(it.position)
+                        val v = scrap.tag as CollectionViewCell
+                        v.contentView.frame.set(frame)
+                        v.contentView.onFrameChanged()
+                        v.applyAttribute(it)
+
+                        var lp = v.contentView.getWidget().layoutParams as ViewGroup.MarginLayoutParams
                         it.view = scrap
+
                         addView(scrap)
 
-                        val exactlyWidth = (frame.width*scale).toInt()
-                        val exactlyHeight = (frame.height*scale).toInt()
+                        val exactlyWidth = lp.width
+                        val exactlyHeight = lp.height
                         if(scrap.isLayoutRequested || scrap.width != exactlyWidth || scrap.height != exactlyHeight){
                             val w = android.view.View.MeasureSpec.makeMeasureSpec(exactlyWidth, android.view.View.MeasureSpec.EXACTLY)
                             val h = android.view.View.MeasureSpec.makeMeasureSpec(exactlyHeight, android.view.View.MeasureSpec.EXACTLY)
@@ -166,8 +174,8 @@ actual open class CollectionView : ScrollView {
 
                         val itemWidth = getDecoratedMeasuredWidth(scrap)
                         val itemHeight = getDecoratedMeasuredHeight(scrap)
-                        val l = (frame.x*scale).toInt() - scrollX
-                        val t = (frame.y*scale).toInt() - scrollY
+                        val l = lp.leftMargin - scrollX
+                        val t = lp.topMargin - scrollY
 
                         layoutDecorated(scrap, l , t , l+itemWidth, t+itemHeight)
                     }
@@ -207,7 +215,7 @@ actual open class CollectionView : ScrollView {
     }
 
     open fun onCreateViewHolder(parent: ViewGroup, viewType: Int): com.hitales.ui.android.scrollview.ScrollView.ViewHolder {
-        var view:com.hitales.ui.View? = null
+        var view:com.hitales.ui.recycler.CollectionViewCell? = null
         when (viewType){
             HEADER_TYPE -> view = adapter!!.createHeaderView(this)
             FOOTER_TYPE -> view = adapter!!.createFooterView(this)
@@ -218,13 +226,14 @@ actual open class CollectionView : ScrollView {
         if(view == null){
             throw RuntimeException("view is null for type:$viewType")
         }
-        return com.hitales.ui.android.scrollview.ScrollView.ViewHolder(view.getWidget(),view)
+        return com.hitales.ui.android.scrollview.ScrollView.ViewHolder(view.contentView.getWidget(),view)
     }
 
 
     open fun onBindViewHolder(holder: com.hitales.ui.android.scrollview.ScrollView.ViewHolder, position: Int) {
         val info  = adapterHelper!!.positionInfoArray[position]
         val viewType = adapterHelper!!.getItemViewType(position)
+        holder.view.tag = holder.v
         when (viewType){
             HEADER_TYPE -> adapter!!.onBindHeaderView(this,info.section,holder.v!!)
             FOOTER_TYPE -> adapter!!.onBindFooterView(this,info.section,holder.v!!)

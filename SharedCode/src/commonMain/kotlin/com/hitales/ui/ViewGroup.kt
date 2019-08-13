@@ -12,6 +12,8 @@ expect open class ViewGroup : View {
 
     open fun removeSubView(view:View)
 
+    open fun removeAllSubViews()
+
     open fun layoutSubviews()
 
 }

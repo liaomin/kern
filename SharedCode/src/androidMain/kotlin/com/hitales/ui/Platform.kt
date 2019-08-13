@@ -105,6 +105,8 @@ actual class Platform : ActivityDelegate{
     }
 
     override fun onDestory() {
+        rootView.removeAllSubViews()
+        rootActivity.setContentView(View(rootActivity))
     }
 
     private fun disableAPIDialog() {

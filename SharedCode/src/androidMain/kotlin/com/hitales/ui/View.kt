@@ -278,17 +278,16 @@ actual open class View {
         if (mBackground == null) {
             mBackground = Background()
             mWidget.setBackgroundDrawable(mBackground)
-            mBackground?.setColor(mBackgroundColor)
+            mBackground!!.setColor(mBackgroundColor)
         }
         return mBackground!!
     }
-
 
     fun getBackground(): Background? {
         return mBackground
     }
 
-    protected open fun onFrameChanged() {
+    open fun onFrameChanged() {
         var params = getLayoutParams()
         mWidget.layoutParams = params
     }
@@ -334,7 +333,7 @@ actual open class View {
         var bottom = top + height
         val background = mBackground
         if(background != null && background.haveShadow()){
-            val radius =background.shadowRadius
+            val radius = background.shadowRadius
             val dx= background.shadowDx
             val dy= background.shadowDy
             val l = (left + dx - radius).toInt()

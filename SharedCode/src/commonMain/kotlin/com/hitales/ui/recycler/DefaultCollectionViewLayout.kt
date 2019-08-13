@@ -1,5 +1,6 @@
 package com.hitales.ui.recycler
 
+import com.hitales.test.TestLineHeight
 import com.hitales.ui.Orientation
 import com.hitales.utils.Frame
 import com.hitales.utils.Size
@@ -13,7 +14,9 @@ abstract class LayoutHelper{
 
     abstract fun getLastPageLayoutInfo(collectionView: CollectionView,layout:DefaultCollectionViewLayout,adapter:CollectionViewAdapter, currentPage: CollectionViewLayout.PageLayoutInfo, lastPage: CollectionViewLayout.PageLayoutInfo)
 
-    abstract fun adjustRow(row: ArrayList<LayoutAttribute>, offsetX: Float, offsetY: Float, maxRowHeight: Float)
+    abstract fun adjustRow(row: ArrayList<LayoutAttribute>,layout: DefaultCollectionViewLayout,start: Float, end: Float, maxRowHeight: Float)
+
+    abstract fun calculateContextSize(lastAttribute: LayoutAttribute,rowCount:Int,rowHeight: Float,contextSize: Size)
 }
 
 open class DefaultCollectionViewLayout : CollectionViewLayout(){
@@ -47,11 +50,19 @@ open class DefaultCollectionViewLayout : CollectionViewLayout(){
     /**
      * 每一列的最小间隔
      */
-    var minimumInteritemSpacing = 10f
+    var minimumInterItemSpacing = 10f
 
+    /**
+     * 头尾是否添加间距
+     */
     var headerAndFooterAddLineSpace = false
 
-    val contextSize = Size()
+    /**
+     * 等间距分布一行数据
+     */
+    var adjustRow = true
+
+    private val contextSize = Size()
 
     private val verticalLayoutHelper = VerticalLayoutHelper()
 
@@ -60,24 +71,6 @@ open class DefaultCollectionViewLayout : CollectionViewLayout(){
     override fun onScroll(scrollX: Float, scrollY: Float) {
 
     }
-
-
-    open fun addMargin(row:ArrayList<LayoutAttribute>,width:Float,height:Float){
-        val size = row.size
-        if(size > 0){
-            val r = row.last().frame.getRight()
-            val e = width - r
-            val margin = e / (size + 1)
-            var offset = margin
-            for (i in 0 until size ){
-                val attr = row.get(i)
-                attr.frame.x += offset
-                offset += margin
-            }
-        }
-
-    }
-
 
     override fun getPageLayoutInfo(lastPage:PageLayoutInfo,currentPage: PageLayoutInfo,nextPage:PageLayoutInfo){
         collectionViewRef?.get()?.apply {
@@ -112,11 +105,11 @@ open class DefaultCollectionViewLayout : CollectionViewLayout(){
                 getVerticalLastPageLayoutInfo(collectionView,adapter,currentPage,lastPage)
             }
         }
-        if(currentPage.isEmpty()){
+        if(!lastPage.isEmpty() && currentPage.isEmpty()){
             getVerticalNextPageLayoutInfo(collectionView,adapter,lastPage,currentPage)
             currentPage.page = lastPage.page + 1
         }
-        if(nextPage.isEmpty()){
+        if(!currentPage.isEmpty() && nextPage.isEmpty()){
             getVerticalNextPageLayoutInfo(collectionView,adapter,currentPage,nextPage)
             nextPage.page = currentPage.page + 1
         }
@@ -153,5 +146,15 @@ open class DefaultCollectionViewLayout : CollectionViewLayout(){
     }
 
     override fun adjustHorizontalRow(row: ArrayList<LayoutAttribute>, offsetX: Float, offsetY: Float,maxRowWidth: Float) {
+    }
+
+    open fun calculateContextSize(lastAttribute: LayoutAttribute,rowCount:Int,rowHeight: Float){
+        collectionViewRef?.get()?.apply {
+            val orientation = this.orientation
+            when (orientation){
+                Orientation.VERTICAL -> verticalLayoutHelper.calculateContextSize(lastAttribute,rowCount, rowHeight, contextSize)
+                Orientation.HORIZONTAL -> horizontalLayoutHelper.calculateContextSize(lastAttribute,rowCount, rowHeight, contextSize)
+            }
+        }
     }
 }

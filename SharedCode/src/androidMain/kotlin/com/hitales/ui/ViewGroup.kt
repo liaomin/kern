@@ -97,6 +97,16 @@ actual open class ViewGroup : View {
         getWidget().removeView(view.getWidget())
     }
 
+    actual open fun removeAllSubViews(){
+        val widget = getWidget()
+        children.forEach {
+            it.onDetachedFromView(this)
+        }
+        widget.removeAllViews()
+        children.clear()
+    }
+
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 //        var focused = false

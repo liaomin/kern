@@ -36,6 +36,10 @@ inline fun Int.overlayColor(b:Int):Int{
 
 class Background : StateListDrawable {
 
+    companion object {
+        const val shadowScale = 1f
+    }
+
     constructor():super(){
 
     }
@@ -209,14 +213,7 @@ class Background : StateListDrawable {
             height = off.height
         }
         onDraw(canvas,width,height)
-        if(haveBorderRadius()){
-            canvas.save()
-            canvas.clipPath(getOuterPath(width,height))
-            super.draw(canvas)
-            canvas.restore()
-        }else{
-            super.draw(canvas)
-        }
+        super.draw(canvas)
         if(off != null){
             canvas.translate(off.x,off.y)
         }
@@ -271,7 +268,7 @@ class Background : StateListDrawable {
         mOuterPath.rewind()
         mOuterPath.addRoundRect(mTempRectF, floatArrayOf(borderTopLeftRadius,borderTopLeftRadius,borderTopRightRadius,borderTopRightRadius,borderBottomRightRadius,borderBottomRightRadius,borderBottomLeftRadius,borderBottomLeftRadius),Path.Direction.CW)
         val paint = this.mPaint
-        paint.setShadowLayer(shadowRadius / 1.5f,shadowDx,shadowDy,shadowColor)
+        paint.setShadowLayer(shadowRadius / shadowScale,shadowDx,shadowDy,shadowColor)
         paint.style = Paint.Style.FILL
         paint.color = backgroundColor
         canvas.drawPath(mOuterPath,mPaint)
@@ -293,6 +290,8 @@ class Background : StateListDrawable {
 //            mOuterPath.quadTo(0f,height,0f,height-borderBottomLeftRadius)
 //            mOuterPath.lineTo(0f,borderTopLeftRadius)
 //            mOuterPath.quadTo(0f,0f,borderTopLeftRadius,0f)
+
+            canvas.clipPath(mOuterPath)
 
             mPaint.isAntiAlias = true
             mPaint.style = Paint.Style.FILL
@@ -571,7 +570,7 @@ class Background : StateListDrawable {
     }
 
     fun setShadow(radius: Float, dx: Float, dy: Float, color: Int){
-        shadowRadius = radius * 1.5f
+        shadowRadius = radius * shadowScale
         shadowDx = dx
         shadowDy = dy
         shadowColor = color

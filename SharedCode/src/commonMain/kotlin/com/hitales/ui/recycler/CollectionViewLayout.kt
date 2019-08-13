@@ -19,8 +19,6 @@ abstract class CollectionViewLayout {
 
         var isLayout:Boolean = false
 
-        var isEnd = false
-
         open fun reset(){
             page = 0
             layoutRef.get()?.apply {
@@ -30,7 +28,6 @@ abstract class CollectionViewLayout {
             }
             attributes.clear()
             frame.reset()
-            isEnd = false
             isLayout = false
         }
 

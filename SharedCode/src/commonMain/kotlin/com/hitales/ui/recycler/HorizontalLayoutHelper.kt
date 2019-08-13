@@ -1,5 +1,7 @@
 package com.hitales.ui.recycler
 
+import com.hitales.utils.Size
+
 class HorizontalLayoutHelper : LayoutHelper() {
 
     override fun getNextPageLayoutInfo(collectionView: CollectionView,layout:DefaultCollectionViewLayout,adapter:CollectionViewAdapter, currentPage: CollectionViewLayout.PageLayoutInfo, nextPage: CollectionViewLayout.PageLayoutInfo){
@@ -10,8 +12,11 @@ class HorizontalLayoutHelper : LayoutHelper() {
 
     }
 
+    override fun calculateContextSize(lastAttribute: LayoutAttribute,rowCount:Int,rowHeight: Float,contextSize: Size){
 
-    override fun adjustRow(row: ArrayList<LayoutAttribute>, offsetX: Float, offsetY: Float, maxRowHeight: Float) {
+    }
+
+    override fun adjustRow(row: ArrayList<LayoutAttribute>,layout: DefaultCollectionViewLayout, start: Float, end: Float, maxRowHeight: Float) {
 
     }
 }

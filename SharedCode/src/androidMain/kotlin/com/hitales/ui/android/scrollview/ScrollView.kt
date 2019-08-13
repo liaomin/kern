@@ -36,7 +36,7 @@ open class ScrollView : RecyclerView {
 
     protected var frameLayout: FrameLayout? = null
 
-    open class ViewHolder(val view: View,val v:com.hitales.ui.View? = null) : RecyclerView.ViewHolder(view) {
+    open class ViewHolder(val view: View,val v:com.hitales.ui.recycler.CollectionViewCell? = null) : RecyclerView.ViewHolder(view) {
 
     }
 

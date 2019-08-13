@@ -1,6 +1,6 @@
 package com.hitales.ui.recycler
 
-import com.hitales.utils.max
+import com.hitales.utils.Size
 import com.hitales.utils.min
 
 class VerticalLayoutHelper : LayoutHelper() {
@@ -10,7 +10,7 @@ class VerticalLayoutHelper : LayoutHelper() {
         val tempSize = layout.tempSize
         val headerAndFooterAddLineSpace = layout.headerAndFooterAddLineSpace
         val maxColumns = layout.maxColumns
-        val minimumInteritemSpacing = layout.minimumInteritemSpacing
+        val minimumInteritemSpacing = layout.minimumInterItemSpacing
 
         val rows = layout.rows
         val padding = collectionView.padding
@@ -30,7 +30,7 @@ class VerticalLayoutHelper : LayoutHelper() {
         var offsetX = paddingLeft
         var offsetY = paddingTop
         var frameEndY =  viewFrame.height
-        var endX = viewFrame.width - paddingRight + 1
+        var endX = viewFrame.width - paddingRight + 0.5f
         var rowHeight = 0f
         var kind = ElementKindNone
         var sectionIndex = 0
@@ -126,7 +126,7 @@ class VerticalLayoutHelper : LayoutHelper() {
                 if(offsetX + width > endX || (maxColumns > 0 && rows.size >= maxColumns)){
                     //换行
                     if(!rows.isEmpty()){
-                        adjustRow(rows,paddingLeft,offsetY,rowHeight)
+                        adjustRow(rows,layout,paddingLeft,endX,rowHeight)
                     }
                     attributes.addAll(rows)
                     rows.clear()
@@ -152,7 +152,7 @@ class VerticalLayoutHelper : LayoutHelper() {
             }
 
             if(!rows.isEmpty()){
-                adjustRow(rows,paddingLeft,offsetY,rowHeight)
+                adjustRow(rows,layout,paddingLeft,endX,rowHeight)
                 attributes.addAll(rows)
                 rows.clear()
                 offsetY += rowHeight + minimumLineSpacing
@@ -184,8 +184,7 @@ class VerticalLayoutHelper : LayoutHelper() {
                 return
             }else if(sectionIndex == sectionCount -1){
                 offsetY += paddingBottom
-                frame.height = offsetY - frame.y
-                nextPage.isEnd = true
+                frame.height = offsetY - frame.y + paddingBottom
             }
             rowIndex = 0
             haveHeader = false
@@ -199,12 +198,38 @@ class VerticalLayoutHelper : LayoutHelper() {
         }
     }
 
+    override fun calculateContextSize(lastAttribute: LayoutAttribute,rowCount:Int,rowHeight: Float,contextSize: Size){
+        val section = lastAttribute.section
+        val row = lastAttribute.row
 
-    override fun adjustRow(row: ArrayList<LayoutAttribute>, offsetX: Float, offsetY: Float, maxRowHeight: Float) {
+    }
+
+    override fun adjustRow(row: ArrayList<LayoutAttribute>,layout: DefaultCollectionViewLayout, start: Float, end: Float, maxRowHeight: Float) {
+        val size = row.size
+        var space = end - start
         row.forEach {
-            val frameHeight = it.frame.height
+            val frame = it.frame
+            val frameHeight = frame.height
             if(frameHeight < maxRowHeight){
-                it.frame.y += ( maxRowHeight - frameHeight) / 2f
+                frame.y += ( maxRowHeight - frameHeight) / 2f
+            }
+            space -= frame.width
+        }
+        if(layout.adjustRow && size > 0 && space > 0f){
+            val last = row.last()
+            val r = last.frame.getRight()
+            if(r < end){
+                if(size == 1){
+                    last.frame.x = start + space / 2f
+                }else{
+                    val itemSpace = space / (size-1)
+                    var offset = start
+                    for (i in 0 until size){
+                        val f = row[i].frame
+                        f.x = offset
+                        offset += f.width + itemSpace
+                    }
+                }
             }
         }
     }

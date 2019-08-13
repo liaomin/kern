@@ -47,15 +47,6 @@ class ViewHelper {
     }
 
     fun dispatchTouchEvent(ev:MotionEvent):Boolean{
-        val padding = mView.innerPadding
-        if(padding != null && ev.action == MotionEvent.ACTION_DOWN){
-            val x = ev.x
-            val y = ev.y
-            val widget = mView.getWidget()
-            if( x < -padding.left || x > widget.right - padding.right || y < -padding.top || y > widget.bottom - padding.bottom){
-                return false
-            }
-        }
         val touches = Touches(ev)
         return mView.dispatchTouchEvent(touches)
     }
@@ -67,7 +58,9 @@ class ViewHelper {
             val x = ev.x
             val y = ev.y
             val widget = mView.getWidget()
-            if( x < -padding.left || x > widget.right - padding.right || y < -padding.top || y > widget.bottom - padding.bottom){
+            val width = widget.width
+            val height = widget.height
+            if( x < -padding.left || x > width - padding.right  || y < -padding.top || y > height - padding.bottom ){
                 return true
             }
         }

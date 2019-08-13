@@ -18,18 +18,18 @@ abstract class CollectionViewAdapter {
         return false
     }
 
-    open fun createHeaderView(collectionView:CollectionView):View?{
+    open fun createHeaderView(collectionView:CollectionView):CollectionViewCell?{
         return null
     }
 
-    open fun onBindHeaderView(collectionView:CollectionView,section:Int,view:View){
+    open fun onBindHeaderView(collectionView:CollectionView,section:Int,view:CollectionViewCell){
     }
 
-    open fun createFooterView(collectionView:CollectionView):View?{
+    open fun createFooterView(collectionView:CollectionView):CollectionViewCell?{
         return null
     }
 
-    open fun onBindFooterView(collectionView:CollectionView,section:Int,view:View){
+    open fun onBindFooterView(collectionView:CollectionView,section:Int,view:CollectionViewCell){
     }
 
     open fun getSectionHeaderViewSize(collectionView:CollectionView,section:Int,size: Size) {
@@ -46,9 +46,9 @@ abstract class CollectionViewAdapter {
 
     abstract fun getNumberOfItem(collectionView:CollectionView,section:Int):Int
 
-    abstract fun createItemView(collectionView:CollectionView,type:Int):View
+    abstract fun createItemView(collectionView:CollectionView,type:Int):CollectionViewCell
 
-    abstract fun onBindItemView(collectionView:CollectionView,section:Int,row:Int,type:Int,view: View)
+    abstract fun onBindItemView(collectionView:CollectionView,section:Int,row:Int,type:Int,view: CollectionViewCell)
 
     abstract fun getItemViewSize(collectionView:CollectionView,section:Int,row:Int,type:Int,size: Size)
 
