@@ -31,14 +31,6 @@ abstract class LayoutHelper{
 
 open class DefaultCollectionViewLayout : CollectionViewLayout(){
 
-    companion object {
-        val HEADER_TYPE = -0xFFFFF0
-        val FOOTER_TYPE = -0xFFFFF1
-        val HEADER_INDEX = -1
-        val FOOTER_INDEX = -2
-    }
-
-
     val tempSize = Size()
 
     val rows = ArrayList<LayoutAttribute>()
