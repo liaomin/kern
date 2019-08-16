@@ -40,24 +40,11 @@ open class AndroidScrollView : com.hitales.ui.android.scrollview.ScrollView {
         }
     }
 
-    var contentSize: Size = Size()
-        set(value) {
-            field = value
-//            mFrameLayout.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
-        }
-
-
-    init {
-//        mFrameLayout.setBackgroundColor(Colors.CLEAR)
-//        super.addView(mFrameLayout, -1, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
-//        mFrameLayout.isFocusable = true
-//        mFrameLayout.isFocusableInTouchMode = true
-    }
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt)
-        val scrollX = PixelUtil.toDIPFromPixel(l.toFloat())
-        val scrollY = PixelUtil.toDIPFromPixel(t.toFloat())
+        val scrollX = PixelUtil.toDIPFromPixel(getScrolledX().toFloat())
+        val scrollY = PixelUtil.toDIPFromPixel(getScrolledY().toFloat())
         mView?.onScroll(scrollX,scrollY)
     }
 
@@ -98,5 +85,4 @@ open class AndroidScrollView : com.hitales.ui.android.scrollview.ScrollView {
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         return mViewHelper!!.dispatchTouchEvent(event) || super.dispatchTouchEvent(event)
     }
-
 }

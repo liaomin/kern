@@ -100,7 +100,6 @@ open class Controller {
         }else{
             val last = stack.last() as Controller
             last.onResume()
-            onControllerChangedListener?.invoke(this,null,last)
         }
     }
 }

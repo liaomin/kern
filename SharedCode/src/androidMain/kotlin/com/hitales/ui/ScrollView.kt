@@ -9,23 +9,26 @@ import com.hitales.utils.Size
 
 actual open class ScrollView : com.hitales.ui.ViewGroup {
 
-    actual open var contentSize: Size
-        get() = getWidget().contentSize
+    /**
+     * default VERTICAL
+     */
+    actual open var orientation: Orientation
+        get() { return  getWidget().orientation }
         set(value) {
-            getWidget().contentSize = value
+            getWidget().orientation = value
+            onOrientationChanged()
         }
-
 
     actual constructor(frame: Frame) : super(frame)
 
     actual var scrollX: Float
-        get() = PixelUtil.toDIPFromPixel(getWidget().scrollX.toFloat())
+        get() = PixelUtil.toDIPFromPixel(getWidget().getScrolledX().toFloat())
         set(value) {
             getWidget().scrollX = PixelUtil.toPixelFromDIP(value).toInt()
         }
 
     actual var scrollY: Float
-        get() = PixelUtil.toDIPFromPixel(getWidget().scrollY.toFloat())
+        get() = PixelUtil.toDIPFromPixel(getWidget().getScrolledY().toFloat())
         set(value) {
             getWidget().scrollY = PixelUtil.toPixelFromDIP(value).toInt()
         }
@@ -36,9 +39,6 @@ actual open class ScrollView : com.hitales.ui.ViewGroup {
 
     override fun getWidget(): AndroidScrollView {
         return super.getWidget() as AndroidScrollView
-    }
-
-    actual open fun layoutSubViews() {
     }
 
     /**
@@ -68,5 +68,10 @@ actual open class ScrollView : com.hitales.ui.ViewGroup {
 
     actual open fun onScroll(offsetX: Float, offsetY: Float) {
     }
+
+    protected open fun onOrientationChanged(){
+
+    }
+
 
 }

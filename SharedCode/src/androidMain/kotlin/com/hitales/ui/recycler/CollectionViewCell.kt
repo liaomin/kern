@@ -7,6 +7,8 @@ actual open class CollectionViewCell{
 
     actual val contentView: ViewGroup
 
+    var tag:Any? = null
+
     actual constructor(){
         contentView = ViewGroup()
     }

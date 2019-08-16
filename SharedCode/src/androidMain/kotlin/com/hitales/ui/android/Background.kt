@@ -37,7 +37,7 @@ inline fun Int.overlayColor(b:Int):Int{
 class Background : StateListDrawable {
 
     companion object {
-        const val shadowScale = 1f
+        const val shadowScale = 2f
     }
 
     constructor():super(){

@@ -1,10 +1,7 @@
 package com.hitales.ui.recycler
 
 import com.hitales.ui.Orientation
-import com.hitales.utils.Frame
-import com.hitales.utils.LinkedList
-import com.hitales.utils.Size
-import com.hitales.utils.WeakReference
+import com.hitales.utils.*
 
 
 abstract class CollectionViewLayout {
@@ -37,26 +34,29 @@ abstract class CollectionViewLayout {
 
     }
 
+    val maxAttributesPoolSize = 1000
+
     var collectionViewRef: WeakReference<CollectionView>?= null
 
     protected val attributesPool = LinkedList<LayoutAttribute>()
 
     abstract fun prepareLayout()
 
-    abstract fun getPageLayoutInfo(lastPage:PageLayoutInfo,currentPage: PageLayoutInfo,nextPage:PageLayoutInfo)
+    abstract fun getLayoutAttributesInFrame(frame: Frame):ArrayList<LayoutAttribute>
 
     abstract fun getContentSize(size: Size)
 
     abstract fun onScroll(scrollX:Float,scrollY:Float)
 
-    abstract fun adjustVerticalRow(row: ArrayList<LayoutAttribute>,offsetX:Float,offsetY:Float,maxRowHeight:Float)
-
-    abstract fun adjustHorizontalRow(row: ArrayList<LayoutAttribute>,offsetX:Float,offsetY:Float,maxRowWidth:Float)
-
+    open fun clear(){
+        attributesPool.clear()
+    }
 
     open fun cacheAttribute(attribute: LayoutAttribute){
-        attribute.reset()
-        attributesPool.append(attribute)
+        if(attributesPool.count() < maxAttributesPoolSize){
+            attribute.reset()
+            attributesPool.append(attribute)
+        }
     }
 
     open fun getCacheAttribute():LayoutAttribute{

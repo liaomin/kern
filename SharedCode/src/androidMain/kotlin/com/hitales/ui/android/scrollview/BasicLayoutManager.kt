@@ -4,6 +4,7 @@ import android.animation.ValueAnimator
 import android.view.ViewGroup
 import androidx.core.view.animation.PathInterpolatorCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.hitales.ui.Orientation
 import com.hitales.ui.android.ViewStyle
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Size
@@ -69,12 +70,12 @@ open class BasicLayoutManager  : RecyclerView.LayoutManager {
             }
         }
 
-    val recyclerView: RecyclerView
+    val scrollView : ScrollView
 
     private var damping:IOSDamping?= null
 
-    constructor(recyclerView: RecyclerView):super(){
-        this.recyclerView = recyclerView
+    constructor(recyclerView: ScrollView):super(){
+        this.scrollView = recyclerView
     }
 
     var contextSize = Size()
@@ -136,11 +137,11 @@ open class BasicLayoutManager  : RecyclerView.LayoutManager {
     }
 
     override fun canScrollVertically(): Boolean {
-        return contextSize.height > height
+        return scrollView.orientation == Orientation.VERTICAL &&  contextSize.height > height
     }
 
     override fun canScrollHorizontally(): Boolean {
-        return contextSize.width > width
+        return scrollView.orientation == Orientation.HORIZONTAL && contextSize.width > width
     }
 
     open fun onScrollChange(recycler: RecyclerView.Recycler,dx:Int,dy:Int){

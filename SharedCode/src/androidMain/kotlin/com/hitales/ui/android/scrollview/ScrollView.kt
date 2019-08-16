@@ -10,11 +10,14 @@ import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.hitales.android.R
 import com.hitales.ui.Colors
+import com.hitales.ui.Orientation
 import com.hitales.ui.Platform
 import com.hitales.ui.android.ViewStyle
 
 
 open class ScrollView : RecyclerView {
+
+    open var orientation: com.hitales.ui.Orientation = com.hitales.ui.Orientation.VERTICAL
 
     var style = ViewStyle.ANDROID
         set(value) {
@@ -107,6 +110,22 @@ open class ScrollView : RecyclerView {
             override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             }
         }
+    }
+
+    fun getScrolledX():Int{
+        val layout = layoutManager
+        if(layout != null && layout is BasicLayoutManager){
+            return layout.scrollX
+        }
+        return scrollX
+    }
+
+    fun getScrolledY():Int{
+        val layout = layoutManager
+        if(layout != null && layout is BasicLayoutManager){
+            return layout.scrollY
+        }
+        return scrollY
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {

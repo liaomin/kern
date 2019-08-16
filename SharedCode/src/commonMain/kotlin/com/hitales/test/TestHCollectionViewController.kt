@@ -5,7 +5,7 @@ import com.hitales.ui.recycler.*
 import com.hitales.utils.*
 
 
-open class TestCollectionViewController : Controller() {
+open class TestHCollectionViewController : Controller() {
 
     class Cell : CollectionViewCell(){
 
@@ -24,6 +24,7 @@ open class TestCollectionViewController : Controller() {
 
     override fun onCreate() {
         val collectionView = CollectionView( Frame(0f,0f,Platform.windowWidth,Platform.windowHeight - 40))
+        collectionView.orientation = Orientation.HORIZONTAL
 //        collectionView.setBackgroundColor(Colors.RED)
 
         val itemWidth = (Platform.windowWidth - 80) / 4
@@ -83,11 +84,6 @@ open class TestCollectionViewController : Controller() {
             override fun onBindItemView(collectionView: CollectionView, section: Int, row: Int,type:Int, view: CollectionViewCell) {
 
                 (view as Cell).button.text = "$section - $row"
-                view.button.setOnPressListener {
-                    if(section == 0 && row == 10){
-                        this@TestCollectionViewController.push(TestHCollectionViewController())
-                    }
-                }
 //                view.setShadow(Colors.BLUE,4f,0f,0f)
 //                if(section == 0 && row == 0){
 //                    view.setShadow(Colors.BLUE,4f,0f,0f)
@@ -113,6 +109,7 @@ open class TestCollectionViewController : Controller() {
         collectionView.padding = EdgeInsets(20f,20f,20f,20f)
         (collectionView.layout as DefaultCollectionViewLayout).minimumInterItemSpacing = 40f
         (collectionView.layout as DefaultCollectionViewLayout).minimumLineSpacing = 40f
+//        collectionView.layout.adjustRow = true
 //        (collectionView.layout as DefaultCollectionViewLayout).headerAndFooterAddLineSpace = true
 //        collectionView.layout.maxColumns = 1
         collectionView.adapter = adapter

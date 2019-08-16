@@ -6,6 +6,11 @@ import com.hitales.utils.Size
 expect open class ScrollView : ViewGroup {
 
     /**
+     * default VERTICAL
+     */
+    open var orientation:Orientation
+
+    /**
      * default true
      */
     open var showScrollBar:Boolean
@@ -15,24 +20,13 @@ expect open class ScrollView : ViewGroup {
      */
     open var scrollEnabled:Boolean
 
-    open var contentSize:Size
-
     var scrollX:Float
 
     var scrollY:Float
 
     constructor(frame: Frame = Frame.zero())
 
-    open fun layoutSubViews()
-
     open fun onScroll(offsetX:Float,offsetY:Float)
-
-}
-
-
-expect open class HorizontalScrollView : ScrollView {
-
-    constructor(frame: Frame = Frame.zero())
 
 }
 

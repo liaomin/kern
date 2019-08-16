@@ -10,6 +10,12 @@ class Stack<T>(list : MutableList<T>? = null) : Iterator<T> {
 
     fun count(): Int = this.items.count()
 
+    fun size(): Int = this.items.count()
+
+    operator fun get(i:Int):T{
+       return items[i]
+    }
+
     override fun toString(): String {
         return this.items.toString()
     }
@@ -56,6 +62,10 @@ class Stack<T>(list : MutableList<T>? = null) : Iterator<T> {
         }else{
             throw NoSuchElementException("No such element") // 异常不用new哦
         }
+    }
+
+    open fun clear(){
+        items.clear()
     }
 }
 
@@ -154,6 +164,17 @@ class LinkedList<T> : Iterator<T>{
         return iterNode != null
     }
 
+    open fun clear(){
+        var temp = head
+        while (temp != null){
+            temp.previous = null
+            val t = temp.next
+            temp.next = null
+            temp = t
+        }
+        head = null
+        tail = null
+    }
 
     override fun next(): T = iterNode!!.value
 

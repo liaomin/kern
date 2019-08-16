@@ -2,21 +2,31 @@ package com.hitales.ui.recycler
 
 import com.hitales.test.TestLineHeight
 import com.hitales.ui.Orientation
-import com.hitales.utils.Frame
-import com.hitales.utils.Size
-import com.hitales.utils.min
+import com.hitales.utils.*
 
 abstract class LayoutHelper{
 
-    val contextSize = Size()
+    var rowHeight:Float = 0f
 
-    abstract fun getNextPageLayoutInfo(collectionView: CollectionView,layout:DefaultCollectionViewLayout,adapter:CollectionViewAdapter, currentPage: CollectionViewLayout.PageLayoutInfo, nextPage: CollectionViewLayout.PageLayoutInfo)
+    var rowColumns = 1
 
-    abstract fun getLastPageLayoutInfo(collectionView: CollectionView,layout:DefaultCollectionViewLayout,adapter:CollectionViewAdapter, currentPage: CollectionViewLayout.PageLayoutInfo, lastPage: CollectionViewLayout.PageLayoutInfo)
+    var headerHeight = 0f
+
+    var footerHeight = 0f
+
+    abstract fun getNextPageLayoutInfo(collectionView: CollectionView,layout:DefaultCollectionViewLayout,adapter:CollectionViewAdapter, currentPage: CollectionViewLayout.PageLayoutInfo?, nextPage: CollectionViewLayout.PageLayoutInfo)
 
     abstract fun adjustRow(row: ArrayList<LayoutAttribute>,layout: DefaultCollectionViewLayout,start: Float, end: Float, maxRowHeight: Float)
 
-    abstract fun calculateContextSize(lastAttribute: LayoutAttribute,rowCount:Int,rowHeight: Float,contextSize: Size)
+    abstract fun calculateContextSize(collectionView: CollectionView,layout: DefaultCollectionViewLayout,adapter:CollectionViewAdapter, page: CollectionViewLayout.PageLayoutInfo,contextSize: Size)
+
+    open fun reset(){
+        rowHeight = 0f
+        rowColumns = 1
+        headerHeight = 0f
+        footerHeight = 0f
+
+    }
 }
 
 open class DefaultCollectionViewLayout : CollectionViewLayout(){
@@ -26,10 +36,6 @@ open class DefaultCollectionViewLayout : CollectionViewLayout(){
         val FOOTER_TYPE = -0xFFFFF1
         val HEADER_INDEX = -1
         val FOOTER_INDEX = -2
-    }
-
-    override fun prepareLayout() {
-
     }
 
 
@@ -60,7 +66,12 @@ open class DefaultCollectionViewLayout : CollectionViewLayout(){
     /**
      * 等间距分布一行数据
      */
-    var adjustRow = true
+    var adjustRow = false
+
+    /**
+     * 初始化预加载几页数据
+     */
+    var initPageSize = 5
 
     private val contextSize = Size()
 
@@ -68,93 +79,118 @@ open class DefaultCollectionViewLayout : CollectionViewLayout(){
 
     private val horizontalLayoutHelper = HorizontalLayoutHelper()
 
+    protected val pages = ArrayList<PageLayoutInfo>()
+
+    private val weakSelf = WeakReference<CollectionViewLayout>(this)
+
+    override fun clear() {
+        attributesPool.clear()
+        pages.clear()
+    }
+
+    override fun prepareLayout() {
+        verticalLayoutHelper.reset()
+        horizontalLayoutHelper.reset()
+        pages.forEach {
+            it.attributes.forEach { cacheAttribute(it) }
+        }
+        pages.clear()
+        getNextPage()
+    }
+
     override fun onScroll(scrollX: Float, scrollY: Float) {
+        collectionViewRef?.get()?.apply {
+            if(!pages.isEmpty()){
+                val last = pages.last()
+                val orientation = orientation
+                when (orientation){
+                    Orientation.VERTICAL -> {
+                        val offsetY = scrollY + frame.height
+                        val bottom = last.frame.getBottom()
+                        if(offsetY >= bottom - 20){
+                            getNextPage()
+                        }
+                    }
+                    Orientation.HORIZONTAL ->{
+                        val offsetX = scrollX + frame.width
+                        val right = last.frame.getRight()
+                        if(offsetX >= right - 20){
+                            getNextPage()
+                        }
+                    }
+                }
+
+
+            }
+        }
 
     }
 
-    override fun getPageLayoutInfo(lastPage:PageLayoutInfo,currentPage: PageLayoutInfo,nextPage:PageLayoutInfo){
+    open fun getNextPage(){
         collectionViewRef?.get()?.apply {
-            val orientation = this.orientation
-            when (orientation){
-                Orientation.VERTICAL -> getVerticalPageLayoutInfo(this,lastPage,currentPage,nextPage)
-                Orientation.HORIZONTAL -> getHorizontalPageLayoutInfo(this,lastPage,currentPage,nextPage)
+            var currentPage:PageLayoutInfo? = null
+            var page = 0
+            if(!pages.isEmpty()){
+                currentPage = pages.last()
+                if(currentPage.isEmpty()){
+                    return
+                }
+                page = currentPage.page
+            }
+            while (true){
+                val nextPage = PageLayoutInfo(weakSelf)
+                nextPage.page = page
+                getNextPageLayoutInfo(this,currentPage,nextPage)
+                if(nextPage.isEmpty()){
+                    break
+                }
+                page++
+                pages.add(nextPage)
+                currentPage = nextPage
+                if(nextPage.frame.contains(scrollX+frame.width,scrollY+frame.height)){
+                    break
+                }
+            }
+            if(!pages.isEmpty()){
+                val lastPage = pages.last()
+                val orientation = orientation
+                when (orientation){
+                    Orientation.VERTICAL -> verticalLayoutHelper.calculateContextSize(this,this@DefaultCollectionViewLayout,adapter!!,lastPage,contextSize)
+                    Orientation.HORIZONTAL -> horizontalLayoutHelper.calculateContextSize(this,this@DefaultCollectionViewLayout,adapter!!,lastPage,contextSize)
+                }
             }
         }
     }
 
-    open fun getVerticalPageLayoutInfo(collectionView: CollectionView,lastPage:PageLayoutInfo,currentPage: PageLayoutInfo,nextPage:PageLayoutInfo){
+    fun getNextPageLayoutInfo(collectionView: CollectionView,current:PageLayoutInfo?,next:PageLayoutInfo){
         val adapter = collectionView.adapter
         if(adapter == null) {
             return
         }
-        val scrollY = collectionView.scrollY
-        var page = 0
-        if(lastPage.isEmpty()){
-            if(currentPage.isEmpty()){
-                //初始化
-                getVerticalNextPageLayoutInfo(collectionView,adapter,lastPage,currentPage)
-                currentPage.page = page
-                page ++
-                while(currentPage.frame.getBottom() < scrollY ){
-                    getVerticalNextPageLayoutInfo(collectionView,adapter,currentPage,currentPage)
-                    currentPage.page = page
-                    page ++
-                }
-                getVerticalLastPageLayoutInfo(collectionView,adapter,currentPage,lastPage)
-            }else{
-                getVerticalLastPageLayoutInfo(collectionView,adapter,currentPage,lastPage)
+        val orientation = collectionView.orientation
+        when (orientation){
+            Orientation.VERTICAL -> verticalLayoutHelper.getNextPageLayoutInfo(collectionView,this,adapter,current, next)
+            Orientation.HORIZONTAL -> horizontalLayoutHelper.getNextPageLayoutInfo(collectionView,this,adapter,current, next)
+        }
+    }
+
+    override fun getLayoutAttributesInFrame(frame: Frame): ArrayList<LayoutAttribute> {
+        val attributes = ArrayList<LayoutAttribute>()
+        var intersect = false
+        for (i in 0 until pages.size){
+            val page = pages[i]
+            if(frame.intersect(page.frame)){
+                intersect = true
+                attributes.addAll(page.attributes.filter { frame.intersect(it.frame) })
+            }else if(intersect){
+                break
             }
         }
-        if(!lastPage.isEmpty() && currentPage.isEmpty()){
-            getVerticalNextPageLayoutInfo(collectionView,adapter,lastPage,currentPage)
-            currentPage.page = lastPage.page + 1
-        }
-        if(!currentPage.isEmpty() && nextPage.isEmpty()){
-            getVerticalNextPageLayoutInfo(collectionView,adapter,currentPage,nextPage)
-            nextPage.page = currentPage.page + 1
-        }
+        return attributes
     }
-
-    open fun getVerticalNextPageLayoutInfo(collectionView: CollectionView,adapter:CollectionViewAdapter,currentPage: PageLayoutInfo,nextPage: PageLayoutInfo){
-        verticalLayoutHelper.getNextPageLayoutInfo(collectionView,this,adapter,currentPage, nextPage)
-    }
-
-    open fun getVerticalLastPageLayoutInfo(collectionView: CollectionView,adapter:CollectionViewAdapter,currentPage: PageLayoutInfo,lastPage: PageLayoutInfo){
-        verticalLayoutHelper.getLastPageLayoutInfo(collectionView,this,adapter,currentPage, lastPage)
-    }
-
-    open fun getHorizontalPageLayoutInfo(collectionView: CollectionView,lastPage:PageLayoutInfo,currentPage: PageLayoutInfo,nextPage:PageLayoutInfo){
-
-    }
-
-    open fun getHorizontalNextPageLayoutInfo(collectionView: CollectionView,adapter:CollectionViewAdapter,currentPage: PageLayoutInfo,nextPage: PageLayoutInfo){
-        horizontalLayoutHelper.getNextPageLayoutInfo(collectionView,this,adapter,currentPage, nextPage)
-    }
-
-    open fun getHorizontalLastPageLayoutInfo(collectionView: CollectionView,adapter:CollectionViewAdapter,currentPage: PageLayoutInfo,lastPage: PageLayoutInfo){
-        horizontalLayoutHelper.getLastPageLayoutInfo(collectionView,this,adapter,currentPage, lastPage)
-    }
-
 
     override fun getContentSize(size: Size) {
         size.set(contextSize)
     }
 
-
-    override fun adjustVerticalRow(row: ArrayList<LayoutAttribute>, offsetX: Float, offsetY: Float, maxRowHeight: Float) {
-
-    }
-
-    override fun adjustHorizontalRow(row: ArrayList<LayoutAttribute>, offsetX: Float, offsetY: Float,maxRowWidth: Float) {
-    }
-
-    open fun calculateContextSize(lastAttribute: LayoutAttribute,rowCount:Int,rowHeight: Float){
-        collectionViewRef?.get()?.apply {
-            val orientation = this.orientation
-            when (orientation){
-                Orientation.VERTICAL -> verticalLayoutHelper.calculateContextSize(lastAttribute,rowCount, rowHeight, contextSize)
-                Orientation.HORIZONTAL -> horizontalLayoutHelper.calculateContextSize(lastAttribute,rowCount, rowHeight, contextSize)
-            }
-        }
-    }
 }

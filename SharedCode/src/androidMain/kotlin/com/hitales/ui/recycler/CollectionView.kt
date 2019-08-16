@@ -1,7 +1,5 @@
 package com.hitales.ui.recycler
 
-import android.graphics.Rect
-import android.graphics.pdf.PdfDocument
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +7,7 @@ import com.hitales.ui.Orientation
 import com.hitales.ui.ScrollView
 import com.hitales.ui.android.AndroidRecyclerView
 import com.hitales.ui.android.scrollview.RecyclerViewLayoutManager
+import com.hitales.ui.android.scrollview.addDifferent
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame
 import com.hitales.utils.WeakReference
@@ -44,11 +43,10 @@ actual open class CollectionView : ScrollView {
 
     actual val layout: CollectionViewLayout
 
-    actual var orientation: Orientation = Orientation.VERTICAL
-        set(value) {
-            field = value
-            reloadData()
-        }
+
+    override fun onOrientationChanged() {
+        reloadData()
+    }
 
     actual fun reloadData() {
         getWidget().onDataSetChanged()
@@ -64,102 +62,42 @@ actual open class CollectionView : ScrollView {
 
     open fun getAndroidLayoutManager():RecyclerViewLayoutManager{
 
-        val weakRef = WeakReference(layout)
-
         return object : RecyclerViewLayoutManager(getWidget()){
-
-            var lastPageLayoutInfo = CollectionViewLayout.PageLayoutInfo(weakRef)
-
-            var currentPageLayoutInfo = CollectionViewLayout.PageLayoutInfo(weakRef)
-
-            var nextPageLayoutInfo = CollectionViewLayout.PageLayoutInfo(weakRef)
-
-            override fun getAttributesForPosition(position:Int): LayoutAttribute {
-                val l = getCachedLayoutAttributes()
-                val info = adapterHelper!!.getInfo(position)
-                l.section = info.section
-                l.row = info.row
-
-                return l
-            }
-
-            open fun calculateShowFrame(){
-                val scale = PixelUtil.getScale()
-                if(orientation == Orientation.VERTICAL){
-                    val startY = lastPageLayoutInfo.frame.y
-                    showFrame.set(0f,startY,currentPageLayoutInfo.frame.width,nextPageLayoutInfo.frame.getBottom() - startY)
-                    showFrame.scale(scale)
-                }
-            }
 
             override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
                 detachAndScrapAttachedViews(recycler)
-                visibleFrame.set(scrollX.toFloat(),scrollY.toFloat(),width.toFloat(),height.toFloat())
-                showFrame.reset()
-                resetPage(recycler,lastPageLayoutInfo)
-                resetPage(recycler,currentPageLayoutInfo)
-                resetPage(recycler,nextPageLayoutInfo)
-                contextSize.reset()
+                showAttributes.forEach {
+                    it.view = null
+                }
+                showAttributes.clear()
                 layout.prepareLayout()
-                layout(recycler)
+                update(recycler)
             }
 
-            open fun layout(recycler: RecyclerView.Recycler){
-                layout.getPageLayoutInfo(lastPageLayoutInfo,currentPageLayoutInfo,nextPageLayoutInfo)
-                layoutPages(recycler)
-            }
-
-            open fun calculate(recycler: RecyclerView.Recycler,dx:Float,dy:Float){
-                var cFrame = nextPageLayoutInfo.frame
-                if(!cFrame.valid()){
-                    val scale = PixelUtil.getScale()
-                    if(orientation == Orientation.VERTICAL){
-                        val startY = cFrame.y*scale
-                        val endY = (cFrame.getBottom() - cFrame.height/2) *scale
-                        val bottom = visibleFrame.getBottom()
-                        if(bottom + dy > endY && !nextPageLayoutInfo.isEmpty()){
-                            val temp = lastPageLayoutInfo
-                            resetPage(recycler,lastPageLayoutInfo)
-                            lastPageLayoutInfo = currentPageLayoutInfo
-                            currentPageLayoutInfo = nextPageLayoutInfo
-                            nextPageLayoutInfo = temp
-                            layout(recycler)
-                        }
+            fun update(recycler: RecyclerView.Recycler){
+                showFrame.set(this@CollectionView.scrollX,this@CollectionView.scrollY,frame.width,frame.height)
+                val attributes = layout.getLayoutAttributesInFrame(showFrame)
+                showAttributes.addDifferent(attributes)
+                showAttributes.removeAll(showAttributes.filter {
+                    val test = showFrame.intersect(it.frame)
+                    if( !test && it.view != null){
+                        removeAndRecycleView(it.view as View,recycler)
+                        it.view = null
                     }
-                }
-            }
+                    !test
+                })
 
-            open fun resetPage(recycler: RecyclerView.Recycler,page:CollectionViewLayout.PageLayoutInfo){
-                page.attributes.forEach {
-                    removeAndRecycleView(it.view as View,recycler)
-                }
-                page.reset()
-            }
-
-            open fun layoutPages(recycler: RecyclerView.Recycler){
-                layoutPage(recycler,lastPageLayoutInfo)
-                layoutPage(recycler,currentPageLayoutInfo)
-                layoutPage(recycler,nextPageLayoutInfo)
-                val scale = PixelUtil.getScale()
-                layout.getContentSize(contextSize)
-                contextSize.set(nextPageLayoutInfo.frame.getRight(),nextPageLayoutInfo.frame.getBottom())
-                contextSize.scale(scale)
-                calculateShowFrame()
-            }
-
-            open fun layoutPage(recycler: RecyclerView.Recycler,pageInfo: CollectionViewLayout.PageLayoutInfo){
-//                val scale = PixelUtil.getScale()
-                if(!pageInfo.isLayout){
-                    pageInfo.attributes.forEach {
-                        val frame = it.frame
-//                        frame.scale(scale)
+                showAttributes.forEach {
+                    val frame = it.frame
+                    if(it.view == null){
                         val scrap = recycler.getViewForPosition(it.position)
-                        val v = scrap.tag as CollectionViewCell
-                        v.contentView.frame.set(frame)
-                        v.contentView.onFrameChanged()
-                        v.applyAttribute(it)
+                        val cell = scrap.tag as CollectionViewCell
+                        cell.contentView.frame.set(frame)
+                        cell.contentView.onFrameChanged()
+                        cell.tag = scrap
+                        cell.applyAttribute(it)
 
-                        var lp = v.contentView.getWidget().layoutParams as ViewGroup.MarginLayoutParams
+                        var lp = cell.contentView.getWidget().layoutParams as ViewGroup.MarginLayoutParams
                         it.view = scrap
 
                         addView(scrap)
@@ -180,25 +118,15 @@ actual open class CollectionView : ScrollView {
                         layoutDecorated(scrap, l , t , l+itemWidth, t+itemHeight)
                     }
                 }
-                pageInfo.isLayout = true
+                layout.getContentSize(contextSize)
+                contextSize.scale(PixelUtil.getScale())
             }
-
-            override fun cachedLayoutAttributes(layoutAttribute: LayoutAttribute) {
-                layout.cacheAttribute(layoutAttribute)
-            }
-
-            override fun getCachedLayoutAttributes(): LayoutAttribute {
-                return layout.getCacheAttribute()
-            }
-
 
             override fun onScrollChange(recycler: RecyclerView.Recycler, dx: Int, dy: Int) {
-                visibleFrame.set(scrollX.toFloat(),scrollY.toFloat(),width.toFloat(),height.toFloat())
-                calculate(recycler,dx.toFloat(),dy.toFloat())
-                layout.onScroll(scrollX.toFloat(),scrollY.toFloat())
-                super.onScrollChange(recycler, dx, dy)
+//                calculate(recycler,dx.toFloat(),dy.toFloat())
+                layout.onScroll(this@CollectionView.scrollX,this@CollectionView.scrollY)
+                update(recycler)
             }
-
         }
     }
 

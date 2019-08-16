@@ -76,6 +76,10 @@ open class Frame(var x:Float = 0f,var y:Float = 0f, var width:Float = 0f,var hei
         return x <= o.x && y <= o.y && getRight() >= o.getRight() && getBottom() >= o.getBottom()
     }
 
+    fun contains(x:Float,y:Float):Boolean{
+        return x >= this.x && x <= getRight() && y >= this.y && y  <= getBottom()
+    }
+
     fun valid():Boolean{
         return width <= 0 || height <= 0
     }

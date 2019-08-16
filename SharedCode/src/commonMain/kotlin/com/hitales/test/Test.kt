@@ -110,7 +110,7 @@ class TestController : BasicController() {
         }
 
 
-        rootView.contentSize = Size(Platform.windowWidth,4100f)
+//        rootView.contentSize = Size(Platform.windowWidth,4100f)
 
     }
 //

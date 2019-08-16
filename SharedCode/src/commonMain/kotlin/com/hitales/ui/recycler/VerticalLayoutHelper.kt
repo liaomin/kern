@@ -2,10 +2,12 @@ package com.hitales.ui.recycler
 
 import com.hitales.utils.Size
 import com.hitales.utils.min
+import kotlin.math.ceil
+import kotlin.math.roundToInt
 
 class VerticalLayoutHelper : LayoutHelper() {
 
-    override fun getNextPageLayoutInfo(collectionView: CollectionView,layout:DefaultCollectionViewLayout,adapter:CollectionViewAdapter, currentPage: CollectionViewLayout.PageLayoutInfo, nextPage: CollectionViewLayout.PageLayoutInfo){
+    override fun getNextPageLayoutInfo(collectionView: CollectionView,layout:DefaultCollectionViewLayout,adapter:CollectionViewAdapter, currentPage: CollectionViewLayout.PageLayoutInfo?, nextPage: CollectionViewLayout.PageLayoutInfo){
         val minimumLineSpacing = layout.minimumLineSpacing
         val tempSize = layout.tempSize
         val headerAndFooterAddLineSpace = layout.headerAndFooterAddLineSpace
@@ -29,7 +31,7 @@ class VerticalLayoutHelper : LayoutHelper() {
         var frameStartY = 0f
         var offsetX = paddingLeft
         var offsetY = paddingTop
-        var frameEndY =  viewFrame.height
+        var frameEndY =  viewFrame.height * layout.initPageSize
         var endX = viewFrame.width - paddingRight + 0.5f
         var rowHeight = 0f
         var kind = ElementKindNone
@@ -40,7 +42,7 @@ class VerticalLayoutHelper : LayoutHelper() {
         var position = 0
         val sectionCount = adapter.getNumberOfSection(collectionView)
         var haveHeader = false
-        if(!currentPage.isEmpty()){
+        if(currentPage != null && !currentPage.isEmpty()){
             frameStartY = currentPage.frame.getBottom()
             frameEndY += frameStartY
             val last = currentPage.attributes.last()
@@ -86,6 +88,7 @@ class VerticalLayoutHelper : LayoutHelper() {
                     }
                     val attribute = layout.getCacheAttribute()
                     attribute.position = position
+                    headerHeight = tempSize.height
                     attribute.frame.set(paddingLeft,offsetY,frameWidth,tempSize.height)
                     attribute.section = section
                     kind = ElementKindHeader
@@ -140,7 +143,7 @@ class VerticalLayoutHelper : LayoutHelper() {
                 if(height > rowHeight){
                     rowHeight = height
                 }
-                attribute.frame.set(offsetX,offsetY,tempSize.width,height)
+                attribute.frame.set(offsetX,offsetY,width,height)
                 attribute.section = section
                 attribute.row = rowIndex
                 attribute.position = position
@@ -171,6 +174,7 @@ class VerticalLayoutHelper : LayoutHelper() {
                 adapter.getSectionFooterViewSize(collectionView,section,tempSize)
                 val attribute = layout.getCacheAttribute()
                 attribute.position = position
+                footerHeight = tempSize.height
                 attribute.frame.set(paddingLeft,offsetY,frameWidth,tempSize.height)
                 attribute.section = section
                 kind = ElementKindFooter
@@ -184,28 +188,22 @@ class VerticalLayoutHelper : LayoutHelper() {
                 return
             }else if(sectionIndex == sectionCount -1){
                 offsetY += paddingBottom
-                frame.height = offsetY - frame.y + paddingBottom
+                frame.height = offsetY - frame.y
             }
             rowIndex = 0
             haveHeader = false
         }
     }
 
-    override fun getLastPageLayoutInfo(collectionView: CollectionView,layout:DefaultCollectionViewLayout,adapter:CollectionViewAdapter, currentPage: CollectionViewLayout.PageLayoutInfo, lastPage: CollectionViewLayout.PageLayoutInfo){
-        if(currentPage.frame.y == 0f){
-            lastPage.frame.set(currentPage.frame)
-            lastPage.frame.height = 0f
-        }
-    }
-
-    override fun calculateContextSize(lastAttribute: LayoutAttribute,rowCount:Int,rowHeight: Float,contextSize: Size){
-        val section = lastAttribute.section
-        val row = lastAttribute.row
-
-    }
 
     override fun adjustRow(row: ArrayList<LayoutAttribute>,layout: DefaultCollectionViewLayout, start: Float, end: Float, maxRowHeight: Float) {
         val size = row.size
+        if(this.rowHeight < maxRowHeight){
+            this.rowHeight = maxRowHeight
+        }
+        if( rowColumns < size ){
+            rowColumns = size
+        }
         var space = end - start
         row.forEach {
             val frame = it.frame
@@ -231,6 +229,48 @@ class VerticalLayoutHelper : LayoutHelper() {
                     }
                 }
             }
+        }
+    }
+
+    override fun calculateContextSize(collectionView: CollectionView,layout: DefaultCollectionViewLayout,adapter: CollectionViewAdapter, page: CollectionViewLayout.PageLayoutInfo, contextSize: Size) {
+        page.attributes.last()?.let {
+            val minimumLineSpacing = layout.minimumLineSpacing
+            val headerAndFooterAddLineSpace = layout.headerAndFooterAddLineSpace
+            var section = it.section
+            var row = it.row
+            var offset = it.frame.getBottom()
+            var sections = adapter.getNumberOfSection(collectionView)
+            for ( i in section until sections){
+                var haveHeader = false
+                if(row < 0){
+                    val kind = it.elementKind
+                    if( ElementKindFooter == kind ){
+                        continue
+                    }else{
+                        haveHeader = true
+                    }
+                }
+                row ++
+                if( row == 0 && !haveHeader && adapter.haveHeaderView(collectionView, section)){
+                    offset += headerHeight
+                    if(headerAndFooterAddLineSpace){
+                        offset += minimumLineSpacing
+                    }
+                }
+                val itemsCount = adapter.getNumberOfItem(collectionView,section)
+                val remaining = itemsCount - row
+                if(remaining > 0){
+                    var rows = ceil(remaining / rowColumns.toFloat())
+                    offset += rows * (rowHeight + minimumLineSpacing)
+                }
+
+                if(adapter.haveFooterView(collectionView, section)){
+                    offset += footerHeight
+                }
+                row = 0
+            }
+            offset += collectionView.padding?.bottom?:0f
+            contextSize.set(collectionView.frame.width,offset)
         }
     }
 }
