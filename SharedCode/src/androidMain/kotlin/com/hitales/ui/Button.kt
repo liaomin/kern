@@ -14,7 +14,7 @@ actual open class Button :  com.hitales.ui.TextView {
     actual constructor(text:CharSequence?,frame: Frame):super(text,frame){
         val widget = getWidget()
         widget.text = text
-        setBorderRadius(5f)
+//        setBorderRadius(5f)
         padding = EdgeInsets(5f,5f,5f,5f)
     }
 
@@ -27,10 +27,14 @@ actual open class Button :  com.hitales.ui.TextView {
     }
 
     actual open fun setBackgroundColor(color: Int, state: ViewState) {
-        if(mBackground != null){
-            mBackground?.setColorForState(color,state)
+        if(state != ViewState.NORMAL){
+            getOrCreateBackground().setColorForState(color,state)
         }else{
-            super.setBackgroundColor(color)
+            if(mBackground != null){
+                mBackground?.setColorForState(color,state)
+            }else{
+                super.setBackgroundColor(color)
+            }
         }
     }
 

@@ -8,19 +8,25 @@ import com.hitales.ui.recycler.LayoutAttribute
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame
 
-inline fun <reified T> ArrayList<T>.addDifferent(o:ArrayList<T>){
+inline fun <reified T> ArrayList<T>.addDifferent(o:List<T>,cb:(t:T)->Unit){
     o.forEach {
         if(!this.contains(it)){
             this.add(it)
+            cb(it)
         }
     }
 }
 
 open abstract class RecyclerViewLayoutManager (scrollView: ScrollView) : BasicLayoutManager(scrollView) {
 
-    //预加载界面大小 >= visibleFrame
+    /**
+     * 显示界面大小
+     */
     val showFrame:Frame = Frame.zero()
 
+    /**
+     * 显示的属性
+     */
     val showAttributes = ArrayList<LayoutAttribute>()
 
     override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {

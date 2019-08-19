@@ -10,6 +10,7 @@ import android.os.Build
 import android.view.View
 import android.view.animation.Transformation
 import android.widget.FrameLayout
+import com.hitales.ui.View.Companion.tempRect
 import com.hitales.ui.android.AndroidView
 import com.hitales.ui.android.Background
 import com.hitales.ui.animation.setAnimation
@@ -32,22 +33,30 @@ actual open class View {
     var mBackground: Background? = null
 
     actual var delegate:WeakReference<ViewDelegate>? = null
+        set(value) {
+            field = value
+            if(value != null){
+                mWidget.setOnClickListener{
+                    onPressListener?.invoke(this)
+                    delegate?.get()?.onPress(this)
+                }
+                mWidget.setOnLongClickListener{
+                    onLongPressListener?.invoke(this)
+                    delegate?.get()?.onLongPress(this)
+                    return@setOnLongClickListener true
+                }
+            }else {
+                if(onPressListener == null){
+                    mWidget.setOnClickListener(null)
+                }
+                if(onLongPressListener == null){
+                    mWidget.setOnLongClickListener(null)
+                }
+            }
+        }
 
     init {
         mWidget.setBackgroundColor(mBackgroundColor)
-        mWidget.setOnClickListener{
-            onPressListener?.invoke(this)
-            delegate?.get()?.onPress(this)
-        }
-        mWidget.setOnLongClickListener{
-            onLongPressListener?.invoke(this)
-            delegate?.get()?.onLongPress(this)
-            return@setOnLongClickListener true
-//            if(onLongPressListener != null){
-//                return@setOnLongClickListener true
-//            }
-//            return@setOnLongClickListener false
-        }
     }
 
     var innerPadding : EdgeInsets? = null
@@ -274,7 +283,7 @@ actual open class View {
         return mBackground?.borderBottomWidth ?: 0f
     }
 
-    protected fun getOrCreateBackground(): Background {
+    fun getOrCreateBackground(): Background {
         if (mBackground == null) {
             mBackground = Background()
             mWidget.setBackgroundDrawable(mBackground)
@@ -317,10 +326,27 @@ actual open class View {
 
     actual fun setOnPressListener(listener: (view: com.hitales.ui.View) -> Unit) {
         onPressListener = listener
+        if(listener != null){
+            mWidget.setOnClickListener{
+                onPressListener?.invoke(this)
+                delegate?.get()?.onPress(this)
+            }
+        }else{
+            mWidget.setOnClickListener(null)
+        }
     }
 
     actual fun setOnLongPressListener(listener: (iew: com.hitales.ui.View) -> Unit) {
         onLongPressListener = listener
+        if(listener != null){
+            mWidget.setOnLongClickListener{
+                onLongPressListener?.invoke(this)
+                delegate?.get()?.onLongPress(this)
+                return@setOnLongClickListener true
+            }
+        }else{
+            mWidget.setOnLongClickListener(null)
+        }
     }
 
     protected open fun getLayoutParams(): android.view.ViewGroup.LayoutParams {

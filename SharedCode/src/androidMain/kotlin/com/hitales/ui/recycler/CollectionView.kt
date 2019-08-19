@@ -76,8 +76,6 @@ actual open class CollectionView : ScrollView {
 
             fun update(recycler: RecyclerView.Recycler){
                 showFrame.set(this@CollectionView.scrollX,this@CollectionView.scrollY,frame.width,frame.height)
-                val attributes = layout.getLayoutAttributesInFrame(showFrame)
-                showAttributes.addDifferent(attributes)
                 showAttributes.removeAll(showAttributes.filter {
                     val test = showFrame.intersect(it.frame)
                     if( !test && it.view != null){
@@ -87,7 +85,8 @@ actual open class CollectionView : ScrollView {
                     !test
                 })
 
-                showAttributes.forEach {
+                val attributes = layout.getLayoutAttributesInFrame(showFrame)
+                showAttributes.addDifferent(attributes){
                     val frame = it.frame
                     if(it.view == null){
                         val scrap = recycler.getViewForPosition(it.position)
@@ -118,6 +117,7 @@ actual open class CollectionView : ScrollView {
                         layoutDecorated(scrap, l , t , l+itemWidth, t+itemHeight)
                     }
                 }
+
                 layout.getContentSize(contextSize)
                 contextSize.scale(PixelUtil.getScale())
             }
@@ -169,6 +169,17 @@ actual open class CollectionView : ScrollView {
                 adapter!!.onBindItemView(this,info.section,info.row,viewType,holder.v!!)
             }
         }
+        holder.v.collectionView = this
     }
+
+    fun onItemPress(section:Int,row:Int,cell:CollectionViewCell){
+        adapter?.onItemPress(this,section,row,cell)
+    }
+
+    fun onItemLongPress(section:Int,row:Int,cell:CollectionViewCell){
+        adapter?.onItemLongPress(this,section,row,cell)
+    }
+
+
 
 }

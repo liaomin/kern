@@ -40,6 +40,12 @@ open class Frame(var x:Float = 0f,var y:Float = 0f, var width:Float = 0f,var hei
         return this
     }
 
+    fun offset(x:Float,y:Float):Frame{
+        this.x += x
+        this.y += y
+        return this
+    }
+
     fun getCenterX():Float{
         return x + width / 2f
     }

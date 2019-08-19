@@ -9,7 +9,7 @@ open class TestCollectionViewController : Controller() {
 
     class Cell : CollectionViewCell(){
 
-        val button:Button = Button()
+        val button = TextView()
 
         init {
             contentView.setBackgroundColor(Colors.RED)
@@ -17,6 +17,7 @@ open class TestCollectionViewController : Controller() {
         }
 
         override fun applyAttribute(layoutAttribute: LayoutAttribute) {
+            super.applyAttribute(layoutAttribute)
             button.frame = button.frame.set(0f,0f,layoutAttribute.frame.width,layoutAttribute.frame.height )
         }
 
@@ -71,23 +72,26 @@ open class TestCollectionViewController : Controller() {
             override fun createItemView(collectionView: CollectionView, type: Int): CollectionViewCell {
                 val c= Cell()
                 val v = c.button
-//                v.setBackgroundColor(0xFF000000.toInt() or (0xFFFFFF * random()).toInt() )
-                v.setBackgroundColor(Colors.RED,ViewState.PRESSED)
+                c.setBackgroundColor(0xFF000000.toInt() or (0xFFFFFF * random()).toInt())
+                c.setBackgroundColor(Colors.BLUE,ViewState.PRESSED)
+                v.setBackgroundColor(Colors.TRANSPARENT)
+
+//                v.setBackgroundColor(Colors.RED,ViewState.PRESSED)
                 c.contentView.setShadow(Colors.RED,10f,6f,0f)
                 v.setBorderRadius(0f)
 //                c.contentView.setBorderRadius(20f)
-                (v as Button).setBackgroundColor(0xFF000000.toInt() or (0xFFFFFF * random()).toInt(),ViewState.NORMAL)
+//                (v as Button).setBackgroundColor(0xFF000000.toInt() or (0xFFFFFF * random()).toInt(),ViewState.NORMAL)
                 return c
             }
 
             override fun onBindItemView(collectionView: CollectionView, section: Int, row: Int,type:Int, view: CollectionViewCell) {
 
                 (view as Cell).button.text = "$section - $row"
-                view.button.setOnPressListener {
-                    if(section == 0 && row == 10){
-                        this@TestCollectionViewController.push(TestHCollectionViewController())
-                    }
-                }
+//                view.button.setOnPressListener {
+//                    if(section == 0 && row == 10){
+//                        this@TestCollectionViewController.push(TestHCollectionViewController())
+//                    }
+//                }
 //                view.setShadow(Colors.BLUE,4f,0f,0f)
 //                if(section == 0 && row == 0){
 //                    view.setShadow(Colors.BLUE,4f,0f,0f)
@@ -107,6 +111,14 @@ open class TestCollectionViewController : Controller() {
 
             override fun getNumberOfSection(collectionView: CollectionView): Int {
                 return 3
+            }
+
+            override fun onItemPress(collectionView: CollectionView, section: Int, row: Int, cell: CollectionViewCell) {
+                println("$section  $row")
+            }
+
+            override fun onItemLongPress(collectionView: CollectionView, section: Int, row: Int, cell: CollectionViewCell) {
+                println("long $section  $row")
             }
 
         }
