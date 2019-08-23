@@ -26,7 +26,6 @@ expect class Platform {
     companion object {
         val mainLoopDispatcher: CoroutineDispatcher
         val windowWidth:Float
-        val rootView:ViewGroup
         val windowHeight:Float
         fun getInstance() : Platform
         val os:String

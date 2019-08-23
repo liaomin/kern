@@ -112,11 +112,11 @@ expect open class View  {
     fun getBorderBottomWidth():Float
 
     /**
-     * @param maxWidth 最大宽度  如果小于等于0表示无限宽
-     * @param maxHeight 最大高度  如果小于等于0表示无限高
+     * @param widthSpace 最大宽度  如果小于等于0表示无限宽
+     * @param heightSpace 最大高度  如果小于等于0表示无限高
      */
-    open fun measureSize(maxWidth: Float,maxHeight:Float):Size
-    open fun measureSize(maxWidth: Float,maxHeight:Float,size: Size)
+    open fun measureSize(widthSpace: Float,heightSpace: Float):Size
+    open fun measureSize(widthSpace: Float,heightSpace: Float,size: Size)
 
     open fun startAnimation(animation: Animation,completion:(()->Unit)? = null)
 

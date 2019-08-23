@@ -5,11 +5,17 @@ import com.hitales.utils.Stack
 
 open class Controller {
 
+    var tag:Any? = null
+
     var title:String? = null
 
     var onControllerChangedListener:((rootController:Controller,pushController:Controller?,removeController:Controller?)->Unit)? = null
 
-    var view:View? = null
+    var view:View = ViewGroup()
+
+    var enterAnimation:Animation? = null
+
+    var exitAnimation:Animation? = null
 
     private var rootController:Controller? = null
 
@@ -18,7 +24,6 @@ open class Controller {
     constructor(){
         rootController = this
     }
-
 
     open fun onCreate(){
 
@@ -45,13 +50,10 @@ open class Controller {
         return this.pop()
     }
 
-    open fun push(controller: Controller,animation: Animation? = null,completion:(()->Unit)? = null){
+    open fun push(controller: Controller){
         val root=  rootController
         if(root != null){
             root.pushStack(controller)
-        }
-        if(animation != null){
-            controller.view?.startAnimation(animation,completion)
         }
     }
 
@@ -102,4 +104,5 @@ open class Controller {
             last.onResume()
         }
     }
+
 }

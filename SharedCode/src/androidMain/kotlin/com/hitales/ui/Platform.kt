@@ -1,27 +1,51 @@
 package com.hitales.ui
 
 
-import android.app.Activity
+import android.animation.Animator
 import android.app.Application
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
+import android.os.Bundle
 import android.util.DisplayMetrics
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
+import android.widget.FrameLayout
 import com.hitales.test.TestController
+import com.hitales.ui.android.AndroidActivity
+import com.hitales.ui.android.AndroidFragment
+import com.hitales.ui.android.ControllerManager
+import com.hitales.ui.animation.toAnimator
 import com.hitales.ui.utils.PixelUtil
-import com.hitales.utils.Frame
-import com.hitales.utils.NotificationCenter
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlin.coroutines.CoroutineContext
 
 
+class ControllerFragment(val controller: Controller) : AndroidFragment(){
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return controller.view.getWidget()
+    }
+
+    override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator? {
+//        enterTransition = Fade()
+        val enterAnimator = controller.enterAnimation
+        val exitAnimation = controller.exitAnimation
+        if(enter){
+            if(enterAnimator != null){
+                return  enterAnimator.toAnimator(controller.view.getWidget())
+            }
+        }else{
+            if(exitAnimation != null){
+                return exitAnimation.toAnimator(controller.view.getWidget())
+            }
+        }
+        return super.onCreateAnimator(transit, enter, nextAnim)
+    }
+
+}
 
 actual class Platform : ActivityDelegate{
-
 
     actual companion object {
 
@@ -30,7 +54,6 @@ actual class Platform : ActivityDelegate{
         actual val windowWidth:Float by lazy { platform!!.windowWidth }
         actual val windowHeight:Float by lazy { platform!!.windowHeight }
 
-        actual val rootView:com.hitales.ui.ViewGroup by lazy { FrameViewGroup() }
 
         val displayMetrics : DisplayMetrics by lazy { platform!!.application.resources.displayMetrics }
 
@@ -42,9 +65,8 @@ actual class Platform : ActivityDelegate{
             return platform!!
         }
 
-        fun init(rootActivity: Activity):ActivityDelegate{
+        fun init(rootActivity: AndroidActivity):ActivityDelegate{
             platform = Platform(rootActivity)
-            rootActivity.setContentView(rootView.getWidget())
             return  platform!!
         }
 
@@ -59,20 +81,28 @@ actual class Platform : ActivityDelegate{
 
     var application:Application
 
-    var rootActivity:Activity
+    var rootActivity:AndroidActivity
 
     var c:TestController? = null
 
-    private constructor(rootActivity: Activity){
+    val rootView:FrameLayout
+
+    val controllerManager:ControllerManager
+
+    private constructor(rootActivity: AndroidActivity){
+        rootView = FrameLayout(rootActivity)
         this.application = rootActivity.application
         this.rootActivity = rootActivity
         val dm = application.resources.displayMetrics
         windowWidth = PixelUtil.toDIPFromPixel( dm.widthPixels.toFloat(),dm)
         windowHeight = PixelUtil.toDIPFromPixel( dm.heightPixels.toFloat(),dm)
+        rootActivity.setContentView(rootView)
+        controllerManager = ControllerManager(rootView)
     }
 
     override fun onBackPressed(): Boolean {
-        return c!!.onBackPressed()
+//        return c!!.onBackPressed()
+        return controllerManager.pop()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -80,20 +110,33 @@ actual class Platform : ActivityDelegate{
 
     override fun onCreate() {
         disableAPIDialog()
-        c =  TestController()
+        var testController = TestController()
+        c =  testController
         c?.onCreate()
         c?.onResume()
-        c?.view?.apply {
-            rootView.addSubView(this)
-        }
-        c?.onControllerChangedListener = {rootController:Controller,pushControll:Controller?,removeControll:Controller? ->
-            pushControll?.view?.apply {
-                rootView.addSubView(this)
+//        c?.view?.apply {
+//            rootView.addSubView(this)
+//        }
+        c?.onControllerChangedListener = {rootController:Controller,pushController:Controller?,removeControll:Controller? ->
+            if(pushController != null){
+//                var fragment = ControllerFragment(pushController)
+//                pushController.tag = fragment
+//                rootActivity.addFragment(fragment)
+                controllerManager.push(pushController)
+            }else if(removeControll != null){
+//                val fragment = removeControll.tag
+//                if(fragment!= null && fragment is ControllerFragment){
+//                    rootActivity.pop(fragment)
+//                }
+                controllerManager.pop()
             }
-            removeControll?.view?.apply {
-                rootView.removeSubView(this)
-            }
         }
+
+        controllerManager.push(testController)
+
+//        var fragment = ControllerFragment(testController)
+//        testController.tag = fragment
+//        rootActivity.addFragment(fragment)
     }
 
     override fun onResume() {
@@ -105,7 +148,7 @@ actual class Platform : ActivityDelegate{
     }
 
     override fun onDestory() {
-        rootView.removeAllSubViews()
+        rootView.removeAllViews()
         rootActivity.setContentView(View(rootActivity))
     }
 

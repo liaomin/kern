@@ -8,9 +8,20 @@ expect open class TextInput : TextView {
 
     open var placeholder:CharSequence?
 
+    /**
+     * default #666666
+     */
     open var placeholderColor:Int
 
-    var autoFocus:Boolean
+    /**
+     * default false
+     */
+    open var autoFocus:Boolean
+
+    /**
+     * default true
+     */
+    open var singleLine:Boolean
 
     open fun focus()
 

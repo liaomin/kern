@@ -1,19 +1,27 @@
 package com.hitales.ui
 
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatImageView
 import com.hitales.ui.android.AndroidEditTextView
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
-import com.hitales.utils.Size
 
 
 actual open class TextInput : com.hitales.ui.TextView {
 
-    actual var autoFocus:Boolean = false
+    actual open var autoFocus:Boolean = false
+
+    actual open var singleLine:Boolean = true
+        set(value) {
+            field = value
+            if (value){
+                numberOfLines = 1
+            }else{
+                numberOfLines = 0
+            }
+        }
 
     actual constructor(text: CharSequence?, frame: Frame):super(text,frame){
         padding = EdgeInsets(10f,15f,10f,15f)
+        placeholderColor = 0xFF666666.toInt()
         numberOfLines = 1
     }
 

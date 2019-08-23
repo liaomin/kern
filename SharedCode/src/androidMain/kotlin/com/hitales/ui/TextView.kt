@@ -1,7 +1,6 @@
 package com.hitales.ui
 
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Build
 import android.text.SpannableString
@@ -16,7 +15,6 @@ import com.hitales.ui.android.StateListColor
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
-import com.hitales.utils.Size
 
 actual open class TextView :  View {
 
@@ -97,6 +95,7 @@ actual open class TextView :  View {
             val lineHeight = PixelUtil.toPixelFromDIP(value).toInt()
             linePadding = 0
             if(value > 0){
+                //TODO 计算还有问题
                 val space = (lineHeight - fontHeight).toFloat()
                 if (lineHeight != fontHeight) {
                     if(space >= 0f){
@@ -109,6 +108,7 @@ actual open class TextView :  View {
                     }
                 }
             }else{
+                field = 0f
                 widget.setLineSpacing(0f, 1f)
                 widget.setPadding(0,0,0,0)
             }
@@ -226,10 +226,16 @@ actual open class TextView :  View {
             field = value
             if(value == 1){
                 getTextWidget().setSingleLine(true)
+                getTextWidget().maxLines = 1
             }else{
                 getTextWidget().setSingleLine(false)
             }
-            getTextWidget().maxLines = value
+            if(value == 0){
+                getTextWidget().maxLines = Int.MAX_VALUE
+            }else{
+                getTextWidget().maxLines = value
+            }
+
         }
 
 //    /**

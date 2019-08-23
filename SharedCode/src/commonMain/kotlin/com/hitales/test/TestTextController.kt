@@ -169,7 +169,7 @@ class TestBorderAndTextColor : TestTextControllerTest(){
 class TestLineHeight : TestTextControllerTest(){
 
     override fun testView() {
-        val text = "测试文字测试文字测试文字测试文测试文字测试测试文字测试文字测试文字测试文测试文字测试"
+        val text = "测试文字测试文字测试文字测试文测试文字测试测试文字测试文字测试文字测试文测试文字测试测试文字测试文字测试文字测试文测试文字测试测试文字测试文字测试文字测试文测试文字测试"
         var width = Platform.windowWidth
         var view = TextView("normal $text")
         view.textSize = 16f
@@ -194,6 +194,16 @@ class TestLineHeight : TestTextControllerTest(){
                 frame.y += 56f
                 temp = View(frame)
                 temp.setBackgroundColor(0xaa0000FF.toInt())
+                (this.view as ScrollView).addSubView(temp)
+                frame = frame.clone()
+                frame.y += 56f
+                temp = View(frame)
+                temp.setBackgroundColor(0xaaffff00.toInt())
+                (this.view as ScrollView).addSubView(temp)
+                frame = frame.clone()
+                frame.y += 56f
+                temp = View(frame)
+                temp.setBackgroundColor(0xaaff7f00.toInt())
                 (this.view as ScrollView).addSubView(temp)
             }
         }

@@ -1,45 +1,67 @@
 package com.hitales.ui.animation
 
+import android.animation.Animator
 import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.graphics.Camera
 import android.view.animation.AlphaAnimation
 import android.view.animation.Transformation
 import androidx.core.view.animation.PathInterpolatorCompat
 import com.hitales.ui.Animation
-import com.hitales.ui.View
 import com.hitales.ui.utils.PixelUtil
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 
-
-inline fun View.setAnimation(animation: Animation):AnimatorSet{
-    val widget = this.getWidget()
-    val tx = ObjectAnimator.ofFloat(widget, "translationX", PixelUtil.toPixelFromDIP(animation.fromTranslateX), PixelUtil.toPixelFromDIP(animation.toTranslateX))
-    val ty = ObjectAnimator.ofFloat(widget, "translationY", PixelUtil.toPixelFromDIP(animation.fromTranslateY), PixelUtil.toPixelFromDIP(animation.toTranslateY))
-    val rx = ObjectAnimator.ofFloat(widget, "rotationX", animation.fromRotateX, animation.toRotateX)
-    val ry = ObjectAnimator.ofFloat(widget, "rotationY", animation.fromRotateX, animation.toRotateY)
-    val rz = ObjectAnimator.ofFloat(widget, "rotation", animation.fromRotateZ, animation.toRotateZ)
-    val op = ObjectAnimator.ofFloat(widget, "alpha", animation.fromOpacity, animation.toOpacity)
-    val sx = ObjectAnimator.ofFloat(widget, "scaleX", animation.fromScaleX, animation.toScaleX)
-    val sy = ObjectAnimator.ofFloat(widget, "scaleY", animation.fromScaleY, animation.toScaleY)
+inline fun Animation.toAnimator(widget:android.view.View):AnimatorSet{
+    val animations = ArrayList<ObjectAnimator>()
+    if(fromTranslateX !== toTranslateX){
+        animations.add(ObjectAnimator.ofFloat(widget, "translationX", PixelUtil.toPixelFromDIP(fromTranslateX), PixelUtil.toPixelFromDIP(toTranslateX)))
+    }
+    if(fromTranslateY !== toTranslateY){
+        animations.add(ObjectAnimator.ofFloat(widget, "translationY", PixelUtil.toPixelFromDIP(fromTranslateY), PixelUtil.toPixelFromDIP(toTranslateY)))
+    }
+    if(fromRotateX !== toRotateX){
+        animations.add(ObjectAnimator.ofFloat(widget, "rotationX", fromRotateX, toRotateX))
+    }
+    if(fromRotateY !== toRotateY){
+        animations.add(ObjectAnimator.ofFloat(widget, "rotationY", fromRotateY, toRotateY))
+    }
+    if(fromRotateZ !== toRotateZ){
+        animations.add(ObjectAnimator.ofFloat(widget, "rotation", fromRotateZ, toRotateZ))
+    }
+    if(fromOpacity !== toOpacity){
+        animations.add(ObjectAnimator.ofFloat(widget, "alpha", fromOpacity, toOpacity))
+    }
+    if(fromScaleX !== toScaleX){
+        animations.add(ObjectAnimator.ofFloat(widget, "scaleX", fromScaleX, toScaleX))
+    }
+    if(fromScaleY !== toScaleY){
+        animations.add(ObjectAnimator.ofFloat(widget, "scaleY", fromScaleY, toScaleY))
+    }
+//    val tx = ObjectAnimator.ofFloat(widget, "translationX", PixelUtil.toPixelFromDIP(fromTranslateX), PixelUtil.toPixelFromDIP(toTranslateX))
+//    val ty = ObjectAnimator.ofFloat(widget, "translationY", PixelUtil.toPixelFromDIP(fromTranslateY), PixelUtil.toPixelFromDIP(toTranslateY))
+//    val rx = ObjectAnimator.ofFloat(widget, "rotationX", fromRotateX, toRotateX)
+//    val ry = ObjectAnimator.ofFloat(widget, "rotationY", fromRotateY, toRotateY)
+//    val rz = ObjectAnimator.ofFloat(widget, "rotation", fromRotateZ, toRotateZ)
+//    val op = ObjectAnimator.ofFloat(widget, "alpha", fromOpacity, toOpacity)
+//    val sx = ObjectAnimator.ofFloat(widget, "scaleX", fromScaleX, toScaleX)
+//    val sy = ObjectAnimator.ofFloat(widget, "scaleY", fromScaleY, toScaleY)
     val animationSet = AnimatorSet()
-    val animations = listOf(tx,ty,rx,ry,rz,op,sx,sy)
-    animationSet.playTogether(animations)
-    animationSet.duration = animation.duration.toLong()
+//    val animations = listOf(tx,ty,rx,ry,rz,op,sx,sy)
+    animationSet.playTogether(animations as Collection<Animator>)
+    animationSet.duration = duration.toLong()
 
-    if(animation.repeatCount > 0){
+    if(repeatCount > 0){
         animations.forEach {
-            it.repeatCount = animation.repeatCount
-            if(animation.autoreverses){
+            it.repeatCount = repeatCount
+            if(autoreverses){
                 it.repeatMode = ValueAnimator.REVERSE
             }
         }
     }
-    val i = animation.interpolator
+    val i = interpolator
     animationSet.interpolator = PathInterpolatorCompat.create(i.x1,i.y1,i.x2,i.y2)
     return animationSet
 }
-
 
 open class AndroidAnimation : AlphaAnimation(1f,1f){
 

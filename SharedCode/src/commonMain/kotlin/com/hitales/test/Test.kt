@@ -1,6 +1,5 @@
 package com.hitales.test
 
-import com.hitales.test.layout.TestLayout
 import com.hitales.ui.*
 import com.hitales.ui.recycler.CollectionView
 import com.hitales.ui.recycler.CollectionViewAdapter

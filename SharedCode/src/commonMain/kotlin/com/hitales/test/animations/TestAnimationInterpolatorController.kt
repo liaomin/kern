@@ -62,6 +62,7 @@ open class TestAnimationInterpolatorController :TestViewController(), Animation.
             animation.setToTranslate(Platform.windowWidth - 50f,0f)
             animation.duration = 2000f
             animation.delegate = this
+            animation.fillAfter = true
             animation.interpolator = EaseInOutInterpolator()
             view.startAnimation(animation)
 

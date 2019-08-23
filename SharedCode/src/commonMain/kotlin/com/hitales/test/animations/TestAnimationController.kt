@@ -23,7 +23,10 @@ open class TestAnimationController :TestViewController(), Animation.AnimationDel
             animation.setToTranslate(0f,0f)
             animation.duration = 500f
             animation.interpolator = EaseOutInterpolator()
-            this.push(TestAnimationInterpolatorController(),animation)
+            val controller = TestAnimationInterpolatorController()
+            controller.enterAnimation = animation
+            controller.exitAnimation = animation.reverse()
+            this.push(controller)
         }
         (this.view as ScrollView).addSubView(button)
 

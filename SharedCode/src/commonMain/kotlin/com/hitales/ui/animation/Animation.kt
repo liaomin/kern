@@ -2,6 +2,7 @@ package com.hitales.ui
 
 import com.hitales.ui.animation.BezierInterpolator
 import com.hitales.ui.animation.LinearInterpolator
+import com.hitales.utils.WeakReference
 
 
 /**
@@ -22,11 +23,18 @@ open class Animation {
      */
     var interpolator:BezierInterpolator = LinearInterpolator()
 
+    private var weakDelegate:WeakReference<AnimationDelegate>? = null
+
     /**
      * 回调
      */
-    var delegate:AnimationDelegate? = null
-
+    var delegate:AnimationDelegate?
+        get() { return weakDelegate?.get() }
+        set(value) {
+            if(value != null){
+                weakDelegate = WeakReference<AnimationDelegate>(value)
+            }
+        }
     /**
      * 保存结束后的位置
      */
@@ -165,5 +173,21 @@ open class Animation {
         toScaleY = y
     }
 
+    fun reverse():Animation{
+        val animation = Animation()
+        animation.setFromRotate(toRotateX,toRotateY,toRotateZ)
+        animation.setToRotate(fromRotateX,fromRotateY,fromRotateZ)
+        animation.setFromScale(toScaleX,toScaleY)
+        animation.setToScale(fromScaleX,fromScaleY)
+        animation.setFromTranslate(toTranslateX,toTranslateY)
+        animation.setToTranslate(fromTranslateX,fromTranslateY)
+        animation.duration = duration
+        animation.interpolator = interpolator
+        animation.fillAfter = fillAfter
+        animation.fromOpacity = toOpacity
+        animation.toOpacity = fromOpacity
+        animation.weakDelegate = weakDelegate
+        return  animation
+    }
 
 }

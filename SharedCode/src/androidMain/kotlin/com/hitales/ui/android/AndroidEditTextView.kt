@@ -1,16 +1,29 @@
 package com.hitales.ui.android
 
 import android.graphics.Canvas
+import android.text.InputType
+import android.view.Gravity
 import android.view.MotionEvent
-import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-import com.hitales.ui.Button
+import androidx.appcompat.widget.AppCompatEditText
 import com.hitales.ui.Platform
 import com.hitales.ui.TextInput
 
 
-class AndroidEditTextView(protected val mView: TextInput) : EditText(Platform.getApplication()) {
+class AndroidEditTextView constructor(protected val mView: TextInput) : AppCompatEditText(Platform.getApplication(),null, android.R.attr.editTextStyle) {
 //    open class AndroidEditTextView(private val view: TextInput) : AppCompatEditText(Platform.getApplication()){
+
+    init {
+        val editText = this
+        editText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+//文本显示的位置在EditText的最上方
+        editText.setGravity(Gravity.TOP);
+        editText.setText("1233333333333333333333333333333333333333333333333333333333333333333333333333");
+//改变默认的单行模式
+        editText.setSingleLine(false);
+//水平滚动设置为False
+        editText.setHorizontallyScrolling(false);
+//        this.setSingleLine(false)
+    }
 
     protected val mViewHelper = ViewHelper(this,mView)
 

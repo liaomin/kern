@@ -1,19 +1,14 @@
 package com.hitales.ui
 
 import android.animation.Animator
-import android.animation.AnimatorSet
-import android.graphics.Canvas
 import android.graphics.Rect
-import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.View
-import android.view.animation.Transformation
 import android.widget.FrameLayout
-import com.hitales.ui.View.Companion.tempRect
 import com.hitales.ui.android.AndroidView
 import com.hitales.ui.android.Background
-import com.hitales.ui.animation.setAnimation
+import com.hitales.ui.animation.toAnimator
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
@@ -394,20 +389,22 @@ actual open class View {
     }
 
     /**
-     * @param maxWidth 最大宽度  如果小于等于0表示无限宽
-     * @param maxHeight 最大高度  如果小于等于0表示无限高
+     * @param widthSpace 最大宽度  如果小于等于0表示无限宽
+     * @param heightSpace 最大高度  如果小于等于0表示无限高
      */
-    actual open fun measureSize(maxWidth: Float, maxHeight: Float): Size {
+    actual open fun measureSize(widthSpace: Float,heightSpace: Float): Size {
         val size =  Size()
-        measureSize(maxWidth,maxHeight,size)
+        measureSize(widthSpace,heightSpace,size)
         return size
     }
 
-    actual open fun measureSize(maxWidth: Float, maxHeight: Float,size: Size){
+    actual open fun measureSize(widthSpace: Float,heightSpace: Float,size: Size){
         if(!frame.valid()){
             size.set(frame.width,frame.height)
             return
         }
+        var maxWidth = widthSpace
+        var maxHeight = heightSpace
         var width = PixelUtil.toPixelFromDIP(maxWidth).toInt()
         var height = PixelUtil.toPixelFromDIP(maxHeight).toInt()
         if( width <= 0 ){
@@ -415,7 +412,7 @@ actual open class View {
         }else{
             width = android.view.View.MeasureSpec.makeMeasureSpec(width, android.view.View.MeasureSpec.AT_MOST)
         }
-        if( height <= 0 ){
+        if ( height <= 0 ){
             height = android.view.View.MeasureSpec.makeMeasureSpec(0, android.view.View.MeasureSpec.UNSPECIFIED)
         }else{
             height = android.view.View.MeasureSpec.makeMeasureSpec(height, android.view.View.MeasureSpec.AT_MOST)
@@ -435,7 +432,7 @@ actual open class View {
     }
 
     actual open fun startAnimation(animation: Animation, completion: (() -> Unit)?) {
-        val animatorSet = setAnimation(animation)
+        val animatorSet = animation.toAnimator(getWidget())
         val widget = WeakReference<android.view.View>(mWidget)
         animatorSet.addListener(object : Animator.AnimatorListener{
             override fun onAnimationRepeat(animation: Animator?) {

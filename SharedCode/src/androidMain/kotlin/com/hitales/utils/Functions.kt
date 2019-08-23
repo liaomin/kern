@@ -12,6 +12,6 @@ actual fun assertUI(){
     assert(mainLopper == Looper.myLooper())
 }
 
-actual fun getCurrnetThreadName():String?{
+actual fun getCurrentThreadName():String?{
     return Thread.currentThread().name
 }
