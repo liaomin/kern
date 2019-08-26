@@ -8,7 +8,7 @@ import platform.QuartzCore.CALayer
 import platform.UIKit.UITextView
 import platform.UIKit.UIWindow
 
-class IOSInputView(protected val mView: WeakReference<TextInput>) : UITextView(CGRectMake(0.0,0.0,0.0,0.0),null) {
+class IOSInputView(val mView: WeakReference<TextInput>) : UITextView(CGRectMake(0.0,0.0,0.0,0.0),null) {
 
     @ObjCAction
     fun willMoveToWindow(window: UIWindow?){

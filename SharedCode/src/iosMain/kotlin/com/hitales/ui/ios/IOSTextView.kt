@@ -8,7 +8,7 @@ import platform.QuartzCore.CALayer
 import platform.UIKit.UILabel
 import platform.UIKit.UIWindow
 
-class IOSTextView(protected val mView: WeakReference<TextView>) : UILabel(CGRectMake(0.0,0.0,0.0,0.0)) {
+class IOSTextView(val mView: WeakReference<TextView>) : UILabel(CGRectMake(0.0,0.0,0.0,0.0)) {
 
     @ObjCAction
     fun willMoveToWindow(window: UIWindow?){
@@ -22,7 +22,15 @@ class IOSTextView(protected val mView: WeakReference<TextView>) : UILabel(CGRect
         }
     }
 
-    override fun displayLayer(layer: CALayer) {
+//    override fun displayLayer(layer: CALayer) {
+//        val view = mView.get()
+//        if(view != null){
+//            view.mBackground?.onDraw(layer,view.mBackgroundColor)
+//        }
+//    }
+
+    override fun layerWillDraw(layer: CALayer) {
+        super.layerWillDraw(layer)
         val view = mView.get()
         if(view != null){
             view.mBackground?.onDraw(layer,view.mBackgroundColor)

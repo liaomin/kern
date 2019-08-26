@@ -1,7 +1,6 @@
 package com.hitales.ui.animation
 
 import com.hitales.ui.Animation
-import com.hitales.utils.WeakReference
 import platform.Foundation.NSNumber
 import platform.Foundation.numberWithDouble
 import platform.Foundation.numberWithFloat
@@ -10,9 +9,9 @@ import platform.QuartzCore.CABasicAnimation
 import platform.QuartzCore.CAMediaTimingFunction
 import platform.QuartzCore.kCAFillModeForwards
 import platform.posix.M_PI
-import platform.posix.M_PI_2
 
-fun transAnimation(animation:Animation):CAAnimationGroup{
+inline fun Animation.toIOSAnimation():CAAnimationGroup{
+    val animation = this
     val animationGroup = CAAnimationGroup()
     val tx = CABasicAnimation.animationWithKeyPath("transform.translation.x")
     val ty = CABasicAnimation.animationWithKeyPath("transform.translation.y")

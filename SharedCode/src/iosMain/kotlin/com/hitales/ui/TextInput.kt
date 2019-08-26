@@ -7,7 +7,10 @@ import com.hitales.utils.Size
 import com.hitales.utils.WeakReference
 import kotlinx.cinterop.useContents
 import platform.CoreGraphics.CGSizeMake
-import platform.Foundation.*
+import platform.Foundation.NSMakeRange
+import platform.Foundation.NSMutableAttributedString
+import platform.Foundation.addAttribute
+import platform.Foundation.create
 import platform.UIKit.*
 
 
@@ -82,7 +85,18 @@ actual open class TextInput : com.hitales.ui.TextView {
     actual open var placeholderColor: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
         set(value) {}
-    actual var autoFocus: Boolean
+
+    /**
+     * default false
+     */
+    actual open var autoFocus: Boolean
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        set(value) {}
+
+    /**
+     * default true
+     */
+    actual open var singleLine: Boolean
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
         set(value) {}
 
@@ -149,5 +163,7 @@ actual open class TextInput : com.hitales.ui.TextView {
         }
         return attr
     }
+
+
 
 }

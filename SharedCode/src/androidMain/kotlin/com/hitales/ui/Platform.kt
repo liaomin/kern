@@ -117,17 +117,10 @@ actual class Platform : ActivityDelegate{
 //        c?.view?.apply {
 //            rootView.addSubView(this)
 //        }
-        c?.onControllerChangedListener = {rootController:Controller,pushController:Controller?,removeControll:Controller? ->
+        c?.onControllerChangedListener = {rootController:Controller,pushController:Controller?,removeController:Controller? ->
             if(pushController != null){
-//                var fragment = ControllerFragment(pushController)
-//                pushController.tag = fragment
-//                rootActivity.addFragment(fragment)
                 controllerManager.push(pushController)
-            }else if(removeControll != null){
-//                val fragment = removeControll.tag
-//                if(fragment!= null && fragment is ControllerFragment){
-//                    rootActivity.pop(fragment)
-//                }
+            }else if(removeController != null){
                 controllerManager.pop()
             }
         }

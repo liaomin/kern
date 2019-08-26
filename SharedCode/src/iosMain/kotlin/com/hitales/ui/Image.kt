@@ -3,10 +3,8 @@ package com.hitales.ui
 import kotlinx.cinterop.*
 import platform.UIKit.UIImage
 import platform.UIKit.UIImagePNGRepresentation
-import platform.posix.memccpy
 
-
-actual class Image {
+actual open class Image {
 
     var mImage:UIImage? = null
 

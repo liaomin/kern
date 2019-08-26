@@ -1,8 +1,8 @@
 package com.hitales.ui.recycler
 
 import com.hitales.utils.Size
-import com.hitales.utils.min
 import kotlin.math.ceil
+import kotlin.math.min
 
 class HorizontalLayoutHelper : LayoutHelper() {
 

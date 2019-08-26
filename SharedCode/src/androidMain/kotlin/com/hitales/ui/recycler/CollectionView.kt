@@ -3,7 +3,6 @@ package com.hitales.ui.recycler
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.hitales.ui.Orientation
 import com.hitales.ui.ScrollView
 import com.hitales.ui.android.AndroidRecyclerView
 import com.hitales.ui.android.scrollview.RecyclerViewLayoutManager
@@ -11,7 +10,6 @@ import com.hitales.ui.android.scrollview.addDifferent
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame
 import com.hitales.utils.WeakReference
-import java.lang.RuntimeException
 
 actual open class CollectionView : ScrollView {
 

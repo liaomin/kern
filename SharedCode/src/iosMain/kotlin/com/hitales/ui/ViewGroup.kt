@@ -1,8 +1,6 @@
 package com.hitales.ui
 
 import com.hitales.ui.ios.IOSView
-import com.hitales.ui.layout.FrameLayoutManager
-import com.hitales.ui.layout.LayoutManager
 import com.hitales.utils.Frame
 import com.hitales.utils.WeakReference
 import platform.UIKit.UIView
@@ -13,17 +11,12 @@ import platform.UIKit.removeFromSuperview
 
 actual open class ViewGroup : View {
 
-    actual var layoutManager: LayoutManager? = null
-        set(value) {
-            field = value
-            layoutSubviews()
-        }
 
     actual constructor(frame: Frame):super(frame){}
 
     actual val children: ArrayList<View> = ArrayList<View>()
 
-    actual open fun addView(view: View, index: Int) {
+    actual open fun addSubView(view: View, index: Int) {
         if(view.superView != null){
             throw RuntimeException("$view already have parent,should remove first")
         }
@@ -44,7 +37,7 @@ actual open class ViewGroup : View {
         return IOSView(WeakReference(this))
     }
 
-    actual open fun removeView(view:View){
+    actual open fun removeSubView(view:View){
         if(view.superView == this){
             children.remove(view)
             view.getWidget().removeFromSuperview()
@@ -53,15 +46,15 @@ actual open class ViewGroup : View {
         }
     }
 
+    actual open fun removeAllSubViews() {
+        children.forEach {
+            it.removeFromSuperView()
+        }
+        children.clear()
+    }
+
     actual open fun layoutSubviews() {
-        layoutManager?.layoutSubviews(this)
     }
 
-    actual open fun getContentWidth(): Float {
-        return frame.width
-    }
 
-    actual open fun getContentHeight(): Float {
-        return frame.height
-    }
 }

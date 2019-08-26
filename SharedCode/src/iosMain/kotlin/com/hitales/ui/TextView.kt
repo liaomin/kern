@@ -1,12 +1,14 @@
 package com.hitales.ui
-import com.hitales.ios.ui.Convert
 import com.hitales.ui.ios.IOSTextView
 import com.hitales.utils.Frame
 import com.hitales.utils.Size
 import com.hitales.utils.WeakReference
 import kotlinx.cinterop.useContents
 import platform.CoreGraphics.CGSizeMake
-import platform.Foundation.*
+import platform.Foundation.NSMakeRange
+import platform.Foundation.NSMutableAttributedString
+import platform.Foundation.addAttribute
+import platform.Foundation.create
 import platform.UIKit.*
 
 actual open class TextView :  View {
@@ -182,9 +184,6 @@ actual open class TextView :  View {
     actual open fun setFontStyle(fontName: String) {
     }
 
-    actual open fun setShadow(color: Int, dx: Float, dy: Float, radius: Float) {
-    }
-
 
     override fun measureSize(maxWidth: Float, maxHeight: Float): Size {
         val text = this.text
@@ -242,5 +241,8 @@ actual open class TextView :  View {
             }
         }
         return attr
+    }
+
+    actual open fun setTextShadow(color: Int, dx: Float, dy: Float, radius: Float) {
     }
 }

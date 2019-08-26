@@ -4,17 +4,13 @@ import com.hitales.ui.View
 import com.hitales.ui.ViewGroup
 import com.hitales.utils.WeakReference
 import kotlinx.cinterop.ObjCAction
-import kotlinx.cinterop.memScoped
-import platform.CoreGraphics.CGImageRef
 import platform.CoreGraphics.CGRectMake
-import platform.CoreGraphics.CGSizeMake
 import platform.QuartzCore.CALayer
-import platform.UIKit.UIEvent
 import platform.UIKit.UIView
 import platform.UIKit.UIWindow
 
 
-class IOSView(protected val mView: WeakReference<View>) : UIView(CGRectMake(0.0,0.0,0.0,0.0)) {
+class IOSView(val mView: WeakReference<View>) : UIView(CGRectMake(0.0,0.0,0.0,0.0)) {
 
     @ObjCAction
     fun willMoveToSuperview(superview: UIView?){
@@ -46,10 +42,18 @@ class IOSView(protected val mView: WeakReference<View>) : UIView(CGRectMake(0.0,
     }
 
     override fun displayLayer(layer: CALayer) {
+        this.layer.backgroundColor = null
         val view = mView.get()
         if(view != null){
             view.mBackground?.onDraw(layer,view.mBackgroundColor)
         }
     }
 
+
+//    override fun drawLayer(layer: CALayer, inContext: CGContextRef?) {
+//        val view = mView.get()
+//        if(view != null){
+//            view.mBackground?.onDraw(layer,view.mBackgroundColor)
+//        }
+//    }
 }

@@ -79,6 +79,10 @@ open class TestImageController :TestViewController(){
         view.resizeMode = ImageResizeMode.SCALE_CENTER_CROP
         addView(view, "SCALE_CENTER_CROP",index++)
 
+        val data = image1.toData()
+
+        println(data)
+
     }
 }
 

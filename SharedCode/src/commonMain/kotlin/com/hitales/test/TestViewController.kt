@@ -53,8 +53,9 @@ open class TestViewController : BasicController() {
 //        view.setBorderRadius(50f)
 //        view.setBorderColor(Colors.BLUE)
 
+        val color = 0x66FF0000
         view = TextView("文本")
-        view.setBackgroundColor(Colors.RED)
+        view.setBackgroundColor(color)
         view.setShadow(Colors.BLUE,9f,5f,5f)
         addView(view,"测试颜色",getIndex(),Colors.BLUE)
         view.setBorderWidth(1f)
@@ -63,7 +64,7 @@ open class TestViewController : BasicController() {
 
 
         view = TextView("文本")
-        view.setBackgroundColor(Colors.RED)
+        view.setBackgroundColor(color)
         view.setShadow(Colors.BLUE,30f,-20f,30f)
         addView(view,"测试颜色",getIndex(),Colors.BLUE)
         view.setBorderWidth(1f)

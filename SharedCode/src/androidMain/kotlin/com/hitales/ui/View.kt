@@ -291,7 +291,7 @@ actual open class View {
         return mBackground
     }
 
-    open fun onFrameChanged() {
+    actual open fun onFrameChanged() {
         var params = getLayoutParams()
         mWidget.layoutParams = params
     }
@@ -501,10 +501,5 @@ actual open class View {
         getOrCreateBackground().setShadow(radius,dx, dy, color)
         onFrameChanged()
         this.checkLayerType()
-    }
-
-    actual open fun getVisibleFrame(frame: Frame) {
-        getWidget().getLocalVisibleRect(tempRect)
-        frame.set(PixelUtil.toDIPFromPixel(tempRect.left.toFloat()),PixelUtil.toDIPFromPixel(tempRect.top.toFloat()),PixelUtil.toDIPFromPixel(tempRect.width().toFloat()),PixelUtil.toDIPFromPixel(tempRect.height().toFloat()))
     }
 }

@@ -3,11 +3,10 @@ package com.hitales.ui.android
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.StateListDrawable
-import com.hitales.test.TestLineHeight
 import com.hitales.ui.BorderStyle
-import com.hitales.ui.utils.PixelUtil
 import com.hitales.ui.Colors
 import com.hitales.ui.ViewState
+import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame
 
 
@@ -265,14 +264,16 @@ class Background : StateListDrawable {
         var borderBottomLeftRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomLeftRadius).toInt().toFloat(),maxRadius)
         val backgroundColor = getCurrentColor()
 
-        mOuterPath.rewind()
-        mOuterPath.addRoundRect(mTempRectF, floatArrayOf(borderTopLeftRadius,borderTopLeftRadius,borderTopRightRadius,borderTopRightRadius,borderBottomRightRadius,borderBottomRightRadius,borderBottomLeftRadius,borderBottomLeftRadius),Path.Direction.CW)
-        val paint = this.mPaint
-        paint.setShadowLayer(shadowRadius / shadowScale,shadowDx,shadowDy,shadowColor)
-        paint.style = Paint.Style.FILL
-        paint.color = backgroundColor
-        canvas.drawPath(mOuterPath,mPaint)
-        paint.clearShadowLayer()
+        if(haveShadow()){
+            mOuterPath.rewind()
+            mOuterPath.addRoundRect(mTempRectF, floatArrayOf(borderTopLeftRadius,borderTopLeftRadius,borderTopRightRadius,borderTopRightRadius,borderBottomRightRadius,borderBottomRightRadius,borderBottomLeftRadius,borderBottomLeftRadius),Path.Direction.CW)
+            val paint = this.mPaint
+            paint.setShadowLayer(shadowRadius / shadowScale,shadowDx,shadowDy,shadowColor)
+            paint.style = Paint.Style.FILL
+            paint.color = backgroundColor
+            canvas.drawPath(mOuterPath,mPaint)
+            paint.clearShadowLayer()
+        }
 
         if(haveBorderRadius()){
             //有圆角

@@ -4,8 +4,10 @@ import com.hitales.ios.ui.setContentsWithImage
 import com.hitales.ui.BorderStyle
 import com.hitales.ui.Colors
 import com.hitales.ui.toUIColor
-import com.hitales.utils.Frame
-import kotlinx.cinterop.*
+import com.hitales.utils.WeakReference
+import kotlinx.cinterop.createValues
+import kotlinx.cinterop.useContents
+import kotlinx.cinterop.value
 import platform.CoreGraphics.*
 import platform.QuartzCore.CALayer
 import platform.UIKit.*
@@ -14,7 +16,7 @@ import platform.posix.M_PI_2
 import kotlin.math.max
 import kotlin.math.min
 
-class Background {
+class Background(val layerRef:WeakReference<CALayer>) {
 
     var borderLeftWidth:Float = 0f
         private set(value) {
@@ -78,6 +80,13 @@ class Background {
 
     private var borderStyle = BorderStyle.SOLID
 
+    var shadowRadius: Float = 0f
+
+    var shadowDx: Float = 0f
+
+    var shadowDy: Float = 0f
+
+    var shadowColor: Int = 0
 
     private fun getOuterPath(size: CGSize,borderLeftWidth:Double,borderTopWidth:Double,borderRightWidth:Double,borderBottomWidth:Double,borderTopLeftRadius:Double,borderTopRightRadius:Double,borderBottomRightRadius:Double,borderBottomLeftRadius:Double):UIBezierPath{
         val path = UIBezierPath.bezierPath()
@@ -94,6 +103,23 @@ class Background {
         path.addArcWithCenter(CGPointMake(borderBottomLeftRadius,size.height - borderBottomLeftRadius),borderBottomLeftRadius, M_PI_2,M_PI,true)
         path.closePath()
         return path
+    }
+
+    private fun getOuterPath(size: CGSize):UIBezierPath{
+
+        val halfWidth = size.width / 2
+        val halfHeight = size.height / 2
+        val maxRadius = min(halfWidth,halfHeight)
+        var borderLeftWidth = min(borderLeftWidth.toDouble(),halfWidth)
+        var borderTopWidth =  min(borderTopWidth.toDouble(),halfHeight)
+        var borderRightWidth = min(borderRightWidth.toDouble(),halfWidth)
+        var borderBottomWidth = min(borderBottomWidth.toDouble(),halfHeight)
+        var borderTopLeftRadius = min(borderTopLeftRadius.toDouble(),maxRadius)
+        var borderTopRightRadius = min(borderTopRightRadius.toDouble(),maxRadius)
+        var borderBottomRightRadius = min(borderBottomRightRadius.toDouble(),maxRadius)
+        var borderBottomLeftRadius = min(borderBottomLeftRadius.toDouble(),maxRadius)
+
+        return getOuterPath(size, borderLeftWidth, borderTopWidth, borderRightWidth, borderBottomWidth, borderTopLeftRadius, borderTopRightRadius, borderBottomRightRadius, borderBottomLeftRadius)
     }
 
     private fun getDashedInnerPath(size: CGSize,borderLeftWidth:Double,borderTopWidth:Double,borderRightWidth:Double,borderBottomWidth:Double,borderTopLeftRadius:Double,borderTopRightRadius:Double,borderBottomRightRadius:Double,borderBottomLeftRadius:Double):UIBezierPath{
@@ -137,7 +163,7 @@ class Background {
     }
 
 
-    fun toDashedImage(size: CGSize,bgColor:Int,dashedScale:Double):UIImage?{
+    fun toDashedImage(size: CGSize,bgColor:Int,dashedScale:Double,image:UIImage?):UIImage?{
         UIGraphicsBeginImageContextWithOptions(CGSizeMake(size.width,size.height),false,0.0)
         val ctx = UIGraphicsGetCurrentContext()
         val halfWidth = size.width / 2
@@ -158,6 +184,10 @@ class Background {
         CGContextSetFillColorWithColor(ctx,bgColor.toUIColor().CGColor)
         CGContextAddPath(ctx, outerPath.CGPath)
         CGContextFillPath(ctx)
+
+        if(image != null){
+            CGContextDrawImage(ctx, CGRectMake(0.0,0.0,size.width,size.height),image.CGImage)
+        }
 
 //        CGContextAddPath(ctx,  innerPath.CGPath)
 //        CGContextSetStrokeColorWithColor(ctx, Colors.GREEN.toUIColor().CGColor)
@@ -427,61 +457,75 @@ class Background {
 
 
     fun onDraw(layer: CALayer,bgColor: Int,image:UIImage? = null){
-         layer.bounds.useContents {
-             val size = this.size
-             if(size.width <= 0 || size.height <= 0){
-                 return
-             }
-             val sameBorderRadius = sameBorderRadius()
-             val haveBorderWidth = haveBorderWidth()
-             if(haveBorderWidth || sameBorderRadius){
-                 val sameBorderColor = sameBorderColor()
-                 val sameBorderWidth = sameBorderWidth()
-                 var borderImage:UIImage? = null
-                 when (borderStyle){
-                     BorderStyle.SOLID -> {
-                         if(sameBorderColor && sameBorderWidth && sameBorderRadius){
-                             layer.borderColor = borderLeftColor.toUIColor().CGColor
-                             val halfWidth = size.width / 2
-                             val halfHeight = size.height / 2
-                             val maxRadius = min(halfWidth,halfHeight)
-                             layer.borderWidth = min(borderLeftWidth.toDouble(),maxRadius)
-                             layer.cornerRadius = min(maxRadius , borderTopLeftRadius.toDouble())
-                         }else{
-                             borderImage = toImage(size,bgColor,image)
+         if(layer == layerRef.get()){
+             layer.bounds.useContents {
+                 val size = this.size
+                 if(size.width <= 0 || size.height <= 0){
+                     return
+                 }
+
+                 if(haveShadow()){
+                     val outPath = getOuterPath(size)
+                     layer.shadowOpacity = 1f
+                     layer.shadowColor = shadowColor.toUIColor().CGColor
+                     layer.shadowRadius = shadowRadius.toDouble()
+                     layer.shadowOffset = CGSizeMake(shadowDx.toDouble(),shadowDy.toDouble())
+                     layer.shadowPath = outPath.CGPath
+                 }else{
+                     layer.shadowOpacity = 0f
+                 }
+
+                 val sameBorderRadius = sameBorderRadius()
+                 val haveBorderWidth = haveBorderWidth()
+                 if(haveBorderWidth || sameBorderRadius){
+                     val sameBorderColor = sameBorderColor()
+                     val sameBorderWidth = sameBorderWidth()
+                     var borderImage:UIImage? = null
+                     when (borderStyle){
+                         BorderStyle.SOLID -> {
+                             if(sameBorderColor && sameBorderWidth && sameBorderRadius){
+                                 layer.borderColor = borderLeftColor.toUIColor().CGColor
+                                 val halfWidth = size.width / 2
+                                 val halfHeight = size.height / 2
+                                 val maxRadius = min(halfWidth,halfHeight)
+                                 layer.borderWidth = min(borderLeftWidth.toDouble(),maxRadius)
+                                 layer.cornerRadius = min(maxRadius , borderTopLeftRadius.toDouble())
+                             }else{
+                                 borderImage = toImage(size,bgColor,image)
+                             }
+                         }
+                         BorderStyle.DASHED ->{
+                             borderImage = toDashedImage(size,bgColor,3.0,image)
+                         }
+                         BorderStyle.DOTTED ->{
+                             borderImage = toDashedImage(size,bgColor,1.0,image)
                          }
                      }
-                     BorderStyle.DASHED ->{
-                         borderImage = toDashedImage(size,bgColor,3.0)
+                     if(borderImage != null){
+                         layer.backgroundColor = null
+                         layer.setContentsWithImage(borderImage)
+                         layer.contentsScale = borderImage.scale
+                         layer.needsDisplayOnBoundsChange = true
+                         layer.mask = null
+                     }else{
+                         if(image != null){
+                             layer.setContentsWithImage(image)
+                         }else{
+                             layer.contents = null
+                         }
+                         layer.backgroundColor = bgColor.toUIColor().CGColor
+                         layer.needsDisplayOnBoundsChange = false
+                         layer.mask = null
                      }
-                     BorderStyle.DOTTED ->{
-                         borderImage = toDashedImage(size,bgColor,1.0)
-                     }
-                 }
-                 if(borderImage != null){
-                     layer.backgroundColor = null
-                     layer.setContentsWithImage(borderImage)
-                     layer.contentsScale = borderImage.scale
-                     layer.needsDisplayOnBoundsChange = true
-                     layer.mask = null
                  }else{
                      if(image != null){
                          layer.setContentsWithImage(image)
                      }else{
                          layer.contents = null
                      }
-                     layer.backgroundColor = bgColor.toUIColor().CGColor
                      layer.needsDisplayOnBoundsChange = false
                      layer.mask = null
                  }
-             }else{
-                 if(image != null){
-                     layer.setContentsWithImage(image)
-                 }else{
-                     layer.contents = null
-                 }
-                 layer.needsDisplayOnBoundsChange = false
-                 layer.mask = null
              }
          }
     }
@@ -502,6 +546,7 @@ class Background {
         borderTopColor = topColor
         borderRightColor = rightColor
         borderBottomColor = bottomColor
+        invalidateSelf()
     }
 
     open fun setBorderWidth(borderWidth: Float, borderStyle: BorderStyle) {
@@ -515,6 +560,7 @@ class Background {
         borderRightWidth = rightWidth
         borderBottomWidth = bottomWidth
         this.borderStyle = borderStyle
+        invalidateSelf()
     }
 
     open fun setBorderRadius(topLeftRadius:Float,topRightRadius: Float,bottomRightRadius:Float,bottomLeftRadius:Float) {
@@ -522,12 +568,18 @@ class Background {
         borderTopRightRadius = topRightRadius
         borderBottomRightRadius = bottomRightRadius
         borderBottomLeftRadius = bottomLeftRadius
+        invalidateSelf()
     }
 
     fun setBorderStyle(borderStyle: BorderStyle){
         if(this.borderStyle != borderStyle){
             this.borderStyle = borderStyle
+            invalidateSelf()
         }
+    }
+
+    fun haveShadow():Boolean{
+        return shadowRadius > 0f
     }
 
     private fun haveBorderWidth():Boolean{
@@ -548,5 +600,17 @@ class Background {
 
     private fun sameBorderRadius():Boolean{
         return  borderTopLeftRadius == borderTopRightRadius && borderTopRightRadius == borderBottomRightRadius && borderBottomRightRadius == borderBottomLeftRadius
+    }
+
+    fun setShadow(radius: Float, dx: Float, dy: Float, color: Int){
+        shadowRadius = radius
+        shadowDx = dx
+        shadowDy = dy
+        shadowColor = color
+        invalidateSelf()
+    }
+
+    fun invalidateSelf(){
+        layerRef.get()?.setNeedsDisplay()
     }
 }

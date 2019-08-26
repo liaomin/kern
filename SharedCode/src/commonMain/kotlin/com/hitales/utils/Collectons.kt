@@ -8,6 +8,8 @@ class Stack<T>(list : MutableList<T>? = null) : Iterator<T> {
 
     fun isEmpty(): Boolean = this.items.isEmpty()
 
+    fun isNotEmpty(): Boolean = !this.items.isEmpty()
+
     fun count(): Int = this.items.count()
 
     fun size(): Int = this.items.count()
@@ -38,6 +40,10 @@ class Stack<T>(list : MutableList<T>? = null) : Iterator<T> {
     }
 
     fun append(value:T) {
+        this.items.add(value)
+    }
+
+    fun push(value:T) {
         this.items.add(value)
     }
 

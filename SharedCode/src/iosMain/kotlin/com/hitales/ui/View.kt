@@ -1,24 +1,27 @@
 package com.hitales.ui
 
 import com.hitales.ios.ui.setTransformM34
-import com.hitales.ui.animation.transAnimation
+import com.hitales.ui.animation.toIOSAnimation
 import com.hitales.ui.ios.Background
 import com.hitales.ui.ios.IOSView
-import com.hitales.utils.*
-import kotlinx.cinterop.*
-import platform.CoreGraphics.CGImageRef
+import com.hitales.utils.EdgeInsets
+import com.hitales.utils.Frame
+import com.hitales.utils.Size
+import com.hitales.utils.WeakReference
+import kotlinx.cinterop.cValuesOf
+import kotlinx.cinterop.get
+import kotlinx.cinterop.memScoped
 import platform.CoreGraphics.CGRectMake
-import platform.CoreGraphics.CGSizeMake
 import platform.Foundation.NSNumber
 import platform.Foundation.numberWithFloat
 import platform.Foundation.setValue
 import platform.Foundation.valueForKeyPath
-import platform.QuartzCore.*
+import platform.QuartzCore.CAAnimation
+import platform.QuartzCore.CAAnimationDelegateProtocol
+import platform.QuartzCore.CALayer
 import platform.UIKit.*
 import platform.darwin.NSObject
 import platform.objc.sel_registerName
-import platform.posix.M_PI
-import kotlin.math.max
 import kotlin.system.getTimeMillis
 
 
@@ -67,7 +70,7 @@ actual open class View {
     actual open var frame:Frame
         set(value) {
             field = value
-            setWidgetFrame(value)
+            onFrameChanged()
         }
 
     actual var superView:ViewGroup? = null
@@ -162,7 +165,7 @@ actual open class View {
     }
 
     actual open fun removeFromSuperView(){
-        superView?.removeView(this)
+        superView?.removeSubView(this)
     }
 
     actual open fun onAttachedToWindow() {
@@ -178,10 +181,6 @@ actual open class View {
 
     actual open fun onDetachedFromView(layoutView: ViewGroup) {
 
-    }
-
-    open fun setWidgetFrame(value:Frame){
-        getWidget().setFrame(CGRectMake(value.x.toDouble(),value.y.toDouble(),value.width.toDouble(),value.height.toDouble()))
     }
 
     actual open fun setBorderColor(color: Int) {
@@ -292,16 +291,27 @@ actual open class View {
     }
 
     /**
-     * @param maxWidth 最大宽度  如果小于等于0表示无限宽
-     * @param maxHeight 最大高度  如果小于等于0表示无限高
+     * @param widthSpace 最大宽度  如果小于等于0表示无限宽
+     * @param heightSpace 最大高度  如果小于等于0表示无限高
      */
-    actual open fun measureSize(maxWidth: Float, maxHeight: Float): Size {
-        return Size(frame.width,frame.height)
+   actual open fun measureSize(widthSpace: Float,heightSpace: Float):Size {
+        val size = Size()
+        measureSize(widthSpace, heightSpace, size)
+        return size
+    }
+
+    actual open fun measureSize(widthSpace: Float,heightSpace: Float,size: Size){
+        size.set(frame.width,frame.height)
+    }
+
+    actual open fun onFrameChanged(){
+        getWidget().setFrame(CGRectMake(frame.x.toDouble(),frame.y.toDouble(),frame.width.toDouble(),frame.height.toDouble()))
     }
 
     protected fun getOrCreateBackground(): Background {
         if (mBackground == null) {
-            mBackground = Background()
+            mBackground = Background(WeakReference<CALayer>(mWidget.layer))
+//            mWidget.backgroundColor = 0.toUIColor()
         }
         mWidget.layer.setNeedsDisplay()
         return mBackground!!
@@ -309,7 +319,7 @@ actual open class View {
 
     actual open fun startAnimation(animation: Animation, completion: (() -> Unit)?) {
         mWidget.layer.setTransformM34(animation.m34)
-        val iosAnimation = transAnimation(animation)
+        val iosAnimation = animation.toIOSAnimation()
         val weakSelf = WeakReference(this)
         iosAnimation.delegate = object : NSObject(),CAAnimationDelegateProtocol{
 
@@ -325,4 +335,38 @@ actual open class View {
         }
         mWidget.layer.addAnimation(iosAnimation,"animation")
     }
+
+
+    actual var delegate: WeakReference<ViewDelegate>? = null
+
+    actual open fun releaseResource() {
+    }
+
+    actual open fun setShadow(color: Int, radius: Float, dx: Float, dy: Float) {
+        getOrCreateBackground().setShadow(radius, dx, dy, color)
+    }
+
+    /**
+     * touches
+     */
+    actual open fun dispatchTouchEvent(touches: Touches): Boolean {
+        return false
+    }
+
+    actual open fun onInterceptTouchEvent(touches: Touches): Boolean {
+        return false
+    }
+
+    actual open fun touchesBegan(touches: Touches) {
+    }
+
+    actual open fun touchesMoved(touches: Touches) {
+    }
+
+    actual open fun touchesEnded(touches: Touches) {
+    }
+
+    actual open fun touchesCancelled(touches: Touches) {
+    }
+
 }

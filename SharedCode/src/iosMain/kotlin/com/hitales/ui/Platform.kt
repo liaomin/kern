@@ -1,14 +1,11 @@
 package com.hitales.ui
-import com.hitales.test.TestController
-import platform.UIKit.UIScreen
 
+import com.hitales.test.TestController
+import com.hitales.ui.ios.ControllerManager
 import com.hitales.utils.Frame
-import com.hitales.utils.NotificationCenter
 import kotlinx.cinterop.useContents
 import kotlinx.coroutines.*
-import platform.Foundation.NSRunLoop
-import platform.Foundation.performBlock
-import platform.UIKit.UIActivityViewController
+import platform.UIKit.UIScreen
 import platform.UIKit.UIViewController
 import platform.darwin.*
 import kotlin.coroutines.CoroutineContext
@@ -76,7 +73,7 @@ actual class Platform {
     @ThreadLocal
     actual companion object {
 
-        actual val mainLoopDispatcher : CoroutineDispatcher = getdMainDispatcher()
+        actual val mainLoopDispatcher : CoroutineDispatcher = getMainDispatcher()
         actual val windowWidth:Float by lazy { platform!!.windowWidth  }
         actual val windowHeight:Float by lazy { platform!!.windowHeight  }
 
@@ -89,25 +86,30 @@ actual class Platform {
             return platform!!
         }
 
+
+
         fun init(viewController: UIViewController){
             UIScreen.mainScreen.bounds.useContents {
                 platform = Platform(this.size.width.toFloat(),this.size.height.toFloat())
-            }
-            var c =  TestController()
-            c.onCreate()
-            c.view?.apply {
-                viewController.view = getWidget()
-            }
-            c.onResume()
-            c.onViewChangedListener = {_,_,view:View? ->
-                view?.apply {
-                    viewController.view = getWidget()
+                val controllerManager = platform!!.controllerManager
+                viewController.view = controllerManager.rootView.getWidget()
+
+                var c =  TestController()
+                c.onCreate()
+                controllerManager.push(c)
+                c.onResume()
+                c.onControllerChangedListener = {_:Controller,pushController:Controller?,removeController:Controller? ->
+                    if(pushController != null){
+                        controllerManager.push(pushController)
+                    }else if(removeController != null){
+                        controllerManager.pop()
+                    }
                 }
             }
         }
 
         @UseExperimental(kotlinx.coroutines.InternalCoroutinesApi::class)
-        private fun getdMainDispatcher():CoroutineDispatcher{
+        private fun getMainDispatcher():CoroutineDispatcher{
             return MainLoopDispatcher()
         }
 
@@ -116,9 +118,12 @@ actual class Platform {
     val windowWidth:Float
     val windowHeight:Float
 
+    val controllerManager:ControllerManager
 
     private constructor(screenWidth:Float,screenHeight: Float){
         windowWidth = screenWidth
         windowHeight = screenHeight
+        val viewGroup = ViewGroup(Frame(0f,0f,screenWidth,screenHeight))
+        controllerManager = ControllerManager(viewGroup)
     }
 }

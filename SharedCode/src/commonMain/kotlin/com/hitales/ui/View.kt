@@ -79,6 +79,8 @@ expect open class View  {
 
     var superView:ViewGroup?
 
+    open fun onFrameChanged()
+
     open fun removeFromSuperView()
     open fun onAttachedToWindow()
     open fun onDetachedFromWindow()
@@ -130,8 +132,6 @@ expect open class View  {
     open fun touchesMoved(touches: Touches)
     open fun touchesEnded(touches: Touches)
     open fun touchesCancelled(touches: Touches)
-
-    open fun getVisibleFrame(frame: Frame)
 }
 
 

@@ -1,10 +1,8 @@
 package com.hitales.ui
 
-import android.widget.FrameLayout
 import com.hitales.ui.android.AndroidScrollView
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame
-import com.hitales.utils.Size
 
 
 actual open class ScrollView : com.hitales.ui.ViewGroup {
@@ -58,13 +56,6 @@ actual open class ScrollView : com.hitales.ui.ViewGroup {
         set(value) {
             getWidget().scrollEnabled = value
         }
-
-
-    override fun getVisibleFrame(frame: Frame) {
-        frame.width = this.frame.width
-        frame.height = this.frame.height
-        super.getVisibleFrame(frame)
-    }
 
     actual open fun onScroll(offsetX: Float, offsetY: Float) {
     }

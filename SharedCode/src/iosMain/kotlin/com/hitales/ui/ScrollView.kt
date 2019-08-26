@@ -3,16 +3,8 @@ package com.hitales.ui
 import com.hitales.ui.ios.IOSScrollView
 import com.hitales.utils.Frame
 import com.hitales.utils.WeakReference
-import kotlinx.cinterop.ObjCAction
-import kotlinx.cinterop.ObjCMethod
-import platform.CoreGraphics.CGRectMake
-import platform.CoreGraphics.CGRectZero
 import platform.CoreGraphics.CGSizeMake
-import platform.QuartzCore.CALayer
 import platform.UIKit.UIScrollView
-import platform.UIKit.UIView
-import platform.UIKit.UIWindow
-import platform.UIKit.layoutSubviews
 import kotlin.math.max
 
 
@@ -29,8 +21,6 @@ actual open class ScrollView : ViewGroup {
         return super.getWidget() as UIScrollView
     }
 
-    actual open fun layoutSubViews(offsetX: Float, offsetY: Float) {
-    }
 
     override fun layoutSubviews() {
         super.layoutSubviews()
@@ -55,12 +45,32 @@ actual open class ScrollView : ViewGroup {
         scrollView.setContentSize(CGSizeMake(width.toDouble(),height.toDouble()))
     }
 
-    override fun getContentHeight(): Float {
-        return Float.MAX_VALUE
-    }
+    /**
+     * default VERTICAL
+     */
+    actual open var orientation: Orientation
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        set(value) {}
+    /**
+     * default true
+     */
+    actual open var showScrollBar: Boolean
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        set(value) {}
+    /**
+     * default true
+     */
+    actual open var scrollEnabled: Boolean
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        set(value) {}
 
-    override fun getContentWidth(): Float {
-        return Float.MAX_VALUE
-    }
+    actual var scrollX: Float
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        set(value) {}
+    actual var scrollY: Float
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        set(value) {}
 
+    actual open fun onScroll(offsetX: Float, offsetY: Float) {
+    }
 }
