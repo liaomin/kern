@@ -1,8 +1,9 @@
 package com.hitales.ui.recycler
 
-import com.hitales.test.TestLineHeight
 import com.hitales.ui.Orientation
-import com.hitales.utils.*
+import com.hitales.utils.Frame
+import com.hitales.utils.Size
+import com.hitales.utils.WeakReference
 
 abstract class LayoutHelper{
 
@@ -99,14 +100,14 @@ open class DefaultCollectionViewLayout : CollectionViewLayout(){
                     Orientation.VERTICAL -> {
                         val offsetY = scrollY + frame.height
                         val bottom = last.frame.getBottom()
-                        if(offsetY >= bottom - 20){
+                        if(offsetY >= bottom - frame.height){
                             getNextPage()
                         }
                     }
                     Orientation.HORIZONTAL ->{
                         val offsetX = scrollX + frame.width
                         val right = last.frame.getRight()
-                        if(offsetX >= right - 20){
+                        if(offsetX >= right - frame.height){
                             getNextPage()
                         }
                     }

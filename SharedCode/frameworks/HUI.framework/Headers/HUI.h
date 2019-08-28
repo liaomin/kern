@@ -10,6 +10,8 @@
 
 #import "CALayer+Image.h"
 #import "Convert.h"
+#import "HCollectionView.h"
+
 
 //! Project version number for HUI.
 FOUNDATION_EXPORT double HUIVersionNumber;

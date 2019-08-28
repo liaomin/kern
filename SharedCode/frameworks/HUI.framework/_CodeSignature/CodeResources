@@ -12,13 +12,17 @@
 		<data>
 		olNXi8Ku5J7MltZu5ZsfXkEqdWY=
 		</data>
+		<key>Headers/HCollectionView.h</key>
+		<data>
+		hl9zFCeVTvRr8dn3iax1mrMWor0=
+		</data>
 		<key>Headers/HUI.h</key>
 		<data>
-		E8fVKjiyPe5bMHFh0U0Lvg1mu6w=
+		ZxlZMbe7wYRwPzpHGGtZW2dkhNc=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		v/+eK4ppdTPfuRi/mWFQLKZC1XE=
+		aBUmJWMDyFP1zgkUjWRo8VekG7Q=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -41,11 +45,18 @@
 			lg4XPtdA+0fsV/TVVlnelg5cHvXTVcEUdoSpfxKMfIE=
 			</data>
 		</dict>
+		<key>Headers/HCollectionView.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			CnoR9DBXKibumdc8MV/QxvI7qhhHzhdS+PptjOt+bJc=
+			</data>
+		</dict>
 		<key>Headers/HUI.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			uq7XFt7AydfNJbSafmhjCFlNOHLLeyLx4nxkVPpbTew=
+			c/JYY5BGFDisQju0TIC/3nh1W44dl3uGYKkhPgOIPok=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

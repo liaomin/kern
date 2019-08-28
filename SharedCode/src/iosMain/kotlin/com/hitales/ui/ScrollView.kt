@@ -3,6 +3,8 @@ package com.hitales.ui
 import com.hitales.ui.ios.IOSScrollView
 import com.hitales.utils.Frame
 import com.hitales.utils.WeakReference
+import kotlinx.cinterop.useContents
+import platform.CoreGraphics.CGPointMake
 import platform.CoreGraphics.CGSizeMake
 import platform.UIKit.UIScrollView
 import kotlin.math.max
@@ -48,9 +50,8 @@ actual open class ScrollView : ViewGroup {
     /**
      * default VERTICAL
      */
-    actual open var orientation: Orientation
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
+    actual open var orientation: Orientation = Orientation.VERTICAL
+
     /**
      * default true
      */
@@ -65,11 +66,21 @@ actual open class ScrollView : ViewGroup {
         set(value) {}
 
     actual var scrollX: Float
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
+        get() {
+            return getWidget().contentOffset.useContents { x.toFloat() }
+        }
+        set(value) {
+            getWidget().contentOffset = CGPointMake(value.toDouble(),scrollY.toDouble())
+        }
+
+
     actual var scrollY: Float
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
+        get() {
+            return getWidget().contentOffset.useContents { x.toFloat() }
+        }
+        set(value) {
+            getWidget().contentOffset = CGPointMake(scrollX.toDouble(),value.toDouble())
+        }
 
     actual open fun onScroll(offsetX: Float, offsetY: Float) {
     }

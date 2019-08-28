@@ -1,6 +1,5 @@
 package com.hitales.ui.recycler
 
-import com.hitales.ui.View
 import com.hitales.utils.Size
 
 
@@ -52,12 +51,5 @@ abstract class CollectionViewAdapter {
 
     abstract fun getItemViewSize(collectionView:CollectionView,section:Int,row:Int,type:Int,size: Size)
 
-    open fun onItemPress(collectionView:CollectionView,section:Int,row:Int,cell:CollectionViewCell){
-
-    }
-
-    open fun onItemLongPress(collectionView:CollectionView,section:Int,row:Int,cell:CollectionViewCell){
-
-    }
 
 }

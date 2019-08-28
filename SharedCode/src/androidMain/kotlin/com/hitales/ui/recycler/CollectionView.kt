@@ -171,11 +171,11 @@ actual open class CollectionView : ScrollView {
     }
 
     fun onItemPress(section:Int,row:Int,cell:CollectionViewCell){
-        adapter?.onItemPress(this,section,row,cell)
+//        adapter?.onItemPress(this,section,row,cell)
     }
 
     fun onItemLongPress(section:Int,row:Int,cell:CollectionViewCell){
-        adapter?.onItemLongPress(this,section,row,cell)
+//        adapter?.onItemLongPress(this,section,row,cell)
     }
 
 

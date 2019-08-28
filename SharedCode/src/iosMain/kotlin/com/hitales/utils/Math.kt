@@ -1,10 +1,7 @@
 package com.hitales.utils
 
-import platform.posix.drand48
-import platform.posix.srand48
-import platform.posix.time
+import platform.posix.arc4random
 
 actual fun random():Double {
-    srand48(time(null))
-    return drand48()
+    return ((arc4random().toLong()%100)+1) / 100.0
 }

@@ -2,18 +2,18 @@ package com.hitales.ui.recycler
 
 import com.hitales.ui.ScrollView
 import com.hitales.utils.Frame
-import platform.CoreGraphics.CGRectMake
+import com.hitales.utils.WeakReference
 import platform.UIKit.UICollectionView
-import platform.UIKit.UICollectionViewCell
-import platform.UIKit.UICollectionViewDelegateFlowLayoutProtocol
 import platform.UIKit.UIScrollView
-import platform.darwin.NSObject
 
-class IOSCell : UICollectionViewCell(CGRectMake(0.0,0.0,0.0,0.0)){
-
-}
 
 actual open class CollectionView : ScrollView {
+
+    companion object {
+        val HEADER_TYPE = -0xFFFFF0
+        val FOOTER_TYPE = -0xFFFFF1
+    }
+
 
     actual val layout: CollectionViewLayout
 
@@ -28,18 +28,14 @@ actual open class CollectionView : ScrollView {
         }
 
 
-    val uiCollectionViewDelegate:UICollectionViewDelegateFlowLayoutProtocol = object:NSObject(),UICollectionViewDelegateFlowLayoutProtocol{
-
-    }
-
     actual constructor(frame: Frame, layout: CollectionViewLayout):super(frame){
         this.layout = layout
+        layout.collectionViewRef = WeakReference(this)
     }
 
     override fun createWidget(): UIScrollView {
-        var widget = UICollectionView(CGRectMake(0.0,0.0,0.0,0.0),IOSCollectionViewLayout())
-        widget.delegate = uiCollectionViewDelegate
-        widget.registerClass(UICollectionViewCell.`class`(),"cell")
+        val weakSelf = WeakReference(this)
+        var widget = IOSCollectionView(weakSelf)
         return widget
     }
 
@@ -51,4 +47,8 @@ actual open class CollectionView : ScrollView {
         getWidget().reloadData()
     }
 
+    override fun onScroll(offsetX: Float, offsetY: Float) {
+        super.onScroll(offsetX, offsetY)
+        layout?.onScroll(offsetX,offsetY)
+    }
 }
