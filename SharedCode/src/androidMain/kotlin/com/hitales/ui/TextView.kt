@@ -24,7 +24,7 @@ actual open class TextView :  View {
         get() = getWidget().text?:""
         set(value) {
             getWidget().text = value
-            onTextValueSet()
+            dirt()
         }
 
     actual open var textSize: Float
@@ -172,7 +172,7 @@ actual open class TextView :  View {
     actual open var decorationLine: TextDecorationLine = TextDecorationLine.NONE
         set(value) {
             field = value
-            this.onTextValueSet()
+            this.dirt()
 //            val paint = textView.paint
 //            when(value){
 //                TextDecorationLine.NONE -> paint.flags = 0
@@ -238,47 +238,34 @@ actual open class TextView :  View {
 
         }
 
-//    /**
-//     * default AUTO
-//     */
-//    actual open var writingDirection: TextWritingDirection = TextWritingDirection.AUTO
-//        set(value) {
-//            field = value
-//            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
-//                val textView = getTextWidget()
-//                when(value){
-//                    TextWritingDirection.AUTO -> textView.textDirection = android.view.View.TEXT_DIRECTION_INHERIT
-//                    TextWritingDirection.LTR -> textView.textDirection = android.view.View.TEXT_DIRECTION_LTR
-//                    TextWritingDirection.RTL -> textView.textDirection = android.view.View.TEXT_DIRECTION_RTL
-//                }
-//            }
-//        }
 
-
-    private fun onTextValueSet(){
+    private fun dirt(){
         val text = text
         val textView = getTextWidget()
-        if(text != null){
-            when(decorationLine){
-                TextDecorationLine.NONE -> textView.text = text
-                TextDecorationLine.UNDERLINE -> {
-                    val sp = SpannableString(textView.text)
-                    sp.setSpan(UnderlineSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    textView.text = sp
+        if(text != ""){
+            if(decorationLine != TextDecorationLine.NONE || lineHeight != 0f){
+                val sp = SpannableString(textView.text)
+                when(decorationLine){
+                    TextDecorationLine.UNDERLINE -> {
+                        sp.setSpan(UnderlineSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    }
+                    TextDecorationLine.LINE_THROUGH -> {
+                        sp.setSpan(StrikethroughSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    }
+                    TextDecorationLine.UNDERLINE_LINE_THROUGH ->  {
+                        val sp = SpannableString(textView.text)
+                        sp.setSpan(StrikethroughSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        sp.setSpan(UnderlineSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    }
                 }
-                TextDecorationLine.LINE_THROUGH -> {
-                    val sp = SpannableString(textView.text)
-                    sp.setSpan(StrikethroughSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    textView.text = sp
-                }
-                TextDecorationLine.UNDERLINE_LINE_THROUGH ->  {
-                    val sp = SpannableString(textView.text)
-                    sp.setSpan(StrikethroughSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    sp.setSpan(UnderlineSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    textView.text = sp
-                }
+                textView.text = sp
+            }else{
+                textView.text = text
             }
+        }else{
+            textView.text = ""
         }
     }
+
 
 }

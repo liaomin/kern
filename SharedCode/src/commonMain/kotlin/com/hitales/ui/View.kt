@@ -11,6 +11,7 @@ enum class Orientation{
 }
 
 enum class ViewState(val value:Int) {
+    ALL(-1),
     NORMAL(0),
     PRESSED(1),
     FOCUSED(2),
