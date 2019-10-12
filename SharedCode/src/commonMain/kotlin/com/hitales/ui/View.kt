@@ -11,7 +11,6 @@ enum class Orientation{
 }
 
 enum class ViewState(val value:Int) {
-    ALL(-1),
     NORMAL(0),
     PRESSED(1),
     FOCUSED(2),
@@ -53,7 +52,7 @@ expect open class View  {
 
     open var elevation:Float
 
-    open var hidden:Boolean
+    open var isHidden:Boolean
 
     open var borderStyle:BorderStyle
 

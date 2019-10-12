@@ -36,7 +36,7 @@ actual open class TextView :  View {
     actual open var textColor: Int
         get() = textColorList.defaultColor
         set(value) {
-            textColorList.setColor(value)
+            textColorList.setColorForState(value)
         }
 
     actual open var bold:Boolean = false

@@ -1,7 +1,6 @@
 package com.hitales.ui
 
 import android.animation.Animator
-import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.View
@@ -15,11 +14,7 @@ import com.hitales.utils.Frame
 import com.hitales.utils.Size
 import com.hitales.utils.WeakReference
 
-actual open class View {
-
-    companion object {
-        val tempRect = Rect()
-    }
+actual open class View : View.OnClickListener,View.OnLongClickListener{
 
     protected val mWidget: android.view.View = createWidget()
 
@@ -52,6 +47,8 @@ actual open class View {
 
     init {
         mWidget.setBackgroundColor(mBackgroundColor)
+        mWidget.setOnClickListener(this)
+        mWidget.setOnLongClickListener(this)
     }
 
     var innerPadding : EdgeInsets? = null
@@ -74,11 +71,11 @@ actual open class View {
             onFrameChanged()
         }
 
-    actual open var hidden: Boolean = false
+    actual open var isHidden: Boolean = false
         set(value) {
             field = value
             if(value){
-                mWidget.visibility = android.view.View.GONE
+                mWidget.visibility = android.view.View.INVISIBLE
             }else{
                 mWidget.visibility = android.view.View.VISIBLE
             }
@@ -319,29 +316,23 @@ actual open class View {
         }
     }
 
+    override fun onClick(v: View) {
+        onPressListener?.invoke(this)
+        delegate?.get()?.onPress(this)
+    }
+
+    override fun onLongClick(v: View): Boolean {
+        onLongPressListener?.invoke(this)
+        delegate?.get()?.onLongPress(this)
+        return onLongPressListener != null
+    }
+
     actual fun setOnPressListener(listener: (view: com.hitales.ui.View) -> Unit) {
         onPressListener = listener
-        if(listener != null){
-            mWidget.setOnClickListener{
-                onPressListener?.invoke(this)
-                delegate?.get()?.onPress(this)
-            }
-        }else{
-            mWidget.setOnClickListener(null)
-        }
     }
 
     actual fun setOnLongPressListener(listener: (iew: com.hitales.ui.View) -> Unit) {
         onLongPressListener = listener
-        if(listener != null){
-            mWidget.setOnLongClickListener{
-                onLongPressListener?.invoke(this)
-                delegate?.get()?.onLongPress(this)
-                return@setOnLongClickListener true
-            }
-        }else{
-            mWidget.setOnLongClickListener(null)
-        }
     }
 
     protected open fun getLayoutParams(): android.view.ViewGroup.LayoutParams {

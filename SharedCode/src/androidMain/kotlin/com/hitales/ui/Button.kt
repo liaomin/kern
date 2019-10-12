@@ -6,10 +6,16 @@ import com.hitales.ui.android.AndroidButton
 import com.hitales.ui.android.StateListColor
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
-import com.hitales.utils.Size
 
 
 actual open class Button :  com.hitales.ui.TextView {
+
+    actual open var isEnabled: Boolean
+        get() = getWidget().isEnabled
+        set(value) {
+            getWidget().isEnabled = value
+        }
+
 
     actual constructor(text:CharSequence?,frame: Frame):super(text,frame){
         val widget = getWidget()
@@ -52,6 +58,8 @@ actual open class Button :  com.hitales.ui.TextView {
     override fun getDefaultColorList(): StateListColor {
         return StateListColor(Color.WHITE)
     }
+
+
 
 
 }

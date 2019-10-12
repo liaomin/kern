@@ -144,7 +144,7 @@ class Background : StateListDrawable {
     }
 
     fun setColor(color:Int){
-        backgroundColors.setColor(color)
+        backgroundColors.setColorForState(color)
     }
 
     override fun isStateful(): Boolean {
