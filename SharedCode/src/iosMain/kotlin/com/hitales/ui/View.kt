@@ -224,7 +224,7 @@ actual open class View {
 
     actual open var elevation: Float = 0f
 
-    actual open var hidden: Boolean
+    actual open var isHidden: Boolean
         get() = mWidget.hidden
         set(value) {
             mWidget.hidden = value

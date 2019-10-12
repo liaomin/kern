@@ -14,7 +14,7 @@ import com.hitales.utils.Frame
 import com.hitales.utils.Size
 import com.hitales.utils.WeakReference
 
-actual open class View : View.OnClickListener,View.OnLongClickListener{
+actual open class View{
 
     protected val mWidget: android.view.View = createWidget()
 
@@ -47,8 +47,6 @@ actual open class View : View.OnClickListener,View.OnLongClickListener{
 
     init {
         mWidget.setBackgroundColor(mBackgroundColor)
-        mWidget.setOnClickListener(this)
-        mWidget.setOnLongClickListener(this)
     }
 
     var innerPadding : EdgeInsets? = null
@@ -316,23 +314,29 @@ actual open class View : View.OnClickListener,View.OnLongClickListener{
         }
     }
 
-    override fun onClick(v: View) {
-        onPressListener?.invoke(this)
-        delegate?.get()?.onPress(this)
-    }
-
-    override fun onLongClick(v: View): Boolean {
-        onLongPressListener?.invoke(this)
-        delegate?.get()?.onLongPress(this)
-        return onLongPressListener != null
-    }
-
     actual fun setOnPressListener(listener: (view: com.hitales.ui.View) -> Unit) {
         onPressListener = listener
+        if(listener != null){
+            mWidget.setOnClickListener{
+                onPressListener?.invoke(this)
+                delegate?.get()?.onPress(this)
+            }
+        }else{
+            mWidget.setOnClickListener(null)
+        }
     }
 
     actual fun setOnLongPressListener(listener: (iew: com.hitales.ui.View) -> Unit) {
         onLongPressListener = listener
+        if(listener != null){
+            mWidget.setOnLongClickListener{
+                onLongPressListener?.invoke(this)
+                delegate?.get()?.onLongPress(this)
+                return@setOnLongClickListener true
+            }
+        }else{
+            mWidget.setOnLongClickListener(null)
+        }
     }
 
     protected open fun getLayoutParams(): android.view.ViewGroup.LayoutParams {

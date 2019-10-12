@@ -12,6 +12,9 @@ enum class Orientation{
 
 enum class ViewState(val value:Int) {
     NORMAL(0),
+    /**
+     * android 必须设置 setOnPressListener PRESSED状态才会生效
+     */
     PRESSED(1),
     FOCUSED(2),
     DISABLED(3),

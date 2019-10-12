@@ -2,14 +2,20 @@ package com.hitales.ui
 
 import com.hitales.ui.ios.IOSButtonView
 import com.hitales.ui.ios.StateListColor
-import com.hitales.utils.*
-import platform.CoreGraphics.CGRectMake
+import com.hitales.utils.EdgeInsets
+import com.hitales.utils.Frame
+import com.hitales.utils.Size
+import com.hitales.utils.WeakReference
 import platform.UIKit.*
-import platform.objc.sel_registerName
-import kotlin.system.getTimeMillis
 
 
 actual open class Button :  com.hitales.ui.TextView {
+
+    actual open var isEnabled: Boolean
+        get() = getWidget().isEnabled()
+        set(value) {
+            getWidget().enabled = value
+        }
 
     val bgColorList = StateListColor(Colors.BLUE)
 
@@ -83,6 +89,7 @@ actual open class Button :  com.hitales.ui.TextView {
         }
         return size
     }
+
 
 
 

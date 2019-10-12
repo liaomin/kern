@@ -155,7 +155,7 @@ class Background : StateListDrawable {
 
     private var mDrawablesIndex = 0
 
-    private var lastState = ViewState.NORMAL.value
+    private var lastState:IntArray = intArrayOf()
 
     fun setDrawable(drawable: Drawable,state: ViewState){
         if(mDrawables == null){
@@ -167,13 +167,14 @@ class Background : StateListDrawable {
             ViewState.FOCUSED->states = intArrayOf(android.R.attr.state_focused)
             ViewState.PRESSED->states = intArrayOf(android.R.attr.state_pressed)
             ViewState.SELECTED->states = intArrayOf(android.R.attr.state_selected)
+            ViewState.DISABLED->states = intArrayOf(-android.R.attr.state_enabled)
         }
         addState(states,drawable)
         mDrawables?.set(stateValue,mDrawablesIndex)
         mDrawablesIndex++
     }
 
-    override fun onStateChange(stateSet: IntArray?): Boolean {
+    override fun onStateChange(stateSet: IntArray): Boolean {
         if(stateSet != null){
             var stateValue = ViewState.NORMAL.value
             var enable = false
@@ -191,10 +192,9 @@ class Background : StateListDrawable {
             }
             if(!enable) stateValue = ViewState.DISABLED.value
             var index = mDrawables?.get(stateValue)
-            if(lastState != stateValue){
+            if(backgroundColors != null && backgroundColors.getColorsSize() > 1){
                 invalidateSelf()
             }
-            lastState = stateValue
             if(index != null){
                 return super.selectDrawable(index)
             }

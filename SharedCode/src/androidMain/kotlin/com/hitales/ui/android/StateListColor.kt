@@ -25,6 +25,10 @@ open class StateListColor(color:Int) : ColorStateList(arrayOf(IntArray(0)), intA
 
     private val stateColors = ArrayList<MStateColor>()
 
+    fun getColorsSize():Int{
+        return stateColors.size
+    }
+
     init {
         this.setColorForState(color)
     }
@@ -44,6 +48,10 @@ open class StateListColor(color:Int) : ColorStateList(arrayOf(IntArray(0)), intA
 
     override fun getColorForState(stateSet: IntArray?, defaultColor: Int): Int {
         if(stateSet != null){
+            if(stateColors.size > 1){
+                for (i in 0 until stateSet.size) print("${stateSet[i]}  ")
+                println()
+            }
             var normalStateColor:MStateColor? = null
             for (i in stateColors.size - 1 downTo 0 ){
                 val temp = stateColors[i]
