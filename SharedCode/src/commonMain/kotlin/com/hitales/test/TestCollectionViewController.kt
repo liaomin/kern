@@ -26,8 +26,6 @@ open class TestCollectionViewController : BasicController() {
 
     }
 
-
-
     override fun onCreate() {
         super.onCreate()
         val collectionView = CollectionView( Frame(0f,0f,Platform.windowWidth,Platform.windowHeight - 40))
@@ -84,7 +82,7 @@ open class TestCollectionViewController : BasicController() {
                     v.setBackgroundColor(Colors.TRANSPARENT)
 
                     c.contentView.setShadow(Colors.RED,10f,6f,0f)
-                    v.setBorderRadius(0f)
+                    c.contentView.setBorderRadius(10f)
                 }else{
                     v.setBackgroundColor(0xFF000000.toInt() or (0xFFFFFF * random()).toInt())
                     v.setBackgroundColor(Colors.BLUE, ViewState.PRESSED)

@@ -6,22 +6,35 @@ import com.hitales.ui.Colors
 import com.hitales.ui.ViewState
 
 
-open class StateListColor(color:Int) : ColorStateList(arrayOf(IntArray(0)), intArrayOf(color)){
-
-    class MStateColor(val state:ViewState,val color:Int){
-        val stateSet:IntArray
-        init {
-            when(state){
-                ViewState.FOCUSED->stateSet = intArrayOf(android.R.attr.state_focused)
-                ViewState.PRESSED->stateSet = intArrayOf(android.R.attr.state_pressed)
-                ViewState.SELECTED->stateSet = intArrayOf(android.R.attr.state_selected)
-                ViewState.DISABLED->stateSet = intArrayOf(-android.R.attr.state_enabled)
-                else -> {
-                    stateSet = intArrayOf(android.R.attr.state_enabled)
-                }
-            }
+inline fun ViewState.toStateSet():IntArray{
+    val stateSet:IntArray
+    when(this){
+        ViewState.FOCUSED->stateSet = intArrayOf(android.R.attr.state_focused)
+        ViewState.PRESSED->stateSet = intArrayOf(android.R.attr.state_pressed)
+        ViewState.SELECTED->stateSet = intArrayOf(android.R.attr.state_selected)
+        ViewState.DISABLED->stateSet = intArrayOf(-android.R.attr.state_enabled)
+        else -> {
+            stateSet = intArrayOf(android.R.attr.state_enabled)
         }
     }
+    return stateSet
+}
+
+open class StateListColor(color:Int) : ColorStateList(arrayOf(IntArray(0)), intArrayOf(color)),Comparator<StateListColor.MStateColor>{
+
+    class MStateColor(val state:ViewState,val color:Int){
+        val stateSet:IntArray = state.toStateSet()
+    }
+
+    override fun compare(o1: MStateColor, o2: MStateColor): Int {
+        if(o1.state.equals(ViewState.NORMAL)){
+            return -1
+        }else if(o2.state.equals(ViewState.NORMAL)){
+            return 1
+        }
+        return 1
+    }
+
 
     private val stateColors = ArrayList<MStateColor>()
 
@@ -44,27 +57,16 @@ open class StateListColor(color:Int) : ColorStateList(arrayOf(IntArray(0)), intA
             }
         }
         stateColors.add(MStateColor(state,color))
+        stateColors.sortWith(this)
     }
 
     override fun getColorForState(stateSet: IntArray?, defaultColor: Int): Int {
         if(stateSet != null){
-            if(stateColors.size > 1){
-                for (i in 0 until stateSet.size) print("${stateSet[i]}  ")
-                println()
-            }
-            var normalStateColor:MStateColor? = null
             for (i in stateColors.size - 1 downTo 0 ){
                 val temp = stateColors[i]
-                val isNormal = temp.state.equals(ViewState.NORMAL)
-                if(normalStateColor == null && isNormal){
-                    normalStateColor = temp
-                }
-                if(!isNormal && StateSet.stateSetMatches(temp.stateSet,stateSet)){
+                if(StateSet.stateSetMatches(temp.stateSet,stateSet)){
                     return temp.color
                 }
-            }
-            if(normalStateColor != null){
-                return  normalStateColor.color
             }
         }
         return getColorForState(ViewState.NORMAL)

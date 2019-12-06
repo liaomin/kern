@@ -177,26 +177,35 @@ class Background : StateListDrawable {
     override fun onStateChange(stateSet: IntArray): Boolean {
         if(stateSet != null){
             var stateValue = ViewState.NORMAL.value
-            var enable = false
-            for ( i in 0 until stateSet.size){
-                var state = stateSet[i]
-                if(state == android.R.attr.state_enabled){
-                    enable = true
-                    continue
-                }
-                when (state){
-                    android.R.attr.state_focused -> stateValue = ViewState.FOCUSED.value
-                    android.R.attr.state_pressed -> stateValue = ViewState.PRESSED.value
-                    android.R.attr.state_selected -> stateValue = ViewState.SELECTED.value
-                }
-            }
-            if(!enable) stateValue = ViewState.DISABLED.value
-            var index = mDrawables?.get(stateValue)
             if(backgroundColors != null && backgroundColors.getColorsSize() > 1){
                 invalidateSelf()
             }
-            if(index != null){
-                return super.selectDrawable(index)
+            val drawables:HashMap<Int,Int>? = mDrawables
+            if(drawables != null){
+                var index:Int? = null
+                var enable = false
+                for ( i in 0 until stateSet.size){
+                    var state = stateSet[i]
+                    if(state == android.R.attr.state_enabled){
+                        enable = true
+                        continue
+                    }
+                    when (state){
+                        android.R.attr.state_focused -> stateValue = ViewState.FOCUSED.value
+                        android.R.attr.state_pressed -> stateValue = ViewState.PRESSED.value
+                        android.R.attr.state_selected -> stateValue = ViewState.SELECTED.value
+                    }
+                    val temp = drawables.get(stateValue)
+                    if(temp != null){
+                        index = temp
+                    }
+                }
+                if(!enable){
+                    index = drawables.get(ViewState.DISABLED.value)
+                }
+                if(index != null){
+                    return super.selectDrawable(index)
+                }
             }
         }
         return super.onStateChange(stateSet)
