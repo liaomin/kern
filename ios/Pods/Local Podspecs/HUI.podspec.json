@@ -1,0 +1,25 @@
+{
+  "name": "HUI",
+  "swift_version": "5.0.1",
+  "version": "0.0.1",
+  "summary": "ui of HUI.",
+  "description": "xxx",
+  "homepage": "http://XX/HUI",
+  "license": "MIT",
+  "authors": {
+    "liaomin": "446287830@qq.com"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source": {
+    "git": "http://xxx/UILib.git",
+    "tag": "0.0.1"
+  },
+  "exclude_files": "HUI/Exclude",
+  "source_files": [
+    "HUI",
+    "HUI/**/*.{h,m,swift}",
+    "HUI/Exclude"
+  ]
+}
