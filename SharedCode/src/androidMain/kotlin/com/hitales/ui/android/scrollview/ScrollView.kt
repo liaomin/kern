@@ -5,12 +5,10 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.hitales.android.R
 import com.hitales.ui.Colors
-import com.hitales.ui.Orientation
 import com.hitales.ui.Platform
 import com.hitales.ui.android.ViewStyle
 
@@ -99,7 +97,7 @@ open class ScrollView : RecyclerView {
         this.frameLayout = frameLayout
         frameLayout.setBackgroundColor(Colors.CLEAR)
         adapter = object : Adapter<ViewHolder>(){
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): ViewHolder {
                 return ViewHolder(frameLayout)
             }
 
