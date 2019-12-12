@@ -1,10 +1,7 @@
 package com.hitales.test
 
 import com.hitales.ui.*
-import com.hitales.ui.recycler.CollectionView
-import com.hitales.ui.recycler.CollectionViewAdapter
 import com.hitales.utils.Frame
-import com.hitales.utils.Size
 import com.hitales.utils.assertUI
 
 class TestController : BasicController() {
@@ -33,7 +30,16 @@ class TestController : BasicController() {
         }
 
         index++
-        v  = Button("view border测试", Frame(10f,(buttonHeight+10)*1+10f, buttonWidth , buttonHeight))
+        v  = Button("view 背景测试", Frame(10f,(buttonHeight+10)*index+10f, buttonWidth , buttonHeight))
+        rootView.addSubView(v)
+        v.setBackgroundColor(Colors.BLUE)
+        v.setBackgroundColor(Colors.RED,ViewState.PRESSED)
+        v.setOnPressListener {
+            this.push(BackgroundTestControllerTest())
+        }
+
+        index++
+        v  = Button("view border测试", Frame(10f,(buttonHeight+10)*index+10f, buttonWidth , buttonHeight))
         rootView.addSubView(v)
         v.setBackgroundColor(Colors.BLUE)
         v.setBackgroundColor(Colors.RED,ViewState.PRESSED)

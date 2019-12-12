@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import <HUI/HUI.h>
 
 @interface ViewController ()
 

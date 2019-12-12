@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import <QuartzCore/QuartzCore.h>
 #import <SharedCode/SharedCode.h>
 #import "BorderView.h"
 
@@ -17,35 +18,36 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    BorderView* b = [[BorderView alloc] initWithFrame:CGRectMake(20, 50, 200, 200)];
-    [b test];
-    [b setNeedsDisplay];
-    b.layer.shadowOffset = CGSizeMake(0, 0);
-    b.layer.shadowOpacity = 1;
-    b.layer.shadowRadius = 10;
-//    b.layer.cornerRadius = 80;
-    b.layer.contents = b.image;
-    b.layer.shadowColor = [UIColor redColor].CGColor;
-    b.layer.mask = NULL;
-
     
-//    UILabel* b2 = [[BorderView alloc] initWithFrame:CGRectMake(0, 0, 200, 200)];
-//    b2.text = @"dwdw";
-//    [b addSubview:b2];
     
-//    BorderView* b2 = [[BorderView alloc] initWithFrame:CGRectMake(20, 50, 200, 200)];
-//    [b addSubview:b2];
-    [self.view addSubview:b];
-    self.borderView = b;
-    
-    CATransform3D transform = CATransform3DIdentity;
-    transform.m34 = 1.0 / -500.0;
-    self.borderView.layer.transform = transform;
+//    BorderView* b = [[BorderView alloc] initWithFrame:CGRectMake(20, 50, 200, 200)];
+//    [b test];
+//    [b setNeedsDisplay];
+//    b.layer.shadowOffset = CGSizeMake(0, 0);
+//    b.layer.shadowOpacity = 1;
+//    b.layer.shadowRadius = 10;
+////    b.layer.cornerRadius = 80;
+//    b.layer.contents = b.image;
+//    b.layer.shadowColor = [UIColor redColor].CGColor;
+//    b.layer.mask = NULL;
+//
+//
+////    UILabel* b2 = [[BorderView alloc] initWithFrame:CGRectMake(0, 0, 200, 200)];
+////    b2.text = @"dwdw";
+////    [b addSubview:b2];
+//
+////    BorderView* b2 = [[BorderView alloc] initWithFrame:CGRectMake(20, 50, 200, 200)];
+////    [b addSubview:b2];
+//    [self.view addSubview:b];
+//    self.borderView = b;
+//
+//    CATransform3D transform = CATransform3DIdentity;
+//    transform.m34 = 1.0 / -500.0;
+//    self.borderView.layer.transform = transform;
 //    [b.layer setValue:[NSNumber numberWithDouble:100] forKeyPath:@"transform.translation.x"];
 
     [[SharedCodePlatformCompanion companion] doInitViewController:self];
 
-    
 }
 
 +(void)load{

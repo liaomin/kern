@@ -161,6 +161,14 @@ actual open class View{
             getWidget().scaleY = value
         }
 
+    actual open var clipsToBounds: Boolean = false
+        set(value) {
+            field = value
+            if (mWidget is android.view.ViewGroup){
+                mWidget.clipChildren = value
+            }
+        }
+
     private var onPressListener:((view: com.hitales.ui.View)->Unit)? = null
 
     private var onLongPressListener:((view: com.hitales.ui.View)->Unit)? = null
@@ -497,4 +505,6 @@ actual open class View{
         onFrameChanged()
         this.checkLayerType()
     }
+
+
 }

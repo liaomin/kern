@@ -142,6 +142,16 @@ actual open class View {
             setLayerValueForPath(value,"transform.scale.y")
         }
 
+    /**
+     * Android ViewGroup clipChildren
+     * IOS clipsToBounds
+     */
+    actual open var clipsToBounds: Boolean
+        get() = mWidget.clipsToBounds
+        set(value) {
+            mWidget.clipsToBounds = value
+        }
+
     actual constructor(frame: Frame){
         this.frame = frame
         setBackgroundColor(0)

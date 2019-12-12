@@ -82,6 +82,12 @@ expect open class View  {
 
     var superView:ViewGroup?
 
+    /**
+     * Android ViewGroup clipChildren
+     * IOS clipsToBounds
+     */
+    open var clipsToBounds:Boolean
+
     open fun onFrameChanged()
 
     open fun removeFromSuperView()
@@ -107,6 +113,9 @@ expect open class View  {
     open fun setBorderWidth(borderWidth:Float)
     open fun setBorderWidth(leftWidth:Float,topWidth: Float,rightWidth:Float,bottomWidth:Float)
     open fun setBorderRadius(radius:Float)
+    /**
+     * ios UILabel 设置borderRadius在背景不会被裁剪，必须设置 clipsToBounds = true
+     */
     open fun setBorderRadius(topLeftRadius:Float,topRightRadius: Float,bottomRightRadius:Float,bottomLeftRadius:Float)
     open fun setShadow(color: Int,radius: Float, dx: Float = 0f, dy: Float = 0f)
 

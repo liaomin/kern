@@ -4,6 +4,7 @@ import com.hitales.ui.View
 import com.hitales.ui.ViewGroup
 import com.hitales.utils.WeakReference
 import kotlinx.cinterop.ObjCAction
+import platform.CoreGraphics.CGContextRef
 import platform.CoreGraphics.CGRectMake
 import platform.QuartzCore.CALayer
 import platform.UIKit.UIView
@@ -15,9 +16,7 @@ class IOSView(val mView: WeakReference<View>) : UIView(CGRectMake(0.0,0.0,0.0,0.
     @ObjCAction
     fun willMoveToSuperview(superview: UIView?){
         if(superview != null){
-            println("not null")
         }else{
-            println("null")
         }
     }
 
@@ -41,19 +40,12 @@ class IOSView(val mView: WeakReference<View>) : UIView(CGRectMake(0.0,0.0,0.0,0.
         }
     }
 
-    override fun displayLayer(layer: CALayer) {
-        this.layer.backgroundColor = null
+    override fun drawLayer(layer: CALayer, inContext: CGContextRef?) {
         val view = mView.get()
         if(view != null){
             view.mBackground?.onDraw(layer,view.mBackgroundColor)
         }
+        super.drawLayer(layer, inContext)
     }
 
-
-//    override fun drawLayer(layer: CALayer, inContext: CGContextRef?) {
-//        val view = mView.get()
-//        if(view != null){
-//            view.mBackground?.onDraw(layer,view.mBackgroundColor)
-//        }
-//    }
 }

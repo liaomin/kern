@@ -4,6 +4,7 @@ import com.hitales.ui.ScrollView
 import com.hitales.utils.WeakReference
 import kotlinx.cinterop.ObjCAction
 import kotlinx.cinterop.useContents
+import platform.CoreGraphics.CGContextRef
 import platform.CoreGraphics.CGRectMake
 import platform.QuartzCore.CALayer
 import platform.UIKit.UIScrollView
@@ -28,11 +29,12 @@ class IOSScrollView(val mView: WeakReference<ScrollView>) : UIScrollView(CGRectM
         }
     }
 
-    override fun displayLayer(layer: CALayer) {
+    override fun drawLayer(layer: CALayer, inContext: CGContextRef?) {
         val view = mView.get()
         if(view != null){
             view.mBackground?.onDraw(layer,view.mBackgroundColor)
         }
+        super.drawLayer(layer, inContext)
     }
 
     override fun scrollViewDidScroll(scrollView: UIScrollView) {

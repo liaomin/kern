@@ -57,6 +57,7 @@
     UIImage* image = [UIImage imageNamed:@"1.jpg"];
     self.image = image;
     self.contentMode = UIViewContentModeScaleAspectFit;
+    
 //    [self.layer setNeedsDisplay];
 
 //    CALayer* l = [[CALayer alloc] init];

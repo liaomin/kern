@@ -54,7 +54,7 @@ open class TestViewController : BasicController() {
 //        view.setBorderColor(Colors.BLUE)
 
         val color = 0x66FF0000
-        view = TextView("文本")
+        view = View()
         view.setBackgroundColor(color)
         view.setShadow(Colors.BLUE,9f,5f,5f)
         addView(view,"测试颜色",getIndex(),Colors.BLUE)
@@ -63,7 +63,8 @@ open class TestViewController : BasicController() {
         view.setBorderColor(Colors.BLUE)
 
 
-        view = TextView("文本")
+        view = View()
+//        view.clipsToBounds = true
         view.setBackgroundColor(color)
         view.setShadow(Colors.BLUE,30f,-20f,30f)
         addView(view,"测试颜色",getIndex(),Colors.BLUE)
@@ -71,17 +72,6 @@ open class TestViewController : BasicController() {
         view.setBorderRadius(50f)
         view.setBorderColor(Colors.BLUE)
 
-//        view = View()
-//        view.setBackgroundColor(Colors.BLUE)
-//        addView(view,"测试颜色",getIndex(),Colors.BLUE)
-//
-//        view = View()
-//        view.setBackgroundColor(0xFF999999.toInt())
-//        addView(view,"测试颜色",getIndex(),0xFF999999.toInt())
-//
-//        view = View()
-//        view.setBackgroundColor(0x33999999)
-//        addView(view,"测试颜色",getIndex(),0x33999999)
 
     }
 
@@ -140,6 +130,14 @@ open class TestViewController : BasicController() {
 inline fun Int.reverseAlpha():Int{
     val alpha = this shl 24
     return  this.and(0xffffff) or ((255 - alpha).shl(24))
+}
+
+class BackgroundTestControllerTest : TestViewController(){
+    override fun testView() {
+        var view =  View()
+        view.setBackgroundColor(Colors.RED)
+        addView(view,"红色背景",getIndex(),Colors.BLACK)
+    }
 }
 
 class BorderWidthTestControllerTest : TestViewController(){
@@ -260,7 +258,7 @@ class BorderWidthTestControllerTest : TestViewController(){
 
 
         view = View()
-        view.setBackgroundColor(bgColor)
+        view.setBackgroundColor(Colors.BLUE)
         addView(view,"测试borderWidth",getIndex(),Colors.BLACK)
 
         view = View()

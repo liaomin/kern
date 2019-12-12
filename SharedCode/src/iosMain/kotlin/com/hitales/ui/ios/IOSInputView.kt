@@ -3,6 +3,7 @@ package com.hitales.ui.ios
 import com.hitales.ui.TextInput
 import com.hitales.utils.WeakReference
 import kotlinx.cinterop.ObjCAction
+import platform.CoreGraphics.CGContextRef
 import platform.CoreGraphics.CGRectMake
 import platform.QuartzCore.CALayer
 import platform.UIKit.UITextView
@@ -22,11 +23,12 @@ class IOSInputView(val mView: WeakReference<TextInput>) : UITextView(CGRectMake(
         }
     }
 
-    override fun displayLayer(layer: CALayer) {
+    override fun drawLayer(layer: CALayer, inContext: CGContextRef?) {
         val view = mView.get()
         if(view != null){
             view.mBackground?.onDraw(layer,view.mBackgroundColor)
         }
+        super.drawLayer(layer, inContext)
     }
 
 }
