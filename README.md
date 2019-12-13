@@ -3,7 +3,7 @@
 在Android和ios上用同一套api编写界面
 <br>
 
-![](https://github.com/liaomin/kern/raw/master/preview.gif)  
+![image](https://github.com/liaomin/kern/blob/master/preview.gif)  
 
 # features
 1.View <br>
