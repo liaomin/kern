@@ -3,7 +3,6 @@ package com.hitales.ui.ios
 import com.hitales.ui.ImageView
 import com.hitales.utils.WeakReference
 import kotlinx.cinterop.ObjCAction
-import platform.CoreGraphics.CGContextRef
 import platform.CoreGraphics.CGRectMake
 import platform.QuartzCore.CALayer
 import platform.UIKit.UIImage
@@ -24,12 +23,11 @@ class IOSImageView(val mView: WeakReference<ImageView>) : UIImageView(CGRectMake
         }
     }
 
-    override fun drawLayer(layer: CALayer, inContext: CGContextRef?) {
+    override fun displayLayer(layer: CALayer) {
         val view = mView.get()
         if(view != null){
-            view.mBackground?.onDraw(layer,view.mBackgroundColor)
+            view.mBackground?.onDraw(layer,view.mBackgroundColor,this.image)
         }
-        super.drawLayer(layer, inContext)
     }
 
     override fun setImage(image: UIImage?) {

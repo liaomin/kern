@@ -19,6 +19,19 @@ actual open class Button :  com.hitales.ui.TextView {
 
     val bgColorList = StateListColor(Colors.BLUE)
 
+    override var text: CharSequence = ""
+        get() = super.text
+        set(value) {
+            field = value
+            getWidget().setTitle(value.toString(), UIControlStateNormal)
+        }
+
+    override var textSize: Float
+        get() = super.textSize
+        set(value) {
+            getWidget().setFont(getWidget().font.fontWithSize(value.toDouble()))
+        }
+
     override var textColor: Int = Colors.WHITE
         set(value) {
             field = value

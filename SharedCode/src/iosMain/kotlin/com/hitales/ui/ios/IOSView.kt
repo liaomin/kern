@@ -40,11 +40,14 @@ class IOSView(val mView: WeakReference<View>) : UIView(CGRectMake(0.0,0.0,0.0,0.
         }
     }
 
-    override fun drawLayer(layer: CALayer, inContext: CGContextRef?) {
+    override fun displayLayer(layer: CALayer) {
         val view = mView.get()
         if(view != null){
-            view.mBackground?.onDraw(layer,view.mBackgroundColor)
+            mView.get()?.mBackground?.onDraw(layer,view.mBackgroundColor)
         }
+    }
+
+    override fun drawLayer(layer: CALayer, inContext: CGContextRef?) {
         super.drawLayer(layer, inContext)
     }
 

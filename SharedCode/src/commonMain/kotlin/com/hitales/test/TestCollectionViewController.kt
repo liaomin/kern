@@ -41,14 +41,14 @@ open class TestCollectionViewController : BasicController() {
 //            override fun haveFooterView(collectionView: CollectionView, section: Int): Boolean {
 //                return true
 //            }
-
-            override fun getSectionHeaderViewSize(collectionView: CollectionView, section: Int, size: Size) {
-                size.set(100f,100f)
-            }
-
-            override fun getSectionFooterViewSize(collectionView: CollectionView, section: Int, size: Size) {
-                size.set(200f,200f)
-            }
+//
+//            override fun getSectionHeaderViewSize(collectionView: CollectionView, section: Int, size: Size) {
+//                size.set(100f,100f)
+//            }
+//
+//            override fun getSectionFooterViewSize(collectionView: CollectionView, section: Int, size: Size) {
+//                size.set(200f,200f)
+//            }
 
             override fun createHeaderView(collectionView: CollectionView): CollectionViewCell? {
                 val v= Cell()
@@ -74,23 +74,16 @@ open class TestCollectionViewController : BasicController() {
             }
 
             override fun createItemView(collectionView: CollectionView, type: Int): CollectionViewCell {
-                val c= Cell()
+                val c = Cell()
                 val v = c.button
-                if(Platform.os == PLATFORM_ANDROID){
-                    c.setBackgroundColor(0xFF000000.toInt() or (0xFFFFFF * random()).toInt())
-                    c.setBackgroundColor(Colors.BLUE, ViewState.PRESSED)
-                    v.setBackgroundColor(Colors.TRANSPARENT)
+                v.setBackgroundColor(0xFF000000.toInt() or (0xFFFFFF * random()).toInt())
+                v.setBackgroundColor(Colors.BLUE, ViewState.PRESSED)
+                c.setBackgroundColor(Colors.TRANSPARENT)
 
-                    c.contentView.setShadow(Colors.RED,10f,6f,0f)
-                    c.contentView.setBorderRadius(10f)
-                }else{
-                    v.setBackgroundColor(0xFF000000.toInt() or (0xFFFFFF * random()).toInt())
-                    v.setBackgroundColor(Colors.BLUE, ViewState.PRESSED)
-//                    c.setBackgroundColor(Colors.TRANSPARENT)
-
-                    c.contentView.setShadow(Colors.RED,10f,6f,0f)
-                    v.setBorderRadius(0f)
-                }
+                c.contentView.setShadow(Colors.RED,10f,6f,0f)
+                c.contentView.setBorderRadius(10f)
+                v.setBorderRadius(10f)
+                v.clipsToBounds = Platform.os === PLATFORM_IOS
 
 //                c.contentView.setBorderRadius(20f)
 //                (v as Button).setBackgroundColor(0xFF000000.toInt() or (0xFFFFFF * random()).toInt(),ViewState.NORMAL)

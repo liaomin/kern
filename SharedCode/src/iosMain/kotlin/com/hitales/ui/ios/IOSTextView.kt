@@ -3,7 +3,6 @@ package com.hitales.ui.ios
 import com.hitales.ui.TextView
 import com.hitales.utils.WeakReference
 import kotlinx.cinterop.ObjCAction
-import platform.CoreGraphics.CGContextRef
 import platform.CoreGraphics.CGRectMake
 import platform.QuartzCore.CALayer
 import platform.UIKit.UILabel
@@ -23,13 +22,19 @@ class IOSTextView(val mView: WeakReference<TextView>) : UILabel(CGRectMake(0.0,0
         }
     }
 
+//    override fun displayLayer(layer: CALayer) {
+//        val view = mView.get()
+//        if(view != null){
+//            view.mBackground?.onDraw(layer,view.mBackgroundColor)
+//        }
+//    }
 
-    override fun drawLayer(layer: CALayer, inContext: CGContextRef?) {
+    override fun layerWillDraw(layer: CALayer) {
         val view = mView.get()
         if(view != null){
             view.mBackground?.onDraw(layer,view.mBackgroundColor)
         }
-        super.drawLayer(layer, inContext)
+        super.layerWillDraw(layer)
     }
 
 }

@@ -3,7 +3,6 @@ package com.hitales.ui.ios
 import com.hitales.ui.Button
 import com.hitales.utils.WeakReference
 import kotlinx.cinterop.ObjCAction
-import platform.CoreGraphics.CGContextRef
 import platform.CoreGraphics.CGRectMake
 import platform.QuartzCore.CALayer
 import platform.UIKit.*
@@ -25,12 +24,11 @@ class IOSButtonView(val mView: WeakReference<Button>) : UIButton(CGRectMake(0.0,
         }
     }
 
-    override fun drawLayer(layer: CALayer, inContext: CGContextRef?) {
+    override fun displayLayer(layer: CALayer) {
         val view = mView.get()
         if(view != null){
             view.mBackground?.onDraw(layer,view.mBackgroundColor)
         }
-        super.drawLayer(layer, inContext)
     }
 
     override fun setEnabled(enabled: Boolean) {
