@@ -48,6 +48,22 @@
 
     [[SharedCodePlatformCompanion companion] doInitViewController:self];
 
+//    UIButton *v = [[UIButton alloc] initWithFrame:CGRectMake(50, 50, 50, 50)];
+//    [v setTitle:@"" forState:UIControlStateNormal];
+//    [v setBackgroundColor:[UIColor redColor]];
+//    v.cu = @"sqsqs";
+////    v.layer.masksToBounds = YES;
+//
+////    v.layer.shadowColor = [UIColor blueColor].CGColor;
+////    v.layer.shadowOpacity = 1;
+////    v.layer.shadowOffset = CGSizeMake(10, 10);
+////    v.layer.shadowRadius = 10;
+//
+//    v.layer.borderColor = [UIColor blueColor].CGColor;
+//    v.layer.borderWidth = 2;
+//    v.layer.cornerRadius = 10;
+//
+//    [self.view addSubview:v];
 }
 
 +(void)load{

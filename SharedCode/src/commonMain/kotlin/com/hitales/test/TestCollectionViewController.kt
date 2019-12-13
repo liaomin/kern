@@ -76,17 +76,24 @@ open class TestCollectionViewController : BasicController() {
             override fun createItemView(collectionView: CollectionView, type: Int): CollectionViewCell {
                 val c = Cell()
                 val v = c.button
-                v.setBackgroundColor(0xFF000000.toInt() or (0xFFFFFF * random()).toInt())
-                v.setBackgroundColor(Colors.BLUE, ViewState.PRESSED)
-                c.setBackgroundColor(Colors.TRANSPARENT)
 
-                c.contentView.setShadow(Colors.RED,10f,6f,0f)
-                c.contentView.setBorderRadius(10f)
-                v.setBorderRadius(10f)
-                v.clipsToBounds = Platform.os === PLATFORM_IOS
+                if(Platform.os === PLATFORM_IOS){
+                    v.setBackgroundColor(0xFF000000.toInt() or (0xFFFFFF * random()).toInt())
+                    v.setBackgroundColor(Colors.BLUE, ViewState.PRESSED)
+                    c.setBackgroundColor(Colors.TRANSPARENT)
+                    c.contentView.setShadow(Colors.RED,10f,6f,0f)
+                    c.contentView.setBorderRadius(10f)
+                    v.setBorderRadius(10f)
+                    v.clipsToBounds = true
+                }else{
+                    c.setBackgroundColor(0xFF000000.toInt() or (0xFFFFFF * random()).toInt())
+                    c.setBackgroundColor(Colors.BLUE, ViewState.PRESSED)
+                    v.setBackgroundColor(Colors.TRANSPARENT)
+                    c.contentView.setShadow(Colors.RED,10f,6f,0f)
+                    c.contentView.setBorderRadius(10f)
+                    c.contentView.setBorderRadius(10f)
+                }
 
-//                c.contentView.setBorderRadius(20f)
-//                (v as Button).setBackgroundColor(0xFF000000.toInt() or (0xFFFFFF * random()).toInt(),ViewState.NORMAL)
                 return c
             }
 
