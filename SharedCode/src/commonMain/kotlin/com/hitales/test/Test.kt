@@ -29,14 +29,14 @@ class TestController : BasicController() {
 
         }
 
-        index++
-        v  = Button("view 背景测试", Frame(10f,(buttonHeight+10)*index+10f, buttonWidth , buttonHeight))
-        rootView.addSubView(v)
-        v.setBackgroundColor(Colors.BLUE)
-        v.setBackgroundColor(Colors.RED,ViewState.PRESSED)
-        v.setOnPressListener {
-            this.push(BackgroundTestControllerTest())
-        }
+//        index++
+//        v  = Button("view 背景测试", Frame(10f,(buttonHeight+10)*index+10f, buttonWidth , buttonHeight))
+//        rootView.addSubView(v)
+//        v.setBackgroundColor(Colors.BLUE)
+//        v.setBackgroundColor(Colors.RED,ViewState.PRESSED)
+//        v.setOnPressListener {
+//            this.push(BackgroundTestControllerTest())
+//        }
 
         index++
         v  = Button("view border测试", Frame(10f,(buttonHeight+10)*index+10f, buttonWidth , buttonHeight))

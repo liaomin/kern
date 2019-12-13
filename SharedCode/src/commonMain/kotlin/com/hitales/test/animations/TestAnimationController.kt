@@ -46,7 +46,38 @@ open class TestAnimationController :TestViewController(), Animation.AnimationDel
         (this.view as ScrollView).addSubView(view)
         offsetY += view.frame.height + 30
 
-//        offsetY = 250f
+
+        addButton("组合测试1"){
+            val animation = Animation()
+            animation.setToRotate(360f,360f,360f)
+            animation.fromOpacity = 1f
+            animation.toOpacity = 0f
+            animation.duration = 3000f
+            animation.delegate = this
+            view.startAnimation(animation)
+        }
+
+        addButton("组合测试2"){
+            val animation = Animation()
+            animation.setToTranslate(100f,100f)
+            animation.fromOpacity = 1f
+            animation.toOpacity = 0f
+            animation.duration = 3000f
+            animation.delegate = this
+            view.startAnimation(animation)
+        }
+
+        addButton("组合测试2"){
+            val animation = Animation()
+            animation.setToRotate(360f,360f,360f)
+            animation.setToTranslate(100f,100f)
+            animation.setToScale(2f,2f)
+            animation.fromOpacity = 1f
+            animation.toOpacity = 0f
+            animation.duration = 3000f
+            animation.delegate = this
+            view.startAnimation(animation)
+        }
 
         addButton("tY"){
             val animation = Animation()
@@ -101,38 +132,6 @@ open class TestAnimationController :TestViewController(), Animation.AnimationDel
             val animation = Animation()
             animation.fromOpacity = 1f
             animation.toOpacity = 0F
-            animation.duration = 3000f
-            animation.delegate = this
-            view.startAnimation(animation)
-        }
-
-        addButton("组合测试1"){
-            val animation = Animation()
-            animation.setToRotate(360f,360f,360f)
-            animation.fromOpacity = 1f
-            animation.toOpacity = 0f
-            animation.duration = 3000f
-            animation.delegate = this
-            view.startAnimation(animation)
-        }
-
-        addButton("组合测试2"){
-            val animation = Animation()
-            animation.setToTranslate(100f,100f)
-            animation.fromOpacity = 1f
-            animation.toOpacity = 0f
-            animation.duration = 3000f
-            animation.delegate = this
-            view.startAnimation(animation)
-        }
-
-        addButton("组合测试2"){
-            val animation = Animation()
-            animation.setToRotate(360f,360f,360f)
-            animation.setToTranslate(100f,100f)
-            animation.setToScale(2f,2f)
-            animation.fromOpacity = 1f
-            animation.toOpacity = 0f
             animation.duration = 3000f
             animation.delegate = this
             view.startAnimation(animation)

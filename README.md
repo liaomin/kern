@@ -1,9 +1,15 @@
- 临时工程，用kotlin native封装同一套api给 Android 和 ios
+目的：
+==== 
+在Android和ios上用同一套api编写界面
+<br>
 
-# TODO
-1.布局
-2.重用
-3.阴影
-4.组合动画，顺序动画
-5.手势，触摸点派发
-6.toast
+![](https://github.com/liaomin/kern/raw/master/preview.gif)  
+
+# features
+1.View <br>
+2.ViewGroup <br>
+3.TextView <br>
+4.Button <br>
+5.ImageView <br>
+6.ScrollView <br>
+7.CollectionView <br>

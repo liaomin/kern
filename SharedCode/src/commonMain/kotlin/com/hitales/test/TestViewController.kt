@@ -53,7 +53,7 @@ open class TestViewController : BasicController() {
 //        view.setBorderRadius(50f)
 //        view.setBorderColor(Colors.BLUE)
 
-        val color = 0x66FF0000
+        val color = 0xFFFF0000.toInt()
         view = View()
         view.setBackgroundColor(color)
         view.setShadow(Colors.BLUE,9f,5f,5f)
