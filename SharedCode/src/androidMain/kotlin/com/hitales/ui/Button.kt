@@ -18,9 +18,6 @@ actual open class Button :  com.hitales.ui.TextView {
 
 
     actual constructor(text:CharSequence?,frame: Frame):super(text,frame){
-        val widget = getWidget()
-        widget.text = text
-//        setBorderRadius(5f)
         padding = EdgeInsets(5f,5f,5f,5f)
     }
 

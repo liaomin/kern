@@ -16,7 +16,7 @@ actual open class TextView :  View {
     actual open var text:CharSequence = ""
         set(value) {
             field = value
-            getTextWidget().attributedText = getAttributedString()
+            onTextSet()
         }
 
     actual open var textSize: Float
@@ -33,6 +33,10 @@ actual open class TextView :  View {
 
     actual constructor(text:CharSequence?,frame: Frame):super(frame){
         this.initLabel(text)
+    }
+
+    protected open fun onTextSet(){
+        getTextWidget().attributedText = getAttributedString()
     }
 
     protected open fun initLabel(text:CharSequence?){

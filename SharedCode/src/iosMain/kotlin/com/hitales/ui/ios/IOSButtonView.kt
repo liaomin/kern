@@ -76,6 +76,7 @@ class IOSButtonView(val mView: WeakReference<Button>) : UIButton(CGRectMake(0.0,
     fun checkState(){
         if(preState != this.state){
             preState = this.state
+            setNeedsDisplay()
             mView.get()?.onIOSStateChange(this.state)
         }
     }

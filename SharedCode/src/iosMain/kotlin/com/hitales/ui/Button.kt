@@ -19,13 +19,6 @@ actual open class Button :  com.hitales.ui.TextView {
 
     val bgColorList = StateListColor(Colors.BLUE)
 
-    override var text: CharSequence = ""
-        get() = super.text
-        set(value) {
-            field = value
-            getWidget().setTitle(value.toString(), UIControlStateNormal)
-        }
-
     override var textSize: Float
         get() = super.textSize
         set(value) {
@@ -44,6 +37,10 @@ actual open class Button :  com.hitales.ui.TextView {
         setTextColor(Colors.WHITE)
         padding = EdgeInsets(5f, 5f, 5f, 5f)
         widget.clipsToBounds = true
+    }
+
+    override fun onTextSet() {
+        getWidget().setTitle(text.toString(), UIControlStateNormal)
     }
 
     override fun setBackgroundColor(color: Int) {
