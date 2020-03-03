@@ -35,6 +35,8 @@
 		9E26259522AFD17C00FCE622 /* CALayer+Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E26259322AFD17C00FCE622 /* CALayer+Image.m */; };
 		9E5979F022B76F5000CABF4E /* Convert.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E5979EE22B76F5000CABF4E /* Convert.m */; };
 		9E5979F122B76F5000CABF4E /* Convert.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E5979EF22B76F5000CABF4E /* Convert.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9E9AAC6323F0F66700B5D9B0 /* UIView+Border.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E9AAC6123F0F66700B5D9B0 /* UIView+Border.h */; };
+		9E9AAC6423F0F66700B5D9B0 /* UIView+Border.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9AAC6223F0F66700B5D9B0 /* UIView+Border.m */; };
 		9EF48D072314FFFB00053981 /* HCollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EF48D052314FFFB00053981 /* HCollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EF48D082314FFFB00053981 /* HCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF48D062314FFFB00053981 /* HCollectionView.m */; };
 /* End PBXBuildFile section */
@@ -83,6 +85,8 @@
 		9E26259322AFD17C00FCE622 /* CALayer+Image.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CALayer+Image.m"; sourceTree = "<group>"; };
 		9E5979EE22B76F5000CABF4E /* Convert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Convert.m; sourceTree = "<group>"; };
 		9E5979EF22B76F5000CABF4E /* Convert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Convert.h; sourceTree = "<group>"; };
+		9E9AAC6123F0F66700B5D9B0 /* UIView+Border.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+Border.h"; sourceTree = "<group>"; };
+		9E9AAC6223F0F66700B5D9B0 /* UIView+Border.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+Border.m"; sourceTree = "<group>"; };
 		9EF48D052314FFFB00053981 /* HCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HCollectionView.h; sourceTree = "<group>"; };
 		9EF48D062314FFFB00053981 /* HCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HCollectionView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -153,6 +157,8 @@
 				9EF48D052314FFFB00053981 /* HCollectionView.h */,
 				9E26259322AFD17C00FCE622 /* CALayer+Image.m */,
 				9EF48D062314FFFB00053981 /* HCollectionView.m */,
+				9E9AAC6123F0F66700B5D9B0 /* UIView+Border.h */,
+				9E9AAC6223F0F66700B5D9B0 /* UIView+Border.m */,
 			);
 			path = HUI;
 			sourceTree = "<group>";
@@ -165,6 +171,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E26259422AFD17C00FCE622 /* CALayer+Image.h in Headers */,
+				9E9AAC6323F0F66700B5D9B0 /* UIView+Border.h in Headers */,
 				9EF48D072314FFFB00053981 /* HCollectionView.h in Headers */,
 				9E5979F122B76F5000CABF4E /* Convert.h in Headers */,
 				9E26258A22AFCA5B00FCE622 /* HUI.h in Headers */,
@@ -309,6 +316,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E9AAC6423F0F66700B5D9B0 /* UIView+Border.m in Sources */,
 				9E26259522AFD17C00FCE622 /* CALayer+Image.m in Sources */,
 				9E5979F022B76F5000CABF4E /* Convert.m in Sources */,
 				9EF48D082314FFFB00053981 /* HCollectionView.m in Sources */,

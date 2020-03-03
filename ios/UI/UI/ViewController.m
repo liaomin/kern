@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import <HUI/HUI.h>
+#include "UIView+Border.h"
 
 @interface ViewController ()
 
@@ -17,6 +18,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.view setBorderWidth:2];
     [self.view isFocused];
     // Do any additional setup after loading the view.
 }
