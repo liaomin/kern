@@ -3,22 +3,23 @@ package com.hitales.ui
 import android.graphics.Canvas
 import android.view.MotionEvent
 import android.widget.FrameLayout
-import com.hitales.ui.android.AndroidScrollView
+//import com.hitales.ui.android.AndroidScrollView
 import com.hitales.ui.android.ViewHelper
-import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Frame
-import com.hitales.utils.Size
-import com.hitales.utils.WeakReference
-import java.util.ArrayList
+import java.util.*
 
 
-open class AndroidFrameLayout(private val view:ViewGroup) : FrameLayout(Platform.getApplication()){
+open class AndroidFrameLayout(private val view:Layout) : FrameLayout(Platform.getApplication()){
 
     val mViewHelper = ViewHelper(this,view)
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        mViewHelper.onMeasure(measuredWidth,measuredHeight)
+//    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+//
+//    }
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        mViewHelper.onLayout(changed,left,top,right,bottom)
     }
 
     override fun onAttachedToWindow() {
@@ -36,6 +37,10 @@ open class AndroidFrameLayout(private val view:ViewGroup) : FrameLayout(Platform
         super.dispatchDraw(canvas)
     }
 
+    override fun drawChild(canvas: Canvas?, child: android.view.View?, drawingTime: Long): Boolean {
+        return super.drawChild(canvas, child, drawingTime)
+    }
+
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         return mViewHelper.dispatchTouchEvent(event) || super.dispatchTouchEvent(event)
     }
@@ -46,7 +51,7 @@ open class AndroidFrameLayout(private val view:ViewGroup) : FrameLayout(Platform
     }
 
 }
-actual open class ViewGroup : View {
+actual open class Layout : View {
 
 
     actual constructor(frame: Frame):super(frame){
@@ -63,18 +68,10 @@ actual open class ViewGroup : View {
     ) {
         val widget = getWidget()
         if(index < 0){
-            if(widget is AndroidScrollView){
-                widget.addSubView(view.getWidget())
-            }else{
-                widget.addView(view.getWidget())
-            }
+            widget.addView(view.getWidget())
             children.add(view)
         }else{
-            if(widget is AndroidScrollView){
-                widget.addSubView(view.getWidget(),index)
-            }else{
-                widget.addView(view.getWidget(),index)
-            }
+            widget.addView(view.getWidget(),index)
             children.add(index,view)
         }
         view.superView = this
@@ -131,8 +128,8 @@ actual open class ViewGroup : View {
 //        mWidget.isFocusableInTouchMode = false
     }
 
-    actual open fun layoutSubviews(){
-
+    actual open fun requestLayout(){
+        getWidget().requestLayout()
     }
 
 

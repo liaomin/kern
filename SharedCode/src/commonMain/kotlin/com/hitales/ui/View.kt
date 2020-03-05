@@ -33,6 +33,7 @@ interface ViewDelegate{
 }
 
 expect open class View  {
+
     var delegate:WeakReference<ViewDelegate>?
     /**
      * use margin and padding to calculate frame
@@ -80,7 +81,7 @@ expect open class View  {
 
     constructor(frame: Frame = Frame.zero())
 
-    var superView:ViewGroup?
+    var superView:Layout?
 
     /**
      * Android ViewGroup clipChildren
@@ -93,8 +94,8 @@ expect open class View  {
     open fun removeFromSuperView()
     open fun onAttachedToWindow()
     open fun onDetachedFromWindow()
-    open fun onAttachedToView(layoutView: ViewGroup)
-    open fun onDetachedFromView(layoutView: ViewGroup)
+    open fun onAttachedToView(layoutView: Layout)
+    open fun onDetachedFromView(layoutView: Layout)
     open fun releaseResource()
 
     /**
@@ -108,31 +109,44 @@ expect open class View  {
      */
     // argb color
     open fun setBackgroundColor(color:Int)
+    open fun getBackgroundColor():Int
+
+    /**
+     * border
+     */
     open fun setBorderColor(color:Int)
     open fun setBorderColor(leftColor:Int,topColor: Int,rightColor:Int,bottomColor:Int)
     open fun setBorderWidth(borderWidth:Float)
     open fun setBorderWidth(leftWidth:Float,topWidth: Float,rightWidth:Float,bottomWidth:Float)
+    fun getLeftBorderWidth():Float
+    fun getTopBorderWidth():Float
+    fun getRightBorderWidth():Float
+    fun getBottomBorderWidth():Float
     open fun setBorderRadius(radius:Float)
-    /**
-     * ios UILabel 设置borderRadius在背景不会被裁剪，必须设置 clipsToBounds = true
-     */
     open fun setBorderRadius(topLeftRadius:Float,topRightRadius: Float,bottomRightRadius:Float,bottomLeftRadius:Float)
-    open fun setShadow(color: Int,radius: Float, dx: Float = 0f, dy: Float = 0f)
+    fun getTopLeftBorderRadius():Float
+    fun getTopRightBorderRadius():Float
+    fun getBottomLeftBorderRadius():Float
+    fun getBottomRightBorderRadius():Float
 
 
-    fun getBorderLeftWidth():Float
-    fun getBorderTopWidth():Float
-    fun getBorderRightWidth():Float
-    fun getBorderBottomWidth():Float
 
     /**
-     * @param widthSpace 最大宽度  如果小于等于0表示无限宽
-     * @param heightSpace 最大高度  如果小于等于0表示无限高
+     * shadow
+     */
+    open fun setShadow(color: Int,radius: Float, dx: Float = 0f, dy: Float = 0f)
+    fun getShadowColor():Int
+    fun getShadowRadius():Float
+    fun getShadowOffsetX():Float
+    fun getShadowOffsetY():Float
+
+
+    /**
+     * @param widthSpace 最大宽度  如果小于0表示无限宽
+     * @param heightSpace 最大高度  如果小于0表示无限高
      */
     open fun measureSize(widthSpace: Float,heightSpace: Float):Size
     open fun measureSize(widthSpace: Float,heightSpace: Float,size: Size)
-
-    open fun startAnimation(animation: Animation,completion:(()->Unit)? = null)
 
 
     /**
@@ -144,6 +158,8 @@ expect open class View  {
     open fun touchesMoved(touches: Touches)
     open fun touchesEnded(touches: Touches)
     open fun touchesCancelled(touches: Touches)
+
+    open fun startAnimation(animation: Animation,completion:(()->Unit)? = null)
 }
 
 

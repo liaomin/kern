@@ -3,11 +3,10 @@ package liam.hitales.com.android
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
-import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PixelFormat
-import android.net.Uri
+import android.graphics.Rect
 import android.os.Build
 import android.provider.Settings
 import android.view.Gravity
@@ -16,8 +15,6 @@ import android.view.WindowManager
 import com.hitales.ui.Colors
 import com.hitales.ui.Platform
 import com.hitales.ui.utils.PixelUtil
-import androidx.core.content.ContextCompat.getSystemService
-import android.os.Debug.getMemoryInfo
 
 
 
@@ -121,6 +118,8 @@ class OverlayView(context: Context) : View(context),Runnable{
     }
 
     override fun onDraw(canvas: Canvas) {
+        val w1 = canvas.width
+        print(w1)
         super.onDraw(canvas)
         val textSize = mPaint.textSize
         val marginY = 5f
@@ -133,6 +132,10 @@ class OverlayView(context: Context) : View(context),Runnable{
         offsetY += textSize + marginY
         canvas.drawText("availMem:$availMem",offsetX,offsetY,mPaint)
 
+        canvas.clipRect(Rect(0,0,20,20))
+
+        val w2 = canvas.width
+        print(w2)
 
     }
 }

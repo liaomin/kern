@@ -15,4 +15,13 @@ actual class WeakReference<T :Any> {
     actual fun get(): T? {
         return mWeakReference.get()
     }
+
+    actual fun use(block: (item: T) -> Unit) {
+        val ref = mWeakReference.get()
+        if(ref != null){
+            block(ref)
+        }
+    }
+
+
 }

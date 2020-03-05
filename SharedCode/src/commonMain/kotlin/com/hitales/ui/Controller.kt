@@ -11,7 +11,7 @@ open class Controller {
 
     var onControllerChangedListener:((rootController:Controller,pushController:Controller?,removeController:Controller?)->Unit)? = null
 
-    var view:View = ViewGroup()
+    var view:View = Layout()
 
     var enterAnimation:Animation? = null
 

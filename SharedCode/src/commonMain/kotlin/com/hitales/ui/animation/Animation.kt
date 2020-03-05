@@ -8,7 +8,7 @@ import com.hitales.utils.WeakReference
 /**
  * 动画属性都在这了，还要什么组合动画
  */
-open class Animation {
+open class Animation(var interpolator:BezierInterpolator = LinearInterpolator()) {
 
     interface AnimationDelegate{
 
@@ -17,11 +17,6 @@ open class Animation {
         fun onAnimationStop(animation: Animation,view: View?)
 
     }
-
-    /**
-     * 插值器，默认LinearInterpolator
-     */
-    var interpolator:BezierInterpolator = LinearInterpolator()
 
     private var weakDelegate:WeakReference<AnimationDelegate>? = null
 

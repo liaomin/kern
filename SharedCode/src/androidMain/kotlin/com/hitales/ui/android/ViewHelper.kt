@@ -1,12 +1,9 @@
 package com.hitales.ui.android
 
 import android.graphics.Canvas
-import android.graphics.Paint
 import android.view.MotionEvent
-import com.hitales.ui.Colors
 import com.hitales.ui.Touches
 import com.hitales.ui.View
-import com.hitales.ui.ViewGroup
 import com.hitales.ui.utils.PixelUtil
 
 
@@ -41,9 +38,15 @@ class ViewHelper {
 
     }
 
-    fun onMeasure(width:Int,height:Int){
-        mView.frame.width = PixelUtil.toDIPFromPixel(width.toFloat())
-        mView.frame.height = PixelUtil.toDIPFromPixel(height.toFloat())
+    fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int){
+        if(changed){
+            val frame = mView.frame
+            frame.x = left.toFloat()
+            frame.y = top.toFloat()
+            frame.width = PixelUtil.toDIPFromPixel((right - left).toFloat())
+            frame.height = PixelUtil.toDIPFromPixel((bottom - top).toFloat())
+        }
+
     }
 
     fun dispatchTouchEvent(ev:MotionEvent):Boolean{

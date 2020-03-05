@@ -2,7 +2,7 @@ package com.hitales.ui
 
 import com.hitales.utils.Frame
 
-expect open class ViewGroup : View {
+expect open class Layout : View {
 
     constructor(frame: Frame = Frame.zero())
 
@@ -14,6 +14,6 @@ expect open class ViewGroup : View {
 
     open fun removeAllSubViews()
 
-    open fun layoutSubviews()
+    open fun requestLayout()
 
 }

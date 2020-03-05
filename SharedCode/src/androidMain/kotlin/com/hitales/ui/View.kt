@@ -3,7 +3,6 @@ package com.hitales.ui
 import android.animation.Animator
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.view.View
 import android.widget.FrameLayout
 import com.hitales.ui.android.AndroidView
 import com.hitales.ui.android.Background
@@ -80,7 +79,7 @@ actual open class View{
         }
 
 
-    actual var superView: ViewGroup? = null
+    actual var superView: Layout? = null
 
     actual open var id: Int
         get() = mWidget.id
@@ -209,11 +208,11 @@ actual open class View{
 
     }
 
-    actual open fun onAttachedToView(layoutView: ViewGroup) {
+    actual open fun onAttachedToView(layoutView: Layout) {
 
     }
 
-    actual open fun onDetachedFromView(layoutView: ViewGroup) {
+    actual open fun onDetachedFromView(layoutView: Layout) {
 
     }
 
@@ -263,22 +262,6 @@ actual open class View{
         if (mWidget.layerType != layerType) {
             mWidget.setLayerType(layerType, null)
         }
-    }
-
-    actual fun getBorderLeftWidth(): Float {
-        return mBackground?.borderLeftWidth ?: 0f
-    }
-
-    actual fun getBorderTopWidth(): Float {
-        return mBackground?.borderTopWidth ?: 0f
-    }
-
-    actual fun getBorderRightWidth(): Float {
-        return mBackground?.borderRightWidth ?: 0f
-    }
-
-    actual fun getBorderBottomWidth(): Float {
-        return mBackground?.borderBottomWidth ?: 0f
     }
 
     fun getOrCreateBackground(): Background {
@@ -506,5 +489,56 @@ actual open class View{
         this.checkLayerType()
     }
 
+    actual open fun getBackgroundColor(): Int {
+       return mBackgroundColor
+    }
+
+    actual fun getLeftBorderWidth(): Float {
+        return mBackground?.borderLeftWidth ?: 0f
+    }
+
+    actual fun getTopBorderWidth(): Float {
+        return mBackground?.borderTopWidth ?: 0f
+    }
+
+    actual fun getRightBorderWidth(): Float {
+        return mBackground?.borderRightWidth ?: 0f
+    }
+
+    actual fun getBottomBorderWidth(): Float {
+        return mBackground?.borderBottomWidth ?: 0f
+    }
+
+    actual fun getTopLeftBorderRadius():Float{
+        return mBackground?.borderTopLeftRadius ?: 0f
+    }
+
+    actual fun getTopRightBorderRadius():Float{
+        return mBackground?.borderTopRightRadius ?: 0f
+    }
+
+    actual fun getBottomLeftBorderRadius():Float{
+        return mBackground?.borderBottomLeftRadius ?: 0f
+    }
+
+    actual fun getBottomRightBorderRadius():Float{
+        return mBackground?.borderBottomRightRadius ?: 0f
+    }
+
+    actual fun getShadowColor(): Int {
+        return mBackground?.shadowColor ?: 0
+    }
+
+    actual fun getShadowOffsetX(): Float {
+        return mBackground?.shadowDx ?: 0f
+    }
+
+    actual fun getShadowOffsetY(): Float {
+        return mBackground?.shadowDy ?: 0f
+    }
+
+    actual fun getShadowRadius(): Float {
+        return mBackground?.shadowRadius ?: 0f
+    }
 
 }
