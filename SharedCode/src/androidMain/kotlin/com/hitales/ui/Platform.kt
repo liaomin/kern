@@ -5,11 +5,11 @@ import android.app.Application
 import android.content.Intent
 import android.os.Build
 import android.util.DisplayMetrics
-import android.view.View
 import android.widget.FrameLayout
 import com.hitales.ui.android.AndroidActivity
-import com.hitales.ui.android.ControllerManager
 import com.hitales.ui.utils.PixelUtil
+import com.hitales.utils.NotificationCenter
+import com.hitales.utils.Stack
 
 //class ControllerFragment(val controller: Controller) : AndroidFragment(){
 //
@@ -56,6 +56,7 @@ actual class Platform : ActivityDelegate{
         }
 
         fun init(rootActivity: AndroidActivity):ActivityDelegate{
+            platform?.onDestory()
             platform = Platform(rootActivity)
             return  platform!!
         }
@@ -64,20 +65,33 @@ actual class Platform : ActivityDelegate{
         fun getApplication():Application{
             return platform!!.application
         }
+
+        actual fun runWithRootController(controller: Controller) {
+            platform?.runWithRootController(controller)
+        }
     }
 
     val windowWidth:Float
+
     val windowHeight:Float
 
     var application:Application
 
     var rootActivity:AndroidActivity
 
-//    var c:TestController? = null
-
     val rootView:FrameLayout
 
-    val controllerManager:ControllerManager
+    private val stack = Stack<Controller>()
+
+    private fun cleanStack(){
+        rootView.removeAllViews()
+        stack.forEach {
+            it.onPause()
+            it.onDestroy()
+        }
+        stack.clear()
+    }
+
 
     private constructor(rootActivity: AndroidActivity){
         rootView = FrameLayout(rootActivity)
@@ -87,46 +101,68 @@ actual class Platform : ActivityDelegate{
         windowWidth = PixelUtil.toDIPFromPixel( dm.widthPixels.toFloat(),dm)
         windowHeight = PixelUtil.toDIPFromPixel( dm.heightPixels.toFloat(),dm)
         rootActivity.setContentView(rootView)
-        controllerManager = ControllerManager(rootView)
+
+        NotificationCenter.getInstance().addObserver(Controller.NOTIFY_CONTROLLER_PUSH,this::pushNotify)
+        NotificationCenter.getInstance().addObserver(Controller.NOTIFY_CONTROLLER_POP,this::popNotify)
+    }
+
+    fun pushNotify(any: Any?){
+        if(any != null && any is Controller){
+            val top = stack.peek()
+            if(top != null){
+                any.parent = top
+                rootView.removeAllViews()
+            }
+            rootView.addView(any.view.getWidget(),FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT))
+        }
+    }
+
+    fun popNotify(any: Any?){
+        if(any != null && any is Controller){
+            val top = stack.peek()
+            if(any === top && stack.size() > 1){
+                stack.pop()
+                rootView.removeAllViews()
+                val  v = stack.peek()?.view
+                if(v != null){
+                    rootView.addView(v.getWidget(),FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT))
+                }
+            }
+        }
+    }
+
+
+    fun runWithRootController(controller: Controller) {
+        cleanStack()
+        pushNotify(controller)
     }
 
     override fun onBackPressed(): Boolean {
-//        return c!!.onBackPressed()
-        return controllerManager.pop()
+        val top = stack.peek()
+        if(top != null){
+            return top.onBackPressed()
+        }
+        return false
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
     }
 
     override fun onCreate() {
         disableAPIDialog()
-//        var testController = TestController()
-//        c =  testController
-//        c?.onCreate()
-//        c?.onResume()
-//        c?.onControllerChangedListener = {rootController:Controller,pushController:Controller?,removeController:Controller? ->
-//            if(pushController != null){
-//                controllerManager.push(pushController)
-//            }else if(removeController != null){
-//                controllerManager.pop()
-//            }
-//        }
-//
-//        controllerManager.push(testController)
-//
     }
 
     override fun onResume() {
-
+        stack.peek()?.onResume()
     }
 
     override fun onPause() {
-
+        stack.peek()?.onPause()
     }
 
     override fun onDestory() {
-        rootView.removeAllViews()
-        rootActivity.setContentView(View(rootActivity))
+       cleanStack()
     }
 
     private fun disableAPIDialog() {

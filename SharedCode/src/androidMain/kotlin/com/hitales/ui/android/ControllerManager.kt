@@ -10,6 +10,20 @@ class ControllerManager( val rootView: ViewGroup) {
 
     private val stack = Stack<Controller>()
 
+    fun cleanStack(){
+        rootView.removeAllViews()
+        stack.forEach {
+            it.onPause()
+            it.onDestroy()
+        }
+        stack.clear()
+    }
+
+    fun runWithRootController(controller: Controller){
+        cleanStack()
+        push(controller)
+    }
+
     fun push(controller: Controller){
         var last:Controller? = null
         if(stack.isNotEmpty()){

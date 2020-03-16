@@ -19,6 +19,14 @@ actual class Touches {
         return PixelUtil.toDIPFromPixel(event.getY(pointerIndex))
     }
 
+    actual fun getLocationX(): Float {
+        return PixelUtil.toDIPFromPixel(event.x)
+    }
+
+    actual fun getLocationY(): Float {
+        return PixelUtil.toDIPFromPixel(event.y)
+    }
+
     actual fun getLocationInWindowX(pointerIndex: Int): Float {
         return PixelUtil.toDIPFromPixel(event.rawX)
     }

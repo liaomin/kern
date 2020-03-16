@@ -2,6 +2,10 @@ package com.hitales.ui
 
 expect class Touches {
 
+    fun getLocationX(): Float
+
+    fun getLocationY(): Float
+
     fun getLocationX(pointerIndex:Int = 0):Float
 
     fun getLocationY(pointerIndex:Int = 0):Float

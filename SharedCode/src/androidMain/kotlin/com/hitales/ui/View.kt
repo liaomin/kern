@@ -3,7 +3,6 @@ package com.hitales.ui
 import android.animation.Animator
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.widget.FrameLayout
 import com.hitales.ui.android.AndroidView
 import com.hitales.ui.android.Background
 import com.hitales.ui.animation.toAnimator
@@ -12,12 +11,16 @@ import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
 import com.hitales.utils.Size
 import com.hitales.utils.WeakReference
+import kotlin.math.max
+import kotlin.math.min
 
 actual open class View{
 
-    protected val mWidget: android.view.View = createWidget()
+    actual var flags:Int = 0
 
-    private var mBackgroundColor = Colors.WHITE
+    val mWidget: android.view.View
+
+    private var mBackgroundColor = Colors.CLEAR
 
     var mBackground: Background? = null
 
@@ -44,29 +47,26 @@ actual open class View{
             }
         }
 
-    init {
-        mWidget.setBackgroundColor(mBackgroundColor)
-    }
-
     var innerPadding : EdgeInsets? = null
         set(value) {
             field = value
-            onPaddingSet()
+            calculatePadding()
         }
 
     actual var padding: EdgeInsets? = null
         set(value) {
             field = value
-            onPaddingSet()
+            mWidget.requestLayout()
         }
 
-    actual var margin: EdgeInsets? = null
-
-    actual open var frame: Frame
+    actual open var layoutParams:LayoutParams
         set(value) {
             field = value
-            onFrameChanged()
+            mWidget.requestLayout()
         }
+
+    actual open val frame: Frame = Frame.identity()
+
 
     actual open var isHidden: Boolean = false
         set(value) {
@@ -79,7 +79,7 @@ actual open class View{
         }
 
 
-    actual var superView: Layout? = null
+    actual var superView : WeakReference<Layout>? = null
 
     actual open var id: Int
         get() = mWidget.id
@@ -98,7 +98,7 @@ actual open class View{
         }
         set(value) {
             if(Build.VERSION.SDK_INT >= 21){
-                mWidget.elevation = PixelUtil.toPixelFromDIP(value)
+                mWidget.elevation = PixelUtil.toPixelFromDIP(value).toFloat()
             }
             field = value
         }
@@ -173,8 +173,11 @@ actual open class View{
     private var onLongPressListener:((view: com.hitales.ui.View)->Unit)? = null
 
 
-    actual constructor(frame: Frame) {
-        this.frame = frame
+    actual constructor(layoutParams:LayoutParams) {
+        mWidget = createWidget()
+        mWidget.tag = this
+        mWidget.setBackgroundColor(mBackgroundColor)
+        this.layoutParams = layoutParams
     }
 
     open fun getWidget(): android.view.View {
@@ -196,7 +199,7 @@ actual open class View{
 
 
     actual open fun removeFromSuperView() {
-        superView?.removeSubView(this)
+        superView?.get()?.removeSubView(this)
         superView = null
     }
 
@@ -277,34 +280,6 @@ actual open class View{
         return mBackground
     }
 
-    actual open fun onFrameChanged() {
-        var params = getLayoutParams()
-        mWidget.layoutParams = params
-    }
-
-    protected open fun onPaddingSet(){
-        val padding = EdgeInsets.zero()
-        getPadding(padding)
-        mWidget.setPadding(padding.left.toInt(),padding.top.toInt(),padding.right.toInt(),padding.bottom.toInt())
-    }
-
-    protected open fun getPadding(padding:EdgeInsets){
-        val tPadding = this.padding
-        if(tPadding != null){
-            padding.left += PixelUtil.toPixelFromDIP(tPadding.left)
-            padding.right += PixelUtil.toPixelFromDIP(tPadding.right)
-            padding.top += PixelUtil.toPixelFromDIP(tPadding.top)
-            padding.bottom += PixelUtil.toPixelFromDIP(tPadding.bottom)
-        }
-        val innerPadding = this.innerPadding
-        if(innerPadding != null){
-            padding.left -= innerPadding.left
-            padding.right += innerPadding.right
-            padding.top -= innerPadding.top
-            padding.bottom += innerPadding.bottom
-        }
-    }
-
     actual fun setOnPressListener(listener: (view: com.hitales.ui.View) -> Unit) {
         onPressListener = listener
         if(listener != null){
@@ -330,83 +305,63 @@ actual open class View{
         }
     }
 
-    protected open fun getLayoutParams(): android.view.ViewGroup.LayoutParams {
-        var params = mWidget.layoutParams
-        var top = PixelUtil.toPixelFromDIP(frame.y).toInt()
-        var left = PixelUtil.toPixelFromDIP(frame.x).toInt()
-        var width = PixelUtil.toPixelFromDIP(frame.width).toInt()
-        var height = PixelUtil.toPixelFromDIP(frame.height).toInt()
-        var right = left + width
-        var bottom = top + height
-        val background = mBackground
-        if(background != null && background.haveShadow()){
-            val radius = background.shadowRadius
-            val dx= background.shadowDx
-            val dy= background.shadowDy
-            val l = (left + dx - radius).toInt()
-            val t = (top + dy - radius).toInt()
-            val r = (right + dx + radius).toInt()
-            val b = (bottom + dy + radius).toInt()
-            val ol = left.toFloat()
-            val ot = top.toFloat()
-            val ob = bottom.toFloat()
-            val or = right.toFloat()
-            left = Math.min(l,left)
-            top = Math.min(t,top)
-            right = Math.max(right,r)
-            bottom = Math.max(bottom,b)
-            background.offset = Frame(left - ol,top - ot,width.toFloat(),height.toFloat())
-            innerPadding = EdgeInsets(top - ot,left - ol,bottom - ob,right - or)
-        }else{
-            background?.offset = null
-            innerPadding = null
-        }
-        if (params == null || params !is android.view.ViewGroup.MarginLayoutParams) {
-            params = FrameLayout.LayoutParams(right - left, bottom - top)
-        } else {
-            params.width = right - left
-            params.height = bottom - top
-        }
-        if(params is android.view.ViewGroup.MarginLayoutParams){
-            params.topMargin = top
-            params.leftMargin = left
-        }
-        return params
-    }
-
     /**
-     * @param widthSpace 最大宽度  如果小于等于0表示无限宽
-     * @param heightSpace 最大高度  如果小于等于0表示无限高
+     * measure view width and height
+     * @param widthSpace 最大宽度  如果小于等于0返回0
+     * @param heightSpace 最大高度  如果小于等于0返回0
+     * @param outSize 获取计算出来的宽高
      */
-    actual open fun measureSize(widthSpace: Float,heightSpace: Float): Size {
-        val size =  Size()
-        measureSize(widthSpace,heightSpace,size)
-        return size
-    }
-
-    actual open fun measureSize(widthSpace: Float,heightSpace: Float,size: Size){
-        if(!frame.valid()){
-            size.set(frame.width,frame.height)
+    actual open fun measure(widthSpace: Float, heightSpace: Float, outSize: Size?){
+        if(widthSpace <= 0 || heightSpace <= 0){
+            outSize?.set(0f,0f)
             return
         }
         var maxWidth = widthSpace
         var maxHeight = heightSpace
         var width = PixelUtil.toPixelFromDIP(maxWidth).toInt()
         var height = PixelUtil.toPixelFromDIP(maxHeight).toInt()
-        if( width <= 0 ){
-            width = android.view.View.MeasureSpec.makeMeasureSpec(0, android.view.View.MeasureSpec.UNSPECIFIED)
+        if(!layoutParams.width.isNaN()){
+            width = android.view.View.MeasureSpec.makeMeasureSpec(PixelUtil.toPixelFromDIP(layoutParams.width).toInt(), android.view.View.MeasureSpec.EXACTLY)
         }else{
             width = android.view.View.MeasureSpec.makeMeasureSpec(width, android.view.View.MeasureSpec.AT_MOST)
         }
-        if ( height <= 0 ){
-            height = android.view.View.MeasureSpec.makeMeasureSpec(0, android.view.View.MeasureSpec.UNSPECIFIED)
+        if(!layoutParams.height.isNaN()){
+            height = android.view.View.MeasureSpec.makeMeasureSpec(PixelUtil.toPixelFromDIP(layoutParams.height).toInt(), android.view.View.MeasureSpec.EXACTLY)
         }else{
             height = android.view.View.MeasureSpec.makeMeasureSpec(height, android.view.View.MeasureSpec.AT_MOST)
         }
+
         mWidget.measure(width,height)
+
         val measuredWidth = mWidget.measuredWidth
         val measuredHeight = mWidget.measuredHeight
-        size.set(PixelUtil.toDIPFromPixel(measuredWidth.toFloat()), PixelUtil.toDIPFromPixel(measuredHeight.toFloat()))
+        outSize?.set(PixelUtil.toDIPFromPixel(measuredWidth.toFloat()), PixelUtil.toDIPFromPixel(measuredHeight.toFloat()))
+    }
+
+    open fun calculatePadding(){
+        val tPadding = this.padding
+        var left = 0
+        var top = 0
+        var right = 0
+        var bottom = 0
+        if(tPadding != null){
+            left += PixelUtil.toPixelFromDIP(tPadding.left).toInt()
+            right += PixelUtil.toPixelFromDIP(tPadding.right).toInt()
+            top += PixelUtil.toPixelFromDIP(tPadding.top).toInt()
+            bottom += PixelUtil.toPixelFromDIP(tPadding.bottom).toInt()
+        }
+        val innerPadding = this.innerPadding
+        if(innerPadding != null){
+            left -= innerPadding.left.toInt()
+            right += innerPadding.right.toInt()
+            top -= innerPadding.top.toInt()
+            bottom += innerPadding.bottom.toInt()
+        }
+        onCalculatePadding(left,top, right, bottom)
+    }
+
+    protected open fun onCalculatePadding(left:Int,top:Int,right:Int,bottom:Int){
+        mWidget.setPadding(left,top, right, bottom)
     }
 
     protected open fun setBackgroundDrawable(drawable: Drawable,state: ViewState){
@@ -452,10 +407,6 @@ actual open class View{
         animatorSet.start()
     }
 
-    actual open fun releaseResource() {
-        superView = null
-    }
-
     /**
      * touches
      */
@@ -467,26 +418,40 @@ actual open class View{
         return false
     }
 
-    actual open fun touchesBegan(touches: Touches) {
-        println("$this touchesBegan")
+    actual open fun onTouchesBegan(touches: Touches) {
+//        println("$this touchesBegan")
     }
 
-    actual open fun touchesMoved(touches: Touches) {
-        println("$this touchesMoved")
+    actual open fun onTouchesMoved(touches: Touches) {
+//        println("$this touchesMoved")
     }
 
-    actual open fun touchesEnded(touches: Touches) {
-        println("$this touchesEnded")
+    actual open fun onTouchesEnded(touches: Touches) {
+//        println("$this touchesEnded")
     }
 
-    actual open fun touchesCancelled(touches: Touches) {
-        println("$this touchesCancelled")
+    actual open fun onTouchesCancelled(touches: Touches) {
+//        println("$this touchesCancelled")
     }
 
     actual open fun setShadow(color: Int,radius: Float, dx: Float, dy: Float) {
-        getOrCreateBackground().setShadow(radius,dx, dy, color)
-        onFrameChanged()
+        val background = getOrCreateBackground()
+        background.setShadow(radius,dx, dy, color)
         this.checkLayerType()
+        if(background.haveShadow()){
+            val radius = background.shadowRadius
+            val dx= background.shadowDx
+            val dy= background.shadowDy
+            val l = min(dx - radius,0f)
+            val t = min(dy - radius,0f)
+            val r = max(0f,dx + radius)
+            val b = max(0f,dy + radius)
+            background.offset = Frame(l,t,0f,0f)
+            innerPadding = EdgeInsets(l,t,r,b)
+        }else{
+            background.offset = null
+            innerPadding = null
+        }
     }
 
     actual open fun getBackgroundColor(): Int {
@@ -541,4 +506,35 @@ actual open class View{
         return mBackground?.shadowRadius ?: 0f
     }
 
+    actual open fun onLayout() {
+        if(!isHidden){
+            var l = PixelUtil.toPixelFromDIP(frame.x)
+            var t = PixelUtil.toPixelFromDIP(frame.y)
+            val width = PixelUtil.toPixelFromDIP(frame.width)
+            val height = PixelUtil.toPixelFromDIP(frame.height)
+            mBackground?.setOffsetSize(width,height)
+            var r = l + width
+            var b = t + height
+            val inner = innerPadding
+            if(inner != null){
+                l += inner.left.toInt()
+                t += inner.top.toInt()
+                r += inner.right.toInt()
+                b += inner.bottom.toInt()
+            }
+            mWidget.layout(l.toInt(), t.toInt(), r.toInt(), b.toInt())
+        }
+    }
+
+    actual open fun onDraw(){
+
+    }
+
+    actual open fun needLayout(){
+        mWidget.requestLayout()
+    }
+
+    actual open fun needDisplay(){
+        mWidget.invalidate()
+    }
 }

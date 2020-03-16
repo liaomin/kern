@@ -15,10 +15,10 @@ class NotificationCenter {
         }
     }
 
-    private val observers = HashMap<Any,LinkedList<((key:Any,value:Any?)->Unit)>>()
+    private val observers = HashMap<Any,LinkedList<((value:Any?)->Unit)>>()
 
     @Synchronized
-    fun addObserver(key:Any,block:((key:Any,value:Any?)->Unit)){
+    fun addObserver(key:Any,block:((value:Any?)->Unit)){
         var list = observers[key]
         if(list == null){
             list = LinkedList()
@@ -28,7 +28,7 @@ class NotificationCenter {
     }
 
     @Synchronized
-    fun removeObserver(key:Any,block:((key:Any,value:Any?)->Unit)){
+    fun removeObserver(key:Any,block:((value:Any?)->Unit)){
         var list = observers[key]
         if(list == null){
             list = LinkedList()
@@ -45,7 +45,7 @@ class NotificationCenter {
             observers[key] = list
         }
         list.forEach {
-            it(key,value)
+            it(value)
         }
     }
 

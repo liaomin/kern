@@ -32,23 +32,45 @@ interface ViewDelegate{
     fun onLongPress(view: View)
 }
 
+
+const val VIEW_ORIENTATION_VERTICAL: Int = 0
+
+const val VIEW_ORIENTATION_HORIZONTAL: Int = 1
+
+const val VIEW_STATE_NORMAL: Int = 0
+
+const val VIEW_STATE_PRESSED: Int = 1
+
+const val VIEW_STATE_FOCUSED: Int = 2
+
+const val VIEW_STATE_DISABLED: Int = 3
+
+const val VIEW_STATE_SELECTED: Int = 4
+
+const val VIEW_STYLE_BORDER_SOLID: Int = 0
+
+const val VIEW_STYLE_BORDER_DOTTED: Int = 1
+
+const val VIEW_STYLE_BORDER_DASHED: Int = 2
+
+
 expect open class View  {
 
+    var flags:Int
+
     var delegate:WeakReference<ViewDelegate>?
+
     /**
      * use margin and padding to calculate frame
      */
     var padding:EdgeInsets?
 
     /**
-     * use margin and padding to calculate frame
+     * display frame
      */
-    var margin:EdgeInsets?
+    open val frame:Frame
 
-    /**
-     * layout params
-     */
-    open var frame:Frame
+    open var layoutParams:LayoutParams
 
     open var id:Int
 
@@ -79,9 +101,9 @@ expect open class View  {
 
     open var scaleY:Float
 
-    constructor(frame: Frame = Frame.zero())
+    constructor(layoutParams: LayoutParams = LayoutParams())
 
-    var superView:Layout?
+    var superView:WeakReference<Layout>?
 
     /**
      * Android ViewGroup clipChildren
@@ -89,14 +111,18 @@ expect open class View  {
      */
     open var clipsToBounds:Boolean
 
-    open fun onFrameChanged()
+    open fun onLayout()
+    open fun onDraw()
+    open fun needLayout()
+    open fun needDisplay()
+
+
 
     open fun removeFromSuperView()
     open fun onAttachedToWindow()
     open fun onDetachedFromWindow()
     open fun onAttachedToView(layoutView: Layout)
     open fun onDetachedFromView(layoutView: Layout)
-    open fun releaseResource()
 
     /**
      * events
@@ -129,8 +155,6 @@ expect open class View  {
     fun getBottomLeftBorderRadius():Float
     fun getBottomRightBorderRadius():Float
 
-
-
     /**
      * shadow
      */
@@ -142,22 +166,22 @@ expect open class View  {
 
 
     /**
-     * @param widthSpace 最大宽度  如果小于0表示无限宽
-     * @param heightSpace 最大高度  如果小于0表示无限高
+     * measure view width and height
+     * @param widthSpace 最大宽度  如果小于等于0返回0
+     * @param heightSpace 最大高度  如果小于等于0返回0
+     * @param outSize 获取计算出来的宽高
      */
-    open fun measureSize(widthSpace: Float,heightSpace: Float):Size
-    open fun measureSize(widthSpace: Float,heightSpace: Float,size: Size)
-
+    open fun measure(widthSpace: Float, heightSpace: Float, outSize: Size? = null)
 
     /**
      * touches
      */
     open fun dispatchTouchEvent(touches: Touches):Boolean
     open fun onInterceptTouchEvent(touches: Touches):Boolean
-    open fun touchesBegan(touches: Touches)
-    open fun touchesMoved(touches: Touches)
-    open fun touchesEnded(touches: Touches)
-    open fun touchesCancelled(touches: Touches)
+    open fun onTouchesBegan(touches: Touches)
+    open fun onTouchesMoved(touches: Touches)
+    open fun onTouchesEnded(touches: Touches)
+    open fun onTouchesCancelled(touches: Touches)
 
     open fun startAnimation(animation: Animation,completion:(()->Unit)? = null)
 }

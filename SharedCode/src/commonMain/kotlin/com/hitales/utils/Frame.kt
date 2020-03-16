@@ -3,9 +3,10 @@ package com.hitales.utils
 open class Frame(var x:Float = 0f,var y:Float = 0f, var width:Float = 0f,var height:Float = 0f){
 
     companion object {
-        fun zero():Frame{
+        fun identity():Frame{
             return Frame(0f,0f,0f,0f)
         }
+        internal val invalid:Frame by lazy { Frame(0f,0f,0f,0f) }
     }
 
     fun set(x:Float,y:Float,width: Float,height: Float):Frame{
@@ -23,6 +24,13 @@ open class Frame(var x:Float = 0f,var y:Float = 0f, var width:Float = 0f,var hei
         this.height = other.height
         return this
     }
+
+    fun setSize(width:Float,height: Float):Frame{
+        this.width = width
+        this.height = height
+        return this
+    }
+
 
     fun scale(scale: Float):Frame{
         this.x *= scale
@@ -87,8 +95,13 @@ open class Frame(var x:Float = 0f,var y:Float = 0f, var width:Float = 0f,var hei
     }
 
     fun valid():Boolean{
-        return width <= 0 || height <= 0
+        return width >= 0 && height >= 0
     }
+
+    fun isIdentity():Boolean{
+        return x == 0f && y == 0f && width == 0f && height == 0f
+    }
+
 
     override fun equals(other: Any?): Boolean {
         if(this == other){

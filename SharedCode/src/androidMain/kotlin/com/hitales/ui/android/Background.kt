@@ -117,17 +117,17 @@ class Background : StateListDrawable {
 
     var shadowRadius: Float = 0f
     private set(value){
-        field = PixelUtil.toPixelFromDIP(value)
+        field = PixelUtil.toPixelFromDIP(value).toFloat()
     }
 
     var shadowDx: Float = 0f
         private set(value){
-            field = PixelUtil.toPixelFromDIP(value)
+            field = PixelUtil.toPixelFromDIP(value).toFloat()
         }
 
     var shadowDy: Float = 0f
         private set(value){
-            field = PixelUtil.toPixelFromDIP(value)
+            field = PixelUtil.toPixelFromDIP(value).toFloat()
         }
 
     var shadowColor: Int = 0
@@ -138,6 +138,10 @@ class Background : StateListDrawable {
     private var borderStyle = BorderStyle.SOLID
 
     var offset:Frame? = null
+
+    fun setOffsetSize(width:Float,height:Float){
+        offset?.setSize(width,height)
+    }
 
     fun setColorForState(color:Int,state: ViewState){
         backgroundColors.setColorForState(color,state)
@@ -263,14 +267,14 @@ class Background : StateListDrawable {
 
         mPaint.reset()
         mPaint.xfermode = null
-        var borderLeftWidth = Math.min(PixelUtil.toPixelFromDIP(borderLeftWidth).toInt().toFloat(),halfWidth)
-        var borderTopWidth =  Math.min(PixelUtil.toPixelFromDIP(borderTopWidth).toInt().toFloat(),halfHeight)
-        var borderRightWidth = Math.min(PixelUtil.toPixelFromDIP(borderRightWidth).toInt().toFloat(),halfWidth)
-        var borderBottomWidth = Math.min(PixelUtil.toPixelFromDIP(borderBottomWidth).toInt().toFloat(),halfHeight)
-        var borderTopLeftRadius = Math.min(PixelUtil.toPixelFromDIP(borderTopLeftRadius).toInt().toFloat(),maxRadius)
-        var borderTopRightRadius = Math.min(PixelUtil.toPixelFromDIP(borderTopRightRadius).toInt().toFloat(),maxRadius)
-        var borderBottomRightRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomRightRadius).toInt().toFloat(),maxRadius)
-        var borderBottomLeftRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomLeftRadius).toInt().toFloat(),maxRadius)
+        var borderLeftWidth = Math.min(PixelUtil.toPixelFromDIP(borderLeftWidth).toFloat(),halfWidth)
+        var borderTopWidth =  Math.min(PixelUtil.toPixelFromDIP(borderTopWidth).toFloat(),halfHeight)
+        var borderRightWidth = Math.min(PixelUtil.toPixelFromDIP(borderRightWidth).toFloat(),halfWidth)
+        var borderBottomWidth = Math.min(PixelUtil.toPixelFromDIP(borderBottomWidth).toFloat(),halfHeight)
+        var borderTopLeftRadius = Math.min(PixelUtil.toPixelFromDIP(borderTopLeftRadius).toFloat(),maxRadius)
+        var borderTopRightRadius = Math.min(PixelUtil.toPixelFromDIP(borderTopRightRadius).toFloat(),maxRadius)
+        var borderBottomRightRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomRightRadius).toFloat(),maxRadius)
+        var borderBottomLeftRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomLeftRadius).toFloat(),maxRadius)
         val backgroundColor = getCurrentColor()
 
         if(haveShadow()){
@@ -615,10 +619,10 @@ class Background : StateListDrawable {
 
 
     private fun getPathEffect():PathEffect?{
-        var top = PixelUtil.toPixelFromDIP(borderTopWidth)
-        var right = PixelUtil.toPixelFromDIP(borderRightWidth)
-        var bottom = PixelUtil.toPixelFromDIP(borderBottomWidth)
-        var left = PixelUtil.toPixelFromDIP(borderLeftWidth)
+        var top = PixelUtil.toPixelFromDIP(borderTopWidth).toFloat()
+        var right = PixelUtil.toPixelFromDIP(borderRightWidth).toFloat()
+        var bottom = PixelUtil.toPixelFromDIP(borderBottomWidth).toFloat()
+        var left = PixelUtil.toPixelFromDIP(borderLeftWidth).toFloat()
         when(borderStyle){
             BorderStyle.SOLID -> return null
             BorderStyle.DASHED -> return DashPathEffect(floatArrayOf(top*3,right*3,bottom*3,left*3),0f)

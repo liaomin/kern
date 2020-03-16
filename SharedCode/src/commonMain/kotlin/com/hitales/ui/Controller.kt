@@ -1,28 +1,29 @@
 package com.hitales.ui
 
-import com.hitales.utils.Stack
+import com.hitales.utils.NotificationCenter
 
 
-open class Controller {
+open class Controller(var parent:Controller? = null,var title:String? = null) {
+
+    companion object{
+        val NOTIFY_CONTROLLER_PUSH = "NOTIFY_CONTROLLER_PUSH"
+        val NOTIFY_CONTROLLER_POP = "NOTIFY_CONTROLLER_POP"
+    }
 
     var tag:Any? = null
 
-    var title:String? = null
-
-    var onControllerChangedListener:((rootController:Controller,pushController:Controller?,removeController:Controller?)->Unit)? = null
-
-    var view:View = Layout()
+    var view:Layout
 
     var enterAnimation:Animation? = null
 
     var exitAnimation:Animation? = null
 
-    private var rootController:Controller? = null
+    init {
+        view = createLayout()
+    }
 
-    protected var stack:Stack<Controller>? = null
-
-    constructor(){
-        rootController = this
+    open fun createLayout():Layout{
+        return Layout()
     }
 
     open fun onCreate(){
@@ -38,7 +39,6 @@ open class Controller {
     }
 
     open fun onDestroy() {
-        view?.releaseResource()
 
     }
 
@@ -51,58 +51,22 @@ open class Controller {
     }
 
     open fun push(controller: Controller){
-        val root=  rootController
-        if(root != null){
-            root.pushStack(controller)
+        if(controller !== this){
+            controller.parent = this
+            NotificationCenter.getInstance().notify(NOTIFY_CONTROLLER_PUSH,controller)
+        }else{
+            throw RuntimeException("Controller can't push it self")
         }
     }
 
     open fun pop():Boolean{
-        if(rootController != this && rootController != null){
-            this.onDestroy()
-            return rootController!!.pop()
-        }else{
-            val temp = stack?.pop()
-            if(temp != null){
-                onPopController(temp)
-            }
-            return temp != null
+        val p = this.parent
+        if( p != null ){
+            parent = null
+            NotificationCenter.getInstance().notify(NOTIFY_CONTROLLER_POP,this)
+            return true
         }
-    }
-
-    protected fun pushStack(controller: Controller){
-        controller.rootController = rootController
-        if(stack == null){
-            stack = Stack()
-        }
-        val stack = stack!!
-        val last = stack.last()
-        if(last != null){
-            last.onPause()
-        }else{
-            this.onPause()
-        }
-        stack.append(controller)
-        controller.onCreate()
-        onPushController(controller)
-    }
-
-    private fun onPushController(controller: Controller){
-        onControllerChangedListener?.invoke(this,controller,null)
-        controller.onResume()
-    }
-
-    private fun onPopController(controller: Controller){
-        controller.onPause()
-        onControllerChangedListener?.invoke(this,null,controller)
-        controller.onDestroy()
-        val stack = stack!!
-        if(stack.isEmpty()){
-            onResume()
-        }else{
-            val last = stack.last() as Controller
-            last.onResume()
-        }
+        return false
     }
 
 }

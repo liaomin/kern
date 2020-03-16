@@ -1,17 +1,10 @@
 package com.hitales.ui.android
 
-import android.graphics.Canvas
+import android.graphics.Rect
 import android.view.MotionEvent
 import com.hitales.ui.Touches
 import com.hitales.ui.View
 import com.hitales.ui.utils.PixelUtil
-
-
-enum class ViewStyle{
-    ANDROID,
-    IOS
-}
-
 
 class ViewHelper {
 
@@ -19,7 +12,6 @@ class ViewHelper {
 
     constructor(androidView: android.view.View,view:View){
         mView = view
-//        androidView.setBackgroundColor(Colors.WHITE)
         androidView.tag = view
         if(androidView is android.view.ViewGroup){
             androidView.clipToPadding = false
@@ -34,37 +26,34 @@ class ViewHelper {
         mView.onDetachedFromWindow()
     }
 
-    fun dispatchDraw(canvas: Canvas) {
-
-    }
-
-    fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int){
-        if(changed){
-            val frame = mView.frame
-            frame.x = left.toFloat()
-            frame.y = top.toFloat()
-            frame.width = PixelUtil.toDIPFromPixel((right - left).toFloat())
-            frame.height = PixelUtil.toDIPFromPixel((bottom - top).toFloat())
-        }
-
-    }
-
-    fun dispatchTouchEvent(ev:MotionEvent):Boolean{
+    fun dispatchTouchEvent(ev:MotionEvent):Boolean {
         val touches = Touches(ev)
         return mView.dispatchTouchEvent(touches)
     }
 
+    fun adjustTouchEvent(ev: MotionEvent): Boolean {
+        val padding = mView.innerPadding
+        if(padding != null){
+            val x = ev.x + padding.left
+            val y = ev.y + padding.top
+            ev.setLocation(x,y)
+            return true
+        }
+        return false
+    }
 
     fun interceptTouchEvent(ev: MotionEvent): Boolean {
         val padding = mView.innerPadding
-        if(padding != null && ev.action == MotionEvent.ACTION_DOWN){
+        if(padding != null){
             val x = ev.x
             val y = ev.y
-            val widget = mView.getWidget()
-            val width = widget.width
-            val height = widget.height
-            if( x < -padding.left || x > width - padding.right  || y < -padding.top || y > height - padding.bottom ){
-                return true
+            if(ev.action == MotionEvent.ACTION_DOWN){
+                val widget = mView.getWidget()
+                val width = PixelUtil.toPixelFromDIP(mView.frame.width)
+                val height = PixelUtil.toPixelFromDIP(mView.frame.height)
+                if( x < 0 || x > width   || y < 0 || y > height ){
+                    return true
+                }
             }
         }
         return false
@@ -73,10 +62,20 @@ class ViewHelper {
     fun onTouchEvent(ev:MotionEvent){
         val touches = Touches(ev)
         when (ev.action){
-            MotionEvent.ACTION_DOWN -> mView.touchesBegan(touches)
-            MotionEvent.ACTION_MOVE -> mView.touchesMoved(touches)
-            MotionEvent.ACTION_UP -> mView.touchesEnded(touches)
-            MotionEvent.ACTION_CANCEL -> mView.touchesCancelled(touches)
+            MotionEvent.ACTION_DOWN -> mView.onTouchesBegan(touches)
+            MotionEvent.ACTION_MOVE -> mView.onTouchesMoved(touches)
+            MotionEvent.ACTION_UP -> mView.onTouchesEnded(touches)
+            MotionEvent.ACTION_CANCEL -> mView.onTouchesCancelled(touches)
+        }
+    }
+
+    fun adjustHitRect(rect: Rect){
+        val padding = mView.innerPadding
+        if(padding != null){
+            rect.left += padding.left.toInt()
+            rect.top += padding.top.toInt()
+            rect.right += padding.right.toInt()
+            rect.bottom += padding.bottom.toInt()
         }
     }
 

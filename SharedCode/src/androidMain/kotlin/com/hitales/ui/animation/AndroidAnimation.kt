@@ -13,28 +13,28 @@ import com.hitales.ui.utils.PixelUtil
 
 inline fun Animation.toAnimator(widget:android.view.View):AnimatorSet{
     val animations = ArrayList<ObjectAnimator>()
-    if(fromTranslateX !== toTranslateX){
-        animations.add(ObjectAnimator.ofFloat(widget, "translationX", PixelUtil.toPixelFromDIP(fromTranslateX), PixelUtil.toPixelFromDIP(toTranslateX)))
+    if(fromTranslateX != toTranslateX){
+        animations.add(ObjectAnimator.ofFloat(widget, "translationX", PixelUtil.toPixelFromDIP(fromTranslateX).toFloat(), PixelUtil.toPixelFromDIP(toTranslateX).toFloat()))
     }
-    if(fromTranslateY !== toTranslateY){
-        animations.add(ObjectAnimator.ofFloat(widget, "translationY", PixelUtil.toPixelFromDIP(fromTranslateY), PixelUtil.toPixelFromDIP(toTranslateY)))
+    if(fromTranslateY != toTranslateY){
+        animations.add(ObjectAnimator.ofFloat(widget, "translationY", PixelUtil.toPixelFromDIP(fromTranslateY).toFloat(), PixelUtil.toPixelFromDIP(toTranslateY).toFloat()))
     }
-    if(fromRotateX !== toRotateX){
+    if(fromRotateX != toRotateX){
         animations.add(ObjectAnimator.ofFloat(widget, "rotationX", fromRotateX, toRotateX))
     }
-    if(fromRotateY !== toRotateY){
+    if(fromRotateY != toRotateY){
         animations.add(ObjectAnimator.ofFloat(widget, "rotationY", fromRotateY, toRotateY))
     }
-    if(fromRotateZ !== toRotateZ){
+    if(fromRotateZ != toRotateZ){
         animations.add(ObjectAnimator.ofFloat(widget, "rotation", fromRotateZ, toRotateZ))
     }
-    if(fromOpacity !== toOpacity){
+    if(fromOpacity != toOpacity){
         animations.add(ObjectAnimator.ofFloat(widget, "alpha", fromOpacity, toOpacity))
     }
-    if(fromScaleX !== toScaleX){
+    if(fromScaleX != toScaleX){
         animations.add(ObjectAnimator.ofFloat(widget, "scaleX", fromScaleX, toScaleX))
     }
-    if(fromScaleY !== toScaleY){
+    if(fromScaleY != toScaleY){
         animations.add(ObjectAnimator.ofFloat(widget, "scaleY", fromScaleY, toScaleY))
     }
 //    val tx = ObjectAnimator.ofFloat(widget, "translationX", PixelUtil.toPixelFromDIP(fromTranslateX), PixelUtil.toPixelFromDIP(toTranslateX))
@@ -109,7 +109,7 @@ open class AndroidAnimation : AlphaAnimation(1f,1f){
      */
     var fromTranslateX = 0f
         set(value) {
-            field = PixelUtil.toPixelFromDIP(value)
+            field = PixelUtil.toPixelFromDIP(value).toFloat()
         }
 
     /**
@@ -117,7 +117,7 @@ open class AndroidAnimation : AlphaAnimation(1f,1f){
      */
     var toTranslateX = 0f
         set(value) {
-            field = PixelUtil.toPixelFromDIP(value)
+            field = PixelUtil.toPixelFromDIP(value).toFloat()
         }
 
     /**
@@ -125,7 +125,7 @@ open class AndroidAnimation : AlphaAnimation(1f,1f){
      */
     var fromTranslateY = 0f
         set(value) {
-            field = PixelUtil.toPixelFromDIP(value)
+            field = PixelUtil.toPixelFromDIP(value).toFloat()
         }
 
     /**
@@ -133,7 +133,7 @@ open class AndroidAnimation : AlphaAnimation(1f,1f){
      */
     var toTranslateY = 0f
         set(value) {
-            field = PixelUtil.toPixelFromDIP(value)
+            field = PixelUtil.toPixelFromDIP(value).toFloat()
         }
 
     /**
@@ -141,7 +141,7 @@ open class AndroidAnimation : AlphaAnimation(1f,1f){
      */
     var fromTranslateZ = 0f
         set(value) {
-            field = PixelUtil.toPixelFromDIP(value)
+            field = PixelUtil.toPixelFromDIP(value).toFloat()
         }
 
     /**
@@ -149,7 +149,7 @@ open class AndroidAnimation : AlphaAnimation(1f,1f){
      */
     var toTranslateZ = 0f
         set(value) {
-            field = PixelUtil.toPixelFromDIP(value)
+            field = PixelUtil.toPixelFromDIP(value).toFloat()
         }
 
     /**

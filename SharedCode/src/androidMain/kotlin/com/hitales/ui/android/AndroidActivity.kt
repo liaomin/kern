@@ -13,7 +13,6 @@ open class AndroidActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         mDelegate = Platform.init(this)
         mDelegate?.onCreate()
     }

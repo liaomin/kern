@@ -112,14 +112,12 @@ class OverlayView(context: Context) : View(context),Runnable{
                 if(Build.VERSION.SDK_INT >= 16){
                     totalMem = "${memInfo.totalMem/1024/1024} M"
                 }
-                System.gc()
+//                System.gc()
             }
         }
     }
 
     override fun onDraw(canvas: Canvas) {
-        val w1 = canvas.width
-        print(w1)
         super.onDraw(canvas)
         val textSize = mPaint.textSize
         val marginY = 5f
@@ -133,9 +131,5 @@ class OverlayView(context: Context) : View(context),Runnable{
         canvas.drawText("availMem:$availMem",offsetX,offsetY,mPaint)
 
         canvas.clipRect(Rect(0,0,20,20))
-
-        val w2 = canvas.width
-        print(w2)
-
     }
 }

@@ -1,86 +1,37 @@
 package com.hitales.ui
 
-import android.graphics.Canvas
-import android.view.MotionEvent
-import android.widget.FrameLayout
-//import com.hitales.ui.android.AndroidScrollView
-import com.hitales.ui.android.ViewHelper
-import com.hitales.utils.Frame
+import com.hitales.ui.android.AndroidLayout
+import com.hitales.ui.layout.flex.FlexLayout
+import com.hitales.utils.Size
+import com.hitales.utils.WeakReference
 import java.util.*
 
 
-open class AndroidFrameLayout(private val view:Layout) : FrameLayout(Platform.getApplication()){
-
-    val mViewHelper = ViewHelper(this,view)
-
-//    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-//
-//    }
-
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        super.onLayout(changed, left, top, right, bottom)
-        mViewHelper.onLayout(changed,left,top,right,bottom)
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        mViewHelper.onAttachedToWindow()
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        mViewHelper.onDetachedFromWindow()
-    }
-
-    override fun dispatchDraw(canvas: Canvas) {
-        mViewHelper.dispatchDraw(canvas)
-        super.dispatchDraw(canvas)
-    }
-
-    override fun drawChild(canvas: Canvas?, child: android.view.View?, drawingTime: Long): Boolean {
-        return super.drawChild(canvas, child, drawingTime)
-    }
-
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        return mViewHelper.dispatchTouchEvent(event) || super.dispatchTouchEvent(event)
-    }
-
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        mViewHelper.onTouchEvent(event)
-        return super.onTouchEvent(event)
-    }
-
-}
 actual open class Layout : View {
 
-
-    actual constructor(frame: Frame):super(frame){
+    actual constructor(layoutParams: LayoutParams):super(layoutParams){
 //        mWidget.isFocusable = true
 //        mWidget.isFocusableInTouchMode = true
     }
 
-
     actual val children: ArrayList<View> = ArrayList()
 
-    actual open fun addSubView(
-        view: View,
-        index: Int
-    ) {
+    actual open fun addSubView(view: View, index: Int) {
         val widget = getWidget()
         if(index < 0){
             widget.addView(view.getWidget())
             children.add(view)
         }else{
+            view.getWidget().bringToFront()
             widget.addView(view.getWidget(),index)
             children.add(index,view)
         }
-        view.superView = this
+        view.superView = WeakReference(this)
         view.onAttachedToView(this)
     }
 
-
     override fun createWidget(): android.view.View {
-        return AndroidFrameLayout(this)
+        return AndroidLayout(this)
     }
 
     override fun getWidget(): android.view.ViewGroup {
@@ -106,39 +57,48 @@ actual open class Layout : View {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-//        var focused = false
-//        var focusedView:android.view.View? = null
-//        children.forEach {
-//            if(it is TextInput && it.autoFocus){
-//                if(!focused){
-//                    focusedView = it.getWidget()
-////                    it.getWidget().requestFocus()
-//                    focused = true
-//                }
-//            }
-//        }
-//        if(focused){
-//            focusedView?.requestFocus()
-//        }else{
-//            mWidget.isFocusable = true
-//            mWidget.isFocusableInTouchMode = true
-//        }
-//
-//        mWidget.isFocusable = false
-//        mWidget.isFocusableInTouchMode = false
     }
 
-    actual open fun requestLayout(){
-        getWidget().requestLayout()
+    actual open fun measureChild(child: View,width:Float,height:Float){
+        val tempSize = FlexLayout.tempSize
+        child.measure(width,height,tempSize)
+        var frame = child.frame
+        frame.width = tempSize.width
+        frame.height = tempSize.height
     }
 
-
-    override fun releaseResource() {
-        super.releaseResource()
-        children.forEach {
-            it.releaseResource()
+    override fun measure(widthSpace: Float, heightSpace: Float, outSize: Size?) {
+        val maxWidth = 0f
+        val maxHeight = 0f
+        val padding = this.padding
+        var w = widthSpace
+        var h = heightSpace
+        var originX = 0f
+        var originY = 0f
+        if(padding != null){
+            originX = padding.left
+            originY = padding.top
+            w -= padding.left + padding.right
+            h -= padding.top + padding.bottom
         }
-        children.clear()
+        for (view in children){
+            measureChild(view,w, h)
+            val frame = view.frame
+            frame.x = originX
+            frame.y = originY
+        }
+        if(layoutParams.width.isNaN()){
+            outSize?.width = maxWidth
+        }else{
+            outSize?.width = layoutParams.width
+        }
+        if(layoutParams.height.isNaN()){
+            outSize?.height = maxHeight
+        }else{
+            outSize?.height = layoutParams.height
+        }
     }
+
+
 
 }

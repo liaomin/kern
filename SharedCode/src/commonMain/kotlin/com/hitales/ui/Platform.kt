@@ -9,11 +9,7 @@ package com.hitales.ui
 const val PLATFORM_ANDROID = "android"
 const val PLATFORM_IOS = "ios"
 
-@Target(AnnotationTarget.CLASS,AnnotationTarget.FIELD,AnnotationTarget.FUNCTION)
-@Retention(AnnotationRetention.SOURCE)
 annotation class TargetPlatform(val platfrom:String)
-
-
 
 expect class Platform {
     companion object {
@@ -22,6 +18,7 @@ expect class Platform {
         val windowHeight:Float
         fun getInstance() : Platform
         val os:String
+        fun runWithRootController(controller: Controller)
 //        fun getCurrentController() : Controller
     }
 

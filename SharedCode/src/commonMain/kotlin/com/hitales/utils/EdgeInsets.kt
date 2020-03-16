@@ -1,10 +1,10 @@
 package com.hitales.utils
 
-data class EdgeInsets( var top:Float = 0f , var left:Float = 0f ,var bottom:Float = 0f, var right:Float = 0f){
+data class EdgeInsets(var left:Float = 0f,var top:Float = 0f,var right:Float = 0f,var bottom:Float = 0f){
 
     companion object {
 
-        fun zero():EdgeInsets{
+        fun identity():EdgeInsets{
             return EdgeInsets()
         }
 
