@@ -62,8 +62,12 @@ open class RowCalculator : FlexCalculator() {
             val margin = l.margin
             var occupyWidth = frame.width
             var occupyHeight = frame.height
+            var marginLeft = 0f
+            var marginRight = 0f
             if (margin != null) {
-                occupyWidth += margin.left + margin.right
+                marginLeft = margin.left
+                marginRight = margin.right
+                occupyWidth += marginLeft + marginRight
                 occupyHeight += margin.top + margin.bottom
             }
             if(maxHeight < occupyHeight){
@@ -72,11 +76,11 @@ open class RowCalculator : FlexCalculator() {
             spendWidth += occupyWidth
             spendHeight += occupyHeight
             if(isReverse){
-                frame.x = offsetX - occupyWidth
+                frame.x = offsetX - occupyWidth + marginLeft
                 frame.y = offsetY + (margin?.top?:0f)
                 offsetX -= occupyWidth
             }else{
-                frame.x = offsetX + (margin?.left?:0f)
+                frame.x = offsetX + marginLeft
                 frame.y = offsetY + (margin?.top?:0f)
                 offsetX += occupyWidth
             }

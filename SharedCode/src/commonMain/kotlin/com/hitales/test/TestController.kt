@@ -1,7 +1,10 @@
 package com.hitales.test
 
 import com.hitales.ui.*
-import com.hitales.ui.layout.flex.*
+import com.hitales.ui.layout.flex.AlignItems
+import com.hitales.ui.layout.flex.FlexDirection
+import com.hitales.ui.layout.flex.FlexLayout
+import com.hitales.ui.layout.flex.FlexLayoutParams
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.random
 
@@ -31,6 +34,8 @@ open class TestController : Controller() {
         vL.height = 140f
 //        vL.width = 200f
         vL.flex =1f
+        vL.maxWidth =20f
+        vL.margin = EdgeInsets.value(10f)
 //        vL.position = LayoutPosition.ABSOLUTE
         val text = TextView("这是文本",vL)
         text.setBackgroundColor(Colors.RED)
@@ -47,6 +52,7 @@ open class TestController : Controller() {
             val l = FlexLayoutParams()
 //            l.margin = EdgeInsets.value(10f)
             val t = TextView("文本  ${i}")
+            t.lineHeight = 50f
             t.layoutParams = l
             t.padding = EdgeInsets.value(10f)
 
@@ -61,7 +67,7 @@ open class TestController : Controller() {
 
         v.flexDirection = FlexDirection.ROW_REVERSE
 //        v.flexWarp = FlexWarp.WARP
-        v.justifyContent = JustifyContent.FLEX_END
+//        v.justifyContent = JustifyContent.FLEX_END
         v.alignItems = AlignItems.CENTER
 
 

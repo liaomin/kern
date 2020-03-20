@@ -11,6 +11,7 @@ import android.text.style.UnderlineSpan
 import android.util.TypedValue
 import android.view.Gravity
 import com.hitales.ui.android.AndroidTextView
+import com.hitales.ui.android.CustomLineHeightSpan
 import com.hitales.ui.android.StateListColor
 import com.hitales.ui.utils.PixelUtil
 
@@ -73,49 +74,15 @@ actual open class TextView :  View {
 
     protected open fun getDefaultColorList(): StateListColor = StateListColor(Color.BLACK)
 
-    private var linePadding = 0
 
     actual open var lineHeight: Float = Float.NaN
-        get() {
-            //TODO use CustomLineHeightSpan
-            if(field != 0f){
-                return field
-            }
-            return PixelUtil.toDIPFromPixel(getTextWidget().lineHeight.toFloat())
-        }
         set(value) {
-            val widget = getTextWidget()
-            val fontHeight = widget.paint.getFontMetricsInt(null)
-//            if(Build.VERSION.SDK_INT >= 28){
-//                widget.lineHeight = PixelUtil.toPixelFromDIP(value).toInt()
-//                return
-//            }
-            field = value
-            val lineHeight = PixelUtil.toPixelFromDIP(value).toInt()
-            linePadding = 0
-            if(value > 0){
-                //TODO 计算还有问题
-                val space = (lineHeight - fontHeight).toFloat()
-                if (lineHeight != fontHeight) {
-                    if(space >= 0f){
-                        val halfLineSpace= space / 2
-                        linePadding = halfLineSpace.toInt()
-                        widget.setLineSpacing(space, 1f)
-                        widget.setPadding(0,linePadding,0,linePadding)
-                    }else{
-                        widget.setLineSpacing(space, 1f)
-                    }
-                }
-            }else{
-                field = 0f
-                widget.setLineSpacing(0f, 1f)
-                widget.setPadding(0,0,0,0)
-            }
+            val v = PixelUtil.toPixelFromDIP(value)
+           if(field != v){
+               field = v
+               dirt()
+           }
         }
-
-    override fun onCalculatePadding(left: Int, top: Int, right: Int, bottom: Int) {
-        super.onCalculatePadding(left, top + linePadding, right, bottom)
-    }
 
     /**
      * default false
@@ -169,15 +136,10 @@ actual open class TextView :  View {
      */
     actual open var decorationLine: TextDecorationLine = TextDecorationLine.NONE
         set(value) {
-            field = value
-            this.dirt()
-//            val paint = textView.paint
-//            when(value){
-//                TextDecorationLine.NONE -> paint.flags = 0
-//                TextDecorationLine.UNDERLINE -> paint.flags = Paint.UNDERLINE_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG
-//                TextDecorationLine.LINE_THROUGH ->  paint.flags = Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG
-//                TextDecorationLine.UNDERLINE_LINE_THROUGH ->  paint.flags = Paint.UNDERLINE_TEXT_FLAG or Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG
-//            }
+            if(field != value){
+                field = value
+                dirt()
+            }
         }
 
     /**
@@ -241,9 +203,9 @@ actual open class TextView :  View {
         val text = text
         val textView = getTextWidget()
         if(text != ""){
-            if(decorationLine != TextDecorationLine.NONE || lineHeight != 0f){
+            val setLineHeight = !lineHeight.isNaN()
+            if(decorationLine != TextDecorationLine.NONE || setLineHeight){
                 val sp = SpannableString(textView.text)
-
                 when(decorationLine){
                     TextDecorationLine.UNDERLINE -> {
                         sp.setSpan(UnderlineSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -252,11 +214,14 @@ actual open class TextView :  View {
                         sp.setSpan(StrikethroughSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
                     TextDecorationLine.UNDERLINE_LINE_THROUGH ->  {
-                        val sp = SpannableString(textView.text)
                         sp.setSpan(StrikethroughSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                         sp.setSpan(UnderlineSpan(),0,text.length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
                 }
+                if(setLineHeight){
+                    sp.setSpan(CustomLineHeightSpan(lineHeight),0,text.length,Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+                }
+
                 textView.text = sp
             }else{
                 textView.text = text
