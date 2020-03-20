@@ -105,12 +105,6 @@ expect open class View  {
 
     var superView:WeakReference<Layout>?
 
-    /**
-     * Android ViewGroup clipChildren
-     * IOS clipsToBounds
-     */
-    open var clipsToBounds:Boolean
-
     open fun onLayout()
     open fun onDraw()
     open fun needLayout()
@@ -171,7 +165,7 @@ expect open class View  {
      * @param heightSpace 最大高度  如果小于等于0返回0
      * @param outSize 获取计算出来的宽高
      */
-    open fun measure(widthSpace: Float, heightSpace: Float, outSize: Size? = null)
+    open fun measure(widthSpace: Float, heightSpace: Float, outSize: Size)
 
     /**
      * touches

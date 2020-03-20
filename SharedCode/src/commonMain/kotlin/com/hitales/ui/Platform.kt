@@ -13,6 +13,7 @@ annotation class TargetPlatform(val platfrom:String)
 
 expect class Platform {
     companion object {
+        var debug:Boolean
 //        val mainLoopDispatcher: CoroutineDispatcher
         val windowWidth:Float
         val windowHeight:Float

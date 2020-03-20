@@ -69,6 +69,8 @@ actual class Platform : ActivityDelegate{
         actual fun runWithRootController(controller: Controller) {
             platform?.runWithRootController(controller)
         }
+
+        actual var debug: Boolean = false
     }
 
     val windowWidth:Float
@@ -95,6 +97,7 @@ actual class Platform : ActivityDelegate{
 
     private constructor(rootActivity: AndroidActivity){
         rootView = FrameLayout(rootActivity)
+        rootView.clipChildren = false
         this.application = rootActivity.application
         this.rootActivity = rootActivity
         val dm = application.resources.displayMetrics

@@ -1,15 +1,19 @@
 package com.hitales.ui.android
 
+import android.graphics.Canvas
+import android.graphics.Rect
 import android.view.MotionEvent
 import android.view.ViewGroup
 import com.hitales.ui.Layout
 import com.hitales.ui.Platform
-import com.hitales.ui.layout.flex.FlexLayout
 import com.hitales.ui.utils.PixelUtil
+import com.hitales.utils.Size
 
-open class AndroidLayout(private val view: Layout) : ViewGroup(Platform.getApplication()){
+open class AndroidLayout(private val mView: Layout) : ViewGroup(Platform.getApplication()){
 
-    val mViewHelper:ViewHelper by lazy { ViewHelper(this, view) }
+    val mViewHelper:ViewHelper by lazy { ViewHelper(this, mView) }
+
+    val tempSize:Size by lazy { Size() }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val maxWidth = MeasureSpec.getSize(widthMeasureSpec).toFloat()
@@ -19,8 +23,8 @@ open class AndroidLayout(private val view: Layout) : ViewGroup(Platform.getAppli
         val w = PixelUtil.toDIPFromPixel(maxWidth)
         val h = PixelUtil.toDIPFromPixel(maxHeight)
 
-        val layoutParams = view.layoutParams
-        val frame = view.frame
+        val layoutParams = mView.layoutParams
+        val frame = mView.frame
         val oldWidth = layoutParams.width
         val oldHeight = layoutParams.height
         var changeWidth = false
@@ -34,9 +38,7 @@ open class AndroidLayout(private val view: Layout) : ViewGroup(Platform.getAppli
             layoutParams.height = h
             changeHeight = true
         }
-
-        val tempSize = FlexLayout.tempSize
-        view.measure(w,h, tempSize)
+        mView.measure(w,h, tempSize)
         frame.width = tempSize.width
         frame.height = tempSize.height
         if(changeWidth){
@@ -49,8 +51,36 @@ open class AndroidLayout(private val view: Layout) : ViewGroup(Platform.getAppli
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        for (it in view.children) {
+        for (it in mView.children) {
             it.onLayout()
+        }
+    }
+
+    override fun dispatchDraw(canvas: Canvas) {
+        try {
+            if(mView.clipsToBounds){
+                val bg = mView.mBackground
+                if(bg != null){
+                    var width = width.toFloat()
+                    var height = height.toFloat()
+                    val off = bg.offset
+                    if(off != null){
+                        canvas.translate(-off.x,-off.y)
+                        width = off.width
+                        height = off.height
+                    }
+                    canvas.clipPath(bg.getOuterPath(width,height))
+                    if(off != null) {
+                        canvas.translate(off.x, off.y)
+                    }
+                }else{
+                    canvas.clipRect(Rect(0,0,width,height))
+                }
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+        }finally {
+            super.dispatchDraw(canvas)
         }
     }
 
@@ -83,4 +113,8 @@ open class AndroidLayout(private val view: Layout) : ViewGroup(Platform.getAppli
         return super.onTouchEvent(event)
     }
 
+    override fun getHitRect(outRect: Rect) {
+        super.getHitRect(outRect)
+        mViewHelper.adjustHitRect(outRect)
+    }
 }

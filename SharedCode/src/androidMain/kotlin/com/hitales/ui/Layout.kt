@@ -1,7 +1,6 @@
 package com.hitales.ui
 
 import com.hitales.ui.android.AndroidLayout
-import com.hitales.ui.layout.flex.FlexLayout
 import com.hitales.utils.Size
 import com.hitales.utils.WeakReference
 import java.util.*
@@ -9,7 +8,16 @@ import java.util.*
 
 actual open class Layout : View {
 
+    actual open var clipsToBounds: Boolean = false
+        set(value) {
+            if(field != value){
+                field = value
+                mWidget.invalidate()
+            }
+        }
+
     actual constructor(layoutParams: LayoutParams):super(layoutParams){
+            getWidget().clipChildren = true
 //        mWidget.isFocusable = true
 //        mWidget.isFocusableInTouchMode = true
     }
@@ -59,15 +67,14 @@ actual open class Layout : View {
         super.onAttachedToWindow()
     }
 
-    actual open fun measureChild(child: View,width:Float,height:Float){
-        val tempSize = FlexLayout.tempSize
-        child.measure(width,height,tempSize)
+    actual open fun measureChild(child: View,width:Float,height:Float,outSize: Size){
+        child.measure(width,height,outSize)
         var frame = child.frame
-        frame.width = tempSize.width
-        frame.height = tempSize.height
+        frame.width = outSize.width
+        frame.height = outSize.height
     }
 
-    override fun measure(widthSpace: Float, heightSpace: Float, outSize: Size?) {
+    override fun measure(widthSpace: Float, heightSpace: Float, outSize: Size) {
         val maxWidth = 0f
         val maxHeight = 0f
         val padding = this.padding
@@ -82,20 +89,20 @@ actual open class Layout : View {
             h -= padding.top + padding.bottom
         }
         for (view in children){
-            measureChild(view,w, h)
+            measureChild(view,w, h,outSize)
             val frame = view.frame
             frame.x = originX
             frame.y = originY
         }
-        if(layoutParams.width.isNaN()){
-            outSize?.width = maxWidth
+        if(layoutParams.flag and LayoutParams.FLAG_WIDTH_MASK != LayoutParams.FLAG_WIDTH_MASK){
+            outSize.width = maxWidth
         }else{
-            outSize?.width = layoutParams.width
+            outSize.width = layoutParams.width
         }
-        if(layoutParams.height.isNaN()){
-            outSize?.height = maxHeight
+        if(layoutParams.flag and LayoutParams.FLAG_HEIGHT_MASK != LayoutParams.FLAG_HEIGHT_MASK){
+            outSize.height = maxHeight
         }else{
-            outSize?.height = layoutParams.height
+            outSize.height = layoutParams.height
         }
     }
 

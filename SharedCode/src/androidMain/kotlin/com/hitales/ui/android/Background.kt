@@ -224,7 +224,19 @@ class Background : StateListDrawable {
             width = off.width
             height = off.height
         }
-        onDraw(canvas,width,height)
+        val clip = haveBorderRadius()
+        if(clip){
+            canvas.save()
+        }
+        try {
+            onDraw(canvas,width,height)
+        }catch (e:Exception){
+            e.printStackTrace()
+        }finally {
+            if(clip){
+                canvas.restore()
+            }
+        }
         super.draw(canvas)
         if(off != null){
             canvas.translate(off.x,off.y)

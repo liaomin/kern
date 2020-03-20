@@ -56,16 +56,16 @@ class MainActivity : AndroidActivity() {
                 )
                 startActivityForResult(intent, 1234)
             }else{
-                OverlayView.showOverlay(this)
+//                OverlayView.showOverlay(this)
             }
         } else {
-            OverlayView.showOverlay(this)
+//            OverlayView.showOverlay(this)
         }
     }
 
     override fun onPause() {
         super.onPause()
-        windowManager.removeView(OverlayView.instance)
+//        windowManager.removeView(OverlayView.instance)
     }
 
     override fun onDestroy() {

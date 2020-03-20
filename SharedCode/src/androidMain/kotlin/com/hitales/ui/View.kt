@@ -56,7 +56,7 @@ actual open class View{
     actual var padding: EdgeInsets? = null
         set(value) {
             field = value
-            mWidget.requestLayout()
+            calculatePadding()
         }
 
     actual open var layoutParams:LayoutParams
@@ -158,14 +158,6 @@ actual open class View{
         get() = getWidget().scaleY
         set(value) {
             getWidget().scaleY = value
-        }
-
-    actual open var clipsToBounds: Boolean = false
-        set(value) {
-            field = value
-            if (mWidget is android.view.ViewGroup){
-                mWidget.clipChildren = value
-            }
         }
 
     private var onPressListener:((view: com.hitales.ui.View)->Unit)? = null
@@ -311,7 +303,7 @@ actual open class View{
      * @param heightSpace 最大高度  如果小于等于0返回0
      * @param outSize 获取计算出来的宽高
      */
-    actual open fun measure(widthSpace: Float, heightSpace: Float, outSize: Size?){
+    actual open fun measure(widthSpace: Float, heightSpace: Float, outSize: Size){
         if(widthSpace <= 0 || heightSpace <= 0){
             outSize?.set(0f,0f)
             return
@@ -320,12 +312,12 @@ actual open class View{
         var maxHeight = heightSpace
         var width = PixelUtil.toPixelFromDIP(maxWidth).toInt()
         var height = PixelUtil.toPixelFromDIP(maxHeight).toInt()
-        if(!layoutParams.width.isNaN()){
+        if(layoutParams.flag and LayoutParams.FLAG_WIDTH_MASK == LayoutParams.FLAG_WIDTH_MASK){
             width = android.view.View.MeasureSpec.makeMeasureSpec(PixelUtil.toPixelFromDIP(layoutParams.width).toInt(), android.view.View.MeasureSpec.EXACTLY)
         }else{
             width = android.view.View.MeasureSpec.makeMeasureSpec(width, android.view.View.MeasureSpec.AT_MOST)
         }
-        if(!layoutParams.height.isNaN()){
+        if(layoutParams.flag and LayoutParams.FLAG_HEIGHT_MASK == LayoutParams.FLAG_HEIGHT_MASK){
             height = android.view.View.MeasureSpec.makeMeasureSpec(PixelUtil.toPixelFromDIP(layoutParams.height).toInt(), android.view.View.MeasureSpec.EXACTLY)
         }else{
             height = android.view.View.MeasureSpec.makeMeasureSpec(height, android.view.View.MeasureSpec.AT_MOST)
@@ -335,7 +327,7 @@ actual open class View{
 
         val measuredWidth = mWidget.measuredWidth
         val measuredHeight = mWidget.measuredHeight
-        outSize?.set(PixelUtil.toDIPFromPixel(measuredWidth.toFloat()), PixelUtil.toDIPFromPixel(measuredHeight.toFloat()))
+        outSize.set(PixelUtil.toDIPFromPixel(measuredWidth.toFloat()), PixelUtil.toDIPFromPixel(measuredHeight.toFloat()))
     }
 
     open fun calculatePadding(){

@@ -43,14 +43,21 @@ enum class AlignItems(val value:Int) {
 open class FlexLayout : CustomLayout<FlexLayoutParams> {
 
     companion object{
-        val tempSize: Size by lazy { Size() }
-        private const val DIRECTION_RIGHT = 0
-        private const val DIRECTION_LEFT = 1
-        private const val DIRECTION_DOWN = 2
-        private const val DIRECTION_UP = 3
+        internal const val DIRECTION_RIGHT = 0
+        internal const val DIRECTION_LEFT = 1
+        internal const val DIRECTION_DOWN = 2
+        internal const val DIRECTION_UP = 3
     }
 
-    private data class Row(val width:Float,val height: Float,val items: ArrayList<View>)
+    val rowCalculator:RowCalculator by lazy { RowCalculator() }
+
+    val rowWrapCalculator:RowWrapCalculator by lazy { RowWrapCalculator() }
+
+    val columnCalculator:ColumnCalculator by lazy { ColumnCalculator() }
+
+    val columnWarpCalculator:ColumnWrapCalculator by lazy { ColumnWrapCalculator() }
+
+    private data class Row(var width:Float,var height: Float,var items: ArrayList<View>)
 
     var flexDirection: FlexDirection = FlexDirection.COLUMN
         set(value) {
@@ -87,399 +94,71 @@ open class FlexLayout : CustomLayout<FlexLayoutParams> {
     constructor(layoutParams: LayoutParams = LayoutParams()):super(layoutParams)
 
 
-    override fun measure(widthSpace: Float, heightSpace: Float, outSize: Size?) {
-        var width = widthSpace
-        var height = heightSpace
-        var paddingLeft = 0f
-        var paddingTop = 0f
-        var paddingRight = 0f
-        var paddingBottom = 0f
-        val padding = this.padding
-        if(padding != null){
-            paddingLeft = padding.left
-            paddingRight = padding.right
-            paddingTop = padding.top
-            paddingBottom = padding.bottom
-            width -= paddingLeft + paddingRight
-            height -= paddingTop + paddingBottom
-        }
-        val widthStart = paddingLeft
-        val widthEnd = paddingLeft + width
-        val heightStart = paddingTop
-        val heightEnd = paddingTop + height
-        //第一步，设置原点和主轴方向
-        var originX = widthStart
-        var originY = heightStart
+    override fun measure(widthSpace: Float, heightSpace: Float, outSize: Size) {
         var direction = DIRECTION_RIGHT
         when (flexDirection) {
             FlexDirection.COLUMN -> {
                 direction = DIRECTION_DOWN
-                if (flexWarp == FlexWarp.WARP_REVERSE) {
-                    originX = widthEnd
-                    originY = heightEnd
-                }
             }
             FlexDirection.ROW -> {
                 direction = DIRECTION_RIGHT
-                if (flexWarp == FlexWarp.WARP_REVERSE) {
-                    originY = heightEnd
-                }
             }
             FlexDirection.COLUMN_REVERSE -> {
                 direction = DIRECTION_UP
-                if (flexWarp == FlexWarp.WARP_REVERSE) {
-                    originX = widthEnd
-                    originY = heightEnd
-                } else {
-                    originY = heightEnd
-                }
             }
             FlexDirection.ROW_REVERSE -> {
                 direction = DIRECTION_LEFT
-                if (flexWarp == FlexWarp.WARP_REVERSE) {
-                    originX = widthEnd
-                    originY = heightEnd
-                } else {
-                    originX = widthEnd
-                }
             }
         }
-
-        //第二步，计算位置
-        var offsetX = originX
-        var offsetY = originY
-        var frameWidth = -1f
-        var frameHeight = -1f
-        if(!layoutParams.width.isNaN()){
-            frameWidth = layoutParams.width
-        }
-        if(!layoutParams.height.isNaN()){
-            frameHeight = layoutParams.height
-        }
-
-        if(flexWarp == FlexWarp.NO_WARP){
-            //没有换行
-            var spendWidthSpace = 0f
-            var spendHeightSpace = 0f
-            val flexChildren = ArrayList<View>()
-            var flexCount = 0f
-            for ( view in children ){
-                val l = view.layoutParams as FlexLayoutParams
-                val margin = l.margin
-                if(direction == DIRECTION_RIGHT || direction == DIRECTION_LEFT){
-                    if(!l.flex.isNaN() && l.width.isNaN()){
-                        flexCount += l.flex
-                        flexChildren.add(view)
-                        continue
-                    }
-                }else{
-                    if(!l.flex.isNaN() && l.height.isNaN() ){
-                        flexChildren.add(view)
-                        flexCount += l.flex
-                        continue
-                    }
-                }
-
-
-                //measure not flex views and calculate spend size
-                val frame = view.frame
-                var maxWidth = width
-                var maxHeight = height
-                if(margin != null){
-                    maxWidth -= margin.right + margin.left
-                    maxHeight -= margin.top + margin.bottom
-                }
-                if(!l.maxWidth.isNaN()){
-                    maxWidth = min(l.maxWidth,width)
-                }
-                if(!l.maxHeight.isNaN()){
-                    maxHeight = min(l.maxHeight,height)
-                }
-                view.measure(maxWidth, maxHeight, tempSize)
-                val w= tempSize.width
-                val h = tempSize.height
-                var reMeasure = false
-                val tempW = l.width
-                val tempH = l.height
-                if(!l.minWidth.isNaN() && w < l.minWidth){
-                    l.width = l.minWidth
-                    reMeasure = true
-                }
-                if(!l.minHeight.isNaN() && h < l.minHeight){
-                    l.height = l.minHeight
-                    reMeasure = true
-                }
-                if(reMeasure){
-                    view.measure(maxWidth,maxHeight, tempSize)
-                    l.width = tempW
-                    l.height = tempH
-                }
-                frame.width = tempSize.width
-                frame.height = tempSize.height
-
-                var occupyWidth = frame.width
-                var occupyHeight = frame.height
-                if (margin != null) {
-                    occupyWidth += margin.left + margin.right
-                    occupyHeight += margin.top + margin.bottom
-                }
-                spendWidthSpace += occupyWidth
-                spendHeightSpace += occupyHeight
+        if(flexDirection  == FlexDirection.ROW || flexDirection == FlexDirection.ROW_REVERSE){
+            if (flexWarp == FlexWarp.NO_WARP) {
+                rowCalculator.calculate(this,direction,children,widthSpace, heightSpace, outSize)
+            }else{
+                rowWrapCalculator.calculate(this,direction,children,widthSpace, heightSpace, outSize)
             }
-
-            if(flexChildren.size > 0){
-                var remainWith = width - spendWidthSpace
-                if(remainWith < 0) remainWith = 0f
-                var remainHeight = height - spendHeightSpace
-                if(remainHeight < 0) remainHeight = 0f
-                val oneWidth = remainWith / flexCount
-                val oneHeight = remainHeight /flexCount
-                for (view in flexChildren){
-                    val frame = view.frame
-                    val layoutParams = view.layoutParams as FlexLayoutParams
-                    val margin = layoutParams.margin
-
-                    var maxWidth = width
-                    var maxHeight = height
-                    if(margin != null){
-                        maxWidth -= margin.right + margin.left
-                        maxHeight -= margin.top + margin.bottom
-                    }
-                    if(!layoutParams.maxWidth.isNaN()){
-                        maxWidth = min(layoutParams.maxWidth,width)
-                    }
-                    if(!layoutParams.maxHeight.isNaN()){
-                        maxHeight = min(layoutParams.maxHeight,height)
-                    }
-
-                    if(direction == DIRECTION_RIGHT || direction == DIRECTION_LEFT){
-                        var exactlyWidth = oneWidth * layoutParams.flex
-                        if(margin != null){
-                            exactlyWidth -= margin.right + margin.left
-                        }
-                        if(exactlyWidth < 0){
-                            exactlyWidth = 0f
-                        }
-                        if(!layoutParams.maxWidth.isNaN() && exactlyWidth > layoutParams.maxWidth){
-                            exactlyWidth = layoutParams.maxWidth
-                        }
-                        if(!layoutParams.minWidth.isNaN() && exactlyWidth < layoutParams.minWidth){
-                            exactlyWidth = layoutParams.minWidth
-                        }
-                        val temp = layoutParams.width
-                        layoutParams.width = exactlyWidth
-                        view.measure(maxWidth,maxHeight, tempSize)
-                        frame.width = tempSize.width
-                        frame.height = tempSize.height
-                        layoutParams.width = temp
-                    }else{
-                        var exactlyHeight = oneHeight * layoutParams.flex
-                        if(margin != null){
-                            exactlyHeight -= margin.top + margin.bottom
-                        }
-                        if(exactlyHeight < 0){
-                            exactlyHeight = 0f
-                        }
-                        if(!layoutParams.maxHeight.isNaN() && exactlyHeight > layoutParams.maxHeight){
-                            exactlyHeight = layoutParams.maxHeight
-                        }
-                        if(!layoutParams.minHeight.isNaN() && exactlyHeight < layoutParams.minHeight){
-                            exactlyHeight = layoutParams.minWidth
-                        }
-                        val temp = layoutParams.height
-                        layoutParams.height = exactlyHeight
-                        view.measure(maxWidth,maxHeight, tempSize)
-                        frame.width = tempSize.width
-                        frame.height = tempSize.height
-                        layoutParams.height = temp
-                    }
-                }
-            }
-
-            spendWidthSpace = 0f
-            spendHeightSpace = 0f
-            offsetX = originX
-            offsetY = originY
-            for (view in children){
-                val l = view.layoutParams as FlexLayoutParams
-                val frame = view.frame
-                val margin = l.margin
-                var occupyWidth = frame.width
-                var occupyHeight = frame.height
-                if (margin != null) {
-                    occupyWidth += margin.left + margin.right
-                    occupyHeight += margin.top + margin.bottom
-                }
-                spendWidthSpace += occupyWidth
-                spendHeightSpace += occupyHeight
-                when (direction){
-                    DIRECTION_RIGHT -> {
-                        //只有 FlexDirection.ROW
-                        frame.x = offsetX + (margin?.left?:0f)
-                        frame.y = offsetY + (margin?.top?:0f)
-                        offsetX += occupyWidth
-                    }
-                    DIRECTION_LEFT -> {
-                        //只有 FlexDirection.ROW_REVERSE
-                        frame.x = offsetX - occupyWidth
-                        frame.y = offsetY + (margin?.top?:0f)
-                        offsetX -= occupyWidth
-                    }
-                    DIRECTION_DOWN -> {
-                        //只有 FlexDirection.COLUMN
-                        frame.x = offsetX + (margin?.left?:0f)
-                        frame.y = offsetY + (margin?.top?:0f)
-                        offsetY += occupyHeight
-                    }
-                    DIRECTION_UP -> {
-                        //只有 FlexDirection.COLUMN_REVERSE
-                        frame.x = offsetX + (margin?.left?:0f)
-                        frame.y = offsetY - occupyHeight
-                        offsetY -= occupyHeight
-                    }
-                }
-
-            }
-
-
-            outSize?.width = frameWidth
-            outSize?.height = frameHeight
-
-            return
         }else{
-            //有换行
-            for ( view in children ){
-                val l = view.layoutParams as FlexLayoutParams
-                val frame = view.frame
-                view.measure(width, height, tempSize.reset())
-                frame.width = tempSize.width
-                frame.height = tempSize.height
-                val margin = l.margin
-                var occupyWidth = frame.width
-                var occupyHeight = frame.height
-                if (margin != null) {
-                    occupyWidth += margin.left + margin.right
-                    occupyHeight += margin.top + margin.bottom
-                }
-                when (direction){
-                    DIRECTION_RIGHT -> {
-                        //只有 FlexDirection.ROW
-                        frame.x = offsetX + (margin?.left?:0f)
-                        frame.y = margin?.top?:0f
-                        offsetX += occupyWidth
-                    }
-                    DIRECTION_LEFT -> {
-                        //只有 FlexDirection.ROW_REVERSE
-                        frame.x = offsetX - occupyWidth
-                        frame.y = margin?.top?:0f
-                        offsetX -= occupyWidth
-                    }
-                    DIRECTION_DOWN -> {
-                        //只有 FlexDirection.COLUMN
-                        frame.x = margin?.left?:0f
-                        frame.y = offsetY + (margin?.top?:0f)
-                        offsetY += occupyHeight
-                    }
-                    DIRECTION_UP -> {
-                        //只有 FlexDirection.COLUMN_REVERSE
-                        frame.x = margin?.top?:0f
-                        frame.y = offsetY - occupyHeight
-                        offsetY -= occupyHeight
-                    }
-                }
-            }
-            return
-        }
-
-        when (flexWarp) {
-            FlexWarp.WARP -> {
-                var rowHeight = 0f
-                val row = ArrayList<View>()
-                for (view in children) {
-                    val l = view.layoutParams as FlexLayoutParams
-                    val frame = view.frame
-                    view.measure(
-                        width, height,
-                        tempSize.reset()
-                    )
-                    frame.width = tempSize.width
-                    frame.height = tempSize.height
-
-                    val margin = l.margin
-                    var occupyWidth = frame.width
-                    var occupyHeight = frame.height
-                    if (margin != null) {
-                        occupyWidth += margin.left + margin.right
-                        occupyHeight += margin.top + margin.bottom
-                    }
-                    if (rowHeight < occupyHeight) {
-                        rowHeight = occupyHeight
-                    }
-                    if (offsetX + occupyWidth > width) {
-                        if (row.size > 0) {
-                            flexRow(width, height, offsetX, rowHeight, row)
-                            row.clear()
-                        }
-                        offsetX = 0f
-                        offsetY += rowHeight
-                        rowHeight = 0f
-                    }
-                    if (margin != null) {
-                        frame.x = offsetX + margin.left
-                        frame.y = offsetY + margin.top
-                    } else {
-                        frame.x = offsetX
-                        frame.y = offsetY
-                    }
-                    offsetX += occupyWidth
-                    row.add(view)
-                    //TODO flex all rows
-                }
+            if (flexWarp == FlexWarp.NO_WARP) {
+                columnCalculator.calculate(this,direction,children,widthSpace, heightSpace, outSize)
+            }else{
+                columnWarpCalculator.calculate(this,direction,children,widthSpace, heightSpace, outSize)
             }
         }
     }
 
-    open fun flexRow(with:Float,height: Float,rowWidth:Float,rowHeight:Float,items:ArrayList<View>){
-        val size = items.size
-        if(size <= 0){
-            return
+
+    override fun measureChild(child: View, width: Float, height: Float,outSize:Size) {
+        var maxWidth = width
+        var maxHeight = height
+        val l = child.layoutParams as FlexLayoutParams
+        if(l.flag and FlexLayoutParams.FLAG_MAX_WIDTH_MASK == FlexLayoutParams.FLAG_MAX_WIDTH_MASK){
+            maxWidth = min(maxWidth,l.maxWidth)
         }
-        when(justifyContent){
-            JustifyContent.FLEX_START -> {
-                //do noting
-            }
-            JustifyContent.FLEX_END -> {
-                val space = with - rowWidth
-                for (v in items){
-                    v.frame.x += space
-                }
-            }
-            JustifyContent.CENTER -> {
-                val space = (with - rowWidth) / 2f
-                for (v in items){
-                    v.frame.x += space
-                }
-            }
-            JustifyContent.SPACE_AROUND ->{
-                val space = (with - rowWidth) / (size + 1).toFloat()
-                for ( i  in 0 until size){
-                    items[i].frame.x += space * (i+1)
-                }
-            }
-            JustifyContent.SPACE_BETWEEN ->{
-                if(size > 1){
-                    val space = (with - rowWidth) / (size - 1).toFloat()
-                    for ( i  in 1 until size){
-                        items[i].frame.x += space * i
-                    }
-                }
-
-            }
+        if(l.flag and FlexLayoutParams.FLAG_MAX_HEIGHT_MASK == FlexLayoutParams.FLAG_MAX_HEIGHT_MASK){
+            maxHeight = min(maxWidth,l.maxHeight)
         }
-    }
+        child.measure(maxWidth,maxHeight,outSize)
+        var frame = child.frame
+        var w = outSize.width
+        var h = outSize.height
+        var reMeasure = false
 
-    open fun adjustRow(direction: Int,frameWidth:Float,frameHeight:Float,width: Float,height: Float,sendWidth:Float,spendHeight:Float){
-
+        val tempW = l.width
+        val tempH = l.height
+        if(l.flag and LayoutParams.FLAG_WIDTH_MASK != LayoutParams.FLAG_WIDTH_MASK && l.flag and FlexLayoutParams.FLAG_MIN_WIDTH_MASK == FlexLayoutParams.FLAG_MIN_WIDTH_MASK && w < l.minWidth){
+            l.width = l.minWidth
+            reMeasure = true
+        }
+        if(l.flag and LayoutParams.FLAG_HEIGHT_MASK != LayoutParams.FLAG_HEIGHT_MASK && l.flag and FlexLayoutParams.FLAG_MIN_HEIGHT_MASK == FlexLayoutParams.FLAG_MIN_HEIGHT_MASK && h < l.minHeight){
+            l.height = l.minHeight
+            reMeasure = true
+        }
+        if(reMeasure){
+            child.measure(width,height, outSize)
+            l.width = tempW
+            l.height = tempH
+        }
+        frame.width = outSize.width
+        frame.height = outSize.height
     }
 
     override fun checkLayoutParams(child: View) {

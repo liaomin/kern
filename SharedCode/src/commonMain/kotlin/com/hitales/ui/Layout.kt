@@ -1,17 +1,49 @@
 package com.hitales.ui
 
 import com.hitales.utils.EdgeInsets
+import com.hitales.utils.Size
 
 open class LayoutParams {
 
+    companion object {
+        internal const val FLAG_WIDTH_MASK = 1
+        internal const val FLAG_HEIGHT_MASK = 2
+    }
+
+    /**
+     * 用位运算来提高效率，判断是否设置宽高的
+     */
+    internal var flag = 0
+
     var width:Float = Float.NaN
+        set(value) {
+            field = value
+            if(value.isNaN()){
+                flag = flag and FLAG_WIDTH_MASK.inv()
+            }else{
+                flag = flag or FLAG_WIDTH_MASK
+            }
+        }
 
     var height:Float = Float.NaN
+        set(value) {
+            field = value
+            if(value.isNaN()){
+                flag = flag and FLAG_HEIGHT_MASK.inv()
+            }else{
+                flag = flag or FLAG_HEIGHT_MASK
+            }
+        }
 
     var margin:EdgeInsets? = null
 }
 
 expect open class Layout : View {
+
+    /**
+     * clips children
+     */
+    open var clipsToBounds:Boolean
 
     constructor(layoutParams: LayoutParams = LayoutParams())
 
@@ -23,7 +55,7 @@ expect open class Layout : View {
 
     open fun removeAllSubViews()
 
-    open fun measureChild(child: View,width:Float,height:Float)
+    open fun measureChild(child: View,width:Float,height:Float,outSize: Size)
 }
 
 /**

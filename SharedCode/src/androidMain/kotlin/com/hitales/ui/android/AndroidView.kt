@@ -10,6 +10,20 @@ open class AndroidView(val mView: View) : android.view.View(Platform.getApplicat
 
     protected val mViewHelper:ViewHelper by lazy { ViewHelper(this, mView) }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val widthMode = MeasureSpec.getMode(widthMeasureSpec)
+        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
+        var widthSize= MeasureSpec.getSize(widthMeasureSpec)
+        var heightSize = MeasureSpec.getSize(heightMeasureSpec)
+        if(widthMode != MeasureSpec.EXACTLY){
+            widthSize = 0
+        }
+        if(heightMode != MeasureSpec.EXACTLY){
+            heightSize = 0
+        }
+        setMeasuredDimension(widthSize,heightSize)
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         mViewHelper.onAttachedToWindow()
@@ -43,6 +57,5 @@ open class AndroidView(val mView: View) : android.view.View(Platform.getApplicat
         super.getHitRect(outRect)
         mViewHelper.adjustHitRect(outRect)
     }
-
 
 }
