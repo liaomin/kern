@@ -1,13 +1,24 @@
 package com.hitales.ui.android
 
-import android.graphics.Canvas
 import android.graphics.Rect
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import com.hitales.ui.Layout
+import com.hitales.ui.MeasureMode
 import com.hitales.ui.Platform
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.Size
+
+inline fun Int.toMeasureMode():MeasureMode{
+    when(this){
+        View.MeasureSpec.EXACTLY -> return MeasureMode.EXACTLY
+        View.MeasureSpec.AT_MOST -> return MeasureMode.AT_MOST
+        View.MeasureSpec.UNSPECIFIED -> return MeasureMode.UNSPECIFIED
+
+    }
+    return MeasureMode.AT_MOST
+}
 
 open class AndroidLayout(private val mView: Layout) : ViewGroup(Platform.getApplication()){
 
@@ -20,8 +31,8 @@ open class AndroidLayout(private val mView: Layout) : ViewGroup(Platform.getAppl
         val maxHeight = MeasureSpec.getSize(heightMeasureSpec).toFloat()
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
-        val w = PixelUtil.toDIPFromPixel(maxWidth)
-        val h = PixelUtil.toDIPFromPixel(maxHeight)
+        var w = PixelUtil.toDIPFromPixel(maxWidth)
+        var h = PixelUtil.toDIPFromPixel(maxHeight)
 
         val layoutParams = mView.layoutParams
         val frame = mView.frame
@@ -30,15 +41,15 @@ open class AndroidLayout(private val mView: Layout) : ViewGroup(Platform.getAppl
         var changeWidth = false
         var changeHeight = false
         //没有设置宽高，在measure时又指定宽高，只有作为rootView才会出现
-        if(layoutParams.width.isNaN() && widthMode == MeasureSpec.EXACTLY){
+        if(layoutParams.flag and com.hitales.ui.LayoutParams.FLAG_WIDTH_MASK != com.hitales.ui.LayoutParams.FLAG_WIDTH_MASK && widthMode == MeasureSpec.EXACTLY){
             layoutParams.width = w
             changeWidth = true
         }
-        if(layoutParams.height.isNaN() && heightMode == MeasureSpec.EXACTLY){
+        if(layoutParams.flag and com.hitales.ui.LayoutParams.FLAG_HEIGHT_MASK != com.hitales.ui.LayoutParams.FLAG_HEIGHT_MASK && heightMode == MeasureSpec.EXACTLY){
             layoutParams.height = h
             changeHeight = true
         }
-        mView.measure(w,h, tempSize)
+        mView.measure(w,widthMode.toMeasureMode(),h,heightMode.toMeasureMode(), tempSize)
         frame.width = tempSize.width
         frame.height = tempSize.height
         if(changeWidth){
@@ -56,33 +67,33 @@ open class AndroidLayout(private val mView: Layout) : ViewGroup(Platform.getAppl
         }
     }
 
-    override fun dispatchDraw(canvas: Canvas) {
-        try {
-            if(mView.clipsToBounds){
-                val bg = mView.mBackground
-                if(bg != null){
-                    var width = width.toFloat()
-                    var height = height.toFloat()
-                    val off = bg.offset
-                    if(off != null){
-                        canvas.translate(-off.x,-off.y)
-                        width = off.width
-                        height = off.height
-                    }
-                    canvas.clipPath(bg.getOuterPath(width,height))
-                    if(off != null) {
-                        canvas.translate(off.x, off.y)
-                    }
-                }else{
-                    canvas.clipRect(Rect(0,0,width,height))
-                }
-            }
-        }catch (e:Exception){
-            e.printStackTrace()
-        }finally {
-            super.dispatchDraw(canvas)
-        }
-    }
+//    override fun dispatchDraw(canvas: Canvas) {
+//        try {
+//            if(mView.clipsToBounds){
+//                val bg = mView.mBackground
+//                if(bg != null){
+//                    var width = width.toFloat()
+//                    var height = height.toFloat()
+//                    val off = bg.offset
+//                    if(off != null){
+//                        canvas.translate(-off.x,-off.y)
+//                        width = off.width
+//                        height = off.height
+//                    }
+//                    canvas.clipPath(bg.getOuterPath(width,height))
+//                    if(off != null) {
+//                        canvas.translate(off.x, off.y)
+//                    }
+//                }else{
+//                    canvas.clipRect(Rect(0,0,width,height))
+//                }
+//            }
+//        }catch (e:Exception){
+//            e.printStackTrace()
+//        }finally {
+//            super.dispatchDraw(canvas)
+//        }
+//    }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()

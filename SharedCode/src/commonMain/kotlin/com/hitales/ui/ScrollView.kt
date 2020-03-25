@@ -1,32 +1,32 @@
-//package com.hitales.ui
-//
-//import com.hitales.utils.Frame
-//
-//expect open class ScrollView : Layout {
-//
-//    /**
-//     * default VERTICAL
-//     */
-//    open var orientation:Orientation
-//
-//    /**
-//     * default true
-//     */
-//    open var showScrollBar:Boolean
-//
-//    /**
-//     * default true
-//     */
-//    open var scrollEnabled:Boolean
-//
-//    var scrollX:Float
-//
-//    var scrollY:Float
-//
-//    constructor(frame: Frame = Frame.zero())
-//
-//    open fun onScroll(offsetX:Float,offsetY:Float)
-//
-//}
-//
-//
+package com.hitales.ui
+
+import com.hitales.ui.layout.flex.FlexLayout
+
+expect open class ScrollView : FlexLayout {
+
+    /**
+     * default VERTICAL
+     */
+    open var orientation:Orientation
+
+    /**
+     * default true
+     */
+    open var showScrollBar:Boolean
+
+    /**
+     * default true
+     */
+    open var scrollEnabled:Boolean
+
+    var scrollX:Float
+
+    var scrollY:Float
+
+    constructor(layoutParams: LayoutParams = LayoutParams())
+
+    open fun onScroll(offsetX:Float,offsetY:Float)
+
+}
+
+

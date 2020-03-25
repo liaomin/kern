@@ -1,39 +1,16 @@
 package com.hitales.ui.android
 
 import android.graphics.Rect
-import android.os.Build
-import android.text.TextUtils
-import android.util.TypedValue
-import android.view.Gravity
 import android.view.MotionEvent
-import android.view.View
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.widget.TextViewCompat
+import android.widget.SeekBar
 import com.hitales.ui.Platform
-import com.hitales.ui.TextView
+import com.hitales.ui.View
 
-class AndroidTextView(protected val mView: TextView) : AppCompatTextView(Platform.getApplication()){
 
-    init {
-        gravity = Gravity.CENTER_VERTICAL
-        includeFontPadding = false
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
-            textAlignment = View.TEXT_ALIGNMENT_TEXT_START
-        }
-        ellipsize = TextUtils.TruncateAt.END
-
-    }
+open class AndroidSlider(val mView: View) : SeekBar(Platform.getApplication()){
 
     protected val mViewHelper:ViewHelper by lazy { ViewHelper(this, mView) }
 
-    fun enableAutoFontSizeToFit(minFontSize:Int,maxFontSize:Int){
-        TextViewCompat.setAutoSizeTextTypeWithDefaults(this,TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM)
-        TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(this,minFontSize,maxFontSize,1, TypedValue.COMPLEX_UNIT_SP)
-    }
-
-    fun disableAutoFontSizeToFit(){
-        TextViewCompat.setAutoSizeTextTypeWithDefaults(this,TextViewCompat.AUTO_SIZE_TEXT_TYPE_NONE)
-    }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()

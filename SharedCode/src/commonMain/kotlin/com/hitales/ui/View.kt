@@ -27,6 +27,21 @@ enum class BorderStyle(val value:Int) {
     DASHED(2),
 }
 
+enum class MeasureMode(val value: Int){
+    /**
+     * 不限制
+     */
+    UNSPECIFIED(0),
+    /**
+     * 精确
+     */
+    EXACTLY(1),
+    /**
+     * 最多
+     */
+    AT_MOST(2),
+}
+
 interface ViewDelegate{
     fun onPress(view: View)
     fun onLongPress(view: View)
@@ -121,8 +136,8 @@ expect open class View  {
     /**
      * events
      */
-    fun setOnPressListener(listener:(view:View)->Unit)
-    fun setOnLongPressListener(listener:(iew:View)->Unit)
+    fun setOnPressListener(listener:((view:View)->Unit)?)
+    fun setOnLongPressListener(listener:((view:View)->Unit)?)
 
     /**
      * background
@@ -158,14 +173,14 @@ expect open class View  {
     fun getShadowOffsetX():Float
     fun getShadowOffsetY():Float
 
-
     /**
      * measure view width and height
-     * @param widthSpace 最大宽度  如果小于等于0返回0
-     * @param heightSpace 最大高度  如果小于等于0返回0
+     * @param widthSpace measure宽度
+     * @param widthMode
+     * @param heightSpace measure高度
      * @param outSize 获取计算出来的宽高
      */
-    open fun measure(widthSpace: Float, heightSpace: Float, outSize: Size)
+    open fun measure(widthSpace: Float,widthMode:MeasureMode, heightSpace: Float,heightMode:MeasureMode,outSize: Size)
 
     /**
      * touches

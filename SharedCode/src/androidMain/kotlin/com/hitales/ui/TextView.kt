@@ -111,6 +111,21 @@ actual open class TextView :  View {
         getTextWidget().setShadowLayer(PixelUtil.toPixelFromDIP(radius),PixelUtil.toPixelFromDIP(dx),PixelUtil.toPixelFromDIP(dy), color)
     }
 
+
+    actual fun enableAutoFontSizeToFit(minFontSize:Int,maxFontSize:Int){
+        val textView =  getTextWidget()
+        if(textView is AndroidTextView){
+            textView.enableAutoFontSizeToFit(minFontSize,maxFontSize)
+        }
+    }
+
+    actual fun disableAutoFontSizeToFit(){
+        val textView =  getTextWidget()
+        if(textView is AndroidTextView){
+            textView.disableAutoFontSizeToFit()
+        }
+    }
+
     /**
      * default LEFT
      */

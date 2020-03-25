@@ -1,6 +1,5 @@
 package com.hitales.ui
 
-import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Size
 
 open class LayoutParams {
@@ -34,8 +33,6 @@ open class LayoutParams {
                 flag = flag or FLAG_HEIGHT_MASK
             }
         }
-
-    var margin:EdgeInsets? = null
 }
 
 expect open class Layout : View {
@@ -55,7 +52,7 @@ expect open class Layout : View {
 
     open fun removeAllSubViews()
 
-    open fun measureChild(child: View,width:Float,height:Float,outSize: Size)
+    open fun measureChild(child: View,width:Float,widthMode: MeasureMode,height:Float,heightMode: MeasureMode,outSize: Size)
 }
 
 /**

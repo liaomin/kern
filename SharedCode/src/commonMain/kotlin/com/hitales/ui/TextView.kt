@@ -81,6 +81,8 @@ expect open class TextView : View {
     open fun setFontStyle(fontName:String)
     open fun setTextShadow(color:Int,radius:Float,dx:Float,dy: Float)
 
+    fun enableAutoFontSizeToFit(minFontSize:Int,maxFontSize:Int)
 
+    fun disableAutoFontSizeToFit()
 
 }

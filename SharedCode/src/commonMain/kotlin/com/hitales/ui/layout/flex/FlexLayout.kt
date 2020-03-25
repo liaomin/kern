@@ -2,9 +2,9 @@ package com.hitales.ui.layout.flex
 
 import com.hitales.ui.CustomLayout
 import com.hitales.ui.LayoutParams
+import com.hitales.ui.MeasureMode
 import com.hitales.ui.View
 import com.hitales.utils.Size
-import kotlin.math.min
 
 
 enum class FlexDirection(val value:Int) {
@@ -94,7 +94,7 @@ open class FlexLayout : CustomLayout<FlexLayoutParams> {
     constructor(layoutParams: LayoutParams = LayoutParams()):super(layoutParams)
 
 
-    override fun measure(widthSpace: Float, heightSpace: Float, outSize: Size) {
+    override fun measure(widthSpace: Float,widthMode: MeasureMode, heightSpace: Float,heightMode: MeasureMode,outSize: Size) {
         var direction = DIRECTION_RIGHT
         when (flexDirection) {
             FlexDirection.COLUMN -> {
@@ -110,50 +110,79 @@ open class FlexLayout : CustomLayout<FlexLayoutParams> {
                 direction = DIRECTION_LEFT
             }
         }
+        var w = widthSpace
+        var h = heightSpace
+        var wMode = widthMode
+        var hMode = heightMode
+        if(wMode == MeasureMode.EXACTLY){
+            wMode = MeasureMode.AT_MOST
+        }
+        if(hMode == MeasureMode.EXACTLY){
+            hMode = MeasureMode.AT_MOST
+        }
+
         if(flexDirection  == FlexDirection.ROW || flexDirection == FlexDirection.ROW_REVERSE){
             if (flexWarp == FlexWarp.NO_WARP) {
-                rowCalculator.calculate(this,direction,children,widthSpace, heightSpace, outSize)
+                rowCalculator.calculate(this,direction,children,w,wMode, h,hMode, outSize)
             }else{
-                rowWrapCalculator.calculate(this,direction,children,widthSpace, heightSpace, outSize)
+                rowWrapCalculator.calculate(this,direction,children,w,wMode, h,hMode, outSize)
             }
         }else{
             if (flexWarp == FlexWarp.NO_WARP) {
-                columnCalculator.calculate(this,direction,children,widthSpace, heightSpace, outSize)
+                columnCalculator.calculate(this,direction,children,w,wMode, h,hMode, outSize)
             }else{
-                columnWarpCalculator.calculate(this,direction,children,widthSpace, heightSpace, outSize)
+                columnWarpCalculator.calculate(this,direction,children,w,wMode, h,hMode, outSize)
             }
         }
     }
 
 
-    override fun measureChild(child: View, width: Float, height: Float,outSize:Size) {
+    override fun measureChild(child: View, width:Float, widthMode: MeasureMode, height:Float, heightMode: MeasureMode, outSize: Size){
         var maxWidth = width
         var maxHeight = height
         val l = child.layoutParams as FlexLayoutParams
-        if(l.flag and FlexLayoutParams.FLAG_MAX_WIDTH_MASK == FlexLayoutParams.FLAG_MAX_WIDTH_MASK){
-            maxWidth = min(maxWidth,l.maxWidth)
+        var wMode = widthMode
+        var hMode = heightMode
+        if(l.flag and LayoutParams.FLAG_WIDTH_MASK ==  LayoutParams.FLAG_WIDTH_MASK){
+            maxWidth = l.width
+            wMode = MeasureMode.EXACTLY
         }
-        if(l.flag and FlexLayoutParams.FLAG_MAX_HEIGHT_MASK == FlexLayoutParams.FLAG_MAX_HEIGHT_MASK){
-            maxHeight = min(maxWidth,l.maxHeight)
+        if(l.flag and LayoutParams.FLAG_HEIGHT_MASK ==  LayoutParams.FLAG_HEIGHT_MASK){
+            maxHeight = l.height
+            hMode = MeasureMode.EXACTLY
         }
-        child.measure(maxWidth,maxHeight,outSize)
+        child.measure(maxWidth,wMode,maxHeight,hMode,outSize)
         var frame = child.frame
         var w = outSize.width
         var h = outSize.height
+
         var reMeasure = false
+
+        if(l.flag and FlexLayoutParams.FLAG_MAX_WIDTH_MASK == FlexLayoutParams.FLAG_MAX_WIDTH_MASK && w > l.maxWidth){
+            maxWidth = l.maxWidth
+            wMode = MeasureMode.AT_MOST
+            reMeasure = true
+        }
+        if(l.flag and FlexLayoutParams.FLAG_MAX_HEIGHT_MASK == FlexLayoutParams.FLAG_MAX_HEIGHT_MASK && h > l.maxHeight){
+            maxHeight = l.maxHeight
+            hMode = MeasureMode.AT_MOST
+            reMeasure = true
+        }
 
         val tempW = l.width
         val tempH = l.height
         if(l.flag and LayoutParams.FLAG_WIDTH_MASK != LayoutParams.FLAG_WIDTH_MASK && l.flag and FlexLayoutParams.FLAG_MIN_WIDTH_MASK == FlexLayoutParams.FLAG_MIN_WIDTH_MASK && w < l.minWidth){
-            l.width = l.minWidth
+            maxWidth= l.minWidth
+            wMode = MeasureMode.EXACTLY
             reMeasure = true
         }
         if(l.flag and LayoutParams.FLAG_HEIGHT_MASK != LayoutParams.FLAG_HEIGHT_MASK && l.flag and FlexLayoutParams.FLAG_MIN_HEIGHT_MASK == FlexLayoutParams.FLAG_MIN_HEIGHT_MASK && h < l.minHeight){
-            l.height = l.minHeight
+            maxHeight = l.minHeight
+            hMode = MeasureMode.EXACTLY
             reMeasure = true
         }
         if(reMeasure){
-            child.measure(width,height, outSize)
+            child.measure(maxWidth,wMode,maxHeight,hMode,outSize)
             l.width = tempW
             l.height = tempH
         }
@@ -167,7 +196,6 @@ open class FlexLayout : CustomLayout<FlexLayoutParams> {
             val newLayoutParams = FlexLayoutParams()
             newLayoutParams.width = oldLayoutParams.width
             newLayoutParams.height = oldLayoutParams.height
-            newLayoutParams.margin = oldLayoutParams.margin
             child.layoutParams = newLayoutParams
         }
     }

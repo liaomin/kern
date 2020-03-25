@@ -30,13 +30,11 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     api 'org.jetbrains.kotlin:kotlin-stdlib'
     api 'androidx.appcompat:appcompat:1.0.2'
-    api 'androidx.recyclerview:recyclerview:1.1.0-alpha01'
+    api 'androidx.recyclerview:recyclerview:1.2.0-alpha01'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
-
-
 
 kotlin {
     final def iOSPresetTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") ? presets.iosArm64 : presets.iosX64

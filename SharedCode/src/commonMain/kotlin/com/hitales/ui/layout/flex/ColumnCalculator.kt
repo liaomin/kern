@@ -1,16 +1,15 @@
 package com.hitales.ui.layout.flex
 
 import com.hitales.ui.LayoutParams
+import com.hitales.ui.MeasureMode
 import com.hitales.ui.View
 import com.hitales.utils.Size
-import kotlin.math.min
 
 open class ColumnCalculator : FlexCalculator() {
 
-    override fun calculate(layout: FlexLayout,direction:Int, children: List<View>, width: Float, height: Float, paddingLeft: Float, paddingTop: Float, paddingRight: Float, paddingBottom: Float, outSize: Size) {
+    override fun calculate(layout: FlexLayout, direction: Int, children: List<View>, width: Float, widthMode: MeasureMode, height: Float, heightMode: MeasureMode, paddingLeft: Float, paddingTop: Float, paddingRight: Float, paddingBottom: Float, outSize: Size) {
         val flexChildren = ArrayList<View>(0)
         var flexCount = 0f
-        val commonChildren = ArrayList<View>(0)
         val isReverse = isReverse(layout)
         val totalWidth = width - paddingLeft - paddingRight
         val totalHeight = height - paddingTop - paddingBottom
@@ -31,8 +30,7 @@ open class ColumnCalculator : FlexCalculator() {
                 flexChildren.add(view)
                 continue
             }
-            commonChildren.add(view)
-            layout.measureChild(view,measureWidthSpace,measureHeightSpace,outSize)
+            layout.measureChild(view,measureWidthSpace,widthMode,measureHeightSpace,heightMode,outSize)
 
             var occupyWidth = frame.width
             var occupyHeight = frame.height
@@ -48,32 +46,32 @@ open class ColumnCalculator : FlexCalculator() {
         var originX = paddingLeft
         var originY = paddingTop
         if(isReverse){
-            originY = height - paddingTop
+            originY = height - paddingTop - paddingBottom
         }
 
         spendWidth = 0f
         spendHeight = 0f
         var offsetX = originX
         var offsetY = originY
-        var maxWidth  = 0f
         for (view in children){
             val l = view.layoutParams as FlexLayoutParams
             val frame = view.frame
             val margin = l.margin
             var occupyWidth = frame.width
             var occupyHeight = frame.height
+            var marginTop = 0f
+            var marginBottom = 0f
             if (margin != null) {
+                marginTop = margin.top
+                marginBottom = margin.bottom
                 occupyWidth += margin.left + margin.right
-                occupyHeight += margin.top + margin.bottom
-            }
-            if(maxWidth < occupyWidth){
-                maxWidth = occupyWidth
+                occupyHeight += marginTop + marginBottom
             }
             spendWidth += occupyWidth
             spendHeight += occupyHeight
             if(isReverse){
-                frame.x = offsetX - occupyWidth
-                frame.y = offsetY + (margin?.top?:0f)
+                frame.x = offsetX + (margin?.left?:0f)
+                frame.y = offsetY - occupyHeight + marginTop
                 offsetY -= occupyHeight
             }else{
                 frame.x = offsetX + (margin?.left?:0f)
@@ -81,23 +79,45 @@ open class ColumnCalculator : FlexCalculator() {
                 offsetY += occupyHeight
             }
         }
-
-        val l = layout.layoutParams
-        var measuredWidth = width
-        var measuredHeight = height
-        if(l.flag and LayoutParams.FLAG_WIDTH_MASK != LayoutParams.FLAG_WIDTH_MASK){
-            measuredWidth = min(width,maxWidth)
-        }
-        if(l.flag and LayoutParams.FLAG_HEIGHT_MASK != LayoutParams.FLAG_HEIGHT_MASK){
-            measuredHeight = min(height,spendHeight)
-        }
-
-        adjustRow(direction,children,measuredWidth-paddingLeft-paddingRight,measuredHeight-paddingTop-paddingBottom,spendWidth,spendHeight,layout.justifyContent,layout.alignItems)
-
-        outSize.width = measuredWidth
-        outSize.height = measuredHeight
-
+        outSize.width = spendWidth
+        outSize.height = spendHeight
     }
+
+    override fun adjustChildren(layout: FlexLayout, direction: Int, children: List<View>, width: Float, widthMode: MeasureMode, height: Float, heightMode: MeasureMode, spendWidth: Float, spendHeight: Float, paddingLeft: Float, paddingTop: Float, paddingRight: Float, paddingBottom: Float, outSize: Size) {
+        val totalWidth = width - paddingLeft - paddingRight
+        val totalHeight = height - paddingTop - paddingBottom
+        var measureWidth = totalWidth
+        var measureHeight = totalHeight
+        if(widthMode == MeasureMode.UNSPECIFIED){
+            measureWidth = spendWidth
+        }
+        if(heightMode == MeasureMode.UNSPECIFIED){
+            measureHeight = spendHeight
+        }
+        adjustRow(direction,children,measureWidth,measureHeight,spendWidth,spendHeight,layout.justifyContent,layout.alignItems)
+
+        var layoutWidth = width
+        var layoutHeight= height
+        if(widthMode != MeasureMode.EXACTLY){
+            layoutWidth = spendWidth + paddingLeft + paddingRight
+        }
+        if(widthMode == MeasureMode.AT_MOST){
+            if(layoutWidth > width){
+                layoutWidth = width
+            }
+        }
+        if(heightMode != MeasureMode.EXACTLY){
+            layoutHeight = spendHeight + paddingTop + paddingBottom
+        }
+        if(heightMode == MeasureMode.AT_MOST){
+            if(layoutHeight > height){
+                layoutHeight = height
+            }
+        }
+        outSize.width = layoutWidth
+        outSize.height = layoutHeight
+    }
+
 
     override fun isReverse(layout: FlexLayout): Boolean {
         return layout.flexDirection == FlexDirection.COLUMN_REVERSE

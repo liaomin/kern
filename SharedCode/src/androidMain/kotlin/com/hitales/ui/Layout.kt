@@ -30,7 +30,6 @@ actual open class Layout : View {
             widget.addView(view.getWidget())
             children.add(view)
         }else{
-            view.getWidget().bringToFront()
             widget.addView(view.getWidget(),index)
             children.add(index,view)
         }
@@ -67,14 +66,27 @@ actual open class Layout : View {
         super.onAttachedToWindow()
     }
 
-    actual open fun measureChild(child: View,width:Float,height:Float,outSize: Size){
-        child.measure(width,height,outSize)
+    actual open fun measureChild(child: View,width:Float,widthMode: MeasureMode,height:Float,heightMode: MeasureMode,outSize: Size){
+        var maxWidth = width
+        var maxHeight = height
+        val l = child.layoutParams
+        var wMode = widthMode
+        var hMode = heightMode
+        if(l.flag and LayoutParams.FLAG_WIDTH_MASK ==  LayoutParams.FLAG_WIDTH_MASK){
+            maxWidth = l.width
+            wMode = MeasureMode.EXACTLY
+        }
+        if(l.flag and LayoutParams.FLAG_HEIGHT_MASK ==  LayoutParams.FLAG_HEIGHT_MASK){
+            maxHeight = l.height
+            hMode = MeasureMode.EXACTLY
+        }
+        child.measure(maxWidth,wMode,maxHeight,hMode,outSize)
         var frame = child.frame
         frame.width = outSize.width
         frame.height = outSize.height
     }
 
-    override fun measure(widthSpace: Float, heightSpace: Float, outSize: Size) {
+    override fun  measure(widthSpace: Float, widthMode: MeasureMode, heightSpace: Float, heightMode: MeasureMode, outSize: Size) {
         val maxWidth = 0f
         val maxHeight = 0f
         val padding = this.padding
@@ -89,7 +101,7 @@ actual open class Layout : View {
             h -= padding.top + padding.bottom
         }
         for (view in children){
-            measureChild(view,w, h,outSize)
+            measureChild(view,w,widthMode, h,heightMode,outSize)
             val frame = view.frame
             frame.x = originX
             frame.y = originY

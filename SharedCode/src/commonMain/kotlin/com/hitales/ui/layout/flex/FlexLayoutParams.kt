@@ -1,6 +1,7 @@
 package com.hitales.ui.layout.flex
 
 import com.hitales.ui.LayoutParams
+import com.hitales.utils.EdgeInsets
 
 enum class LayoutPosition(val value:Int) {
     ABSOLUTE(1),
@@ -120,4 +121,5 @@ open class FlexLayoutParams : LayoutParams(){
             }
         }
 
+    var margin: EdgeInsets? = null
 }

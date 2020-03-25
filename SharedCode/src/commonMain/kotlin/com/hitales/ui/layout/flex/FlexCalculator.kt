@@ -1,6 +1,7 @@
 package com.hitales.ui.layout.flex
 
 import com.hitales.ui.LayoutParams
+import com.hitales.ui.MeasureMode
 import com.hitales.ui.Platform
 import com.hitales.ui.View
 import com.hitales.utils.Size
@@ -8,9 +9,13 @@ import kotlin.math.min
 
 abstract class FlexCalculator {
 
-    fun calculate(layout:FlexLayout,direction: Int,children:List<View>,widthSpace:Float,heightSpace:Float,outSize:Size){
+    protected data class Row(val children: List<View>, val spendWidth: Float, val spendHeight: Float)
+
+    fun calculate(layout:FlexLayout,direction: Int,children:List<View>,widthSpace:Float,widthMode: MeasureMode,heightSpace:Float,heightMode: MeasureMode,outSize:Size){
         var frameWidth = widthSpace
         var frameHeight = heightSpace
+        var wMode = widthMode
+        var hMode = heightMode
         val layoutParams = layout.layoutParams
         val isFlexLayout = layoutParams is FlexLayoutParams
         if(layoutParams.flag and LayoutParams.FLAG_WIDTH_MASK != LayoutParams.FLAG_WIDTH_MASK){
@@ -19,14 +24,17 @@ abstract class FlexCalculator {
                 if(l.flag and FlexLayoutParams.FLAG_MAX_WIDTH_MASK == FlexLayoutParams.FLAG_MAX_WIDTH_MASK){
                     if( frameWidth > l.maxWidth ){
                         frameWidth = l.maxWidth
+                        wMode = MeasureMode.AT_MOST
                     }
                 }
                 if(l.flag and FlexLayoutParams.FLAG_MIN_WIDTH_MASK == FlexLayoutParams.FLAG_MIN_WIDTH_MASK && frameWidth < l.minWidth){
                     frameWidth = l.minWidth
+                    wMode = MeasureMode.AT_MOST
                 }
             }
         }else{
             frameWidth = layoutParams.width
+            wMode = MeasureMode.AT_MOST
         }
         if(layoutParams.flag and LayoutParams.FLAG_HEIGHT_MASK != LayoutParams.FLAG_HEIGHT_MASK){
             if(isFlexLayout){
@@ -34,14 +42,17 @@ abstract class FlexCalculator {
                 if(l.flag and FlexLayoutParams.FLAG_MAX_HEIGHT_MASK == FlexLayoutParams.FLAG_MAX_HEIGHT_MASK){
                     if(frameHeight > l.maxHeight){
                         frameHeight = l.maxHeight
+                        hMode = MeasureMode.AT_MOST
                     }
                 }
                 if(l.flag and FlexLayoutParams.FLAG_MIN_HEIGHT_MASK == FlexLayoutParams.FLAG_MIN_HEIGHT_MASK && frameHeight < l.minHeight){
                     frameHeight = l.minHeight
+                    hMode = MeasureMode.AT_MOST
                 }
             }
         }else{
             frameHeight = layoutParams.height
+            hMode = MeasureMode.AT_MOST
         }
 
         var paddingLeft = 0f
@@ -68,13 +79,22 @@ abstract class FlexCalculator {
             }
         }
 
-        calculate(layout,direction,commonChildren, frameWidth, frameHeight, paddingLeft, paddingTop, paddingRight, paddingBottom, outSize)
+        calculate(layout,direction,commonChildren, frameWidth,wMode, frameHeight,hMode, paddingLeft, paddingTop, paddingRight, paddingBottom, outSize)
+
+        val spendWidth = outSize.width
+        val spendHeight = outSize.height
+
+        adjustChildren(layout,direction,commonChildren, frameWidth,wMode, frameHeight,hMode,spendWidth,spendHeight,paddingLeft, paddingTop, paddingRight, paddingBottom, outSize)
 
         layoutAbsolute(absoluteChildren,outSize.width,outSize.height)
     }
 
-    abstract fun calculate(layout:FlexLayout,direction:Int,children:List<View>,width:Float,height:Float,paddingLeft: Float,paddingTop: Float,paddingRight: Float,paddingBottom: Float,outSize:Size)
+    /**
+     * @param outSize 记录children占用的矿高
+     */
+    abstract fun calculate(layout:FlexLayout,direction:Int,children:List<View>,width:Float,widthMode: MeasureMode,height:Float,heightMode: MeasureMode,paddingLeft: Float,paddingTop: Float,paddingRight: Float,paddingBottom: Float,outSize:Size)
 
+    abstract fun adjustChildren(layout:FlexLayout,direction:Int,children:List<View>,width:Float,widthMode: MeasureMode,height:Float,heightMode: MeasureMode,spendWidth: Float,spendHeight: Float,paddingLeft: Float,paddingTop: Float,paddingRight: Float,paddingBottom: Float,outSize:Size)
 
     /**
      * 计算flex空间
@@ -127,7 +147,7 @@ abstract class FlexCalculator {
                 }
                 val temp = layoutParams.width
                 layoutParams.width = exactlyWidth
-                view.measure(maxWidth,maxHeight, outSize)
+                view.measure(temp,MeasureMode.EXACTLY,maxHeight, MeasureMode.AT_MOST,outSize)
                 frame.width = outSize.width
                 frame.height = outSize.height
                 layoutParams.width = temp
@@ -147,7 +167,7 @@ abstract class FlexCalculator {
                 }
                 val temp = layoutParams.height
                 layoutParams.height = exactlyHeight
-                view.measure(maxWidth,maxHeight, outSize)
+                view.measure(maxWidth,MeasureMode.AT_MOST,temp,MeasureMode.EXACTLY, outSize)
                 frame.width = outSize.width
                 frame.height = outSize.height
                 layoutParams.height = temp
@@ -179,6 +199,13 @@ abstract class FlexCalculator {
         for (i in 0 until size){
             val view = row[i]
             val frame = view.frame
+            var occupyWidth = frame.width
+            var occupyHeight = frame.height
+            val margin = (view.layoutParams as FlexLayoutParams).margin
+            if (margin != null) {
+                occupyWidth += margin.left + margin.right
+                occupyHeight += margin.top + margin.bottom
+            }
             var remain = if(isRow) rowWidth - spendWidth else rowHeight - spendHeight
             when (justifyContent){
                 JustifyContent.FLEX_START ->{
@@ -295,14 +322,14 @@ abstract class FlexCalculator {
                 }
                 AlignItems.CENTER ->{
                     if(isRow) {
-                        frame.y += (rowHeight - frame.height) / 2f
+                        frame.y += (rowHeight - occupyHeight) / 2f
                     }else{
-                        frame.x += (rowWidth - frame.width) / 2f
+                        frame.x += (rowWidth - occupyWidth) / 2f
                     }
                 }
                 AlignItems.FLEX_END ->{
                     if(isRow) {
-                        frame.y = rowHeight - frame.height
+                        frame.y = rowHeight - occupyHeight
                     }else{
                         frame.x = rowWidth - frame.width
                     }
@@ -414,7 +441,7 @@ abstract class FlexCalculator {
                 val tempH = layoutParams.height
                 layoutParams.width = width
                 layoutParams.height = height
-                view.measure(width,height,outSize)
+                view.measure(width,MeasureMode.EXACTLY,height,MeasureMode.EXACTLY,outSize)
                 layoutParams.width = tempW
                 layoutParams.height = tempH
                 frame.width = width

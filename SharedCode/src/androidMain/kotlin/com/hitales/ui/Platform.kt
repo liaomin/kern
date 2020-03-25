@@ -116,6 +116,8 @@ actual class Platform : ActivityDelegate{
                 any.parent = top
                 rootView.removeAllViews()
             }
+            any.onCreate()
+            any.onResume()
             rootView.addView(any.view.getWidget(),FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT))
         }
     }
@@ -124,8 +126,12 @@ actual class Platform : ActivityDelegate{
         if(any != null && any is Controller){
             val top = stack.peek()
             if(any === top && stack.size() > 1){
-                stack.pop()
+                val o = stack.pop()
                 rootView.removeAllViews()
+                if(o != null){
+                    o.onPause()
+                    o.onDestroy()
+                }
                 val  v = stack.peek()?.view
                 if(v != null){
                     rootView.addView(v.getWidget(),FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT))

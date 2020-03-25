@@ -3,6 +3,7 @@ package com.hitales.ui
 import android.animation.Animator
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.view.View
 import com.hitales.ui.android.AndroidView
 import com.hitales.ui.android.Background
 import com.hitales.ui.animation.toAnimator
@@ -15,6 +16,17 @@ import kotlin.math.max
 import kotlin.math.min
 
 actual open class View{
+
+    companion object{
+        fun getMeasureWidth(size:Float,sizeMode:MeasureMode):Int{
+            val tempSize = PixelUtil.toPixelFromDIP(size).toInt()
+            when (sizeMode){
+                MeasureMode.AT_MOST -> return View.MeasureSpec.makeMeasureSpec(tempSize, View.MeasureSpec.AT_MOST)
+                MeasureMode.UNSPECIFIED -> return View.MeasureSpec.makeMeasureSpec(tempSize, View.MeasureSpec.UNSPECIFIED)
+                MeasureMode.EXACTLY -> return View.MeasureSpec.makeMeasureSpec(tempSize, View.MeasureSpec.EXACTLY)
+            }
+        }
+    }
 
     actual var flags:Int = 0
 
@@ -272,9 +284,10 @@ actual open class View{
         return mBackground
     }
 
-    actual fun setOnPressListener(listener: (view: com.hitales.ui.View) -> Unit) {
+    actual fun setOnPressListener(listener: ((view: com.hitales.ui.View) -> Unit)?) {
         onPressListener = listener
         if(listener != null){
+
             mWidget.setOnClickListener{
                 onPressListener?.invoke(this)
                 delegate?.get()?.onPress(this)
@@ -284,7 +297,7 @@ actual open class View{
         }
     }
 
-    actual fun setOnLongPressListener(listener: (iew: com.hitales.ui.View) -> Unit) {
+    actual fun setOnLongPressListener(listener: ((view: com.hitales.ui.View) -> Unit)?) {
         onLongPressListener = listener
         if(listener != null){
             mWidget.setOnLongClickListener{
@@ -297,34 +310,16 @@ actual open class View{
         }
     }
 
+
     /**
      * measure view width and height
      * @param widthSpace 最大宽度  如果小于等于0返回0
+     * @param widthMode
      * @param heightSpace 最大高度  如果小于等于0返回0
      * @param outSize 获取计算出来的宽高
      */
-    actual open fun measure(widthSpace: Float, heightSpace: Float, outSize: Size){
-        if(widthSpace <= 0 || heightSpace <= 0){
-            outSize?.set(0f,0f)
-            return
-        }
-        var maxWidth = widthSpace
-        var maxHeight = heightSpace
-        var width = PixelUtil.toPixelFromDIP(maxWidth).toInt()
-        var height = PixelUtil.toPixelFromDIP(maxHeight).toInt()
-        if(layoutParams.flag and LayoutParams.FLAG_WIDTH_MASK == LayoutParams.FLAG_WIDTH_MASK){
-            width = android.view.View.MeasureSpec.makeMeasureSpec(PixelUtil.toPixelFromDIP(layoutParams.width).toInt(), android.view.View.MeasureSpec.EXACTLY)
-        }else{
-            width = android.view.View.MeasureSpec.makeMeasureSpec(width, android.view.View.MeasureSpec.AT_MOST)
-        }
-        if(layoutParams.flag and LayoutParams.FLAG_HEIGHT_MASK == LayoutParams.FLAG_HEIGHT_MASK){
-            height = android.view.View.MeasureSpec.makeMeasureSpec(PixelUtil.toPixelFromDIP(layoutParams.height).toInt(), android.view.View.MeasureSpec.EXACTLY)
-        }else{
-            height = android.view.View.MeasureSpec.makeMeasureSpec(height, android.view.View.MeasureSpec.AT_MOST)
-        }
-
-        mWidget.measure(width,height)
-
+    actual open fun measure(widthSpace: Float,widthMode:MeasureMode, heightSpace: Float,heightMode:MeasureMode,outSize: Size){
+        mWidget.measure(getMeasureWidth(widthSpace,widthMode), getMeasureWidth(heightSpace,heightMode))
         val measuredWidth = mWidget.measuredWidth
         val measuredHeight = mWidget.measuredHeight
         outSize.set(PixelUtil.toDIPFromPixel(measuredWidth.toFloat()), PixelUtil.toDIPFromPixel(measuredHeight.toFloat()))
