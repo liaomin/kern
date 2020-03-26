@@ -1,8 +1,8 @@
 
-import com.hitales.test.back.TestController
+import com.hitales.test.TempTestViewController
 import com.hitales.ui.Platform
 
 fun main() {
-    Platform.runWithRootController(TestController())
+    Platform.runWithRootController(TempTestViewController())
 //    Platform.runWithRootController(TestViewController())
 }

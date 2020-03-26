@@ -20,9 +20,11 @@ inline fun Int.toMeasureMode():MeasureMode{
     return MeasureMode.AT_MOST
 }
 
-open class AndroidLayout(private val mView: Layout) : ViewGroup(Platform.getApplication()){
+open class AndroidLayout(val mView: Layout) : ViewGroup(Platform.getApplication()){
 
-    val mViewHelper:ViewHelper by lazy { ViewHelper(this, mView) }
+    init {
+        AndroidBridge.init(this,mView)
+    }
 
     val tempSize:Size by lazy { Size() }
 
@@ -97,22 +99,22 @@ open class AndroidLayout(private val mView: Layout) : ViewGroup(Platform.getAppl
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        mViewHelper.onAttachedToWindow()
+        AndroidBridge.onAttachedToWindow(mView)
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        mViewHelper.onDetachedFromWindow()
+        AndroidBridge.onDetachedFromWindow(mView)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         val x = event.x
         val y = event.y
-        val adjust = mViewHelper.adjustTouchEvent(event)
-        if(mViewHelper.interceptTouchEvent(event)){
+        val adjust = AndroidBridge.adjustTouchEvent(mView,event)
+        if(AndroidBridge.interceptTouchEvent(mView,event)){
             return false
         }
-        val result =  super.dispatchTouchEvent(event) || mViewHelper.dispatchTouchEvent(event)
+        val result =  super.dispatchTouchEvent(event) || AndroidBridge.dispatchTouchEvent(mView,event)
         if(adjust) {
             event.setLocation(x,y)
         }
@@ -120,12 +122,13 @@ open class AndroidLayout(private val mView: Layout) : ViewGroup(Platform.getAppl
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        mViewHelper.onTouchEvent(event)
+        AndroidBridge.onTouchEvent(mView,event)
         return super.onTouchEvent(event)
     }
 
     override fun getHitRect(outRect: Rect) {
         super.getHitRect(outRect)
-        mViewHelper.adjustHitRect(outRect)
+        AndroidBridge.adjustHitRect(mView,outRect)
     }
+
 }

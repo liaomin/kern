@@ -14,22 +14,13 @@ open class AndroidScrollView : com.hitales.ui.android.scrollview.ScrollView {
 
     var mView: ScrollView? = null
 
-    var mViewHelper :ViewHelper? = null
-
-    constructor(view: ScrollView) : super() {
-        mView = view
-        mViewHelper = ViewHelper(this,view)
-    }
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-
-    }
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
     companion object {
         fun createFromXLM(view: ScrollView):AndroidScrollView{
             val  scrollView = LayoutInflater.from(Platform.getApplication()).inflate(R.layout.scroll_view,null) as AndroidScrollView
             scrollView.mView = view
-            scrollView.mViewHelper = ViewHelper(scrollView,view)
+            AndroidBridge.init(scrollView,view)
             scrollView.setup(view)
             return scrollView
         }
@@ -45,7 +36,6 @@ open class AndroidScrollView : com.hitales.ui.android.scrollview.ScrollView {
 
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {
-        mViewHelper?.onTouchEvent(ev)
         when (ev.action) {
             MotionEvent.ACTION_DOWN -> {
                 return if (scrollEnabled) super.onTouchEvent(ev) else scrollEnabled
@@ -56,19 +46,5 @@ open class AndroidScrollView : com.hitales.ui.android.scrollview.ScrollView {
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         return if (!scrollEnabled) false else super.onInterceptTouchEvent(ev)
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        mViewHelper?.onAttachedToWindow()
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        mViewHelper?.onDetachedFromWindow()
-    }
-
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        return mViewHelper!!.dispatchTouchEvent(event) || super.dispatchTouchEvent(event)
     }
 }

@@ -32,8 +32,6 @@ actual open class TextInput : com.hitales.ui.TextView {
         super.onAttachedToWindow()
         if(autoFocus){
             val w = getWidget()
-            w.isFocusable = true
-            w.isFocusableInTouchMode = true
             w.requestFocus()
         }
     }
