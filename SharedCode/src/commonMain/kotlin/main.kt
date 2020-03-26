@@ -1,8 +1,8 @@
 
-import com.hitales.test.TempTestViewController
-import com.hitales.ui.Platform
+import com.hitales.test.TempTestViewViewController
+import com.hitales.ui.Screen
 
 fun main() {
-    Platform.runWithRootController(TempTestViewController())
+    Screen.getInstsance().window.rootViewController = TempTestViewViewController()
 //    Platform.runWithRootController(TestViewController())
 }

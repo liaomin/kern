@@ -14,5 +14,5 @@ interface ActivityDelegate{
 
     fun onPause()
 
-    fun onDestory()
+    fun onDestroy()
 }

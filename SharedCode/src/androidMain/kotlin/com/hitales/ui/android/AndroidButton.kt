@@ -1,54 +1,53 @@
-//package com.hitales.ui.android
-//
-//import android.graphics.Canvas
-//import android.view.Gravity
-//import android.view.MotionEvent
-//import androidx.appcompat.widget.AppCompatButton
-//import com.hitales.ui.Button
-//import com.hitales.ui.Platform
-//
-//class AndroidButton(protected val mView: Button) : AppCompatButton(Platform.getApplication()){
-//
-//    protected val mViewHelper = ViewHelper(this,mView)
-//
-//    init {
-//        gravity = Gravity.CENTER
-//    }
-//
-//    override fun onAttachedToWindow() {
-//        super.onAttachedToWindow()
-//        mViewHelper.onAttachedToWindow()
-//    }
-//
-//    override fun onDetachedFromWindow() {
-//        super.onDetachedFromWindow()
-//        mViewHelper.onDetachedFromWindow()
-//    }
-//
-//    override fun dispatchDraw(canvas: Canvas) {
-//        mViewHelper.dispatchDraw(canvas)
-//        super.dispatchDraw(canvas)
-//    }
-//
-//    override fun draw(canvas: Canvas?) {
-//        super.draw(canvas)
-//    }
-//
-//    override fun onDraw(canvas: Canvas?) {
-//        super.onDraw(canvas)
-//    }
-//
-//    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-//        if(mViewHelper.interceptTouchEvent(event)){
-//            return false
-//        }
-//        return mViewHelper.dispatchTouchEvent(event) || super.dispatchTouchEvent(event)
-//    }
-//
-//    override fun onTouchEvent(event: MotionEvent): Boolean {
-//        mViewHelper.onTouchEvent(event)
-//        return super.onTouchEvent(event)
-//    }
-//
-//
-//}
+package com.hitales.ui.android
+
+import android.graphics.Rect
+import android.view.Gravity
+import android.view.MotionEvent
+import androidx.appcompat.widget.AppCompatButton
+import com.hitales.ui.Button
+import com.hitales.ui.Platform
+
+class AndroidButton(val mView: Button) : AppCompatButton(Platform.getApplication()){
+
+    init {
+        AndroidBridge.init(this,mView)
+        gravity = Gravity.CENTER
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        AndroidBridge.onAttachedToWindow(mView)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        AndroidBridge.onDetachedFromWindow(mView)
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        val x = event.x
+        val y = event.y
+        val adjust = AndroidBridge.adjustTouchEvent(mView,event)
+        if(AndroidBridge.interceptTouchEvent(mView,event)){
+            return false
+        }
+        val result =  super.dispatchTouchEvent(event) || AndroidBridge.dispatchTouchEvent(mView,event)
+        if(adjust) {
+            event.setLocation(x,y)
+        }
+        return result
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        AndroidBridge.onTouchEvent(mView,event)
+        return super.onTouchEvent(event)
+    }
+
+    override fun getHitRect(outRect: Rect) {
+        super.getHitRect(outRect)
+        AndroidBridge.adjustHitRect(mView,outRect)
+    }
+
+
+
+}

@@ -120,6 +120,7 @@ class LinkedList<T> : Iterator<T>{
         if (tail != null){
             newNode.previous = tail
             tail?.next = newNode
+            tail = newNode
         }else{
             head = newNode
             tail = head

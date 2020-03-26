@@ -6,7 +6,7 @@ import com.hitales.ui.Platform
 import com.hitales.ui.TextInput
 import com.hitales.ui.layout.flex.FlexLayoutParams
 
-open class TestViewController : BasicController() {
+open class TestViewViewController : BasicViewController() {
 
     val itemWidth = Platform.windowWidth / 3f
 

@@ -363,6 +363,7 @@ actual open class View{
         val animatorSet = animation.toAnimator(getWidget())
         val widget = WeakReference<android.view.View>(mWidget)
         animatorSet.addListener(object : Animator.AnimatorListener{
+
             override fun onAnimationRepeat(animation: Animator?) {
             }
 

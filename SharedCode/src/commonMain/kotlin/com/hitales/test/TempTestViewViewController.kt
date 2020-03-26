@@ -3,12 +3,13 @@ package com.hitales.test
 import com.hitales.ui.*
 import com.hitales.ui.layout.flex.FlexLayoutParams
 
-open class TempTestViewController : BasicController() {
+open class TempTestViewViewController : BasicViewController() {
 
     val itemWidth = Platform.windowWidth / 3f
 
 
     override fun onCreate() {
+        super.onCreate()
         var lp = FlexLayoutParams()
         lp.width = itemWidth
         lp.height = itemWidth

@@ -19,8 +19,6 @@ expect class Platform {
         val windowHeight:Float
         fun getInstance() : Platform
         val os:String
-        fun runWithRootController(controller: Controller)
-//        fun getCurrentController() : Controller
     }
 
 

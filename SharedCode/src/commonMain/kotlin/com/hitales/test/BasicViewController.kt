@@ -1,15 +1,15 @@
 package com.hitales.test
 
-import com.hitales.ui.Controller
 import com.hitales.ui.Layout
 import com.hitales.ui.Platform
 import com.hitales.ui.View
+import com.hitales.ui.ViewController
 import com.hitales.ui.layout.flex.FlexDirection
 import com.hitales.ui.layout.flex.FlexLayout
 import com.hitales.ui.layout.flex.FlexLayoutParams
 import com.hitales.utils.EdgeInsets
 
-open class BasicController : Controller() {
+open class BasicViewController : ViewController() {
 
     override fun createLayout(): Layout {
         val l = FlexLayoutParams()

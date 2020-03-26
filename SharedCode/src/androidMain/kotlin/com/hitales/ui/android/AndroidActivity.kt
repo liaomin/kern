@@ -29,11 +29,12 @@ open class AndroidActivity : FragmentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mDelegate?.onDestory()
+        mDelegate?.onDestroy()
     }
 
     override fun onBackPressed() {
-        if(mDelegate != null && mDelegate!!.onBackPressed()){
+        val delegate = mDelegate
+        if(delegate != null && delegate.onBackPressed()){
             return
         }
         super.onBackPressed()

@@ -9,7 +9,6 @@ import android.widget.FrameLayout
 import com.hitales.ui.android.AndroidActivity
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.NotificationCenter
-import com.hitales.utils.Stack
 
 //class ControllerFragment(val controller: Controller) : AndroidFragment(){
 //
@@ -56,7 +55,7 @@ actual class Platform : ActivityDelegate{
         }
 
         fun init(rootActivity: AndroidActivity):ActivityDelegate{
-            platform?.onDestory()
+            platform?.onDestroy()
             platform = Platform(rootActivity)
             return  platform!!
         }
@@ -64,10 +63,6 @@ actual class Platform : ActivityDelegate{
 
         fun getApplication():Application{
             return platform!!.application
-        }
-
-        actual fun runWithRootController(controller: Controller) {
-            platform?.runWithRootController(controller)
         }
 
         actual var debug: Boolean = false
@@ -83,18 +78,6 @@ actual class Platform : ActivityDelegate{
 
     val rootView:FrameLayout
 
-    private val stack = Stack<Controller>()
-
-    private fun cleanStack(){
-        rootView.removeAllViews()
-        stack.forEach {
-            it.onPause()
-            it.onDestroy()
-        }
-        stack.clear()
-    }
-
-
     private constructor(rootActivity: AndroidActivity){
         rootView = FrameLayout(rootActivity)
         rootView.clipChildren = false
@@ -103,53 +86,33 @@ actual class Platform : ActivityDelegate{
         val dm = application.resources.displayMetrics
         windowWidth = PixelUtil.toDIPFromPixel( dm.widthPixels.toFloat(),dm)
         windowHeight = PixelUtil.toDIPFromPixel( dm.heightPixels.toFloat(),dm)
+        Screen.init(windowWidth,windowHeight)
         rootActivity.setContentView(rootView)
-
-        NotificationCenter.getInstance().addObserver(Controller.NOTIFY_CONTROLLER_PUSH,this::pushNotify)
-        NotificationCenter.getInstance().addObserver(Controller.NOTIFY_CONTROLLER_POP,this::popNotify)
     }
 
-    fun pushNotify(any: Any?){
-        if(any != null && any is Controller){
-            val top = stack.peek()
-            if(top != null){
-                any.parent = top
-                rootView.removeAllViews()
-            }
-            any.onCreate()
-            any.onResume()
-            rootView.addView(any.view.getWidget(),FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT))
+    fun addView(view:Any? = null){
+        if(view != null && view is View){
+            rootView.addView(view.mWidget)
         }
     }
 
-    fun popNotify(any: Any?){
-        if(any != null && any is Controller){
-            val top = stack.peek()
-            if(any === top && stack.size() > 1){
-                val o = stack.pop()
-                rootView.removeAllViews()
-                if(o != null){
-                    o.onPause()
-                    o.onDestroy()
-                }
-                val  v = stack.peek()?.view
-                if(v != null){
-                    rootView.addView(v.getWidget(),FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT))
-                }
-            }
+    fun removeView(view:Any? = null){
+        if(view != null && view is View){
+            rootView.removeView(view.mWidget)
         }
     }
 
-
-    fun runWithRootController(controller: Controller) {
-        cleanStack()
-        pushNotify(controller)
+    fun removeAllAndAddView(view:Any? = null){
+        rootView.removeAllViews()
+        if(view != null && view is View){
+            val v = view.mWidget
+            rootView.addView(view.mWidget)
+        }
     }
 
     override fun onBackPressed(): Boolean {
-        val top = stack.peek()
-        if(top != null){
-            return top.onBackPressed()
+        if(Screen.getInstsance().window.onBackPressed()){
+            return true
         }
         return false
     }
@@ -159,19 +122,25 @@ actual class Platform : ActivityDelegate{
     }
 
     override fun onCreate() {
+        NotificationCenter.getInstance().addObserver(Window.NOTIFY_KEY_REMOVE_VIEW,this::removeView)
+        NotificationCenter.getInstance().addObserver(Window.NOTIFY_KEY_ADD_VIEW,this::addView)
+        NotificationCenter.getInstance().addObserver(Window.NOTIFY_KEY_REMOVE_ALL_AND_ADD_VIEW,this::removeAllAndAddView)
         disableAPIDialog()
     }
 
     override fun onResume() {
-        stack.peek()?.onResume()
+        Screen.getInstsance().window.onResume()
     }
 
     override fun onPause() {
-        stack.peek()?.onPause()
+        Screen.getInstsance().window.onPause()
     }
 
-    override fun onDestory() {
-       cleanStack()
+    override fun onDestroy() {
+        NotificationCenter.getInstance().removeObserver(Window.NOTIFY_KEY_REMOVE_VIEW,this::removeView)
+        NotificationCenter.getInstance().removeObserver(Window.NOTIFY_KEY_ADD_VIEW,this::addView)
+        NotificationCenter.getInstance().removeObserver(Window.NOTIFY_KEY_REMOVE_ALL_AND_ADD_VIEW,this::removeAllAndAddView)
+        Screen.getInstsance().window.onDestroy()
     }
 
     private fun disableAPIDialog() {
