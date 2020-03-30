@@ -229,6 +229,7 @@ class Background : StateListDrawable {
             canvas.save()
         }
         try {
+            //TODO use NinePath draw bitmap
             onDraw(canvas,width,height)
         }catch (e:Exception){
             e.printStackTrace()
@@ -279,14 +280,14 @@ class Background : StateListDrawable {
 
         mPaint.reset()
         mPaint.xfermode = null
-        var borderLeftWidth = Math.min(PixelUtil.toPixelFromDIP(borderLeftWidth).toFloat(),halfWidth)
-        var borderTopWidth =  Math.min(PixelUtil.toPixelFromDIP(borderTopWidth).toFloat(),halfHeight)
-        var borderRightWidth = Math.min(PixelUtil.toPixelFromDIP(borderRightWidth).toFloat(),halfWidth)
-        var borderBottomWidth = Math.min(PixelUtil.toPixelFromDIP(borderBottomWidth).toFloat(),halfHeight)
-        var borderTopLeftRadius = Math.min(PixelUtil.toPixelFromDIP(borderTopLeftRadius).toFloat(),maxRadius)
-        var borderTopRightRadius = Math.min(PixelUtil.toPixelFromDIP(borderTopRightRadius).toFloat(),maxRadius)
-        var borderBottomRightRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomRightRadius).toFloat(),maxRadius)
-        var borderBottomLeftRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomLeftRadius).toFloat(),maxRadius)
+        var borderLeftWidth = Math.min(PixelUtil.toPixelFromDIP(borderLeftWidth),halfWidth)
+        var borderTopWidth =  Math.min(PixelUtil.toPixelFromDIP(borderTopWidth),halfHeight)
+        var borderRightWidth = Math.min(PixelUtil.toPixelFromDIP(borderRightWidth),halfWidth)
+        var borderBottomWidth = Math.min(PixelUtil.toPixelFromDIP(borderBottomWidth),halfHeight)
+        var borderTopLeftRadius = Math.min(PixelUtil.toPixelFromDIP(borderTopLeftRadius),maxRadius)
+        var borderTopRightRadius = Math.min(PixelUtil.toPixelFromDIP(borderTopRightRadius),maxRadius)
+        var borderBottomRightRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomRightRadius),maxRadius)
+        var borderBottomLeftRadius = Math.min(PixelUtil.toPixelFromDIP(borderBottomLeftRadius),maxRadius)
         val backgroundColor = getCurrentColor()
 
         if(haveShadow()){

@@ -17,6 +17,8 @@ actual open class Button :  com.hitales.ui.TextView {
 
     actual constructor(text: CharSequence?, layoutParams: LayoutParams):super(text,layoutParams) {
         padding = EdgeInsets(5f,5f,5f,5f)
+        setTextColor(Colors.WHITE)
+        setBackgroundColor(Colors.BLUE)
     }
 
     override fun createWidget(): android.widget.Button {

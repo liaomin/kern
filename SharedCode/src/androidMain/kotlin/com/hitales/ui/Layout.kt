@@ -86,7 +86,7 @@ actual open class Layout : View {
         frame.height = outSize.height
     }
 
-    override fun  measure(widthSpace: Float, widthMode: MeasureMode, heightSpace: Float, heightMode: MeasureMode, outSize: Size) {
+    override fun measure(widthSpace: Float, widthMode: MeasureMode, heightSpace: Float, heightMode: MeasureMode, outSize: Size) {
         val maxWidth = 0f
         val maxHeight = 0f
         val padding = this.padding
@@ -118,6 +118,8 @@ actual open class Layout : View {
         }
     }
 
+    fun onMeasured(){
 
+    }
 
 }

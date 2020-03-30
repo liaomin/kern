@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Intent
 import android.os.Build
 import android.util.DisplayMetrics
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.hitales.ui.android.AndroidActivity
 import com.hitales.ui.utils.PixelUtil
@@ -90,28 +91,44 @@ actual class Platform : ActivityDelegate{
         rootActivity.setContentView(rootView)
     }
 
-    fun addView(view:Any? = null){
-        if(view != null && view is View){
-            rootView.addView(view.mWidget)
+    fun addView(args:Array<out Any?>){
+        if(args != null && args.isNotEmpty()){
+            val view = args[0]
+            var index = -1
+            if(args.size > 1){
+                val i = args[1]
+                if(i is Int){
+                    index = i
+                }
+            }
+            if(view != null && view is View){
+                rootView.addView(view.mWidget,index,ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT))
+            }
+        }
+
+    }
+
+    fun removeView(args:Array<out Any?>){
+        if(args != null && args.isNotEmpty()){
+            val view = args[0]
+            if(view != null && view is View){
+                rootView.removeView(view.mWidget)
+            }
         }
     }
 
-    fun removeView(view:Any? = null){
-        if(view != null && view is View){
-            rootView.removeView(view.mWidget)
-        }
-    }
-
-    fun removeAllAndAddView(view:Any? = null){
+    fun setRootView(args:Array<out Any?>){
         rootView.removeAllViews()
-        if(view != null && view is View){
-            val v = view.mWidget
-            rootView.addView(view.mWidget)
+        if(args != null && args.isNotEmpty()){
+            val view = args[0]
+            if(view is View){
+                rootView.addView(view.mWidget,ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT))
+            }
         }
     }
 
     override fun onBackPressed(): Boolean {
-        if(Screen.getInstsance().window.onBackPressed()){
+        if(Screen.getInstance().window.onBackPressed()){
             return true
         }
         return false
@@ -124,23 +141,23 @@ actual class Platform : ActivityDelegate{
     override fun onCreate() {
         NotificationCenter.getInstance().addObserver(Window.NOTIFY_KEY_REMOVE_VIEW,this::removeView)
         NotificationCenter.getInstance().addObserver(Window.NOTIFY_KEY_ADD_VIEW,this::addView)
-        NotificationCenter.getInstance().addObserver(Window.NOTIFY_KEY_REMOVE_ALL_AND_ADD_VIEW,this::removeAllAndAddView)
+        NotificationCenter.getInstance().addObserver(Window.NOTIFY_KEY_SET_ROOT_VIEW,this::setRootView)
         disableAPIDialog()
     }
 
     override fun onResume() {
-        Screen.getInstsance().window.onResume()
+        Screen.getInstance().window.onResume()
     }
 
     override fun onPause() {
-        Screen.getInstsance().window.onPause()
+        Screen.getInstance().window.onPause()
     }
 
     override fun onDestroy() {
         NotificationCenter.getInstance().removeObserver(Window.NOTIFY_KEY_REMOVE_VIEW,this::removeView)
         NotificationCenter.getInstance().removeObserver(Window.NOTIFY_KEY_ADD_VIEW,this::addView)
-        NotificationCenter.getInstance().removeObserver(Window.NOTIFY_KEY_REMOVE_ALL_AND_ADD_VIEW,this::removeAllAndAddView)
-        Screen.getInstsance().window.onDestroy()
+        NotificationCenter.getInstance().removeObserver(Window.NOTIFY_KEY_SET_ROOT_VIEW,this::setRootView)
+        Screen.getInstance().window.onDestroy()
     }
 
     private fun disableAPIDialog() {

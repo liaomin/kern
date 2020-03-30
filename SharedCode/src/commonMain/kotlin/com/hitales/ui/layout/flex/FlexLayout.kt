@@ -114,12 +114,6 @@ open class FlexLayout : CustomLayout<FlexLayoutParams> {
         var h = heightSpace
         var wMode = widthMode
         var hMode = heightMode
-        if(wMode == MeasureMode.EXACTLY){
-            wMode = MeasureMode.AT_MOST
-        }
-        if(hMode == MeasureMode.EXACTLY){
-            hMode = MeasureMode.AT_MOST
-        }
 
         if(flexDirection  == FlexDirection.ROW || flexDirection == FlexDirection.ROW_REVERSE){
             if (flexWarp == FlexWarp.NO_WARP) {

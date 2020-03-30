@@ -37,27 +37,6 @@ actual open class View{
     var mBackground: Background? = null
 
     actual var delegate:WeakReference<ViewDelegate>? = null
-        set(value) {
-            field = value
-            if(value != null){
-                mWidget.setOnClickListener{
-                    onPressListener?.invoke(this)
-                    delegate?.get()?.onPress(this)
-                }
-                mWidget.setOnLongClickListener{
-                    onLongPressListener?.invoke(this)
-                    delegate?.get()?.onLongPress(this)
-                    return@setOnLongClickListener true
-                }
-            }else {
-                if(onPressListener == null){
-                    mWidget.setOnClickListener(null)
-                }
-                if(onLongPressListener == null){
-                    mWidget.setOnLongClickListener(null)
-                }
-            }
-        }
 
     var innerPadding : EdgeInsets? = null
         set(value) {
@@ -182,6 +161,15 @@ actual open class View{
         mWidget.tag = this
         mWidget.setBackgroundColor(mBackgroundColor)
         this.layoutParams = layoutParams
+        mWidget.setOnClickListener{
+            onPressListener?.invoke(this)
+            delegate?.get()?.onPress(this)
+        }
+        mWidget.setOnLongClickListener{
+            onLongPressListener?.invoke(this)
+            delegate?.get()?.onLongPress(this)
+            return@setOnLongClickListener true
+        }
     }
 
     open fun getWidget(): android.view.View {
@@ -310,19 +298,36 @@ actual open class View{
         }
     }
 
-
-    /**
-     * measure view width and height
-     * @param widthSpace 最大宽度  如果小于等于0返回0
-     * @param widthMode
-     * @param heightSpace 最大高度  如果小于等于0返回0
-     * @param outSize 获取计算出来的宽高
-     */
     actual open fun measure(widthSpace: Float,widthMode:MeasureMode, heightSpace: Float,heightMode:MeasureMode,outSize: Size){
         mWidget.measure(getMeasureWidth(widthSpace,widthMode), getMeasureWidth(heightSpace,heightMode))
-        val measuredWidth = mWidget.measuredWidth
-        val measuredHeight = mWidget.measuredHeight
-        outSize.set(PixelUtil.toDIPFromPixel(measuredWidth.toFloat()), PixelUtil.toDIPFromPixel(measuredHeight.toFloat()))
+        var measuredWidth = mWidget.measuredWidth.toFloat()
+        var measuredHeight = mWidget.measuredHeight.toFloat()
+        val inner = innerPadding
+        if(inner != null && this.javaClass !== com.hitales.ui.View::class.java){
+            measuredWidth = measuredWidth + inner.left - inner.right
+            measuredHeight = measuredHeight + inner.top - inner.bottom
+        }
+        outSize.set(PixelUtil.toDIPFromPixel(measuredWidth), PixelUtil.toDIPFromPixel(measuredHeight))
+    }
+
+    actual open fun onLayout() {
+        if(!isHidden){
+            var l = PixelUtil.toPixelFromDIP(frame.x)
+            var t = PixelUtil.toPixelFromDIP(frame.y)
+            val width = PixelUtil.toPixelFromDIP(frame.width)
+            val height = PixelUtil.toPixelFromDIP(frame.height)
+            mBackground?.setOffsetSize(width,height)
+            var r = l + width
+            var b = t + height
+            val inner = innerPadding
+            if(inner != null){
+                l += inner.left.toInt()
+                t += inner.top.toInt()
+                r += inner.right.toInt()
+                b += inner.bottom.toInt()
+            }
+            mWidget.layout(l.toInt(), t.toInt(), r.toInt(), b.toInt())
+        }
     }
 
     open fun calculatePadding(){
@@ -492,26 +497,6 @@ actual open class View{
 
     actual fun getShadowRadius(): Float {
         return mBackground?.shadowRadius ?: 0f
-    }
-
-    actual open fun onLayout() {
-        if(!isHidden){
-            var l = PixelUtil.toPixelFromDIP(frame.x)
-            var t = PixelUtil.toPixelFromDIP(frame.y)
-            val width = PixelUtil.toPixelFromDIP(frame.width)
-            val height = PixelUtil.toPixelFromDIP(frame.height)
-            mBackground?.setOffsetSize(width,height)
-            var r = l + width
-            var b = t + height
-            val inner = innerPadding
-            if(inner != null){
-                l += inner.left.toInt()
-                t += inner.top.toInt()
-                r += inner.right.toInt()
-                b += inner.bottom.toInt()
-            }
-            mWidget.layout(l.toInt(), t.toInt(), r.toInt(), b.toInt())
-        }
     }
 
     actual open fun onDraw(){

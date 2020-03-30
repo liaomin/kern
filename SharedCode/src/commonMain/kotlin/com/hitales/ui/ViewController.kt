@@ -19,7 +19,7 @@ open class ViewController(var title:String? = null) {
 
     var tag:Any? = null
 
-    var view:Layout
+    var view:Layout? = null
 
     var enterAnimation:Animation? = null
         set(value) {
@@ -34,7 +34,6 @@ open class ViewController(var title:String? = null) {
     var window:WeakReference<Window>? = null
 
     init {
-        view = createLayout()
         flag = FLAG_PAUSE or FLAG_DESTROY
     }
 
@@ -45,6 +44,7 @@ open class ViewController(var title:String? = null) {
     fun create(){
         if(flag and FLAG_DESTROY == FLAG_DESTROY){
             flag = flag and FLAG_DESTROY.inv()
+            view = createLayout()
             onCreate()
         }
     }
@@ -73,6 +73,7 @@ open class ViewController(var title:String? = null) {
     fun destroy(){
         if(flag and FLAG_DESTROY != FLAG_DESTROY){
             flag = flag or FLAG_DESTROY
+            view = null
             onDestroy()
         }
     }

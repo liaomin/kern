@@ -84,7 +84,7 @@ abstract class FlexCalculator {
         val spendWidth = outSize.width
         val spendHeight = outSize.height
 
-        adjustChildren(layout,direction,commonChildren, frameWidth,wMode, frameHeight,hMode,spendWidth,spendHeight,paddingLeft, paddingTop, paddingRight, paddingBottom, outSize)
+        adjustChildren(layout,direction,commonChildren, widthSpace,widthMode, heightSpace,heightMode,spendWidth,spendHeight,paddingLeft, paddingTop, paddingRight, paddingBottom, outSize)
 
         layoutAbsolute(absoluteChildren,outSize.width,outSize.height)
     }
@@ -145,12 +145,9 @@ abstract class FlexCalculator {
                 if(layoutParams.flag and FlexLayoutParams.FLAG_MIN_WIDTH_MASK == FlexLayoutParams.FLAG_MIN_WIDTH_MASK && exactlyWidth < layoutParams.minWidth){
                     exactlyWidth = layoutParams.minWidth
                 }
-                val temp = layoutParams.width
-                layoutParams.width = exactlyWidth
-                view.measure(temp,MeasureMode.EXACTLY,maxHeight, MeasureMode.AT_MOST,outSize)
+                view.measure(exactlyWidth,MeasureMode.EXACTLY,maxHeight, MeasureMode.AT_MOST,outSize)
                 frame.width = outSize.width
                 frame.height = outSize.height
-                layoutParams.width = temp
             }else{
                 var exactlyHeight = oneHeight * layoutParams.flex
                 if(margin != null){
@@ -165,12 +162,9 @@ abstract class FlexCalculator {
                 if(layoutParams.flag and FlexLayoutParams.FLAG_MIN_HEIGHT_MASK ==  FlexLayoutParams.FLAG_MIN_HEIGHT_MASK && exactlyHeight < layoutParams.minHeight){
                     exactlyHeight = layoutParams.minWidth
                 }
-                val temp = layoutParams.height
-                layoutParams.height = exactlyHeight
-                view.measure(maxWidth,MeasureMode.AT_MOST,temp,MeasureMode.EXACTLY, outSize)
+                view.measure(maxWidth,MeasureMode.AT_MOST,exactlyHeight,MeasureMode.EXACTLY, outSize)
                 frame.width = outSize.width
                 frame.height = outSize.height
-                layoutParams.height = temp
             }
         }
     }

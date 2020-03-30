@@ -17,7 +17,7 @@ class Screen {
 
         private var _instsance:Screen? = null
 
-        fun getInstsance():Screen{
+        fun getInstance():Screen{
             if(Platform.debug && _instsance == null){
                 throw RuntimeException("framework don't call init method")
             }

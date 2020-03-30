@@ -22,27 +22,32 @@ class MainActivity : AndroidActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         main()
-//        mDelegate = Platform.init(this)
-//        mDelegate?.onCreate()
 
-
-
-//        var f1 = F1()
-//        addFragment(f1)
+//        val image = Image.named("2.jpg")
 //
-//        val delay = 3000L
-//
-//        Timer.schedule(delay){
-//            addFragment(F2())
-//            Timer.schedule(delay){
-//                addFragment(F3())
-//                Timer.schedule (delay){
-//                    popTo(f1.index)
-//                }
-//            }
+//        val l = FrameLayout(this)
+//        var offsetX = 100
+//        var offsetY = 0
+//        for (i in 0 until 100){
+//            val imageView2 = com.hitales.ui.ImageView()
+//            val view = imageView2.getWidget()
+//            imageView2.setBorderRadius(30f)
+//            imageView2.setShadow(Colors.RED,0f,0f,0f)
+//            imageView2.setBackgroundColor(Colors.BLUE)
+//            view.setImageBitmap(image?.bitmap)
+//            val lp = FrameLayout.LayoutParams(800,800)
+//            lp.leftMargin = offsetX
+//            lp.topMargin = offsetY
+//            offsetY += 800
+//            l.addView(view,lp)
 //        }
+//
+//        val s = NestedScrollView(this)
+//        s.clipChildren = false
+//        l.clipChildren = false
+//        s.addView(l)
+//        setContentView(s)
 
-//        supportFragmentManager.beginTransaction().add(R.id.root,F1(),"").addToBackStack("dw").commit()
 
     }
 
@@ -56,16 +61,16 @@ class MainActivity : AndroidActivity() {
                 )
                 startActivityForResult(intent, 1234)
             }else{
-//                OverlayView.showOverlay(this)
+                OverlayView.showOverlay(this)
             }
         } else {
-//            OverlayView.showOverlay(this)
+            OverlayView.showOverlay(this)
         }
     }
 
     override fun onPause() {
         super.onPause()
-//        windowManager.removeView(OverlayView.instance)
+        windowManager.removeView(OverlayView.instance)
     }
 
     override fun onDestroy() {

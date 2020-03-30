@@ -7,9 +7,9 @@ import com.hitales.utils.WeakReference
 class Window {
 
     companion object{
-        const val NOTIFY_KEY_REMOVE_ALL_AND_ADD_VIEW = "NOTIFY_KEY_REMOVE_ALL_AND_ADD_VIEW"
-        const val NOTIFY_KEY_ADD_VIEW = "NOTIFY_KEY_REPLACE_VIEW"
-        const val NOTIFY_KEY_REMOVE_VIEW = "NOTIFY_KEY_REPLACE_VIEW"
+        const val NOTIFY_KEY_SET_ROOT_VIEW = "__NOTIFY_KEY_SET_ROOT_VIEW__"
+        const val NOTIFY_KEY_ADD_VIEW = "__NOTIFY_KEY_ADD_VIEW__"
+        const val NOTIFY_KEY_REMOVE_VIEW = "__NOTIFY_KEY_REMOVE_VIEW__"
     }
 
     var width:Float
@@ -42,7 +42,7 @@ class Window {
                 value.resume()
                 viewControllerStack.append(value)
             }
-            NotificationCenter.getInstance().notify(NOTIFY_KEY_REMOVE_ALL_AND_ADD_VIEW,rootViewController?.view)
+            NotificationCenter.getInstance().notify(NOTIFY_KEY_SET_ROOT_VIEW,rootViewController?.view)
         }
 
 
@@ -51,12 +51,13 @@ class Window {
         val last = viewControllerStack.last()
         viewController.window = WeakReference(this)
         viewControllerStack.append(viewController)
-        NotificationCenter.getInstance().notify(NOTIFY_KEY_ADD_VIEW,viewController.view)
         viewController.create()
         viewController.resume()
-        if(ani != null){
-            viewController.view.startAnimation(ani){
+        NotificationCenter.getInstance().notify(NOTIFY_KEY_ADD_VIEW,viewController.view)
+        if(ani != null && viewController.view != null){
+            viewController.view!!.startAnimation(ani){
                 if(last != null){
+                    last.pause()
                     NotificationCenter.getInstance().notify(NOTIFY_KEY_REMOVE_VIEW,last.view)
                 }
                 completion?.invoke()
@@ -74,19 +75,20 @@ class Window {
         if(stackSize > 1){
             var pop = viewControllerStack.pop()!!
             var last = viewControllerStack.last()!!
+            NotificationCenter.getInstance().notify(NOTIFY_KEY_ADD_VIEW,last.view,0)
             val ani = animation ?: last.exitAnimation ?: defaultExitAnimation
-            if(ani != null){
-                pop.view.startAnimation(ani){
+            if(ani != null && pop.view != null){
+                pop.view!!.startAnimation(ani){
                     last.resume()
+                    NotificationCenter.getInstance().notify(NOTIFY_KEY_REMOVE_VIEW,pop.view)
                     pop.pause()
                     pop.destroy()
-                    NotificationCenter.getInstance().notify(NOTIFY_KEY_REMOVE_VIEW,pop.view)
                 }
             }else{
                 last.resume()
+                NotificationCenter.getInstance().notify(NOTIFY_KEY_REMOVE_VIEW,pop.view)
                 pop.pause()
                 pop.destroy()
-                NotificationCenter.getInstance().notify(NOTIFY_KEY_REMOVE_VIEW,pop.view)
             }
 
         }

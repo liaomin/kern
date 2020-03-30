@@ -20,7 +20,7 @@ class AndroidImageView : ImageView {
         val bg = mView.mBackground
         if(bg != null && (bg.haveBorderRadius() || bg.shadowRadius >= 0f)){
             val saveCount = canvas.save()
-            canvas.clipPath(bg.getOuterPath(canvas.width.toFloat(),canvas.height.toFloat()))
+            canvas.clipPath(bg.getOuterPath(width.toFloat(),height.toFloat()))
             super.onDraw(canvas)
             canvas.restoreToCount(saveCount)
         }else{

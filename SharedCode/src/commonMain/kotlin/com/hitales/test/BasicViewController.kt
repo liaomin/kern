@@ -1,23 +1,16 @@
 package com.hitales.test
 
 import com.hitales.ui.Layout
-import com.hitales.ui.Platform
+import com.hitales.ui.ScrollView
 import com.hitales.ui.View
 import com.hitales.ui.ViewController
-import com.hitales.ui.layout.flex.FlexDirection
-import com.hitales.ui.layout.flex.FlexLayout
-import com.hitales.ui.layout.flex.FlexLayoutParams
-import com.hitales.utils.EdgeInsets
 
 open class BasicViewController : ViewController() {
 
     override fun createLayout(): Layout {
-        val l = FlexLayoutParams()
-        l.width = Platform.windowWidth
-        l.height = Platform.windowHeight - 30
-        val scrollView = FlexLayout(l)
-        scrollView.padding = EdgeInsets.value(10f)
-        scrollView.flexDirection = FlexDirection.COLUMN
+        val scrollView = ScrollView()
+//        scrollView.padding = EdgeInsets.value(10f)
+//        scrollView.flexDirection = FlexDirection.COLUMN
 //        scrollView.flexWarp = FlexWarp.WARP
 //        scrollView.justifyContent = JustifyContent.CENTER
 //        scrollView.alignItems = AlignItems.CENTER
@@ -26,6 +19,6 @@ open class BasicViewController : ViewController() {
     }
 
     fun addView(view: View){
-        this.view.addSubView(view)
+        this.view?.addSubView(view)
     }
 }

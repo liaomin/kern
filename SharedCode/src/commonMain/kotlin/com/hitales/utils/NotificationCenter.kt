@@ -15,25 +15,28 @@ class NotificationCenter {
         }
     }
 
-    private val observers = HashMap<Any,LinkedList<((value:Any?)->Unit)>>()
+    private val observers = HashMap<Any,LinkedList<((args:Array<out Any?>)->Unit)>>()
 
-    fun addObserver(key:Any,block:((value:Any?)->Unit)){
-        getObserversForKey(key).append(block)
+    fun addObserver(key:Any,block:((args:Array<out Any?>)->Unit)){
+        val list = getObserversForKey(key)
+        list.append(block)
     }
 
-    fun removeObserver(key:Any,block:((value:Any?)->Unit)){
-        getObserversForKey(key).remove(block)
+    fun removeObserver(key:Any,block:((args:Array<out Any?>)->Unit)){
+        val list = getObserversForKey(key)
+        list.remove(block)
     }
 
 
-    fun notify(key:Any,value: Any? = null){
-        getObserversForKey(key).forEach {
-            it(value)
+    fun notify(key:Any,vararg args:Any?){
+        val list = getObserversForKey(key)
+        list.forEach {
+            it(args)
         }
     }
 
     @Synchronized
-    private fun getObserversForKey(key: Any):LinkedList<((value:Any?)->Unit)>{
+    private fun getObserversForKey(key: Any):LinkedList<((args:Array<out Any?>)->Unit)>{
         var list = observers[key]
         if(list == null){
             list = LinkedList()

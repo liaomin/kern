@@ -12,9 +12,6 @@ enum class Orientation{
 
 enum class ViewState(val value:Int) {
     NORMAL(0),
-    /**
-     * android 必须设置 setOnPressListener PRESSED状态才会生效
-     */
     PRESSED(1),
     FOCUSED(2),
     DISABLED(3),
@@ -46,28 +43,6 @@ interface ViewDelegate{
     fun onPress(view: View)
     fun onLongPress(view: View)
 }
-
-
-const val VIEW_ORIENTATION_VERTICAL: Int = 0
-
-const val VIEW_ORIENTATION_HORIZONTAL: Int = 1
-
-const val VIEW_STATE_NORMAL: Int = 0
-
-const val VIEW_STATE_PRESSED: Int = 1
-
-const val VIEW_STATE_FOCUSED: Int = 2
-
-const val VIEW_STATE_DISABLED: Int = 3
-
-const val VIEW_STATE_SELECTED: Int = 4
-
-const val VIEW_STYLE_BORDER_SOLID: Int = 0
-
-const val VIEW_STYLE_BORDER_DOTTED: Int = 1
-
-const val VIEW_STYLE_BORDER_DASHED: Int = 2
-
 
 expect open class View  {
 

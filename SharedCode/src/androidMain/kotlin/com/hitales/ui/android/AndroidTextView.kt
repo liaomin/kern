@@ -33,6 +33,7 @@ open class AndroidTextView(protected val mView: TextView) : AppCompatTextView(Pl
     fun disableAutoFontSizeToFit(){
         TextViewCompat.setAutoSizeTextTypeWithDefaults(this,TextViewCompat.AUTO_SIZE_TEXT_TYPE_NONE)
     }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         AndroidBridge.onAttachedToWindow(mView)
