@@ -9,10 +9,10 @@ class NotificationCenter {
 
     companion object {
 
-        private val instance_ =  NotificationCenter()
+        private val mInstance:NotificationCenter by lazy { NotificationCenter() }
 
         fun getInstance(): NotificationCenter {
-            return instance_
+            return mInstance
         }
     }
 
@@ -28,7 +28,6 @@ class NotificationCenter {
         val list = getObserversForKey(key)
         list.remove(block)
     }
-
 
     fun notify(key:Any,vararg args:Any?){
         val list = getObserversForKey(key)

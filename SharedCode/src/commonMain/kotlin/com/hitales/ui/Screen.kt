@@ -15,17 +15,17 @@ class Screen {
 
     companion object{
 
-        private var _instsance:Screen? = null
+        private var mInstance:Screen? = null
 
         fun getInstance():Screen{
-            if(Platform.debug && _instsance == null){
+            if(Platform.debug && mInstance == null){
                 throw RuntimeException("framework don't call init method")
             }
-            return _instsance!!
+            return mInstance!!
         }
 
         internal fun init(width: Float,height: Float){
-            _instsance = Screen(width,height)
+            mInstance = Screen(width,height)
         }
     }
 }
