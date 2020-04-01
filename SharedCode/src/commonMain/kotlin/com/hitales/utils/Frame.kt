@@ -1,12 +1,59 @@
 package com.hitales.utils
 
-open class Frame(var x:Float = 0f,var y:Float = 0f, var width:Float = 0f,var height:Float = 0f){
+open class Frame{
+
+    var x:Float = 0f
+        set(value) {
+            if(field != value){
+                changed = true
+            }
+            field = value
+        }
+
+    var y:Float = 0f
+        set(value) {
+            if(field != value){
+                changed = true
+            }
+            field = value
+        }
+
+    var width:Float = 0f
+        set(value) {
+            if(field != value){
+                changed = true
+            }
+            field = value
+        }
+
+    var height:Float = 0f
+        set(value) {
+            if(field != value){
+                changed = true
+            }
+            field = value
+        }
+
+    private var changed = true
+
+    constructor(x:Float = 0f,y:Float = 0f, width:Float = 0f,height:Float = 0f){
+        this.x = x
+        this.y = y
+        this.width = width
+        this.height = height
+    }
 
     companion object {
         fun identity():Frame{
             return Frame(0f,0f,0f,0f)
         }
         internal val invalid:Frame by lazy { Frame(0f,0f,0f,0f) }
+    }
+
+    fun isChanged():Boolean{
+        val temp = changed
+        changed = false
+        return temp
     }
 
     fun set(x:Float,y:Float,width: Float,height: Float):Frame{

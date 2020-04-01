@@ -10,6 +10,7 @@ open class ViewController(var title:String? = null) {
         const val FLAG_PAUSE = 1
         const val FLAG_DESTROY = 1 shl 1
         const val FLAG_VIEW_DID_LOAD = 1 shl 2
+        const val FLAG_VIEW_TRANSITION_ANIMATION = 1 shl 3
     }
 
     /**
@@ -21,11 +22,17 @@ open class ViewController(var title:String? = null) {
 
     var view:Layout? = null
 
+    var isShowTransitionAnimation:Boolean
+        get() = flag and FLAG_VIEW_TRANSITION_ANIMATION == FLAG_VIEW_TRANSITION_ANIMATION
+        set(value) {
+            flag = if(value) flag or FLAG_VIEW_TRANSITION_ANIMATION else flag and FLAG_VIEW_TRANSITION_ANIMATION.inv()
+        }
+
     var enterAnimation:Animation? = null
         set(value) {
             field = value
-            if(enterAnimation == null && value != null){
-                enterAnimation = value.reverse()
+            if(exitAnimation == null && value != null){
+                exitAnimation = value.reverse()
             }
         }
 

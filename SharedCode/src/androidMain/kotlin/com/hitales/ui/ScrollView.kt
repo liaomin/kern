@@ -64,9 +64,13 @@ actual open class ScrollView : FlexLayout {
      * default true
      */
     actual open var showScrollBar: Boolean
-        get() = mWidget.isVerticalScrollBarEnabled
+        get() = if(orientation == Orientation.VERTICAL) mWidget.isVerticalScrollBarEnabled else mWidget.isHorizontalScrollBarEnabled
         set(value) {
-            mWidget.isVerticalScrollBarEnabled = value
+            if(orientation == Orientation.VERTICAL){
+                mWidget.isVerticalScrollBarEnabled = value
+            }else{
+                mWidget.isHorizontalScrollBarEnabled = value
+            }
         }
 
     /**

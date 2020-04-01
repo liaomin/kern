@@ -89,15 +89,9 @@ actual open class View{
         }
         set(value) {
             if(Build.VERSION.SDK_INT >= 21){
-                mWidget.elevation = PixelUtil.toPixelFromDIP(value).toFloat()
+                mWidget.elevation = PixelUtil.toPixelFromDIP(value)
             }
             field = value
-        }
-
-    actual open var borderStyle:BorderStyle = BorderStyle.SOLID
-        set(value) {
-            field = value
-            mBackground?.setBorderStyle(value)
         }
 
     /**
@@ -223,13 +217,18 @@ actual open class View{
     }
 
     actual open fun setBorderWidth(borderWidth: Float) {
-        getOrCreateBackground().setBorderWidth(borderWidth,borderStyle)
+        getOrCreateBackground().setBorderWidth(borderWidth)
+    }
+
+    actual open fun setBorderStyle(style: BorderStyle) {
+        getOrCreateBackground().setBorderStyle(style)
+
     }
 
     actual open fun setBorderWidth(leftWidth: Float, topWidth: Float, rightWidth: Float, bottomWidth: Float
     ) {
         val background = getOrCreateBackground()
-        background.setBorderWidth(leftWidth, topWidth, rightWidth, bottomWidth,borderStyle)
+        background.setBorderWidth(leftWidth, topWidth, rightWidth, bottomWidth)
         this.checkLayerType()
     }
 
@@ -310,6 +309,10 @@ actual open class View{
         outSize.set(PixelUtil.toDIPFromPixel(measuredWidth), PixelUtil.toDIPFromPixel(measuredHeight))
     }
 
+    actual open fun onFrameChanged(){
+
+    }
+
     actual open fun onLayout() {
         if(!isHidden){
             var l = PixelUtil.toPixelFromDIP(frame.x)
@@ -327,6 +330,9 @@ actual open class View{
                 b += inner.bottom.toInt()
             }
             mWidget.layout(l.toInt(), t.toInt(), r.toInt(), b.toInt())
+            if(frame.isChanged()){
+                onFrameChanged()
+            }
         }
     }
 
@@ -510,4 +516,5 @@ actual open class View{
     actual open fun needDisplay(){
         mWidget.invalidate()
     }
+
 }

@@ -1,10 +1,12 @@
 package com.hitales.test
 
 import com.hitales.ui.*
-import com.hitales.ui.layout.flex.FlexLayoutParams
+import com.hitales.ui.layout.flex.*
 import com.hitales.utils.EdgeInsets
 
 open class TempTestViewViewController : BasicViewController() {
+
+
 
     val itemWidth = Platform.windowWidth / 3f
 
@@ -22,7 +24,7 @@ open class TempTestViewViewController : BasicViewController() {
 //        view.autoFocus = true
         view.setBorderRadius(itemWidth/2)
         view.setBorderWidth(10f)
-        view.borderStyle = BorderStyle.DASHED
+        view.setBorderStyle(BorderStyle.DASHED)
         view.setBorderColor(Colors.BLUE)
 //        view.singleLine = false
         addView(view)

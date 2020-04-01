@@ -548,12 +548,7 @@ class Background : StateListDrawable {
         setBorderColor(color,color,color,color)
     }
 
-    open fun setBorderColor(
-        leftColor: Int,
-        topColor: Int,
-        rightColor: Int,
-        bottomColor: Int
-    ) {
+    open fun setBorderColor(leftColor: Int, topColor: Int, rightColor: Int, bottomColor: Int) {
         borderLeftColor = leftColor
         borderTopColor = topColor
         borderRightColor = rightColor
@@ -561,13 +556,16 @@ class Background : StateListDrawable {
         invalidateSelf()
     }
 
-   open fun setBorderWidth(borderWidth: Float, borderStyle: BorderStyle) {
-       setBorderWidth(borderWidth,borderWidth,borderWidth,borderWidth,borderStyle)
+    fun setBorderWidth(borderWidth: Float) {
+        setBorderWidth(borderWidth,borderWidth,borderWidth,borderWidth,borderStyle)
     }
 
-   open fun setBorderWidth(leftWidth: Float, topWidth: Float, rightWidth: Float, bottomWidth: Float, borderStyle: BorderStyle
-    ) {
-       val changed = borderLeftWidth != leftWidth ||  borderTopWidth != topWidth || borderRightWidth != rightWidth || borderBottomWidth != bottomWidth
+    fun setBorderWidth(leftWidth: Float, topWidth: Float, rightWidth: Float, bottomWidth: Float) {
+        setBorderWidth(leftWidth,topWidth,rightWidth,bottomWidth,borderStyle)
+    }
+
+   open fun setBorderWidth(leftWidth: Float, topWidth: Float, rightWidth: Float, bottomWidth: Float, borderStyle: BorderStyle) {
+       val changed = borderLeftWidth != leftWidth ||  borderTopWidth != topWidth || borderRightWidth != rightWidth || borderBottomWidth != bottomWidth || this.borderStyle != borderStyle
        borderLeftWidth = leftWidth
        borderTopWidth = topWidth
        borderRightWidth = rightWidth
@@ -632,10 +630,10 @@ class Background : StateListDrawable {
 
 
     private fun getPathEffect():PathEffect?{
-        var top = PixelUtil.toPixelFromDIP(borderTopWidth).toFloat()
-        var right = PixelUtil.toPixelFromDIP(borderRightWidth).toFloat()
-        var bottom = PixelUtil.toPixelFromDIP(borderBottomWidth).toFloat()
-        var left = PixelUtil.toPixelFromDIP(borderLeftWidth).toFloat()
+        var top = PixelUtil.toPixelFromDIP(borderTopWidth)
+        var right = PixelUtil.toPixelFromDIP(borderRightWidth)
+        var bottom = PixelUtil.toPixelFromDIP(borderBottomWidth)
+        var left = PixelUtil.toPixelFromDIP(borderLeftWidth)
         when(borderStyle){
             BorderStyle.SOLID -> return null
             BorderStyle.DASHED -> return DashPathEffect(floatArrayOf(top*3,right*3,bottom*3,left*3),0f)

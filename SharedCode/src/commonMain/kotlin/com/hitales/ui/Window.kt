@@ -17,6 +17,12 @@ class Window {
     var height:Float
 
     var defaultEnterAnimation:Animation? = null
+        set(value) {
+            field = value
+            if(defaultExitAnimation == null && value != null){
+                defaultExitAnimation = value.reverse()
+            }
+        }
 
     var defaultExitAnimation:Animation? = null
 
@@ -45,17 +51,20 @@ class Window {
             NotificationCenter.getInstance().notify(NOTIFY_KEY_SET_ROOT_VIEW,rootViewController?.view)
         }
 
-
     fun pushViewController(viewController: ViewController,animation: Animation? = null,completion:(()->Unit)? = null){
         val ani = animation ?: viewController.enterAnimation ?: defaultEnterAnimation
         val last = viewControllerStack.last()
+        if(viewController == last) return
         viewController.window = WeakReference(this)
         viewControllerStack.append(viewController)
         viewController.create()
         viewController.resume()
+        val view = viewController.view
         NotificationCenter.getInstance().notify(NOTIFY_KEY_ADD_VIEW,viewController.view)
-        if(ani != null && viewController.view != null){
-            viewController.view!!.startAnimation(ani){
+        if(ani != null && view != null){
+            viewController.isShowTransitionAnimation = true
+            view.startAnimation(ani){
+                viewController.isShowTransitionAnimation = false
                 if(last != null){
                     last.pause()
                     NotificationCenter.getInstance().notify(NOTIFY_KEY_REMOVE_VIEW,last.view)
@@ -77,8 +86,11 @@ class Window {
             var last = viewControllerStack.last()!!
             NotificationCenter.getInstance().notify(NOTIFY_KEY_ADD_VIEW,last.view,0)
             val ani = animation ?: last.exitAnimation ?: defaultExitAnimation
-            if(ani != null && pop.view != null){
-                pop.view!!.startAnimation(ani){
+            val view = pop.view
+            if(ani != null && view != null){
+                pop.isShowTransitionAnimation = true
+                view.startAnimation(ani){
+                    pop.isShowTransitionAnimation = false
                     last.resume()
                     NotificationCenter.getInstance().notify(NOTIFY_KEY_REMOVE_VIEW,pop.view)
                     pop.pause()

@@ -48,7 +48,6 @@ class AndroidBridge {
                 val x = ev.x
                 val y = ev.y
                 if(ev.action == MotionEvent.ACTION_DOWN){
-                    val widget = mView.getWidget()
                     val width = PixelUtil.toPixelFromDIP(mView.frame.width)
                     val height = PixelUtil.toPixelFromDIP(mView.frame.height)
                     if( x < 0 || x > width   || y < 0 || y > height ){

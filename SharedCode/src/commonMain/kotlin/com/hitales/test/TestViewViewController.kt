@@ -24,7 +24,7 @@ open class TestViewViewController : BasicViewController() {
 //        view.autoFocus = true
         view.setBorderRadius(itemWidth/2)
         view.setBorderWidth(10f)
-        view.borderStyle = BorderStyle.DOTTED
+        view.setBorderStyle(BorderStyle.DOTTED)
         view.setBorderColor(Colors.BLUE)
         view.singleLine = false
         addView(view)

@@ -4,6 +4,8 @@ import com.hitales.ui.Layout
 import com.hitales.ui.ScrollView
 import com.hitales.ui.View
 import com.hitales.ui.ViewController
+import com.hitales.ui.layout.flex.AlignItems
+import com.hitales.ui.layout.flex.JustifyContent
 
 open class BasicViewController : ViewController() {
 
@@ -12,8 +14,8 @@ open class BasicViewController : ViewController() {
 //        scrollView.padding = EdgeInsets.value(10f)
 //        scrollView.flexDirection = FlexDirection.COLUMN
 //        scrollView.flexWarp = FlexWarp.WARP
-//        scrollView.justifyContent = JustifyContent.CENTER
-//        scrollView.alignItems = AlignItems.CENTER
+        scrollView.justifyContent = JustifyContent.CENTER
+        scrollView.alignItems = AlignItems.CENTER
 //        scrollView.setBackgroundColor(Colors.YELLOW)
         return scrollView
     }

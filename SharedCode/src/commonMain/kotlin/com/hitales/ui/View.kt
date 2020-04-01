@@ -66,11 +66,12 @@ expect open class View  {
 
     open var tag:Any?
 
+    /**
+     * android elevation
+     */
     open var elevation:Float
 
     open var isHidden:Boolean
-
-    open var borderStyle:BorderStyle
 
     /**
      * 透明度 0~1
@@ -95,6 +96,7 @@ expect open class View  {
 
     var superView:WeakReference<Layout>?
 
+    open fun onFrameChanged()
     open fun onLayout()
     open fun onDraw()
     open fun needLayout()
@@ -127,6 +129,7 @@ expect open class View  {
     open fun setBorderColor(color:Int)
     open fun setBorderColor(leftColor:Int,topColor: Int,rightColor:Int,bottomColor:Int)
     open fun setBorderWidth(borderWidth:Float)
+    open fun setBorderStyle(style: BorderStyle)
     open fun setBorderWidth(leftWidth:Float,topWidth: Float,rightWidth:Float,bottomWidth:Float)
     fun getLeftBorderWidth():Float
     fun getTopBorderWidth():Float

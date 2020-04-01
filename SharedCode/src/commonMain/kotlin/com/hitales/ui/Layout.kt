@@ -36,7 +36,6 @@ open class LayoutParams {
 }
 
 expect open class Layout : View {
-
     /**
      * clips children
      */
@@ -53,6 +52,7 @@ expect open class Layout : View {
     open fun removeAllSubViews()
 
     open fun measureChild(child: View,width:Float,widthMode: MeasureMode,height:Float,heightMode: MeasureMode,outSize: Size)
+
 }
 
 /**

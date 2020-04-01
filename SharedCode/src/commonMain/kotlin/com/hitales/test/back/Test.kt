@@ -37,8 +37,8 @@ package com.hitales.test.back
 ////        v.setBackgroundColor(Colors.BLUE)
 ////        v.setBackgroundColor(Colors.RED,ViewState.PRESSED)
 ////        v.setOnPressListener {
-////            this.push(BackgroundTestControllerTest())
-////        }
+//            this.push(BackgroundTestControllerTest())
+//        }
 //
 //        index++
 //        v  = Button("view border测试", Frame(10f,(buttonHeight+10)*index+10f, buttonWidth , buttonHeight))

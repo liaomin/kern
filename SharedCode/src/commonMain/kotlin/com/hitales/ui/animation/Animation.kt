@@ -27,7 +27,7 @@ open class Animation(var interpolator:BezierInterpolator = LinearInterpolator())
         get() { return weakDelegate?.get() }
         set(value) {
             if(value != null){
-                weakDelegate = WeakReference<AnimationDelegate>(value)
+                weakDelegate = WeakReference(value)
             }
         }
     /**
@@ -136,36 +136,44 @@ open class Animation(var interpolator:BezierInterpolator = LinearInterpolator())
      */
     var toScaleY = 1f
 
-    fun setFromTranslate(x:Float,y:Float){
+    var isDone = true
+
+    fun setFromTranslate(x:Float,y:Float):Animation{
         fromTranslateX = x
         fromTranslateY = y
+        return this
     }
 
-    fun setToTranslate(x:Float,y:Float){
+    fun setToTranslate(x:Float,y:Float):Animation{
         toTranslateX = x
         toTranslateY = y
+        return this
     }
 
-    fun setFromRotate(x:Float,y:Float,z:Float){
+    fun setFromRotate(x:Float,y:Float,z:Float = 0f):Animation{
         fromRotateX = x
         fromRotateY = y
         fromRotateZ = z
+        return this
     }
 
-    fun setToRotate(x:Float,y:Float,z:Float){
+    fun setToRotate(x:Float,y:Float,z:Float = 0f):Animation{
         toRotateX = x
         toRotateY = y
         toRotateZ = z
+        return this
     }
 
-    fun setFromScale(x:Float = 1f,y:Float = 1f){
+    fun setFromScale(x:Float = 1f,y:Float = 1f):Animation{
         fromScaleX = x
         fromScaleY = y
+        return this
     }
 
-    fun setToScale(x:Float = 1f,y:Float = 1f){
+    fun setToScale(x:Float = 1f,y:Float = 1f):Animation{
         toScaleX = x
         toScaleY = y
+        return this
     }
 
     fun reverse():Animation{

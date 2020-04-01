@@ -12,7 +12,9 @@ actual open class ImageView : com.hitales.ui.View {
     }
 
     override fun createWidget(): AndroidImageView {
-        return AndroidImageView(this)
+        val androidImageView = AndroidImageView(this)
+        androidImageView.scaleType =  ImageView.ScaleType.FIT_CENTER
+        return androidImageView
     }
 
     actual open var image: Image? = null
