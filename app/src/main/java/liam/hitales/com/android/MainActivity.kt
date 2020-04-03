@@ -14,6 +14,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.View
 import com.hitales.ui.android.AndroidActivity
 import main
 
@@ -22,6 +23,7 @@ class MainActivity : AndroidActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         main()
+        val w = View(this)
 
 //        val image = Image.named("2.jpg")
 //

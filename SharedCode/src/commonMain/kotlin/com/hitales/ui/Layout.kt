@@ -9,6 +9,11 @@ open class LayoutParams {
         internal const val FLAG_HEIGHT_MASK = 2
     }
 
+    constructor(width:Float = Float.NaN,height: Float =  Float.NaN){
+        this.width = width
+        this.height = height
+    }
+
     /**
      * 用位运算来提高效率，判断是否设置宽高的
      */
@@ -41,7 +46,7 @@ expect open class Layout : View {
      */
     open var clipsToBounds:Boolean
 
-    constructor(layoutParams: LayoutParams = LayoutParams())
+    constructor(layoutParams: LayoutParams? = null)
 
     val children:ArrayList<View>
 
@@ -60,7 +65,7 @@ expect open class Layout : View {
  */
 abstract class CustomLayout<T:LayoutParams> : Layout {
 
-    constructor(layoutParams: LayoutParams = LayoutParams()):super(layoutParams)
+    constructor(layoutParams: LayoutParams? = null):super(layoutParams)
 
     override fun addSubView(view: View, index: Int) {
         checkLayoutParams(view)

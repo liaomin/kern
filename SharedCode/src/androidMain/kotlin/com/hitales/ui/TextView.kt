@@ -20,7 +20,7 @@ actual open class TextView :  View {
     protected val textColorList = getDefaultColorList()
 
     actual open var text:CharSequence
-        get() = getWidget().text?:""
+        get() = getWidget().text?.toString()?:""
         set(value) {
             getWidget().text = value
             dirt()
@@ -53,7 +53,7 @@ actual open class TextView :  View {
             field = value
         }
 
-    actual constructor(text:CharSequence?,layoutParams: LayoutParams):super(layoutParams){
+    actual constructor(text:CharSequence?,layoutParams: LayoutParams?):super(layoutParams){
         val widget = getTextWidget()
         widget.text = text
         widget.setTextColor(textColorList)

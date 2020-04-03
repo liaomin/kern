@@ -50,7 +50,7 @@ actual open class View{
             calculatePadding()
         }
 
-    actual open var layoutParams:LayoutParams
+    actual open var layoutParams:LayoutParams?
         set(value) {
             field = value
             mWidget.requestLayout()
@@ -150,20 +150,11 @@ actual open class View{
     private var onLongPressListener:((view: com.hitales.ui.View)->Unit)? = null
 
 
-    actual constructor(layoutParams:LayoutParams) {
+    actual constructor(layoutParams:LayoutParams?) {
         mWidget = createWidget()
         mWidget.tag = this
         mWidget.setBackgroundColor(mBackgroundColor)
         this.layoutParams = layoutParams
-        mWidget.setOnClickListener{
-            onPressListener?.invoke(this)
-            delegate?.get()?.onPress(this)
-        }
-        mWidget.setOnLongClickListener{
-            onLongPressListener?.invoke(this)
-            delegate?.get()?.onLongPress(this)
-            return@setOnLongClickListener true
-        }
     }
 
     open fun getWidget(): android.view.View {
@@ -277,7 +268,6 @@ actual open class View{
 
             mWidget.setOnClickListener{
                 onPressListener?.invoke(this)
-                delegate?.get()?.onPress(this)
             }
         }else{
             mWidget.setOnClickListener(null)
@@ -289,7 +279,6 @@ actual open class View{
         if(listener != null){
             mWidget.setOnLongClickListener{
                 onLongPressListener?.invoke(this)
-                delegate?.get()?.onLongPress(this)
                 return@setOnLongClickListener true
             }
         }else{
@@ -310,7 +299,7 @@ actual open class View{
     }
 
     actual open fun onFrameChanged(){
-
+        delegate?.get()?.onFrameChanged(this)
     }
 
     actual open fun onLayout() {
@@ -503,10 +492,6 @@ actual open class View{
 
     actual fun getShadowRadius(): Float {
         return mBackground?.shadowRadius ?: 0f
-    }
-
-    actual open fun onDraw(){
-
     }
 
     actual open fun needLayout(){

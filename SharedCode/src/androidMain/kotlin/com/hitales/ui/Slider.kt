@@ -5,7 +5,7 @@ import com.hitales.ui.android.AndroidSlider
 
 actual open class Slider : View {
 
-    actual constructor(layoutParams: LayoutParams):super(layoutParams)
+    actual constructor(layoutParams: LayoutParams?):super(layoutParams)
 
     override fun createWidget(): android.view.View {
         return AndroidSlider(this)

@@ -5,7 +5,7 @@ import com.hitales.ui.android.AndroidImageView
 
 actual open class ImageView : com.hitales.ui.View {
 
-    actual constructor(layoutParams: LayoutParams) : super(layoutParams)
+    actual constructor(layoutParams: LayoutParams?) : super(layoutParams)
 
     override fun getWidget(): AndroidImageView {
         return super.getWidget() as AndroidImageView

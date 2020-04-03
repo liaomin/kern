@@ -1,12 +1,11 @@
 package com.hitales.test
 
 import com.hitales.ui.*
-import com.hitales.ui.layout.flex.*
+import com.hitales.ui.layout.flex.FlexLayoutParams
 import com.hitales.utils.EdgeInsets
+import com.hitales.utils.WeakReference
 
-open class TempTestViewViewController : BasicViewController() {
-
-
+open class TempTestViewViewController : BasicViewController(),TextInputDelegate {
 
     val itemWidth = Platform.windowWidth / 3f
 
@@ -16,6 +15,7 @@ open class TempTestViewViewController : BasicViewController() {
         lp.width = itemWidth
         lp.height = itemWidth
         var view = TextInput("单位",lp)
+        view.delegate = WeakReference(this)
 //        var view = View(lp)
         view.setBackgroundColor(Colors.RED)
         view.setTextColor(Colors.BLUE)
@@ -28,6 +28,23 @@ open class TempTestViewViewController : BasicViewController() {
         view.setBorderColor(Colors.BLUE)
 //        view.singleLine = false
         addView(view)
+
+
+        var view2 = TextInput("",lp)
+        view.nextInput = WeakReference(view2)
+        view2.setBackgroundColor(Colors.RED)
+        addView(view2)
+
+        var view3 = TextInput("",lp)
+        view3.setBackgroundColor(Colors.RED)
+        view2.nextInput = WeakReference(view3)
+        addView(view3)
+
+        var view4= TextInput("",lp)
+        view4.setBackgroundColor(Colors.RED)
+        view3.nextInput = WeakReference(view4)
+        addView(view4)
+
 
         val image = Image.named("1.jpg")
         val image2 = Image.named("2.jpg")
@@ -47,6 +64,26 @@ open class TempTestViewViewController : BasicViewController() {
             imageView2.setShadow(Colors.RED,20f,0f,0f)
             addView(imageView2)
         }
+    }
+
+    override fun onTextChanged(view: TextInput, s: CharSequence) {
+        println(s)
+    }
+
+    override fun onFocusChanged(view: TextInput, focused: Boolean) {
+
+    }
+
+    override fun onSelectionChanged(view: TextInput, selStart: Int, selEnd: Int) {
+
+    }
+
+    override fun shouldChangeText(view: TextInput, beforeText: CharSequence, start: Int, length: Int, replaceText: CharSequence): Boolean {
+        return true
+    }
+
+    override fun onFrameChanged(view: View) {
+
     }
 
 }

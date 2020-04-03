@@ -4,7 +4,7 @@ expect open class Button : TextView {
 
     open var isEnabled:Boolean
 
-    constructor(text:CharSequence? = null,layoutParams: LayoutParams = LayoutParams())
+    constructor(text:CharSequence? = null,layoutParams: LayoutParams? = null)
 
     open fun setBackgroundColor(color:Int,state: ViewState = ViewState.NORMAL)
 

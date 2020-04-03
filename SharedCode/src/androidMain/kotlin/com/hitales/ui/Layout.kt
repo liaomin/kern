@@ -16,7 +16,7 @@ actual open class Layout : View {
             }
         }
 
-    actual constructor(layoutParams: LayoutParams):super(layoutParams){
+    actual constructor(layoutParams: LayoutParams?):super(layoutParams){
             getWidget().clipChildren = true
 //        mWidget.isFocusable = true
 //        mWidget.isFocusableInTouchMode = true
@@ -69,7 +69,7 @@ actual open class Layout : View {
     actual open fun measureChild(child: View,width:Float,widthMode: MeasureMode,height:Float,heightMode: MeasureMode,outSize: Size){
         var maxWidth = width
         var maxHeight = height
-        val l = child.layoutParams
+        val l = child.layoutParams!!
         var wMode = widthMode
         var hMode = heightMode
         if(l.flag and LayoutParams.FLAG_WIDTH_MASK ==  LayoutParams.FLAG_WIDTH_MASK){
@@ -106,6 +106,7 @@ actual open class Layout : View {
             frame.x = originX
             frame.y = originY
         }
+        val layoutParams = this.layoutParams!!
         if(layoutParams.flag and LayoutParams.FLAG_WIDTH_MASK != LayoutParams.FLAG_WIDTH_MASK){
             outSize.width = maxWidth
         }else{

@@ -1,8 +1,19 @@
 package com.hitales.ui
 
+import com.hitales.utils.WeakReference
+
+interface TextInputDelegate : ViewDelegate {
+    fun onTextChanged(view: TextInput,s: CharSequence)
+    fun onFocusChanged(view: TextInput,focused: Boolean)
+    fun onSelectionChanged(view: TextInput,selStart: Int, selEnd: Int)
+    fun shouldChangeText(view: TextInput,beforeText: CharSequence,start:Int,length:Int,replaceText: CharSequence):Boolean
+}
+
 expect open class TextInput : TextView {
 
-    constructor(text:CharSequence? = null,layoutParams: LayoutParams = LayoutParams())
+    constructor(text:CharSequence? = null,layoutParams: LayoutParams? = null)
+
+    var nextInput:WeakReference<TextInput>?
 
     open var placeholder:CharSequence?
 

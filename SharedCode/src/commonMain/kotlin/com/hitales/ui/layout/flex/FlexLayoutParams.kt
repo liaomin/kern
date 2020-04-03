@@ -8,7 +8,7 @@ enum class LayoutPosition(val value:Int) {
     RELATIVE(2),
 }
 
-open class FlexLayoutParams : LayoutParams(){
+open class FlexLayoutParams : LayoutParams{
 
     companion object {
         internal const val FLAG_FLEX_MASK = 1 shl 3
@@ -21,6 +21,8 @@ open class FlexLayoutParams : LayoutParams(){
         internal const val FLAG_MIN_HEIGHT_MASK = 1 shl 10
         internal const val FLAG_MAX_HEIGHT_MASK = 1 shl 11
     }
+
+    constructor(width:Float = Float.NaN,height: Float =  Float.NaN):super(width,height)
 
 
 

@@ -36,7 +36,7 @@ open class AndroidLayout(val mView: Layout) : ViewGroup(Platform.getApplication(
         var w = PixelUtil.toDIPFromPixel(maxWidth)
         var h = PixelUtil.toDIPFromPixel(maxHeight)
 
-        val layoutParams = mView.layoutParams
+        val layoutParams = mView.layoutParams!!
         val frame = mView.frame
         val oldWidth = layoutParams.width
         val oldHeight = layoutParams.height

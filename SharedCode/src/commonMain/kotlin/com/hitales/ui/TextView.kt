@@ -21,7 +21,7 @@ enum class TextEllipsizeMode(var value: Int){
 
 expect open class TextView : View {
 
-    constructor(text:CharSequence? = "",layoutParams: LayoutParams = LayoutParams())
+    constructor(text:CharSequence? = "",layoutParams: LayoutParams? = null)
 
     open var text:CharSequence
 

@@ -34,6 +34,13 @@ class NavigateController : BasicViewController(){
             }
         }
 
+        val lp = FlexLayoutParams(300f)
+        lp.margin = EdgeInsets.value(5f)
+        val textInp = TextInput("",lp)
+        textInp.setBackgroundColor(Colors.RED)
+        addView(textInp)
+
+
     }
 
 }

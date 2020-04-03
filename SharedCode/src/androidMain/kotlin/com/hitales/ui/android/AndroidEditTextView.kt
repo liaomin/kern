@@ -19,19 +19,14 @@ class AndroidEditTextView constructor(val mView: TextInput) : AppCompatEditText(
     init {
         AndroidBridge.init(this,mView)
         isFocusableInTouchMode = false
-//        val editText = this
-//        editText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE)
-////文本显示的位置在EditText的最上方
-//        editText.setGravity(Gravity.CENTER_VERTICAL)
-////改变默认的单行模式
-//        editText.setSingleLine(false)
-////水平滚动设置为False
-//        editText.setHorizontallyScrolling(false)
         setSingleLine(true)
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        postDelayed({
+            isFocusableInTouchMode = true
+        },0)
         AndroidBridge.onAttachedToWindow(mView)
     }
 
@@ -64,18 +59,18 @@ class AndroidEditTextView constructor(val mView: TextInput) : AppCompatEditText(
         AndroidBridge.adjustHitRect(mView,outRect)
     }
 
-
-
     private fun showSoftKeyboard(): Boolean {
         return mInputMethodManager.showSoftInput(this, 0)
     }
 
     private fun hideSoftKeyboard() {
-        mInputMethodManager.hideSoftInputFromWindow(windowToken, 0)
+        if(mView.canHideSoftKeyboard()){
+            mInputMethodManager.hideSoftInputFromWindow(windowToken, 0)
+        }
     }
 
     override fun requestFocus(direction: Int, previouslyFocusedRect: Rect?): Boolean {
-        isFocusableInTouchMode = true
+
         showSoftKeyboard()
         return super.requestFocus(direction, previouslyFocusedRect)
     }
@@ -93,10 +88,18 @@ class AndroidEditTextView constructor(val mView: TextInput) : AppCompatEditText(
     }
 
     override fun clearFocus() {
-        isFocusableInTouchMode = false
         super.clearFocus()
         hideSoftKeyboard()
     }
 
+    override fun onFocusChanged(focused: Boolean, direction: Int, previouslyFocusedRect: Rect?) {
+        super.onFocusChanged(focused, direction, previouslyFocusedRect)
+        mView.onFocusChanged(focused)
+    }
+
+    override fun onSelectionChanged(selStart: Int, selEnd: Int) {
+        super.onSelectionChanged(selStart, selEnd)
+        mView?.onSelectionChanged(selStart,selEnd)
+    }
 
 }

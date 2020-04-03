@@ -91,7 +91,7 @@ open class FlexLayout : CustomLayout<FlexLayoutParams> {
             }
         }
 
-    constructor(layoutParams: LayoutParams = LayoutParams()):super(layoutParams)
+    constructor(layoutParams: LayoutParams? = null):super(layoutParams)
 
 
     override fun measure(widthSpace: Float,widthMode: MeasureMode, heightSpace: Float,heightMode: MeasureMode,outSize: Size) {
@@ -186,7 +186,7 @@ open class FlexLayout : CustomLayout<FlexLayoutParams> {
 
     override fun checkLayoutParams(child: View) {
         if(child.layoutParams !is FlexLayoutParams){
-            val oldLayoutParams = child.layoutParams
+            val oldLayoutParams = child.layoutParams!!
             val newLayoutParams = FlexLayoutParams()
             newLayoutParams.width = oldLayoutParams.width
             newLayoutParams.height = oldLayoutParams.height

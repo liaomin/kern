@@ -2,6 +2,11 @@ package com.hitales.ui
 
 import com.hitales.ui.layout.flex.FlexLayout
 
+
+interface ScrollViewDelegate : ViewDelegate {
+    fun onScroll(view: ScrollView,offsetX: Float, offsetY: Float)
+}
+
 //TODO NestedScrolling
 expect open class ScrollView : FlexLayout {
 
@@ -24,7 +29,7 @@ expect open class ScrollView : FlexLayout {
 
     var scrollY:Float
 
-    constructor(layoutParams: LayoutParams = LayoutParams())
+    constructor(layoutParams: LayoutParams? = null)
 
     open fun onScroll(offsetX:Float,offsetY:Float)
 

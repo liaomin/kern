@@ -1,7 +1,6 @@
 package com.hitales.utils
 
 import kotlin.jvm.Synchronized
-import kotlin.jvm.Volatile
 
 class NotificationCenter {
 
@@ -16,7 +15,6 @@ class NotificationCenter {
         }
     }
 
-    @Volatile
     private val observers = HashMap<Any,LinkedList<((args:Array<out Any?>)->Unit)>>()
 
     fun addObserver(key:Any,block:((args:Array<out Any?>)->Unit)){

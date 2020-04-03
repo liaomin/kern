@@ -18,7 +18,7 @@ actual open class ScrollView : FlexLayout {
             onOrientationChanged()
         }
 
-    actual  constructor(layoutParams: LayoutParams) : super(layoutParams)
+    actual  constructor(layoutParams: LayoutParams?) : super(layoutParams)
 
     actual var scrollX: Float
         get() = PixelUtil.toDIPFromPixel(getWidget().getScrolledX().toFloat())
@@ -83,7 +83,10 @@ actual open class ScrollView : FlexLayout {
         }
 
     actual open fun onScroll(offsetX: Float, offsetY: Float) {
-        println("x:$offsetX y:$offsetY")
+        val delegate = this.delegate?.get()
+        if(delegate != null && delegate is ScrollViewDelegate){
+            delegate.onScroll(this,offsetX,offsetY)
+        }
     }
 
     protected open fun onOrientationChanged(){

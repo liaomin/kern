@@ -25,7 +25,7 @@ enum class ImageResizeMode(val value:Int) {
 
 expect open class ImageView : View {
 
-    constructor(layoutParams: LayoutParams = LayoutParams())
+    constructor(layoutParams: LayoutParams? = null)
 
     open var image:Image?
 

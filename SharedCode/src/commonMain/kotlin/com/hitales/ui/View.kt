@@ -18,6 +18,21 @@ enum class ViewState(val value:Int) {
     SELECTED(4),
 }
 
+//open class Enum(val value: Int){
+//
+//}
+//
+//class ViewState:Enum{
+//    constructor(value: Int):super(value)
+//    companion object{
+//        val NORMAL = ViewState(0)
+//        val PRESSED = ViewState(0)
+//        val FOCUSED = ViewState(0)
+//        val DISABLED = ViewState(0)
+//        val SELECTED = ViewState(0)
+//    }
+//}
+
 enum class BorderStyle(val value:Int) {
     SOLID(0),
     DOTTED(1),
@@ -40,8 +55,7 @@ enum class MeasureMode(val value: Int){
 }
 
 interface ViewDelegate{
-    fun onPress(view: View)
-    fun onLongPress(view: View)
+    fun onFrameChanged(view: View)
 }
 
 expect open class View  {
@@ -60,7 +74,7 @@ expect open class View  {
      */
     open val frame:Frame
 
-    open var layoutParams:LayoutParams
+    open var layoutParams:LayoutParams?
 
     open var id:Int
 
@@ -92,13 +106,12 @@ expect open class View  {
 
     open var scaleY:Float
 
-    constructor(layoutParams: LayoutParams = LayoutParams())
+    constructor(layoutParams: LayoutParams? = null)
 
     var superView:WeakReference<Layout>?
 
     open fun onFrameChanged()
     open fun onLayout()
-    open fun onDraw()
     open fun needLayout()
     open fun needDisplay()
 

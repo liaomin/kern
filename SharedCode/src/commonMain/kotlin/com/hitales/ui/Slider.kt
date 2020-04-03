@@ -12,6 +12,6 @@ expect open class Slider : View {
 
     var onValueChangeListener:((slider:Slider,value:Int,max:Int)->Unit)?
 
-    constructor(layoutParams: LayoutParams = LayoutParams())
+    constructor(layoutParams: LayoutParams? = null)
 
 }

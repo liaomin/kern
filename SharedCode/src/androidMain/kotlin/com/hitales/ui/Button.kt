@@ -15,7 +15,7 @@ actual open class Button :  com.hitales.ui.TextView {
             getWidget().isEnabled = value
         }
 
-    actual constructor(text: CharSequence?, layoutParams: LayoutParams):super(text,layoutParams) {
+    actual constructor(text: CharSequence?, layoutParams: LayoutParams?):super(text,layoutParams) {
         padding = EdgeInsets(5f,5f,5f,5f)
         setTextColor(Colors.WHITE)
         setBackgroundColor(Colors.BLUE)
@@ -55,8 +55,6 @@ actual open class Button :  com.hitales.ui.TextView {
     override fun getDefaultColorList(): StateListColor {
         return StateListColor(Color.WHITE)
     }
-
-
 
 
 }

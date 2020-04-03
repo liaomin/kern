@@ -16,7 +16,7 @@ abstract class FlexCalculator {
         var frameHeight = heightSpace
         var wMode = widthMode
         var hMode = heightMode
-        val layoutParams = layout.layoutParams
+        val layoutParams = layout.layoutParams!!
         val isFlexLayout = layoutParams is FlexLayoutParams
         if(layoutParams.flag and LayoutParams.FLAG_WIDTH_MASK != LayoutParams.FLAG_WIDTH_MASK){
             if(isFlexLayout){
