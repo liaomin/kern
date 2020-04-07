@@ -1,5 +1,6 @@
 package com.hitales.ui
 
+import androidx.recyclerview.widget.RecyclerView
 import com.hitales.ui.android.AndroidScrollView
 import com.hitales.ui.layout.flex.FlexLayout
 import com.hitales.ui.utils.PixelUtil
@@ -31,6 +32,8 @@ actual open class ScrollView : FlexLayout {
         set(value) {
             getWidget().scrollY = PixelUtil.toPixelFromDIP(value).toInt()
         }
+
+    actual var isPageEnable:Boolean = false
 
     override fun createWidget(): android.view.View {
         return AndroidScrollView.createFromXLM(this)
@@ -86,6 +89,97 @@ actual open class ScrollView : FlexLayout {
         val delegate = this.delegate?.get()
         if(delegate != null && delegate is ScrollViewDelegate){
             delegate.onScroll(this,offsetX,offsetY)
+        }
+    }
+
+    open fun onBeginScrolling(){
+        val delegate = this.delegate?.get()
+        if(delegate != null && delegate is ScrollViewDelegate){
+            delegate.onBeginScrolling(this)
+        }
+    }
+
+    private fun postSmoothScrollBy(widget:RecyclerView,dx:Int,dy:Int){
+        widget.post {
+            widget.smoothScrollBy(dx,dy)
+        }
+    }
+
+    open fun onEndScrolling(){
+        val delegate = this.delegate?.get()
+        if(delegate != null && delegate is ScrollViewDelegate){
+            delegate.onEndScrolling(this)
+        }
+        if(isPageEnable){
+            val widget = getWidget()
+            val contextSize = widget.getContextSize()
+            if(orientation == Orientation.VERTICAL){
+                var contextHeight = contextSize.height
+                val height = widget.height
+                contextHeight -= height
+                val halfHeight = height / 2f
+                if(contextHeight > 0 && height > 0){
+                    val offsetY = widget.getScrolledY()
+                    val mode = offsetY % height
+                    if(mode > halfHeight){
+                        val offset = height - mode
+                        if(offsetY + offset <= contextHeight){
+                            postSmoothScrollBy(widget,0,offset)
+                        }else{
+                            postSmoothScrollBy(widget,0,-mode)
+                        }
+                    }else{
+                        postSmoothScrollBy(widget,0,-mode)
+                    }
+                }
+            }else{
+                var contextWidth = contextSize.width
+                val width = widget.width
+                contextWidth -= width
+                val halfWidth = width / 2f
+                if(contextWidth > 0 && width > 0){
+                    val offsetX = widget.getScrolledX()
+                    val mode = offsetX % width
+                    if(mode > halfWidth){
+                        val offset = width - mode
+                        if(offsetX + offset <= contextWidth){
+                            postSmoothScrollBy(widget,offset,0)
+                        }else{
+                            postSmoothScrollBy(widget,-mode,0)
+                        }
+                    }else{
+                        postSmoothScrollBy(widget,-mode,0)
+                    }
+                }
+            }
+        }
+    }
+
+    open fun onBeginDragging(){
+        val delegate = this.delegate?.get()
+        if(delegate != null && delegate is ScrollViewDelegate){
+            delegate.onBeginDragging(this)
+        }
+    }
+
+    open fun onEndDragging(){
+        val delegate = this.delegate?.get()
+        if(delegate != null && delegate is ScrollViewDelegate){
+            delegate.onEndDragging(this)
+        }
+    }
+
+    open fun onBeginDecelerating(){
+        val delegate = this.delegate?.get()
+        if(delegate != null && delegate is ScrollViewDelegate){
+            delegate.onBeginDecelerating(this)
+        }
+    }
+
+    open fun onEndDecelerating(){
+        val delegate = this.delegate?.get()
+        if(delegate != null && delegate is ScrollViewDelegate){
+            delegate.onEndDecelerating(this)
         }
     }
 

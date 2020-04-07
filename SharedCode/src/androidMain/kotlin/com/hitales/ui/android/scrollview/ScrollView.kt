@@ -11,6 +11,7 @@ import com.hitales.android.R
 import com.hitales.ui.Colors
 import com.hitales.ui.Platform
 import com.hitales.ui.android.AndroidLayout
+import com.hitales.utils.Size
 
 open class ScrollView : RecyclerView {
 
@@ -28,7 +29,7 @@ open class ScrollView : RecyclerView {
 
     var scrollEnabled = true
 
-    protected var layouted = false
+    protected var flag = 0
 
     protected var flexLayout: AndroidLayout? = null
 
@@ -51,6 +52,10 @@ open class ScrollView : RecyclerView {
     }
 
     companion object {
+        internal const val FLAG_LAYOUTED_MASK = 1 shl 3
+        internal const val FLAG_BEGIN_SCROLL_MASK = 1 shl 4
+        internal const val FLAG_BEGIN_DRAGG_MASK = 1 shl 5
+        internal const val FLAG_BEGIN_DECELERATE_MASK = 1 shl 6
         fun createFromXLM(): ScrollView {
             val scrollView = LayoutInflater.from(Platform.getApplication()).inflate(R.layout.recycler_scroll_view, null) as ScrollView
             return scrollView
@@ -87,7 +92,6 @@ open class ScrollView : RecyclerView {
             override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
             }
-
         }
     }
 
@@ -107,8 +111,17 @@ open class ScrollView : RecyclerView {
         return scrollY
     }
 
+    fun getContextSize():Size{
+        val layout = layoutManager
+        if(layout != null && layout is BasicLayoutManager){
+            return layout.contextSize.clone()
+        }
+        return Size()
+    }
+
+
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        layouted = true
+        flag = flag or FLAG_LAYOUTED_MASK
         super.onLayout(changed, l, t, r, b)
     }
 
@@ -118,7 +131,7 @@ open class ScrollView : RecyclerView {
         }else{
             flexLayout?.addView(view,index)
         }
-        if(layouted){
+        if(flag and FLAG_LAYOUTED_MASK == FLAG_LAYOUTED_MASK){
             onDataSetChanged()
         }
     }
@@ -151,4 +164,68 @@ open class ScrollView : RecyclerView {
         return super.onTouchEvent(e)
     }
 
+
+    override fun onScrollStateChanged(state: Int) {
+        super.onScrollStateChanged(state)
+        when(state){
+            SCROLL_STATE_IDLE -> {
+                if(flag and FLAG_BEGIN_DRAGG_MASK == FLAG_BEGIN_DRAGG_MASK){
+                    onEndDecelerating()
+                    flag = flag and FLAG_BEGIN_DRAGG_MASK.inv()
+                }
+                if(flag and FLAG_BEGIN_SCROLL_MASK == FLAG_BEGIN_SCROLL_MASK){
+                    onEndScrolling()
+                    flag = flag and FLAG_BEGIN_SCROLL_MASK.inv()
+                }
+            }
+            SCROLL_STATE_DRAGGING -> {
+                if(flag and FLAG_BEGIN_SCROLL_MASK != FLAG_BEGIN_SCROLL_MASK){
+                    onBeginScrolling()
+                    flag = flag or FLAG_BEGIN_SCROLL_MASK
+                }
+                if(flag and FLAG_BEGIN_DRAGG_MASK != FLAG_BEGIN_DRAGG_MASK){
+                    onBeginDragging()
+                    flag = flag or FLAG_BEGIN_DRAGG_MASK
+                }
+            }
+            SCROLL_STATE_SETTLING -> {
+                if(flag and FLAG_BEGIN_SCROLL_MASK != FLAG_BEGIN_SCROLL_MASK){
+                    onBeginScrolling()
+                    flag = flag or FLAG_BEGIN_SCROLL_MASK
+                }
+                if(flag and FLAG_BEGIN_DRAGG_MASK == FLAG_BEGIN_DRAGG_MASK){
+                    onEndDragging()
+                    flag = flag and FLAG_BEGIN_DRAGG_MASK.inv()
+                }
+                if(flag and FLAG_BEGIN_DRAGG_MASK != FLAG_BEGIN_DRAGG_MASK){
+                    onBeginDecelerating()
+                    flag = flag or FLAG_BEGIN_DRAGG_MASK
+                }
+            }
+        }
+    }
+
+
+    open fun onBeginScrolling(){
+
+    }
+
+    open fun onEndScrolling(){
+
+    }
+
+    open fun onBeginDragging(){
+
+    }
+
+    open fun onEndDragging(){
+
+    }
+
+    open fun onBeginDecelerating(){
+
+    }
+    open fun onEndDecelerating(){
+
+    }
 }

@@ -262,10 +262,9 @@ actual open class View{
         return mBackground
     }
 
-    actual fun setOnPressListener(listener: ((view: com.hitales.ui.View) -> Unit)?) {
+    actual open fun setOnPressListener(listener: ((view: com.hitales.ui.View) -> Unit)?) {
         onPressListener = listener
         if(listener != null){
-
             mWidget.setOnClickListener{
                 onPressListener?.invoke(this)
             }
@@ -274,7 +273,7 @@ actual open class View{
         }
     }
 
-    actual fun setOnLongPressListener(listener: ((view: com.hitales.ui.View) -> Unit)?) {
+    actual open fun setOnLongPressListener(listener: ((view: com.hitales.ui.View) -> Unit)?) {
         onLongPressListener = listener
         if(listener != null){
             mWidget.setOnLongClickListener{

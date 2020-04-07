@@ -126,8 +126,8 @@ expect open class View  {
     /**
      * events
      */
-    fun setOnPressListener(listener:((view:View)->Unit)?)
-    fun setOnLongPressListener(listener:((view:View)->Unit)?)
+    open fun setOnPressListener(listener:((view:View)->Unit)?)
+    open fun setOnLongPressListener(listener:((view:View)->Unit)?)
 
     /**
      * background

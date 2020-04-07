@@ -34,6 +34,30 @@ open class AndroidScrollView : com.hitales.ui.android.scrollview.ScrollView {
         mView?.onScroll(scrollX,scrollY)
     }
 
+    override fun onBeginScrolling(){
+        mView?.onBeginScrolling()
+    }
+
+    override fun onEndScrolling(){
+        mView?.onEndScrolling()
+    }
+
+    override fun onBeginDragging(){
+        mView?.onBeginDragging()
+    }
+
+    override fun onEndDragging(){
+        mView?.onEndDragging()
+    }
+
+    override fun onBeginDecelerating(){
+        mView?.onBeginDecelerating()
+    }
+
+    override fun onEndDecelerating(){
+        mView?.onEndDecelerating()
+    }
+
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         when (ev.action) {

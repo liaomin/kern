@@ -44,11 +44,14 @@ actual open class TextInput : com.hitales.ui.TextView,TextWatcher {
         return widget
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
+
+    fun requestAutoFocus(){
         if(autoFocus){
             val w = getWidget()
             w.requestFocus()
+            w.postDelayed({
+                w.showSoftKeyboard()
+            },0)
         }
     }
 

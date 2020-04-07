@@ -21,6 +21,14 @@ open class ViewController(var title:String? = null) {
     var tag:Any? = null
 
     var view:Layout? = null
+        set(value) {
+            field = value
+            if(value != null){
+                if(value.layoutParams == null){
+                    value.layoutParams = LayoutParams()
+                }
+            }
+        }
 
     var isShowTransitionAnimation:Boolean
         get() = flag and FLAG_VIEW_TRANSITION_ANIMATION == FLAG_VIEW_TRANSITION_ANIMATION

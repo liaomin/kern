@@ -26,6 +26,8 @@ class AndroidEditTextView constructor(val mView: TextInput) : AppCompatEditText(
         super.onAttachedToWindow()
         postDelayed({
             isFocusableInTouchMode = true
+            isFocusable = true
+            mView.requestAutoFocus()
         },0)
         AndroidBridge.onAttachedToWindow(mView)
     }
@@ -59,18 +61,17 @@ class AndroidEditTextView constructor(val mView: TextInput) : AppCompatEditText(
         AndroidBridge.adjustHitRect(mView,outRect)
     }
 
-    private fun showSoftKeyboard(): Boolean {
+    fun showSoftKeyboard(): Boolean {
         return mInputMethodManager.showSoftInput(this, 0)
     }
 
-    private fun hideSoftKeyboard() {
+    fun hideSoftKeyboard() {
         if(mView.canHideSoftKeyboard()){
             mInputMethodManager.hideSoftInputFromWindow(windowToken, 0)
         }
     }
 
     override fun requestFocus(direction: Int, previouslyFocusedRect: Rect?): Boolean {
-
         showSoftKeyboard()
         return super.requestFocus(direction, previouslyFocusedRect)
     }

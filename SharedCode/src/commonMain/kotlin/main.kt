@@ -13,7 +13,7 @@ class NavigateController : BasicViewController(){
         super.onCreate()
         val map = HashMap<String,ViewController>()
         map["测试view"] = TempTestViewViewController()
-        map["test1"] = TempTestViewViewController()
+        map["test1测试"] = TempTestViewViewController()
         map["test2"] = TempTestViewViewController()
         map["test3"] = TempTestViewViewController()
         map["test4"] = TempTestViewViewController()

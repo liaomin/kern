@@ -4,7 +4,13 @@ import com.hitales.ui.layout.flex.FlexLayout
 
 
 interface ScrollViewDelegate : ViewDelegate {
+    fun onBeginScrolling(view: ScrollView)
+    fun onEndScrolling(view: ScrollView)
     fun onScroll(view: ScrollView,offsetX: Float, offsetY: Float)
+    fun onBeginDragging(view: ScrollView)
+    fun onEndDragging(view: ScrollView)
+    fun onBeginDecelerating(view: ScrollView)
+    fun onEndDecelerating(view: ScrollView)
 }
 
 //TODO NestedScrolling
@@ -28,6 +34,8 @@ expect open class ScrollView : FlexLayout {
     var scrollX:Float
 
     var scrollY:Float
+
+    var isPageEnable:Boolean
 
     constructor(layoutParams: LayoutParams? = null)
 

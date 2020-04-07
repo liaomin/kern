@@ -9,6 +9,12 @@ open class TempTestViewViewController : BasicViewController(),TextInputDelegate 
 
     val itemWidth = Platform.windowWidth / 3f
 
+    override fun createLayout(): Layout {
+        val s =  super.createLayout() as ScrollView
+        s.isPageEnable = true
+        return s
+    }
+
     override fun onCreate() {
         super.onCreate()
         var lp = FlexLayoutParams()
@@ -31,6 +37,7 @@ open class TempTestViewViewController : BasicViewController(),TextInputDelegate 
 
 
         var view2 = TextInput("",lp)
+        view2.autoFocus = true
         view.nextInput = WeakReference(view2)
         view2.setBackgroundColor(Colors.RED)
         addView(view2)
