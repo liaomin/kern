@@ -15,6 +15,8 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import com.hitales.ui.ActivityDelegate
+import com.hitales.ui.Platform
 import com.hitales.ui.android.AndroidActivity
 import main
 
@@ -53,6 +55,10 @@ class MainActivity : AndroidActivity() {
 
     }
 
+    override fun onInit(): ActivityDelegate {
+       return Platform.init(this,true)
+    }
+
     override fun onResume() {
         super.onResume()
         if (Build.VERSION.SDK_INT >= 23) {
@@ -74,11 +80,6 @@ class MainActivity : AndroidActivity() {
         super.onPause()
         windowManager.removeView(OverlayView.instance)
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

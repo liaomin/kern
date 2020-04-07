@@ -1,6 +1,7 @@
 package com.hitales.ui
 
 import com.hitales.ui.layout.flex.FlexLayout
+import com.hitales.utils.Log
 import com.hitales.utils.WeakReference
 
 
@@ -26,6 +27,12 @@ open class ViewController(var title:String? = null) {
             if(value != null){
                 if(value.layoutParams == null){
                     value.layoutParams = LayoutParams()
+                }
+                val color = value.getBackgroundColor()
+                val a = color ushr 24
+                if(a != 255){
+                    Log.d("viewController's root view can't have alpha, reset width white color")
+                    value.setBackgroundColor(Colors.WHITE)
                 }
             }
         }

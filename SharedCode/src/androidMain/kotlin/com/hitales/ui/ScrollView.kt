@@ -2,6 +2,7 @@ package com.hitales.ui
 
 import androidx.recyclerview.widget.RecyclerView
 import com.hitales.ui.android.AndroidScrollView
+import com.hitales.ui.layout.flex.FlexDirection
 import com.hitales.ui.layout.flex.FlexLayout
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.WeakReference
@@ -186,7 +187,11 @@ actual open class ScrollView : FlexLayout {
     }
 
     protected open fun onOrientationChanged(){
-
+        if(orientation == Orientation.VERTICAL){
+            flexDirection = FlexDirection.COLUMN
+        }else{
+            flexDirection = FlexDirection.ROW
+        }
     }
 
     actual fun scrollTo(dx: Float, dy: Float) {

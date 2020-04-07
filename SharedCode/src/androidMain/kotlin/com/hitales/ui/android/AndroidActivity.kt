@@ -5,17 +5,18 @@ import android.content.res.Resources
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.hitales.ui.ActivityDelegate
-import com.hitales.ui.Platform
 
-open class AndroidActivity : FragmentActivity() {
+abstract class AndroidActivity : FragmentActivity() {
 
     var mDelegate: ActivityDelegate? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mDelegate = Platform.init(this)
+        mDelegate = onInit()
         mDelegate?.onCreate()
     }
+
+    abstract fun onInit():ActivityDelegate
 
     override fun onResume() {
         super.onResume()

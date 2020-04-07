@@ -23,6 +23,7 @@ open class ScrollView : RecyclerView {
                     layout.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.MATCH_PARENT)
                 }
             }
+            field = value
         }
 
     var scrollEnabled = true
@@ -67,7 +68,7 @@ open class ScrollView : RecyclerView {
                 if(orientation == com.hitales.ui.Orientation.VERTICAL){
                     heightMode = MeasureSpec.UNSPECIFIED
                 }else{
-                    heightMode = MeasureSpec.UNSPECIFIED
+                    widthMode = MeasureSpec.UNSPECIFIED
                 }
                 super.onMeasure(MeasureSpec.makeMeasureSpec(maxWidth,widthMode), MeasureSpec.makeMeasureSpec(maxHeight,heightMode))
             }

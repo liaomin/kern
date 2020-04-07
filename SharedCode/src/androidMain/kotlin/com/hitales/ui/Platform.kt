@@ -55,9 +55,11 @@ actual class Platform : ActivityDelegate{
             return platform!!
         }
 
-        fun init(rootActivity: AndroidActivity):ActivityDelegate{
+        fun init(rootActivity: AndroidActivity,debug:Boolean = false,tag:String = "Kern"):ActivityDelegate{
             platform?.onDestroy()
             platform = Platform(rootActivity)
+            Platform.debug = debug
+            Platform.platformTag = tag
             return  platform!!
         }
 
@@ -67,6 +69,8 @@ actual class Platform : ActivityDelegate{
         }
 
         actual var debug: Boolean = false
+
+        var platformTag:String = "Kern"
     }
 
     val windowWidth:Float
