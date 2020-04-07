@@ -100,8 +100,10 @@ actual open class ScrollView : FlexLayout {
     }
 
     private fun postSmoothScrollBy(widget:RecyclerView,dx:Int,dy:Int){
-        widget.post {
-            widget.smoothScrollBy(dx,dy)
+        if(dx != 0 || dy != 0){
+            widget.post {
+                widget.smoothScrollBy(dx,dy)
+            }
         }
     }
 
@@ -187,5 +189,16 @@ actual open class ScrollView : FlexLayout {
 
     }
 
+    actual fun scrollTo(dx: Float, dy: Float) {
+        getWidget().scrollTo(PixelUtil.toPixelFromDIP(dx).toInt(),PixelUtil.toPixelFromDIP(dy).toInt())
+    }
+
+    actual fun scrollBy(dx: Float, dy: Float) {
+        getWidget().scrollBy(PixelUtil.toPixelFromDIP(dx).toInt(),PixelUtil.toPixelFromDIP(dy).toInt())
+    }
+
+    actual fun smoothScrollBy(dx: Float, dy: Float) {
+        getWidget().smoothScrollBy(PixelUtil.toPixelFromDIP(dx).toInt(),PixelUtil.toPixelFromDIP(dy).toInt())
+    }
 
 }

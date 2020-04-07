@@ -12,6 +12,7 @@ open class TempTestViewViewController : BasicViewController(),TextInputDelegate 
     override fun createLayout(): Layout {
         val s =  super.createLayout() as ScrollView
         s.isPageEnable = true
+        s.orientation = Orientation.HORIZONTAL
         return s
     }
 
@@ -37,7 +38,7 @@ open class TempTestViewViewController : BasicViewController(),TextInputDelegate 
 
 
         var view2 = TextInput("",lp)
-        view2.autoFocus = true
+//        view2.autoFocus = true
         view.nextInput = WeakReference(view2)
         view2.setBackgroundColor(Colors.RED)
         addView(view2)
@@ -87,10 +88,6 @@ open class TempTestViewViewController : BasicViewController(),TextInputDelegate 
 
     override fun shouldChangeText(view: TextInput, beforeText: CharSequence, start: Int, length: Int, replaceText: CharSequence): Boolean {
         return true
-    }
-
-    override fun onFrameChanged(view: View) {
-
     }
 
 }

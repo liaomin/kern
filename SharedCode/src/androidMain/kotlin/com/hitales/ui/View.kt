@@ -298,7 +298,7 @@ actual open class View{
     }
 
     actual open fun onFrameChanged(){
-        delegate?.get()?.onFrameChanged(this)
+
     }
 
     actual open fun onLayout() {

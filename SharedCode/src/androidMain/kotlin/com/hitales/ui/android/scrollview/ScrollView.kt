@@ -2,12 +2,10 @@ package com.hitales.ui.android.scrollview
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.hitales.android.R
 import com.hitales.ui.Colors
 import com.hitales.ui.Platform
 import com.hitales.ui.android.AndroidLayout
@@ -52,14 +50,10 @@ open class ScrollView : RecyclerView {
     }
 
     companion object {
-        internal const val FLAG_LAYOUTED_MASK = 1 shl 3
+        internal const val FLAG_LAYOUT_MASK = 1 shl 3
         internal const val FLAG_BEGIN_SCROLL_MASK = 1 shl 4
         internal const val FLAG_BEGIN_DRAGG_MASK = 1 shl 5
         internal const val FLAG_BEGIN_DECELERATE_MASK = 1 shl 6
-        fun createFromXLM(): ScrollView {
-            val scrollView = LayoutInflater.from(Platform.getApplication()).inflate(R.layout.recycler_scroll_view, null) as ScrollView
-            return scrollView
-        }
     }
 
     protected open fun setup(view: com.hitales.ui.ScrollView){
@@ -121,7 +115,7 @@ open class ScrollView : RecyclerView {
 
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        flag = flag or FLAG_LAYOUTED_MASK
+        flag = flag or FLAG_LAYOUT_MASK
         super.onLayout(changed, l, t, r, b)
     }
 
@@ -131,7 +125,7 @@ open class ScrollView : RecyclerView {
         }else{
             flexLayout?.addView(view,index)
         }
-        if(flag and FLAG_LAYOUTED_MASK == FLAG_LAYOUTED_MASK){
+        if(flag and FLAG_LAYOUT_MASK == FLAG_LAYOUT_MASK){
             onDataSetChanged()
         }
     }
@@ -169,9 +163,9 @@ open class ScrollView : RecyclerView {
         super.onScrollStateChanged(state)
         when(state){
             SCROLL_STATE_IDLE -> {
-                if(flag and FLAG_BEGIN_DRAGG_MASK == FLAG_BEGIN_DRAGG_MASK){
+                if(flag and FLAG_BEGIN_DECELERATE_MASK == FLAG_BEGIN_DECELERATE_MASK){
                     onEndDecelerating()
-                    flag = flag and FLAG_BEGIN_DRAGG_MASK.inv()
+                    flag = flag and FLAG_BEGIN_DECELERATE_MASK.inv()
                 }
                 if(flag and FLAG_BEGIN_SCROLL_MASK == FLAG_BEGIN_SCROLL_MASK){
                     onEndScrolling()
@@ -197,9 +191,9 @@ open class ScrollView : RecyclerView {
                     onEndDragging()
                     flag = flag and FLAG_BEGIN_DRAGG_MASK.inv()
                 }
-                if(flag and FLAG_BEGIN_DRAGG_MASK != FLAG_BEGIN_DRAGG_MASK){
+                if(flag and FLAG_BEGIN_DECELERATE_MASK != FLAG_BEGIN_DECELERATE_MASK){
                     onBeginDecelerating()
-                    flag = flag or FLAG_BEGIN_DRAGG_MASK
+                    flag = flag or FLAG_BEGIN_DECELERATE_MASK
                 }
             }
         }

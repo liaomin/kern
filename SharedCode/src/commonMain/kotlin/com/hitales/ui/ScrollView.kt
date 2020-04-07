@@ -41,6 +41,12 @@ expect open class ScrollView : FlexLayout {
 
     open fun onScroll(offsetX:Float,offsetY:Float)
 
+    fun scrollTo(dx:Float,dy:Float)
+
+    fun scrollBy(dx:Float,dy:Float)
+
+    fun smoothScrollBy(dx:Float,dy:Float)
+
 }
 
 

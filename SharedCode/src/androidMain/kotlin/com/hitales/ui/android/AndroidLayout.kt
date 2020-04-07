@@ -26,7 +26,7 @@ open class AndroidLayout(val mView: Layout) : ViewGroup(Platform.getApplication(
         AndroidBridge.init(this,mView)
     }
 
-    val tempSize:Size by lazy { Size() }
+    private val tempSize:Size by lazy { Size() }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val maxWidth = MeasureSpec.getSize(widthMeasureSpec).toFloat()

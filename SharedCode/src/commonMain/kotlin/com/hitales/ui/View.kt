@@ -54,9 +54,7 @@ enum class MeasureMode(val value: Int){
     AT_MOST(2),
 }
 
-interface ViewDelegate{
-    fun onFrameChanged(view: View)
-}
+interface ViewDelegate
 
 expect open class View  {
 
