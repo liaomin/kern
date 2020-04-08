@@ -1,9 +1,6 @@
 package com.hitales.ui.recycler
 
-import com.hitales.utils.Frame
-import com.hitales.utils.LinkedList
-import com.hitales.utils.Size
-import com.hitales.utils.WeakReference
+import com.hitales.utils.*
 
 
 abstract class CollectionViewLayout {
@@ -33,12 +30,11 @@ abstract class CollectionViewLayout {
         fun isEmpty():Boolean{
             return attributes.isEmpty()
         }
-
     }
 
     val maxAttributesPoolSize = 1000
 
-    var collectionViewRef: WeakReference<CollectionView>?= null
+    var collectionView:CollectionView? by WeakDelegate()
 
     protected val attributesPool = LinkedList<LayoutAttribute>()
 

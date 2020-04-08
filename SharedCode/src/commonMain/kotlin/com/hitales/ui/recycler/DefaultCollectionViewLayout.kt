@@ -92,7 +92,7 @@ open class DefaultCollectionViewLayout : CollectionViewLayout(){
     }
 
     override fun onScroll(scrollX: Float, scrollY: Float) {
-        collectionViewRef?.get()?.apply {
+        collectionView?.apply {
             if(!pages.isEmpty()){
                 val last = pages.last()
                 val orientation = orientation
@@ -120,7 +120,7 @@ open class DefaultCollectionViewLayout : CollectionViewLayout(){
     }
 
     open fun getNextPage(){
-        collectionViewRef?.get()?.apply {
+        collectionView?.apply {
             var currentPage:PageLayoutInfo? = null
             var page = 0
             if(!pages.isEmpty()){

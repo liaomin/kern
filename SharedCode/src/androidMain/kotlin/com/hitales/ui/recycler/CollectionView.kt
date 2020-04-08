@@ -9,7 +9,6 @@ import com.hitales.ui.android.AndroidRecyclerView
 import com.hitales.ui.android.scrollview.RecyclerViewLayoutManager
 import com.hitales.ui.android.scrollview.addDifferent
 import com.hitales.ui.utils.PixelUtil
-import com.hitales.utils.WeakReference
 
 actual open class CollectionView : ScrollView {
 
@@ -22,7 +21,7 @@ actual open class CollectionView : ScrollView {
 
     actual constructor(layoutParams: LayoutParams?,layout: CollectionViewLayout):super(layoutParams){
         this.layout = layout
-        layout.collectionViewRef = WeakReference(this)
+        layout.collectionView = this
         getWidget().setup()
 //        getWidget().recycledViewPool.setMaxRecycledViews(0,100)
     }

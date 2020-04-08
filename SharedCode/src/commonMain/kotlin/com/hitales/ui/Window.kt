@@ -2,7 +2,6 @@ package com.hitales.ui
 
 import com.hitales.utils.NotificationCenter
 import com.hitales.utils.Stack
-import com.hitales.utils.WeakReference
 
 class Window {
 
@@ -43,7 +42,7 @@ class Window {
             field = value
             cleanStack()
             if(value != null){
-                value.window = WeakReference(this)
+                value.window = this
                 value.create()
                 value.resume()
                 viewControllerStack.append(value)
@@ -55,7 +54,7 @@ class Window {
         val ani = animation ?: viewController.enterAnimation ?: defaultEnterAnimation
         val last = viewControllerStack.last()
         if(viewController == last) return
-        viewController.window = WeakReference(this)
+        viewController.window = this
         viewControllerStack.append(viewController)
         viewController.create()
         viewController.resume()

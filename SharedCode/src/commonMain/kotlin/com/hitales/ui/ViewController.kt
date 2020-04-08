@@ -2,7 +2,7 @@ package com.hitales.ui
 
 import com.hitales.ui.layout.flex.FlexLayout
 import com.hitales.utils.Log
-import com.hitales.utils.WeakReference
+import com.hitales.utils.WeakDelegate
 
 
 open class ViewController(var title:String? = null) {
@@ -53,7 +53,7 @@ open class ViewController(var title:String? = null) {
 
     var exitAnimation:Animation? = null
 
-    var window:WeakReference<Window>? = null
+    var window:Window? by WeakDelegate()
 
     init {
         flag = FLAG_PAUSE or FLAG_DESTROY
@@ -134,11 +134,11 @@ open class ViewController(var title:String? = null) {
     }
 
     open fun push(viewController: ViewController,animation: Animation? = null,completion:(()->Unit)? = null){
-        window?.get()?.pushViewController(viewController,animation, completion)
+        window?.pushViewController(viewController,animation, completion)
     }
 
     open fun pop(){
-        window?.get()?.popViewController(exitAnimation)
+        window?.popViewController(exitAnimation)
     }
 
 }
