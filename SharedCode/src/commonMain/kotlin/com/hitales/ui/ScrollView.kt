@@ -13,7 +13,6 @@ interface ScrollViewDelegate : ViewDelegate {
     fun onEndDecelerating(view: ScrollView)
 }
 
-//TODO NestedScrolling
 expect open class ScrollView : FlexLayout {
 
     /**

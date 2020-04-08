@@ -3,16 +3,18 @@ package com.hitales.test
 import com.hitales.ui.*
 import com.hitales.ui.layout.flex.FlexLayoutParams
 import com.hitales.utils.EdgeInsets
+import com.hitales.utils.Log
 import com.hitales.utils.WeakReference
 
-open class TempTestViewViewController : BasicViewController(),TextInputDelegate {
+open class TempTestViewViewController : BasicViewController(),TextInputDelegate,ScrollViewDelegate {
 
     val itemWidth = Platform.windowWidth / 3f
 
     override fun createLayout(): Layout {
         val s =  super.createLayout() as ScrollView
         s.isPageEnable = true
-        s.orientation = Orientation.HORIZONTAL
+        s.delegate = WeakReference(this)
+//        s.orientation = Orientation.HORIZONTAL
         return s
     }
 
@@ -88,6 +90,34 @@ open class TempTestViewViewController : BasicViewController(),TextInputDelegate 
 
     override fun shouldChangeText(view: TextInput, beforeText: CharSequence, start: Int, length: Int, replaceText: CharSequence): Boolean {
         return true
+    }
+
+    override fun onBeginScrolling(view: ScrollView) {
+       Log.e("onBeginScrolling")
+    }
+
+    override fun onEndScrolling(view: ScrollView) {
+        Log.e("onEndScrolling")
+    }
+
+    override fun onScroll(view: ScrollView, offsetX: Float, offsetY: Float) {
+        Log.e("onScroll")
+    }
+
+    override fun onBeginDragging(view: ScrollView) {
+        Log.e("onBeginDragging")
+    }
+
+    override fun onEndDragging(view: ScrollView) {
+        Log.e("onEndDragging")
+    }
+
+    override fun onBeginDecelerating(view: ScrollView) {
+        Log.e("onBeginDecelerating")
+    }
+
+    override fun onEndDecelerating(view: ScrollView) {
+        Log.e("onEndDecelerating")
     }
 
 }

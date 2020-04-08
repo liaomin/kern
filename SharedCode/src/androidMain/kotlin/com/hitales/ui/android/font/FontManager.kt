@@ -3,19 +3,32 @@ package com.hitales.ui.android.font
 import android.content.res.AssetManager
 import android.graphics.Typeface
 import android.util.SparseArray
+import com.hitales.utils.Log
 import java.util.*
 
 class FontManager {
-    private val EXTENSIONS = arrayOf(
-        "",
-        "_bold",
-        "_italic",
-        "_bold_italic"
-    )
-    private val FILE_EXTENSIONS = arrayOf(".ttf", ".otf")
-    private val FONTS_ASSET_PATH = "fonts/"
 
-    private var sFontManagerInstance: FontManager? = null
+    companion object{
+        private val EXTENSIONS = arrayOf(
+            "",
+            "_bold",
+            "_italic",
+            "_bold_italic"
+        )
+        private val FILE_EXTENSIONS = arrayOf(".ttf", ".otf")
+        private const val FONTS_ASSET_PATH = "fonts/"
+
+        private var sFontManagerInstance: FontManager? = null
+
+        fun getInstance():FontManager {
+            if (sFontManagerInstance == null) {
+                sFontManagerInstance = FontManager()
+            }
+            return sFontManagerInstance!!
+        }
+
+    }
+
 
     private var mFontCache: MutableMap<String, FontFamily>
 
@@ -23,18 +36,8 @@ class FontManager {
         mFontCache = HashMap()
     }
 
-    fun getInstance():FontManager {
-        if (sFontManagerInstance == null) {
-            sFontManagerInstance = FontManager()
-        }
-        return sFontManagerInstance!!
-    }
 
-    fun getTypeface(
-        fontFamilyName: String,
-        style: Int,
-        assetManager: AssetManager
-    ): Typeface? {
+    fun getTypeface(fontFamilyName: String, style: Int, assetManager: AssetManager): Typeface? {
         var fontFamily = mFontCache[fontFamilyName]
         if (fontFamily == null) {
             fontFamily = FontFamily()
@@ -69,11 +72,7 @@ class FontManager {
         }
     }
 
-    private fun createTypeface(
-        fontFamilyName: String,
-        style: Int,
-        assetManager: AssetManager
-    ): Typeface? {
+    private fun createTypeface(fontFamilyName: String, style: Int, assetManager: AssetManager): Typeface? {
         val extension = EXTENSIONS[style]
         for (fileExtension in FILE_EXTENSIONS) {
             val fileName = StringBuilder()
@@ -86,14 +85,17 @@ class FontManager {
                 return Typeface.createFromAsset(assetManager, fileName)
             } catch (e: RuntimeException) { // unfortunately Typeface.createFromAsset throws an exception instead of returning null
 // if the typeface doesn't exist
+                Log.d(e.localizedMessage)
             }
         }
         return Typeface.create(fontFamilyName, style)
     }
 
     private class FontFamily {
+
         private val mTypefaceSparseArray: SparseArray<Typeface>
-        fun getTypeface(style: Int): Typeface {
+
+        fun getTypeface(style: Int): Typeface? {
             return mTypefaceSparseArray[style]
         }
 

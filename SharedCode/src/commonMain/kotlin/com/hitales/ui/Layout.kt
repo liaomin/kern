@@ -58,6 +58,7 @@ expect open class Layout : View {
 
     open fun measureChild(child: View,width:Float,widthMode: MeasureMode,height:Float,heightMode: MeasureMode,outSize: Size)
 
+    open fun checkLayoutParams(child: View)
 }
 
 /**
@@ -67,10 +68,9 @@ abstract class CustomLayout<T:LayoutParams> : Layout {
 
     constructor(layoutParams: LayoutParams? = null):super(layoutParams)
 
-    override fun addSubView(view: View, index: Int) {
-        checkLayoutParams(view)
-        super.addSubView(view, index)
+    override fun checkLayoutParams(child: View) {
+        child.layoutParams = convertLayoutParams(child)
     }
 
-    abstract fun checkLayoutParams(child: View)
+    abstract fun convertLayoutParams(child: View):T
 }

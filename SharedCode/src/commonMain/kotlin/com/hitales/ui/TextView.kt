@@ -19,6 +19,13 @@ enum class TextEllipsizeMode(var value: Int){
     TAIL(2),
 }
 
+enum class FontStyle(var value: Int){
+    DEFAULT(0),
+    BOLD(1),
+    ITALIC(2),
+    BOLD_ITALIC(3),
+}
+
 expect open class TextView : View {
 
     constructor(text:CharSequence? = "",layoutParams: LayoutParams? = null)
@@ -78,7 +85,7 @@ expect open class TextView : View {
     /**
      * 自定义字体
      */
-    open fun setFontStyle(fontName:String)
+    open fun setFontStyle(fontName:String,style: FontStyle = FontStyle.DEFAULT)
     open fun setTextShadow(color:Int,radius:Float,dx:Float,dy: Float)
 
     fun enableAutoFontSizeToFit(minFontSize:Int,maxFontSize:Int)

@@ -16,6 +16,7 @@ open class BasicViewController : ViewController() {
 //        scrollView.flexWarp = FlexWarp.WARP
         scrollView.justifyContent = JustifyContent.CENTER
         scrollView.alignItems = AlignItems.CENTER
+        scrollView.showScrollBar = false
 //        scrollView.setBackgroundColor(Colors.YELLOW)
         return scrollView
     }

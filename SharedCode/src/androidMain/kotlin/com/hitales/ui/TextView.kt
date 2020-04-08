@@ -13,6 +13,7 @@ import android.view.Gravity
 import com.hitales.ui.android.AndroidTextView
 import com.hitales.ui.android.CustomLineHeightSpan
 import com.hitales.ui.android.StateListColor
+import com.hitales.ui.android.font.FontManager
 import com.hitales.ui.utils.PixelUtil
 
 actual open class TextView :  View {
@@ -103,8 +104,14 @@ actual open class TextView :  View {
     /**
      * 自定义字体
      */
-    actual open fun setFontStyle(fontName: String) {
-        getTextWidget().typeface  = Typeface.createFromAsset(Platform.getApplication().assets,fontName)
+    actual open fun setFontStyle(fontName: String,style: FontStyle) {
+        var fontStyle = Typeface.NORMAL
+        when (style){
+            FontStyle.BOLD -> fontStyle = Typeface.BOLD
+            FontStyle.ITALIC -> fontStyle = Typeface.ITALIC
+            FontStyle.BOLD_ITALIC -> fontStyle = Typeface.BOLD_ITALIC
+        }
+        getTextWidget().typeface  = FontManager.getInstance().getTypeface(fontName,fontStyle,Platform.getApplication().assets)
     }
 
     actual open fun setTextShadow(color: Int, radius: Float, dx: Float, dy: Float) {

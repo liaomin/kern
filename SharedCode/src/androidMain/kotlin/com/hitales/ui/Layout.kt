@@ -25,6 +25,7 @@ actual open class Layout : View {
     actual val children: ArrayList<View> = ArrayList()
 
     actual open fun addSubView(view: View, index: Int) {
+        checkLayoutParams(view)
         val widget = getWidget()
         if(index < 0){
             widget.addView(view.getWidget())
@@ -35,6 +36,12 @@ actual open class Layout : View {
         }
         view.superView = WeakReference(this)
         view.onAttachedToView(this)
+    }
+
+    actual open fun checkLayoutParams(child: View){
+        if(child.layoutParams == null){
+            child.layoutParams = LayoutParams()
+        }
     }
 
     override fun createWidget(): android.view.View {

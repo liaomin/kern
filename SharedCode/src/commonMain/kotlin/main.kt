@@ -40,6 +40,26 @@ class NavigateController : BasicViewController(){
         textInp.setBackgroundColor(Colors.RED)
         addView(textInp)
 
+        var text = TextInput("司马彦行书")
+        text.setBackgroundColor(Colors.RED)
+        text.setFontStyle("JingDianXingShuJian",FontStyle.BOLD_ITALIC)
+        addView(text)
+
+        text = TextInput("司马彦行书",lp)
+        text.setBackgroundColor(Colors.RED)
+        text.setFontStyle("JingDianXingShuJian",FontStyle.BOLD)
+        addView(text)
+
+        text = TextInput("司马彦行书",lp)
+        text.setBackgroundColor(Colors.RED)
+        text.setFontStyle("JingDianXingShuJian",FontStyle.ITALIC)
+        addView(text)
+
+        text = TextInput("司马彦行书")
+        text.padding = EdgeInsets.identity()
+        text.setBackgroundColor(Colors.RED)
+        text.setFontStyle("JingDianXingShuJian")
+        addView(text)
 
     }
 

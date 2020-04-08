@@ -45,6 +45,7 @@ actual open class ScrollView : FlexLayout {
     }
 
     override fun addSubView(view: View, index: Int) {
+        checkLayoutParams(view)
         val widget = getWidget()
         if(index < 0){
             widget.addSubView(view.getWidget())

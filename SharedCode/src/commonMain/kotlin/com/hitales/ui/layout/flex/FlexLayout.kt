@@ -184,14 +184,16 @@ open class FlexLayout : CustomLayout<FlexLayoutParams> {
         frame.height = outSize.height
     }
 
-    override fun checkLayoutParams(child: View) {
-        if(child.layoutParams !is FlexLayoutParams){
-            val oldLayoutParams = child.layoutParams!!
-            val newLayoutParams = FlexLayoutParams()
-            newLayoutParams.width = oldLayoutParams.width
-            newLayoutParams.height = oldLayoutParams.height
-            child.layoutParams = newLayoutParams
+
+    override fun convertLayoutParams(child: View):FlexLayoutParams {
+        val l = child.layoutParams
+        if(l == null){
+            return FlexLayoutParams()
         }
+        if(l is FlexLayoutParams){
+            return l
+        }
+        return FlexLayoutParams(l.width,l.height)
     }
 
 }
