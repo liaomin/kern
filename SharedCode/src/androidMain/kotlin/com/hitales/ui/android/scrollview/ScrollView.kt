@@ -32,11 +32,7 @@ open class ScrollView : RecyclerView {
 
     protected var flexLayout: AndroidLayout? = null
 
-//    open class ViewHolder(val view: View,val v:com.hitales.ui.recycler.CollectionViewCell? = null) : RecyclerView.ViewHolder(view) {
-//
-//    }
-
-    open class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    open class ViewHolder(val view: View,val v:com.hitales.ui.recycler.CollectionViewCell? = null) : RecyclerView.ViewHolder(view) {
 
     }
 
@@ -59,7 +55,7 @@ open class ScrollView : RecyclerView {
 
     protected open fun setup(view: com.hitales.ui.ScrollView){
         layoutManager = BasicLayoutManager(this)
-        flexLayout = object : AndroidLayout(view){
+        var flexLayout = object : AndroidLayout(view){
             override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
                 val maxWidth = MeasureSpec.getSize(widthMeasureSpec)
                 val maxHeight = MeasureSpec.getSize(heightMeasureSpec)
@@ -73,11 +69,11 @@ open class ScrollView : RecyclerView {
                 super.onMeasure(MeasureSpec.makeMeasureSpec(maxWidth,widthMode), MeasureSpec.makeMeasureSpec(maxHeight,heightMode))
             }
         }
-        flexLayout?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT)
-        flexLayout?.setBackgroundColor(Colors.CLEAR)
+        flexLayout.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT)
+        flexLayout.setBackgroundColor(Colors.CLEAR)
         adapter = object : Adapter<ViewHolder>(){
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-                return ViewHolder(flexLayout!!)
+                return ViewHolder(flexLayout)
             }
 
             override fun getItemCount(): Int {
@@ -88,6 +84,7 @@ open class ScrollView : RecyclerView {
 
             }
         }
+        this.flexLayout = flexLayout
     }
 
     fun getScrolledX():Int{

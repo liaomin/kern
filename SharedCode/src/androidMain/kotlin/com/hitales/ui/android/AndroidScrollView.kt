@@ -26,6 +26,13 @@ open class AndroidScrollView : com.hitales.ui.android.scrollview.ScrollView {
         }
     }
 
+    override fun onMeasure(widthSpec: Int, heightSpec: Int) {
+        super.onMeasure(widthSpec, heightSpec)
+        val v = mView
+        if(v != null){
+            v.frame.setSize(PixelUtil.toDIPFromPixel(measuredWidth),PixelUtil.toDIPFromPixel(measuredHeight))
+        }
+    }
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt)

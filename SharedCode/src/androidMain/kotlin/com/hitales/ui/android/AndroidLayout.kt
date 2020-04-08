@@ -61,14 +61,15 @@ open class AndroidLayout(val mView: Layout) : ViewGroup(Platform.getApplication(
             layoutParams.height = oldHeight
         }
         setMeasuredDimension(PixelUtil.toPixelFromDIP(frame.width).toInt(), PixelUtil.toPixelFromDIP(frame.height).toInt())
-        mView.onMeasured()
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        mView.onLayout()
         for (it in mView.children) {
-            it.onLayout()
+            it.layout()
         }
     }
+
 
 //    override fun dispatchDraw(canvas: Canvas) {
 //        try {

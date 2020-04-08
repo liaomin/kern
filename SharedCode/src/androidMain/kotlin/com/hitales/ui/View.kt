@@ -317,12 +317,35 @@ actual open class View{
                 r += inner.right.toInt()
                 b += inner.bottom.toInt()
             }
+            if(frame.isChanged()){
+                onFrameChanged()
+            }
+        }
+    }
+
+    open fun layout() {
+        if(!isHidden){
+            var l = PixelUtil.toPixelFromDIP(frame.x)
+            var t = PixelUtil.toPixelFromDIP(frame.y)
+            val width = PixelUtil.toPixelFromDIP(frame.width)
+            val height = PixelUtil.toPixelFromDIP(frame.height)
+            mBackground?.setOffsetSize(width,height)
+            var r = l + width
+            var b = t + height
+            val inner = innerPadding
+            if(inner != null){
+                l += inner.left.toInt()
+                t += inner.top.toInt()
+                r += inner.right.toInt()
+                b += inner.bottom.toInt()
+            }
             mWidget.layout(l.toInt(), t.toInt(), r.toInt(), b.toInt())
             if(frame.isChanged()){
                 onFrameChanged()
             }
         }
     }
+
 
     open fun calculatePadding(){
         val tPadding = this.padding

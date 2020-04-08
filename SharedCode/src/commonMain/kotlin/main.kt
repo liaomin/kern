@@ -1,6 +1,7 @@
 
 import com.hitales.test.BasicViewController
 import com.hitales.test.TempTestViewViewController
+import com.hitales.test.back.TestCollectionViewController
 import com.hitales.test.view.ViewBorderTestController
 import com.hitales.ui.*
 import com.hitales.ui.animation.EaseInOutInterpolator
@@ -15,7 +16,7 @@ class NavigateController : BasicViewController(){
         map["测试view"] = TempTestViewViewController()
         map["test1测试"] = TempTestViewViewController()
         map["test2"] = TempTestViewViewController()
-        map["test3"] = TempTestViewViewController()
+        map["测试Collection"] = TestCollectionViewController()
         map["test4"] = TempTestViewViewController()
         map["ViewBorderTestController"] = ViewBorderTestController()
         for (i in 0 until  1){

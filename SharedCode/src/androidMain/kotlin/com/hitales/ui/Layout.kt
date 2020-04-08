@@ -126,8 +126,4 @@ actual open class Layout : View {
         }
     }
 
-    fun onMeasured(){
-
-    }
-
 }
