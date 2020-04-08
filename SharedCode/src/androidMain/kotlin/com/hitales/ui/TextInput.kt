@@ -84,7 +84,7 @@ actual open class TextInput : com.hitales.ui.TextView,TextWatcher {
     }
 
     fun onFocusChanged(focused: Boolean) {
-        val delegate = this.delegate?.get()
+        val delegate = this.delegate
         if(delegate != null && delegate is TextInputDelegate){
             delegate.onFocusChanged(this,focused)
         }
@@ -107,7 +107,7 @@ actual open class TextInput : com.hitales.ui.TextView,TextWatcher {
         val oInfo = oldChangeInfo
         val rInfo = replaceChangeInfo
         if(oInfo != null && rInfo != null){
-            val delegate = this.delegate?.get()
+            val delegate = this.delegate
             if(delegate != null && delegate is TextInputDelegate){
                 try {
                     if(delegate.shouldChangeText(this,oInfo.source!!,oInfo.start,oInfo.length,rInfo.s)){
@@ -152,7 +152,7 @@ actual open class TextInput : com.hitales.ui.TextView,TextWatcher {
     }
 
     fun onSelectionChanged(selStart: Int, selEnd: Int) {
-        val delegate = this.delegate?.get()
+        val delegate = this.delegate
         if(delegate != null && delegate is TextInputDelegate){
             delegate.onSelectionChanged(this,selStart,selEnd)
         }

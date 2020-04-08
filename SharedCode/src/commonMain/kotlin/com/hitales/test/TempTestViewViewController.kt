@@ -13,7 +13,7 @@ open class TempTestViewViewController : BasicViewController(),TextInputDelegate,
     override fun createLayout(): Layout {
         val s =  super.createLayout() as ScrollView
         s.isPageEnable = true
-        s.delegate = WeakReference(this)
+        s.delegate = this
 //        s.orientation = Orientation.HORIZONTAL
         return s
     }
@@ -24,7 +24,7 @@ open class TempTestViewViewController : BasicViewController(),TextInputDelegate,
         lp.width = itemWidth
         lp.height = itemWidth
         var view = TextInput("单位",lp)
-        view.delegate = WeakReference(this)
+        view.delegate = this
 //        var view = View(lp)
         view.setBackgroundColor(Colors.RED)
         view.setTextColor(Colors.BLUE)

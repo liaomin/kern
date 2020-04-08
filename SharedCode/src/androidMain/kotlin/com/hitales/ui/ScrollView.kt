@@ -88,14 +88,14 @@ actual open class ScrollView : FlexLayout {
         }
 
     actual open fun onScroll(offsetX: Float, offsetY: Float) {
-        val delegate = this.delegate?.get()
+        val delegate = this.delegate
         if(delegate != null && delegate is ScrollViewDelegate){
             delegate.onScroll(this,offsetX,offsetY)
         }
     }
 
     open fun onBeginScrolling(){
-        val delegate = this.delegate?.get()
+        val delegate = this.delegate
         if(delegate != null && delegate is ScrollViewDelegate){
             delegate.onBeginScrolling(this)
         }
@@ -110,7 +110,7 @@ actual open class ScrollView : FlexLayout {
     }
 
     open fun onEndScrolling(){
-        val delegate = this.delegate?.get()
+        val delegate = this.delegate
         if(delegate != null && delegate is ScrollViewDelegate){
             delegate.onEndScrolling(this)
         }
@@ -160,28 +160,28 @@ actual open class ScrollView : FlexLayout {
     }
 
     open fun onBeginDragging(){
-        val delegate = this.delegate?.get()
+        val delegate = this.delegate
         if(delegate != null && delegate is ScrollViewDelegate){
             delegate.onBeginDragging(this)
         }
     }
 
     open fun onEndDragging(){
-        val delegate = this.delegate?.get()
+        val delegate = this.delegate
         if(delegate != null && delegate is ScrollViewDelegate){
             delegate.onEndDragging(this)
         }
     }
 
     open fun onBeginDecelerating(){
-        val delegate = this.delegate?.get()
+        val delegate = this.delegate
         if(delegate != null && delegate is ScrollViewDelegate){
             delegate.onBeginDecelerating(this)
         }
     }
 
     open fun onEndDecelerating(){
-        val delegate = this.delegate?.get()
+        val delegate = this.delegate
         if(delegate != null && delegate is ScrollViewDelegate){
             delegate.onEndDecelerating(this)
         }

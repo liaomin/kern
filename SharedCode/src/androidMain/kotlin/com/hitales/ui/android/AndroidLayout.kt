@@ -1,5 +1,6 @@
 package com.hitales.ui.android
 
+import android.graphics.Canvas
 import android.graphics.Rect
 import android.view.MotionEvent
 import android.view.View
@@ -71,33 +72,33 @@ open class AndroidLayout(val mView: Layout) : ViewGroup(Platform.getApplication(
     }
 
 
-//    override fun dispatchDraw(canvas: Canvas) {
-//        try {
-//            if(mView.clipsToBounds){
-//                val bg = mView.mBackground
-//                if(bg != null){
-//                    var width = width.toFloat()
-//                    var height = height.toFloat()
-//                    val off = bg.offset
-//                    if(off != null){
-//                        canvas.translate(-off.x,-off.y)
-//                        width = off.width
-//                        height = off.height
-//                    }
-//                    canvas.clipPath(bg.getOuterPath(width,height))
-//                    if(off != null) {
-//                        canvas.translate(off.x, off.y)
-//                    }
-//                }else{
-//                    canvas.clipRect(Rect(0,0,width,height))
-//                }
-//            }
-//        }catch (e:Exception){
-//            e.printStackTrace()
-//        }finally {
-//            super.dispatchDraw(canvas)
-//        }
-//    }
+    override fun dispatchDraw(canvas: Canvas) {
+        try {
+            if(mView.clipsToBounds){
+                val bg = mView.mBackground
+                if(bg != null){
+                    var width = width.toFloat()
+                    var height = height.toFloat()
+                    val off = bg.offset
+                    if(off != null){
+                        canvas.translate(-off.x,-off.y)
+                        width = off.width
+                        height = off.height
+                    }
+                    canvas.clipPath(bg.getOuterPath(width,height))
+                    if(off != null) {
+                        canvas.translate(off.x, off.y)
+                    }
+                }else{
+                    canvas.clipRect(Rect(0,0,width,height))
+                }
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+        }finally {
+            super.dispatchDraw(canvas)
+        }
+    }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()

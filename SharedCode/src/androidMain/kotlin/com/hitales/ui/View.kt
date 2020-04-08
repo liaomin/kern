@@ -36,7 +36,7 @@ actual open class View{
 
     var mBackground: Background? = null
 
-    actual var delegate:WeakReference<ViewDelegate>? = null
+    actual var delegate:ViewDelegate? = null
 
     var innerPadding : EdgeInsets? = null
         set(value) {

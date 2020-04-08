@@ -5,7 +5,6 @@ import com.hitales.ui.View
 import com.hitales.ui.ViewDelegate
 import com.hitales.ui.ViewState
 import com.hitales.ui.layout.flex.FlexLayout
-import com.hitales.utils.WeakReference
 
 actual open class CollectionViewCell : ViewDelegate {
 
@@ -27,7 +26,8 @@ actual open class CollectionViewCell : ViewDelegate {
         contentView.setOnLongPressListener {
             onLongPress(contentView)
         }
-        contentView.delegate = WeakReference(this)
+        contentView.clipsToBounds = true
+        contentView.delegate = this
     }
 
     actual open fun applyAttribute(layoutAttribute: LayoutAttribute) {

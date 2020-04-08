@@ -22,6 +22,4 @@ actual class WeakReference<T :Any> {
             block(ref)
         }
     }
-
-
 }

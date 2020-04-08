@@ -60,7 +60,7 @@ expect open class View  {
 
     var flags:Int
 
-    var delegate:WeakReference<ViewDelegate>?
+    var delegate:ViewDelegate?
 
     /**
      * use margin and padding to calculate frame
