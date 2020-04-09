@@ -2,7 +2,7 @@ package com.hitales.ui
 
 import com.hitales.ui.layout.flex.FlexLayout
 import com.hitales.utils.Log
-import com.hitales.utils.WeakDelegate
+import com.hitales.utils.Weak
 
 
 open class ViewController(var title:String? = null) {
@@ -53,7 +53,7 @@ open class ViewController(var title:String? = null) {
 
     var exitAnimation:Animation? = null
 
-    var window:Window? by WeakDelegate()
+    var window:Window? by Weak()
 
     init {
         flag = FLAG_PAUSE or FLAG_DESTROY

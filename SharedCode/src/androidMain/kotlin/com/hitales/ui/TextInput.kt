@@ -4,7 +4,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import com.hitales.ui.android.AndroidEditTextView
 import com.hitales.utils.EdgeInsets
-import com.hitales.utils.WeakReference
 
 
 actual open class TextInput : com.hitales.ui.TextView,TextWatcher {
@@ -18,7 +17,7 @@ actual open class TextInput : com.hitales.ui.TextView,TextWatcher {
 
     private var skipChange = false
 
-    actual var nextInput: WeakReference<TextInput>? = null
+    actual var nextInput: TextInput? = null
 
     actual open var autoFocus:Boolean = false
 
@@ -91,7 +90,7 @@ actual open class TextInput : com.hitales.ui.TextView,TextWatcher {
     }
 
     fun canHideSoftKeyboard():Boolean{
-        val next = nextInput?.get()
+        val next = nextInput
         if(next != null){
             next.focus()
             return false

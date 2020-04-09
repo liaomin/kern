@@ -1,7 +1,5 @@
 package com.hitales.ui
 
-import com.hitales.utils.WeakReference
-
 interface TextInputDelegate : ViewDelegate {
     fun onTextChanged(view: TextInput,s: CharSequence)
     fun onFocusChanged(view: TextInput,focused: Boolean)
@@ -13,7 +11,7 @@ expect open class TextInput : TextView {
 
     constructor(text:CharSequence? = null,layoutParams: LayoutParams? = null)
 
-    var nextInput:WeakReference<TextInput>?
+    var nextInput:TextInput?
 
     open var placeholder:CharSequence?
 

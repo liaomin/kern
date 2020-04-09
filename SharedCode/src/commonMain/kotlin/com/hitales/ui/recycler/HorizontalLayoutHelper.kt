@@ -9,9 +9,9 @@ class HorizontalLayoutHelper : LayoutHelper() {
     override fun getNextPageLayoutInfo(collectionView: CollectionView,layout:DefaultCollectionViewLayout,adapter:CollectionViewAdapter, currentPage: CollectionViewLayout.PageLayoutInfo?, nextPage: CollectionViewLayout.PageLayoutInfo){
         val minimumLineSpacing = layout.minimumLineSpacing
         val tempSize = layout.tempSize
-        val headerAndFooterAddLineSpace = layout.headerAndFooterAddLineSpace
+        val headerAndFooterAddLineSpace = false
         val maxColumns = layout.maxColumns
-        val minimumInteritemSpacing = layout.minimumInterItemSpacing
+        val minimumInterItemSpacing = layout.minimumInterItemSpacing
 
         val rows = layout.rows
         val padding = collectionView.padding
@@ -148,7 +148,7 @@ class HorizontalLayoutHelper : LayoutHelper() {
                 attribute.position = position
                 kind = ElementKindCell
                 attribute.elementKind = kind
-                offsetY += height + minimumInteritemSpacing
+                offsetY += height + minimumInterItemSpacing
                 rows.add(attribute)
                 position++
             }
@@ -234,7 +234,7 @@ class HorizontalLayoutHelper : LayoutHelper() {
     override fun calculateContextSize(collectionView: CollectionView,layout: DefaultCollectionViewLayout,adapter: CollectionViewAdapter, page: CollectionViewLayout.PageLayoutInfo, contextSize: Size) {
         page.attributes.last()?.let {
             val minimumLineSpacing = layout.minimumLineSpacing
-            val headerAndFooterAddLineSpace = layout.headerAndFooterAddLineSpace
+            val headerAndFooterAddLineSpace = false
             var section = it.section
             var row = it.row
             var offset = it.frame.getRight()

@@ -30,11 +30,14 @@ open class TestCollectionViewController : BasicViewController() {
     override fun createLayout(): Layout {
         val lp = LayoutParams(Platform.windowWidth,Platform.windowHeight / 2f)
         val collectionView = CollectionView(lp)
-        collectionView.isPageEnable = true
+//        collectionView.isPageEnable = true
 //        collectionView.setBackgroundColor(Colors.RED)
 
+//        collectionView.setBorderRadius(20f)
+//        collectionView.setShadow(Colors.BLUE,10f,10f,10f)
+
         val itemWidth = (Platform.windowWidth - 80) / 4
-        val adapter = object : CollectionViewAdapter(){
+        val adapter = object : CollectionViewAdapter{
 
             override fun haveHeaderView(collectionView: CollectionView, section: Int): Boolean {
                 return true

@@ -1,9 +1,9 @@
 package com.hitales.ui.recycler
 
 import com.hitales.ui.Orientation
+import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
 import com.hitales.utils.Size
-import com.hitales.utils.WeakReference
 
 abstract class LayoutHelper {
 
@@ -52,9 +52,9 @@ open class DefaultCollectionViewLayout : CollectionViewLayout(){
     var minimumInterItemSpacing = 10f
 
     /**
-     * 头尾是否添加间距
+     * 内容间距
      */
-    var headerAndFooterAddLineSpace = false
+    var sectionInset:EdgeInsets? = null
 
     /**
      * 等间距分布一行数据
@@ -73,8 +73,6 @@ open class DefaultCollectionViewLayout : CollectionViewLayout(){
     private val horizontalLayoutHelper = HorizontalLayoutHelper()
 
     protected val pages = ArrayList<PageLayoutInfo>()
-
-    private val weakSelf = WeakReference<CollectionViewLayout>(this)
 
     override fun clear() {
         attributesPool.clear()
@@ -131,7 +129,7 @@ open class DefaultCollectionViewLayout : CollectionViewLayout(){
                 page = currentPage.page
             }
             while (true){
-                val nextPage = PageLayoutInfo(weakSelf)
+                val nextPage = PageLayoutInfo(this@DefaultCollectionViewLayout)
                 nextPage.page = page
                 getNextPageLayoutInfo(this,currentPage,nextPage)
                 if(nextPage.isEmpty()){

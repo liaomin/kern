@@ -9,9 +9,9 @@ class VerticalLayoutHelper : LayoutHelper() {
     override fun getNextPageLayoutInfo(collectionView: CollectionView,layout:DefaultCollectionViewLayout,adapter:CollectionViewAdapter, currentPage: CollectionViewLayout.PageLayoutInfo?, nextPage: CollectionViewLayout.PageLayoutInfo){
         val minimumLineSpacing = layout.minimumLineSpacing
         val tempSize = layout.tempSize
-        val headerAndFooterAddLineSpace = layout.headerAndFooterAddLineSpace
+        val headerAndFooterAddLineSpace = false
         val maxColumns = layout.maxColumns
-        val minimumInteritemSpacing = layout.minimumInterItemSpacing
+        val minimumInterItemSpacing = layout.minimumInterItemSpacing
 
         val rows = layout.rows
         val padding = collectionView.padding
@@ -27,6 +27,7 @@ class VerticalLayoutHelper : LayoutHelper() {
             paddingRight = it.right
             paddingLeft = it.left
         }
+
         var frameStartY = 0f
         var offsetX = paddingLeft
         var offsetY = paddingTop
@@ -148,7 +149,7 @@ class VerticalLayoutHelper : LayoutHelper() {
                 attribute.position = position
                 kind = ElementKindCell
                 attribute.elementKind = kind
-                offsetX += width + minimumInteritemSpacing
+                offsetX += width + minimumInterItemSpacing
                 rows.add(attribute)
                 position++
             }
@@ -234,7 +235,7 @@ class VerticalLayoutHelper : LayoutHelper() {
     override fun calculateContextSize(collectionView: CollectionView,layout: DefaultCollectionViewLayout,adapter: CollectionViewAdapter, page: CollectionViewLayout.PageLayoutInfo, contextSize: Size) {
         page.attributes.last()?.let {
             val minimumLineSpacing = layout.minimumLineSpacing
-            val headerAndFooterAddLineSpace = layout.headerAndFooterAddLineSpace
+            val headerAndFooterAddLineSpace = false
             var section = it.section
             var row = it.row
             var offset = it.frame.getBottom()

@@ -26,13 +26,11 @@ actual open class CollectionViewCell : ViewDelegate {
         contentView.setOnLongPressListener {
             onLongPress(contentView)
         }
-        contentView.clipsToBounds = true
         contentView.delegate = this
     }
 
     actual open fun applyAttribute(layoutAttribute: LayoutAttribute) {
         contentView.frame.set(layoutAttribute.frame)
-        contentView.onFrameChanged()
         section = layoutAttribute.section
         row = layoutAttribute.row
     }
@@ -42,6 +40,7 @@ actual open class CollectionViewCell : ViewDelegate {
             collectionView?.onItemPress(section,row,this)
         }
     }
+
     fun onLongPress(view: View) {
         if(section >= 0 && row >= 0){
             collectionView?.onItemLongPress(section,row,this)

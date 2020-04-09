@@ -2,7 +2,6 @@ package com.hitales.ui
 
 import com.hitales.ui.android.AndroidLayout
 import com.hitales.utils.Size
-import com.hitales.utils.WeakReference
 import java.util.*
 
 
@@ -17,7 +16,7 @@ actual open class Layout : View {
         }
 
     actual constructor(layoutParams: LayoutParams?):super(layoutParams){
-            getWidget().clipChildren = true
+//        getWidget().clipChildren = true
 //        mWidget.isFocusable = true
 //        mWidget.isFocusableInTouchMode = true
     }
@@ -34,7 +33,7 @@ actual open class Layout : View {
             widget.addView(view.getWidget(),index)
             children.add(index,view)
         }
-        view.superView = WeakReference(this)
+        view.superView = this
         view.onAttachedToView(this)
     }
 

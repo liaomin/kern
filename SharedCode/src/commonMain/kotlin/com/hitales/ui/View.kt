@@ -3,7 +3,6 @@ package com.hitales.ui
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
 import com.hitales.utils.Size
-import com.hitales.utils.WeakReference
 
 enum class Orientation{
     VERTICAL,
@@ -106,7 +105,7 @@ expect open class View  {
 
     constructor(layoutParams: LayoutParams? = null)
 
-    var superView:WeakReference<Layout>?
+    var superView:Layout?
 
     open fun onFrameChanged()
     open fun onLayout()

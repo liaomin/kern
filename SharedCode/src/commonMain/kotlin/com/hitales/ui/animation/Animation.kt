@@ -2,7 +2,7 @@ package com.hitales.ui
 
 import com.hitales.ui.animation.BezierInterpolator
 import com.hitales.ui.animation.LinearInterpolator
-import com.hitales.utils.WeakDelegate
+import com.hitales.utils.Weak
 
 
 /**
@@ -21,7 +21,7 @@ open class Animation(var interpolator:BezierInterpolator = LinearInterpolator())
     /**
      * 回调
      */
-    var delegate:AnimationDelegate? by WeakDelegate()
+    var delegate:AnimationDelegate? by Weak()
 
     /**
      * 保存结束后的位置

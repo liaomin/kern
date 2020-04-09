@@ -5,7 +5,6 @@ import com.hitales.ui.android.AndroidScrollView
 import com.hitales.ui.layout.flex.FlexDirection
 import com.hitales.ui.layout.flex.FlexLayout
 import com.hitales.ui.utils.PixelUtil
-import com.hitales.utils.WeakReference
 
 
 actual open class ScrollView : FlexLayout {
@@ -54,7 +53,7 @@ actual open class ScrollView : FlexLayout {
             widget.addSubView(view.getWidget(),index)
             children.add(index,view)
         }
-        view.superView = WeakReference(this)
+        view.superView = this
         view.onAttachedToView(this)
     }
 

@@ -12,11 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HAttributes : UICollectionViewLayoutAttributes
 
-@property (nonatomic,weak) id tag;
+@property (nonatomic,weak,nullable) id tag;
 
-@property (nonatomic,weak) id tag1;
+@property (nonatomic,weak,nullable) id tag1;
 
-@property (nonatomic,strong) id tag2;
+@property (nonatomic,strong,nullable) id tag2;
 
 @end
 

@@ -1,11 +1,16 @@
 package com.hitales.ui.recycler
 
-import com.hitales.utils.*
+import com.hitales.utils.Frame
+import com.hitales.utils.LinkedList
+import com.hitales.utils.Size
+import com.hitales.utils.Weak
 
 
 abstract class CollectionViewLayout {
 
-    open class PageLayoutInfo(val layoutRef:WeakReference<CollectionViewLayout>){
+    open class PageLayoutInfo{
+
+        var layout:CollectionViewLayout? by Weak()
 
         var page:Int = 0
 
@@ -15,9 +20,13 @@ abstract class CollectionViewLayout {
 
         var isLayout:Boolean = false
 
+        constructor(layout:CollectionViewLayout?){
+            this.layout = layout
+        }
+
         open fun reset(){
             page = 0
-            layoutRef.get()?.apply {
+            layout?.apply {
                 attributes.forEach {
                     cacheAttribute(it)
                 }
@@ -34,7 +43,7 @@ abstract class CollectionViewLayout {
 
     val maxAttributesPoolSize = 1000
 
-    var collectionView:CollectionView? by WeakDelegate()
+    var collectionView:CollectionView? by Weak()
 
     protected val attributesPool = LinkedList<LayoutAttribute>()
 

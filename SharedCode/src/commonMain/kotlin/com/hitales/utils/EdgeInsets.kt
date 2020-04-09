@@ -1,6 +1,6 @@
 package com.hitales.utils
 
-data class EdgeInsets(var left:Float = 0f,var top:Float = 0f,var right:Float = 0f,var bottom:Float = 0f){
+class EdgeInsets {
 
     companion object {
 
@@ -11,6 +11,28 @@ data class EdgeInsets(var left:Float = 0f,var top:Float = 0f,var right:Float = 0
         fun value(value:Float):EdgeInsets{
             return EdgeInsets(value,value,value,value)
         }
+    }
+
+    var left:Float
+
+    var top:Float
+
+    var right:Float
+
+    var bottom:Float
+
+    constructor(left:Float = 0f,top:Float = 0f,right:Float = 0f,bottom:Float = 0f){
+        this.left = left
+        this.top = top
+        this.right = right
+        this.bottom = bottom
+    }
+
+    constructor(other: EdgeInsets){
+        this.left = other.left
+        this.top = other.top
+        this.right = other.right
+        this.bottom = other.bottom
     }
 
     override fun equals(other: Any?): Boolean {

@@ -13,10 +13,10 @@ import com.hitales.ui.utils.PixelUtil
 actual open class CollectionView : ScrollView {
 
     companion object {
-        val HEADER_TYPE = -0xFFFFF0
-        val FOOTER_TYPE = -0xFFFFF1
-        val HEADER_INDEX = -1
-        val FOOTER_INDEX = -2
+        const val HEADER_TYPE = -0xFFFFF0
+        const val FOOTER_TYPE = -0xFFFFF1
+        const val HEADER_INDEX = -1
+        const val FOOTER_INDEX = -2
     }
 
     actual constructor(layoutParams: LayoutParams?,layout: CollectionViewLayout):super(layoutParams){
@@ -176,17 +176,14 @@ actual open class CollectionView : ScrollView {
     }
 
     fun onItemPress(section:Int,row:Int,cell:CollectionViewCell){
-//        adapter?.onItemPress(this,section,row,cell)
+        adapter?.onItemPress(this,section,row,cell)
     }
 
     fun onItemLongPress(section:Int,row:Int,cell:CollectionViewCell){
-//        adapter?.onItemLongPress(this,section,row,cell)
+        adapter?.onItemLongPress(this,section,row,cell)
     }
-
 
     override fun addSubView(view: com.hitales.ui.View, index: Int) {
         throw RuntimeException("unsupport")
     }
-
-
 }

@@ -11,7 +11,6 @@ import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
 import com.hitales.utils.Size
-import com.hitales.utils.WeakReference
 import kotlin.math.max
 import kotlin.math.min
 
@@ -70,7 +69,7 @@ actual open class View{
         }
 
 
-    actual var superView : WeakReference<Layout>? = null
+    actual var superView : Layout?= null
 
     actual open var id: Int
         get() = mWidget.id
@@ -176,7 +175,7 @@ actual open class View{
 
 
     actual open fun removeFromSuperView() {
-        superView?.get()?.removeSubView(this)
+        superView?.removeSubView(this)
         superView = null
     }
 
@@ -383,14 +382,14 @@ actual open class View{
 
     actual open fun startAnimation(animation: Animation, completion: (() -> Unit)?) {
         val animatorSet = animation.toAnimator(getWidget())
-        val widget = WeakReference<android.view.View>(mWidget)
+        val widget = mWidget
         animatorSet.addListener(object : Animator.AnimatorListener{
 
             override fun onAnimationRepeat(animation: Animator?) {
             }
 
             override fun onAnimationEnd(animator: Animator?) {
-                val view = widget.get()
+                val view = widget
                 if(!animation.fillAfter && view != null){
                     view.translationX = 0f
                     view.translationY = 0f

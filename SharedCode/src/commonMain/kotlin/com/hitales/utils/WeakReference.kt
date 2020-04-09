@@ -12,7 +12,7 @@ expect class WeakReference<T:Any>{
 /**
  * 模拟ios __weak
  */
-class WeakDelegate<T : Any> {
+class Weak<T : Any> {
 
     var weakReference:WeakReference<T>? = null
 

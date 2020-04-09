@@ -4,7 +4,6 @@ import com.hitales.ui.*
 import com.hitales.ui.layout.flex.FlexLayoutParams
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Log
-import com.hitales.utils.WeakReference
 
 open class TempTestViewViewController : BasicViewController(),TextInputDelegate,ScrollViewDelegate {
 
@@ -41,18 +40,18 @@ open class TempTestViewViewController : BasicViewController(),TextInputDelegate,
 
         var view2 = TextInput("",lp)
 //        view2.autoFocus = true
-        view.nextInput = WeakReference(view2)
+        view.nextInput = view2
         view2.setBackgroundColor(Colors.RED)
         addView(view2)
 
         var view3 = TextInput("",lp)
         view3.setBackgroundColor(Colors.RED)
-        view2.nextInput = WeakReference(view3)
+        view2.nextInput = view3
         addView(view3)
 
         var view4= TextInput("",lp)
         view4.setBackgroundColor(Colors.RED)
-        view3.nextInput = WeakReference(view4)
+        view3.nextInput = view4
         addView(view4)
 
 
