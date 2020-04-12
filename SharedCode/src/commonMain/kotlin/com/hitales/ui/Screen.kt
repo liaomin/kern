@@ -1,5 +1,7 @@
 package com.hitales.ui
 
+import kotlin.native.concurrent.ThreadLocal
+
 class Screen {
 
     val width:Float
@@ -12,7 +14,8 @@ class Screen {
         this.height = height
         window = Window(width,height)
     }
-
+    
+    @ThreadLocal
     companion object{
 
         private var mInstance:Screen? = null

@@ -1,0 +1,7 @@
+depends = CoreGraphics UIKit
+language = Objective-C
+package = com.kern.ios.ui
+headers = KUI.h
+
+compilerOpts = -framework KUI
+linkerOpts = -framework KUI -F./frameworks

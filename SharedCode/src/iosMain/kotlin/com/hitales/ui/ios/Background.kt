@@ -549,12 +549,19 @@ class Background(val layerRef:WeakReference<CALayer>) {
         invalidateSelf()
     }
 
+    open fun setBorderWidth(borderWidth: Float) {
+        setBorderWidth(borderWidth,borderWidth,borderWidth,borderWidth,borderStyle)
+    }
+
     open fun setBorderWidth(borderWidth: Float, borderStyle: BorderStyle) {
         setBorderWidth(borderWidth,borderWidth,borderWidth,borderWidth,borderStyle)
     }
 
-    open fun setBorderWidth(leftWidth: Float, topWidth: Float, rightWidth: Float, bottomWidth: Float, borderStyle: BorderStyle
-    ) {
+    open fun setBorderWidth(leftWidth: Float, topWidth: Float, rightWidth: Float, bottomWidth: Float) {
+        setBorderWidth(leftWidth, topWidth, rightWidth, bottomWidth, borderStyle)
+    }
+
+    open fun setBorderWidth(leftWidth: Float, topWidth: Float, rightWidth: Float, bottomWidth: Float, borderStyle: BorderStyle) {
         borderLeftWidth = leftWidth
         borderTopWidth = topWidth
         borderRightWidth = rightWidth

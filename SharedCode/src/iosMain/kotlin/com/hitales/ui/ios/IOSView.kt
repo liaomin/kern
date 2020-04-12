@@ -1,54 +1,48 @@
 package com.hitales.ui.ios
 
+import com.hitales.ui.Layout
 import com.hitales.ui.View
-import com.hitales.ui.ViewGroup
+import com.hitales.utils.Log
 import com.hitales.utils.WeakReference
-import kotlinx.cinterop.ObjCAction
-import platform.CoreGraphics.CGContextRef
+import com.kern.ios.ui.KView
+import kotlinx.cinterop.useContents
 import platform.CoreGraphics.CGRectMake
-import platform.QuartzCore.CALayer
-import platform.UIKit.UIView
 import platform.UIKit.UIWindow
 
+class IOSView(val mView: WeakReference<View>) : KView(CGRectMake(0.0,0.0,0.0,0.0)) {
 
-class IOSView(val mView: WeakReference<View>) : UIView(CGRectMake(0.0,0.0,0.0,0.0)) {
-
-    @ObjCAction
-    fun willMoveToSuperview(superview: UIView?){
-        if(superview != null){
-        }else{
-        }
-    }
-
-    @ObjCAction
-    fun willMoveToWindow(window: UIWindow?){
+    override fun willMoveToWindow(window: UIWindow) {
+        super.willMoveToWindow(window)
         val view = mView.get()
         if(window == null){
             view?.onDetachedFromWindow()
-            this.layer.contents = null
         }else{
             view?.onAttachedToWindow()
-            this.layer.setNeedsDisplay()
         }
     }
 
-    @ObjCAction
-    fun layoutSubviews() {
+    override fun layoutSubviews() {
+        super.layoutSubviews()
+        Log.d("$mView layoutSubviews")
         val view = mView.get()
-        if(view != null && view is ViewGroup){
-            view.layoutSubviews()
+        if(view != null && view is Layout){
+            this.frame.useContents {
+                view.layoutSubviews(this.size.width.toFloat(),this.size.height.toFloat())
+            }
+
         }
     }
 
-    override fun displayLayer(layer: CALayer) {
-        val view = mView.get()
-        if(view != null){
-            mView.get()?.mBackground?.onDraw(layer,view.mBackgroundColor)
-        }
-    }
 
-    override fun drawLayer(layer: CALayer, inContext: CGContextRef?) {
-        super.drawLayer(layer, inContext)
-    }
+//    override fun displayLayer(layer: CALayer) {
+//        val view = mView.get()
+//        if(view != null){
+//            mView.get()?.mBackground?.onDraw(layer,view.mBackgroundColor)
+//        }
+//    }
+//
+//    override fun drawLayer(layer: CALayer, inContext: CGContextRef?) {
+//        super.drawLayer(layer, inContext)
+//    }
 
 }

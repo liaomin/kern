@@ -1,7 +1,5 @@
 package com.hitales.utils
 
-import kotlin.reflect.KProperty
-
 actual class WeakReference<T : Any> {
 
     private val mWeakReference:kotlin.native.ref.WeakReference<T>
@@ -16,5 +14,12 @@ actual class WeakReference<T : Any> {
 
     actual fun get(): T? {
         return mWeakReference.get()
+    }
+
+    actual fun use(block: (item: T) -> Unit) {
+        val ref = mWeakReference.get()
+        if(ref != null){
+            block(ref)
+        }
     }
 }

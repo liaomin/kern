@@ -1,11 +1,11 @@
 package com.hitales.ui
 
 import com.hitales.ui.ios.IOSImageView
-import com.hitales.utils.Frame
-import com.hitales.utils.Size
 import com.hitales.utils.WeakReference
-import kotlinx.cinterop.useContents
-import platform.UIKit.*
+import platform.UIKit.UIImageView
+import platform.UIKit.UIViewContentMode
+import platform.UIKit.clipsToBounds
+import platform.UIKit.contentMode
 
 actual open class ImageView : com.hitales.ui.View {
 
@@ -26,7 +26,7 @@ actual open class ImageView : com.hitales.ui.View {
 //                getWidget().setImageBitmap(value.bitmap)
 //            }
 //        }
-    actual constructor(frame: Frame):super(frame)
+    actual constructor(layoutParams: LayoutParams?):super(layoutParams)
 
     override fun createWidget(): UIImageView {
         val imageView = IOSImageView(WeakReference(this))
@@ -63,20 +63,20 @@ actual open class ImageView : com.hitales.ui.View {
             }
         }
 
-    override fun measureSize(maxWidth: Float, maxHeight: Float): Size {
-        val size = super.measureSize(maxWidth, maxHeight)
-        image?.mImage?.apply {
-            val scale = this.scale
-            this.size.useContents {
-                val w = this.width * scale
-                val h = this.height * scale
-                val screenScale = UIScreen.mainScreen.scale
-                size.width = (w / screenScale).toFloat()
-                size.height = (h / screenScale).toFloat()
-            }
-        }
-        return size
-
-    }
+//    override fun measureSize(maxWidth: Float, maxHeight: Float): Size {
+//        val size = super.measureSize(maxWidth, maxHeight)
+//        image?.mImage?.apply {
+//            val scale = this.scale
+//            this.size.useContents {
+//                val w = this.width * scale
+//                val h = this.height * scale
+//                val screenScale = UIScreen.mainScreen.scale
+//                size.width = (w / screenScale).toFloat()
+//                size.height = (h / screenScale).toFloat()
+//            }
+//        }
+//        return size
+//
+//    }
 
 }

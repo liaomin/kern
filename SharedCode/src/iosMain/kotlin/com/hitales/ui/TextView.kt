@@ -1,6 +1,5 @@
 package com.hitales.ui
 import com.hitales.ui.ios.IOSTextView
-import com.hitales.utils.Frame
 import com.hitales.utils.Size
 import com.hitales.utils.WeakReference
 import kotlinx.cinterop.useContents
@@ -31,7 +30,7 @@ actual open class TextView :  View {
             getTextWidget().textColor = value.toUIColor()
         }
 
-    actual constructor(text:CharSequence?,frame: Frame):super(frame){
+    actual constructor(text:CharSequence?,layoutParams: LayoutParams?):super(layoutParams){
         this.initLabel(text)
     }
 
@@ -181,35 +180,28 @@ actual open class TextView :  View {
         set(value) {
             getTextWidget().numberOfLines = value.toLong()
         }
-
-    /**
-     * 自定义字体
-     */
-    actual open fun setFontStyle(fontName: String) {
-    }
-
-
-    override fun measureSize(maxWidth: Float, maxHeight: Float): Size {
+    override fun measure(widthSpace: Float, widthMode: MeasureMode, heightSpace: Float, heightMode: MeasureMode, outSize: Size) {
         val text = this.text
         if(text != null){
-            var width = maxWidth
-            var height = maxHeight
-            if(width <= 0){
+            var width = widthSpace
+            var height = heightSpace
+            if(widthMode  == MeasureMode.UNSPECIFIED){
                 width = Float.MAX_VALUE
             }
-            if(height <= 0){
+            if(heightMode  == MeasureMode.UNSPECIFIED){
                 height = Float.MAX_VALUE
             }
             return getAttributedString().boundingRectWithSize(CGSizeMake(width.toDouble(),height.toDouble()),
                 NSStringDrawingUsesLineFragmentOrigin or NSStringDrawingUsesFontLeading,null).useContents {
                 val p = padding
                 if(p != null){
-                    return Size(this.size.width.toFloat() + p.left + p.right,this.size.height.toFloat() + p.top + p.bottom)
+                    outSize.set(this.size.width.toFloat() + p.left + p.right,this.size.height.toFloat() + p.top + p.bottom)
+                }else{
+                    outSize.set(this.size.width.toFloat(),this.size.height.toFloat())
                 }
-                return Size(this.size.width.toFloat(),this.size.height.toFloat())
             }
         }else{
-            return super.measureSize(maxWidth, maxHeight)
+            super.measure(widthSpace, widthMode, heightSpace, heightMode, outSize)
         }
     }
 
@@ -247,6 +239,18 @@ actual open class TextView :  View {
         return attr
     }
 
-    actual open fun setTextShadow(color: Int, dx: Float, dy: Float, radius: Float) {
+    /**
+     * 自定义字体
+     */
+    actual open fun setFontStyle(fontName: String, style: FontStyle) {
+    }
+
+    actual fun enableAutoFontSizeToFit(minFontSize: Int, maxFontSize: Int) {
+    }
+
+    actual fun disableAutoFontSizeToFit() {
+    }
+
+    actual open fun setTextShadow(color: Int, radius: Float, dx: Float, dy: Float) {
     }
 }

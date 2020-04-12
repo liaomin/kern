@@ -16,17 +16,8 @@ class IOSImageView(val mView: WeakReference<ImageView>) : UIImageView(CGRectMake
         val view = mView.get()
         if(window == null){
             view?.onDetachedFromWindow()
-            this.layer.contents = null
         }else{
             view?.onAttachedToWindow()
-            this.layer.setNeedsDisplay()
-        }
-    }
-
-    override fun displayLayer(layer: CALayer) {
-        val view = mView.get()
-        if(view != null){
-            view.mBackground?.onDraw(layer,view.mBackgroundColor,this.image)
         }
     }
 

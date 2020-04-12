@@ -4,7 +4,6 @@ import com.hitales.ui.TextView
 import com.hitales.utils.WeakReference
 import kotlinx.cinterop.ObjCAction
 import platform.CoreGraphics.CGRectMake
-import platform.QuartzCore.CALayer
 import platform.UIKit.UILabel
 import platform.UIKit.UIWindow
 
@@ -15,10 +14,8 @@ class IOSTextView(val mView: WeakReference<TextView>) : UILabel(CGRectMake(0.0,0
         val view = mView.get()
         if(window == null){
             view?.onDetachedFromWindow()
-            this.layer.contents = null
         }else{
             view?.onAttachedToWindow()
-            this.layer.setNeedsDisplay()
         }
     }
 
@@ -28,13 +25,5 @@ class IOSTextView(val mView: WeakReference<TextView>) : UILabel(CGRectMake(0.0,0
 //            view.mBackground?.onDraw(layer,view.mBackgroundColor)
 //        }
 //    }
-
-    override fun layerWillDraw(layer: CALayer) {
-        val view = mView.get()
-        if(view != null){
-            view.mBackground?.onDraw(layer,view.mBackgroundColor)
-        }
-        super.layerWillDraw(layer)
-    }
 
 }

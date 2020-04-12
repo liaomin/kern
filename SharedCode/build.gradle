@@ -55,6 +55,10 @@ kotlin {
 //                        includeDirs("frameworks/HUI.framework/Headers")
 //                    }
 //
+//                    oInterop {
+//                        defFile project.file("frameworks/KUI.def")
+//                        includeDirs("frameworks/KUI.framework/Headers")
+//                    }
 //                }
 //            }
 //        }

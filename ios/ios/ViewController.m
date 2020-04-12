@@ -10,7 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <SharedCode/SharedCode.h>
 #import "BorderView.h"
-
+#import <HUI/KButton.h>
 
 @implementation ViewController
 
@@ -46,8 +46,20 @@
 //    self.borderView.layer.transform = transform;
 //    [b.layer setValue:[NSNumber numberWithDouble:100] forKeyPath:@"transform.translation.x"];
 
-    [[SharedCodePlatformCompanion companion] doInitViewController:self];
+    [[SharedCodePlatformCompanion companion] doInitViewController:self debug:YES];
+    [SharedCodeMainKt main];
 
+    SharedCodeLayoutParams* par = [[SharedCodeLayoutParams alloc] initWithWidth:0/0.f height:0/0.f];
+    self.view = [[[SharedCodeView alloc] initWithLayoutParams:par] getWidget];
+
+    UIView* view = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 60, 40)];
+    UIButton* k = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 40)];
+           [k setTitle:@"dwd" forState:UIControlStateNormal];
+           [k setTitle:@"Highlighted" forState:UIControlStateHighlighted];
+           [k setBackgroundColor:[UIColor redColor]];
+       [self.view addSubview:view];
+    [view addSubview:k];
+    
 //    UIButton *v = [[UIButton alloc] initWithFrame:CGRectMake(50, 50, 50, 50)];
 //    [v setTitle:@"" forState:UIControlStateNormal];
 //    [v setBackgroundColor:[UIColor redColor]];

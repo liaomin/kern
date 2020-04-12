@@ -1,6 +1,7 @@
 package com.hitales.ui
 
 actual class Touches {
+
     actual fun getLocationX(pointerIndex: Int): Float {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -20,4 +21,13 @@ actual class Touches {
     actual fun getPointerSize(): Int {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    actual fun getLocationX(): Float {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    actual fun getLocationY(): Float {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 }

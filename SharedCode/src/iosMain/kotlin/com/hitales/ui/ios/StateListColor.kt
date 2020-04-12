@@ -13,14 +13,17 @@ open class StateListColor(color:Int) {
     }
 
     fun getColorForState(state:UIControlState): Int {
-        if(state != null){
-            when(state){
-                UIControlStateNormal -> return getColorForState(ViewState.NORMAL)
-                UIControlStateHighlighted -> return getColorForState(ViewState.PRESSED)
-                UIControlStateDisabled -> return getColorForState(ViewState.DISABLED)
-                UIControlStateSelected -> return getColorForState(ViewState.SELECTED)
-                UIControlStateFocused -> return getColorForState(ViewState.FOCUSED)
-            }
+        if(state and UIControlStateHighlighted == UIControlStateHighlighted){
+            return getColorForState(ViewState.PRESSED)
+        }
+        if(state and UIControlStateSelected == UIControlStateSelected){
+            return getColorForState(ViewState.SELECTED)
+        }
+        if(state and UIControlStateFocused == UIControlStateFocused){
+            return getColorForState(ViewState.FOCUSED)
+        }
+        if(state and UIControlStateDisabled == UIControlStateDisabled){
+            return getColorForState(ViewState.DISABLED)
         }
         return getColorForState(ViewState.NORMAL)
     }

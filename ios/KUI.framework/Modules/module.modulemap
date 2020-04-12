@@ -1,0 +1,6 @@
+framework module KUI {
+  umbrella header "KUI.h"
+
+  export *
+  module * { export * }
+}

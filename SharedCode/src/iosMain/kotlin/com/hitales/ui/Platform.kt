@@ -1,129 +1,99 @@
 package com.hitales.ui
 
-import com.hitales.test.TestController
-import com.hitales.ui.ios.ControllerManager
-import com.hitales.utils.Frame
+import com.hitales.utils.NotificationCenter
 import kotlinx.cinterop.useContents
-import kotlinx.coroutines.*
-import platform.UIKit.UIScreen
-import platform.UIKit.UIViewController
-import platform.darwin.*
-import kotlin.coroutines.CoroutineContext
-
-@InternalCoroutinesApi
-class MainLoopDispatcher : CoroutineDispatcher(), Delay {
-
-    override fun dispatch(context: CoroutineContext, block: Runnable) {
-        dispatch_async(dispatch_get_main_queue()) {
-            try {
-                block.run()
-            } catch (err: Throwable) {
-                println(err)
-                throw err
-            }
-        }
-    }
-
-
-    @InternalCoroutinesApi
-    override fun scheduleResumeAfterDelay(timeMillis: Long, continuation: CancellableContinuation<Unit>) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeMillis * 1_000_000), dispatch_get_main_queue()) {
-            try {
-                with(continuation) {
-                    resumeUndispatched(Unit)
-                }
-            } catch (err: Throwable) {
-                println(err)
-                throw err
-            }
-        }
-    }
-
-    @InternalCoroutinesApi
-    override fun invokeOnTimeout(timeMillis: Long, block: Runnable): DisposableHandle {
-        val handle = object : DisposableHandle {
-            var disposed = false
-                private set
-
-            override fun dispose() {
-                disposed = true
-            }
-        }
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeMillis * 1_000_000), dispatch_get_main_queue()) {
-            try {
-                if (!handle.disposed) {
-                    block.run()
-                }
-            } catch (err: Throwable) {
-                println(err)
-                throw err
-            }
-        }
-        return handle
-    }
-
-}
-
-
+import platform.CoreGraphics.CGRectMake
+import platform.UIKit.*
 
 
 actual class Platform {
 
-
     @ThreadLocal
     actual companion object {
 
-        actual val mainLoopDispatcher : CoroutineDispatcher = getMainDispatcher()
         actual val windowWidth:Float by lazy { platform!!.windowWidth  }
         actual val windowHeight:Float by lazy { platform!!.windowHeight  }
 
         actual val os:String = PLATFORM_IOS
 
-        @ThreadLocal
         private var platform:Platform? = null
 
         actual fun getInstance():Platform {
             return platform!!
         }
 
-
-
-        fun init(viewController: UIViewController){
+        fun init(viewController: UIViewController,debug:Boolean = false){
+            Platform.debug = debug
             UIScreen.mainScreen.bounds.useContents {
-                platform = Platform(this.size.width.toFloat(),this.size.height.toFloat())
-                val controllerManager = platform!!.controllerManager
-                viewController.view = controllerManager.rootView.getWidget()
-
-                var c =  TestController()
-                c.onCreate()
-                controllerManager.push(c)
-                c.onResume()
-                c.onControllerChangedListener = {_:Controller,pushController:Controller?,removeController:Controller? ->
-                    if(pushController != null){
-                        controllerManager.push(pushController)
-                    }else if(removeController != null){
-                        controllerManager.pop()
-                    }
-                }
+                platform = Platform(this.size.width.toFloat(),this.size.height.toFloat(),viewController)
             }
         }
 
-        @UseExperimental(kotlinx.coroutines.InternalCoroutinesApi::class)
-        private fun getMainDispatcher():CoroutineDispatcher{
-            return MainLoopDispatcher()
-        }
+        actual var debug: Boolean = false
 
     }
 
     val windowWidth:Float
     val windowHeight:Float
 
-    val controllerManager:ControllerManager
+    val rootViewController:UIViewController
 
-    private constructor(screenWidth:Float,screenHeight: Float){
+
+    private constructor(screenWidth:Float,screenHeight: Float,viewController: UIViewController){
         windowWidth = screenWidth
         windowHeight = screenHeight
-        val viewGroup = ViewGroup(Frame(0f,0f,screenWidth,screenHeight))
-        controllerManager = ControllerManager(viewGroup)
+        rootViewController = viewController
+        Screen.init(windowWidth,windowHeight)
+        NotificationCenter.getInstance().addObserver(Window.NOTIFY_KEY_REMOVE_VIEW,this::removeView)
+        NotificationCenter.getInstance().addObserver(Window.NOTIFY_KEY_ADD_VIEW,this::addView)
+        NotificationCenter.getInstance().addObserver(Window.NOTIFY_KEY_SET_ROOT_VIEW,this::setRootView)
+    }
+
+    fun addView(args:Array<out Any?>){
+        if(args != null && args.isNotEmpty()){
+            val view = args[0]
+            var index = -1
+            if(args.size > 1){
+                val i = args[1]
+                if(i is Int){
+                    index = i
+                }
+            }
+            if(view != null && view is View){
+                rootViewController.view.frame.useContents {
+                    val widget = view.getWidget()
+                    widget.setFrame(CGRectMake(0.0,0.0,this.size.width,this.size.height))
+                    if(index >= 0){
+                        rootViewController.view.insertSubview(widget,index.toLong())
+                    }else{
+                        rootViewController.view.addSubview(widget)
+                    }
+                }
+
+            }
+        }
+
+    }
+
+    fun removeView(args:Array<out Any?>){
+        if(args != null && args.isNotEmpty()){
+            val view = args[0]
+            if(view != null && view is View){
+                view.getWidget().removeFromSuperview()
+            }
+        }
+    }
+
+    fun setRootView(args:Array<out Any?>){
+        if(args != null && args.isNotEmpty()){
+            val view = args[0]
+            if(view is View){
+                rootViewController.view.frame.useContents {
+                    val widget = view.getWidget()
+                    widget.setFrame(CGRectMake(0.0,0.0,this.size.width,this.size.height))
+                    rootViewController.view.addSubview(widget)
+                }
+            }
+        }
     }
 }

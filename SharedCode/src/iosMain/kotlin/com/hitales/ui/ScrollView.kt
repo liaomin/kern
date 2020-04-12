@@ -1,19 +1,20 @@
 package com.hitales.ui
 
 import com.hitales.ui.ios.IOSScrollView
-import com.hitales.utils.Frame
+import com.hitales.ui.layout.flex.FlexLayout
 import com.hitales.utils.WeakReference
 import kotlinx.cinterop.useContents
 import platform.CoreGraphics.CGPointMake
 import platform.CoreGraphics.CGSizeMake
 import platform.UIKit.UIScrollView
+import platform.UIKit.layoutSubviews
 import kotlin.math.max
 
 
 
-actual open class ScrollView : ViewGroup {
+actual open class ScrollView : FlexLayout {
 
-    actual constructor(frame: Frame):super(frame)
+    actual constructor(layoutParams: LayoutParams?):super(layoutParams)
 
     override fun createWidget(): UIScrollView {
         return IOSScrollView(WeakReference(this))
@@ -23,15 +24,14 @@ actual open class ScrollView : ViewGroup {
         return super.getWidget() as UIScrollView
     }
 
-
-    override fun layoutSubviews() {
-        super.layoutSubviews()
+    override fun layoutSubviews(width: Float, height: Float) {
+        super.layoutSubviews(width, height)
         calculateContentSize()
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        layoutSubviews()
+        mWidget.layoutSubviews()
     }
 
     protected open fun calculateContentSize(){
@@ -83,5 +83,20 @@ actual open class ScrollView : ViewGroup {
         }
 
     actual open fun onScroll(offsetX: Float, offsetY: Float) {
+    }
+
+    actual var isPageEnable: Boolean
+        get() = getWidget().isPagingEnabled()
+        set(value) {
+            getWidget().pagingEnabled = value
+        }
+
+    actual fun scrollTo(dx: Float, dy: Float) {
+    }
+
+    actual fun scrollBy(dx: Float, dy: Float) {
+    }
+
+    actual fun smoothScrollBy(dx: Float, dy: Float) {
     }
 }

@@ -1,11 +1,13 @@
 package com.hitales.utils
 
 import kotlin.jvm.Synchronized
+import kotlin.native.concurrent.ThreadLocal
 
 class NotificationCenter {
 
     private constructor()
 
+    @ThreadLocal
     companion object {
 
         private val mInstance:NotificationCenter by lazy { NotificationCenter() }

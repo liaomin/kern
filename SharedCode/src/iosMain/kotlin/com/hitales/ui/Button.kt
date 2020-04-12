@@ -3,10 +3,9 @@ package com.hitales.ui
 import com.hitales.ui.ios.IOSButtonView
 import com.hitales.ui.ios.StateListColor
 import com.hitales.utils.EdgeInsets
-import com.hitales.utils.Frame
-import com.hitales.utils.Size
 import com.hitales.utils.WeakReference
 import platform.UIKit.*
+import platform.objc.sel_registerName
 
 
 actual open class Button :  com.hitales.ui.TextView {
@@ -31,12 +30,12 @@ actual open class Button :  com.hitales.ui.TextView {
             setTextColor(value)
         }
 
-    actual constructor(text:CharSequence?,frame: Frame):super(text,frame) {
+    actual constructor(text:CharSequence?,layoutParams: LayoutParams?):super(text,layoutParams) {
         val widget = getWidget()
         widget.setTitle(text?.toString(), UIControlStateNormal)
         setTextColor(Colors.WHITE)
         padding = EdgeInsets(5f, 5f, 5f, 5f)
-        widget.clipsToBounds = true
+        setBackgroundColor(Colors.BLUE)
     }
 
     override fun onTextSet() {
@@ -76,9 +75,20 @@ actual open class Button :  com.hitales.ui.TextView {
     }
 
     open fun onIOSStateChange(state:UIControlState){
-        mWidget.setBackgroundColor(bgColorList.getColorForState(state).toUIColor())
+        val color = bgColorList.getColorForState(state)
+        mWidget.setBackgroundColor(color.toUIColor())
     }
 
+
+    override fun setOnPressListener(listener: ((view: View) -> Unit)?) {
+        onPressListener = listener
+        if(listener != null){
+            getWidget().addTarget(this, sel_registerName("onPress"), UIControlEventTouchUpInside)
+        }else{
+            getWidget().removeTarget(this, sel_registerName("onPress"), UIControlEventTouchUpInside)
+        }
+
+    }
 
     actual open fun setBackgroundImage(image: Image, state: ViewState) {
         when (state){
@@ -90,15 +100,15 @@ actual open class Button :  com.hitales.ui.TextView {
         }
     }
 
-    override fun measureSize(maxWidth: Float, maxHeight: Float): Size {
-        val size = super.measureSize(maxWidth, maxHeight)
-        val p = padding
-        if( p != null){
-            size.width += p.left + p.right
-            size.height += p.top + p.bottom
-        }
-        return size
-    }
+//    override fun measureSize(maxWidth: Float, maxHeight: Float): Size {
+//        val size = super.measureSize(maxWidth, maxHeight)
+//        val p = padding
+//        if( p != null){
+//            size.width += p.left + p.right
+//            size.height += p.top + p.bottom
+//        }
+//        return size
+//    }
 
 
 

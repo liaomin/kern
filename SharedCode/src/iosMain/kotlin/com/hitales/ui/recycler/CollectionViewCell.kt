@@ -2,11 +2,10 @@ package com.hitales.ui.recycler
 
 import com.hitales.ios.ui.HAttributes
 import com.hitales.ios.ui.HCellDelegateProtocol
-import com.hitales.ui.View
+import com.hitales.ui.Layout
 import com.hitales.ui.ViewDelegate
-import com.hitales.ui.ViewGroup
 import com.hitales.ui.ViewState
-import com.hitales.utils.WeakReference
+import com.hitales.ui.layout.flex.FlexLayout
 import platform.darwin.NSObject
 
 class CellProxy(val cell:CollectionViewCell):NSObject(),HCellDelegateProtocol{
@@ -22,11 +21,11 @@ class CellProxy(val cell:CollectionViewCell):NSObject(),HCellDelegateProtocol{
 
 actual open class CollectionViewCell : ViewDelegate {
 
-    actual val contentView: ViewGroup
+    actual val contentView: Layout
 
     actual constructor(){
-        contentView = ViewGroup()
-        contentView.delegate = WeakReference(this)
+        contentView = FlexLayout()
+        contentView.delegate = this
     }
 
     actual open fun applyAttribute(layoutAttribute: LayoutAttribute) {
@@ -39,11 +38,4 @@ actual open class CollectionViewCell : ViewDelegate {
         contentView.setBackgroundColor(color)
     }
 
-    override fun onPress(view: View) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onLongPress(view: View) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 }

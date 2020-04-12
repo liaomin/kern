@@ -13,7 +13,7 @@
 -(void)setContentsWithImage:(UIImage *)image
 {
     if(image != nil){
-        self.contents = (id)image.CGImage;
+        self.contents = (__bridge id)image.CGImage;
     }else{
         self.contents = NULL;
     }

@@ -7,8 +7,8 @@
 //
 
 #import "ViewController.h"
-#import <HUI/HUI.h>
-#include "UIView+Border.h"
+//#import <HUI/HUI.h>
+#import <KUI/KUI.h>
 
 @interface ViewController ()
 
@@ -18,10 +18,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.view setBorderWidth:2];
-    [self.view isFocused];
+    
+    KView* v = [[KView alloc] initWithFrame:CGRectMake(50, 50, 100, 100)];
+    
+    [v setBackgroundColorInt:0xffff0000];
+    [v setBorderWidth:12];
+    
+    [[self view] addSubview:v];
+    
     // Do any additional setup after loading the view.
 }
-
 
 @end

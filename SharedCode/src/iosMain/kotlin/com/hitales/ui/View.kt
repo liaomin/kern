@@ -4,10 +4,7 @@ import com.hitales.ios.ui.setTransformM34
 import com.hitales.ui.animation.toIOSAnimation
 import com.hitales.ui.ios.Background
 import com.hitales.ui.ios.IOSView
-import com.hitales.utils.EdgeInsets
-import com.hitales.utils.Frame
-import com.hitales.utils.Size
-import com.hitales.utils.WeakReference
+import com.hitales.utils.*
 import kotlinx.cinterop.cValuesOf
 import kotlinx.cinterop.get
 import kotlinx.cinterop.memScoped
@@ -44,6 +41,10 @@ inline fun UIColor.toInt():Int{
     }
 }
 
+inline fun Frame.toCGRect():kotlinx.cinterop.CValue<platform.CoreGraphics.CGRect>{
+    return CGRectMake(x.toDouble(),y.toDouble(),width.toDouble(),height.toDouble())
+}
+
 
 actual open class View {
 
@@ -65,15 +66,9 @@ actual open class View {
 
     actual var padding: EdgeInsets? = null
 
-    actual var margin:EdgeInsets? = null
+    actual open val frame:Frame =  Frame.identity()
 
-    actual open var frame:Frame
-        set(value) {
-            field = value
-            onFrameChanged()
-        }
-
-    actual var superView:ViewGroup? = null
+    actual var superView:Layout? by Weak()
 
     actual open var id:Int
         get() = getWidget().tag.toInt()
@@ -142,18 +137,10 @@ actual open class View {
             setLayerValueForPath(value,"transform.scale.y")
         }
 
-    /**
-     * Android ViewGroup clipChildren
-     * IOS clipsToBounds
-     */
-    actual open var clipsToBounds: Boolean
-        get() = mWidget.clipsToBounds
-        set(value) {
-            mWidget.clipsToBounds = value
-        }
+    actual open var layoutParams:LayoutParams? = null
 
-    actual constructor(frame: Frame){
-        this.frame = frame
+    actual constructor(layoutParams: LayoutParams?){
+        this.layoutParams = layoutParams
         setBackgroundColor(0)
     }
 
@@ -186,10 +173,10 @@ actual open class View {
 
     }
 
-    actual open fun onAttachedToView(layoutView: ViewGroup) {
+    actual open fun onAttachedToView(layoutView: Layout) {
     }
 
-    actual open fun onDetachedFromView(layoutView: ViewGroup) {
+    actual open fun onDetachedFromView(layoutView: Layout) {
 
     }
 
@@ -197,38 +184,23 @@ actual open class View {
         getOrCreateBackground().setBorderColor(color)
     }
 
-    actual open fun setBorderColor(
-        leftColor: Int,
-        topColor: Int,
-        rightColor: Int,
-        bottomColor: Int
-    ) {
+    actual open fun setBorderColor(leftColor: Int, topColor: Int, rightColor: Int, bottomColor: Int) {
         getOrCreateBackground().setBorderColor(leftColor,topColor, rightColor, bottomColor)
     }
 
     actual open fun setBorderWidth(borderWidth: Float) {
-        getOrCreateBackground().setBorderWidth(borderWidth,borderStyle)
+        getOrCreateBackground().setBorderWidth(borderWidth)
     }
 
-    actual open fun setBorderWidth(
-        leftWidth: Float,
-        topWidth: Float,
-        rightWidth: Float,
-        bottomWidth: Float
-    ) {
-        getOrCreateBackground().setBorderWidth(leftWidth, topWidth, rightWidth, bottomWidth, borderStyle)
+    actual open fun setBorderWidth(leftWidth: Float, topWidth: Float, rightWidth: Float, bottomWidth: Float) {
+        getOrCreateBackground().setBorderWidth(leftWidth, topWidth, rightWidth, bottomWidth)
     }
 
     actual open fun setBorderRadius(radius: Float) {
         getOrCreateBackground().setBorderRadius(radius,radius,radius,radius)
     }
 
-    actual open fun setBorderRadius(
-        topLeftRadius: Float,
-        topRightRadius: Float,
-        bottomRightRadius: Float,
-        bottomLeftRadius: Float
-    ) {
+    actual open fun setBorderRadius(topLeftRadius: Float, topRightRadius: Float, bottomRightRadius: Float, bottomLeftRadius: Float) {
         getOrCreateBackground().setBorderRadius(topLeftRadius,topRightRadius,bottomRightRadius,bottomLeftRadius)
     }
 
@@ -240,32 +212,46 @@ actual open class View {
             mWidget.hidden = value
         }
 
-    actual open var borderStyle: BorderStyle = BorderStyle.SOLID
-        set(value) {
-            field = value
-            getOrCreateBackground().setBorderStyle(value)
-        }
+    actual open fun setBorderStyle(style: BorderStyle){
+        getOrCreateBackground().setBorderStyle(style)
+    }
 
     /**
      * events
      */
-    actual fun setOnPressListener(listener: (view: View) -> Unit) {
+    actual open fun setOnPressListener(listener:((view:View)->Unit)?) {
         onPressListener = listener
-        if(pressGestureRecognizer == null){
-            val gestureRecognizer = UITapGestureRecognizer(this, sel_registerName("onPress"))
-            gestureRecognizer.cancelsTouchesInView = false
-            mWidget.addGestureRecognizer(gestureRecognizer)
-            pressGestureRecognizer = gestureRecognizer
+        if(listener == null){
+            val gesture = pressGestureRecognizer
+            if(gesture != null){
+                mWidget.removeGestureRecognizer(gesture)
+            }
+            pressGestureRecognizer = null
+        }else{
+            if(pressGestureRecognizer == null){
+                val gestureRecognizer = UITapGestureRecognizer(this, sel_registerName("onPress"))
+                gestureRecognizer.cancelsTouchesInView = false
+                mWidget.addGestureRecognizer(gestureRecognizer)
+                pressGestureRecognizer = gestureRecognizer
+            }
         }
     }
 
-    actual fun setOnLongPressListener(listener: (iew: View) -> Unit) {
+    actual open fun setOnLongPressListener(listener:((view:View)->Unit)?) {
         onLongPressListener = listener
-        if(longPressGestureRecognizer == null){
-            val gestureRecognizer = UILongPressGestureRecognizer(this, sel_registerName("onLongPress"))
-            gestureRecognizer.cancelsTouchesInView = false
-            mWidget.addGestureRecognizer(gestureRecognizer)
-            longPressGestureRecognizer = gestureRecognizer
+        if(listener == null){
+            val gesture = longPressGestureRecognizer
+            if(gesture != null){
+                mWidget.removeGestureRecognizer(gesture)
+            }
+            longPressGestureRecognizer = null
+        }else{
+            if(longPressGestureRecognizer == null){
+                val gestureRecognizer = UILongPressGestureRecognizer(this, sel_registerName("onLongPress"))
+                gestureRecognizer.cancelsTouchesInView = false
+                mWidget.addGestureRecognizer(gestureRecognizer)
+                longPressGestureRecognizer = gestureRecognizer
+            }
         }
     }
 
@@ -281,39 +267,6 @@ actual open class View {
         }
     }
 
-    /**
-     * border
-     */
-    actual fun getBorderLeftWidth(): Float {
-        return mBackground?.borderLeftWidth?:0f
-    }
-
-    actual fun getBorderTopWidth(): Float {
-        return mBackground?.borderTopWidth?:0f
-    }
-
-    actual fun getBorderRightWidth(): Float {
-        return mBackground?.borderRightWidth?:0f
-    }
-
-    actual fun getBorderBottomWidth(): Float {
-        return mBackground?.borderBottomWidth?:0f
-    }
-
-    /**
-     * @param widthSpace 最大宽度  如果小于等于0表示无限宽
-     * @param heightSpace 最大高度  如果小于等于0表示无限高
-     */
-   actual open fun measureSize(widthSpace: Float,heightSpace: Float):Size {
-        val size = Size()
-        measureSize(widthSpace, heightSpace, size)
-        return size
-    }
-
-    actual open fun measureSize(widthSpace: Float,heightSpace: Float,size: Size){
-        size.set(frame.width,frame.height)
-    }
-
     actual open fun onFrameChanged(){
         getWidget().setFrame(CGRectMake(frame.x.toDouble(),frame.y.toDouble(),frame.width.toDouble(),frame.height.toDouble()))
     }
@@ -321,7 +274,6 @@ actual open class View {
     protected fun getOrCreateBackground(): Background {
         if (mBackground == null) {
             mBackground = Background(WeakReference<CALayer>(mWidget.layer))
-//            mWidget.backgroundColor = 0.toUIColor()
         }
         mWidget.layer.setNeedsDisplay()
         return mBackground!!
@@ -347,10 +299,7 @@ actual open class View {
     }
 
 
-    actual var delegate: WeakReference<ViewDelegate>? = null
-
-    actual open fun releaseResource() {
-    }
+    actual var delegate:ViewDelegate? by Weak()
 
     actual open fun setShadow(color: Int, radius: Float, dx: Float, dy: Float) {
         getOrCreateBackground().setShadow(radius, dx, dy, color)
@@ -367,16 +316,101 @@ actual open class View {
         return false
     }
 
-    actual open fun touchesBegan(touches: Touches) {
+    actual var flags: Int = 0
+
+    actual open fun onLayout() {
+        mWidget.setFrame(frame.toCGRect())
     }
 
-    actual open fun touchesMoved(touches: Touches) {
+    actual open fun needLayout() {
     }
 
-    actual open fun touchesEnded(touches: Touches) {
+    actual open fun needDisplay() {
     }
 
-    actual open fun touchesCancelled(touches: Touches) {
+
+    actual open fun getBackgroundColor(): Int {
+        return mBackgroundColor
     }
+
+    actual fun getLeftBorderWidth(): Float {
+        return mBackground?.borderLeftWidth?:0f
+    }
+
+    actual fun getTopBorderWidth(): Float {
+        return mBackground?.borderTopWidth?:0f
+    }
+
+    actual fun getRightBorderWidth(): Float {
+        return mBackground?.borderRightWidth?:0f
+    }
+
+    actual fun getBottomBorderWidth(): Float {
+        return mBackground?.borderBottomWidth?:0f
+    }
+
+    actual fun getTopLeftBorderRadius(): Float {
+        return mBackground?.borderTopLeftRadius?:0f
+    }
+
+    actual fun getTopRightBorderRadius(): Float {
+        return mBackground?.borderTopRightRadius?:0f
+    }
+
+    actual fun getBottomLeftBorderRadius(): Float {
+        return mBackground?.borderBottomLeftRadius?:0f
+    }
+
+    actual fun getBottomRightBorderRadius(): Float {
+        return mBackground?.borderBottomRightRadius?:0f
+    }
+
+    actual fun getShadowColor(): Int {
+        return mBackground?.shadowColor?:0
+    }
+
+    actual fun getShadowRadius(): Float {
+        return mBackground?.shadowRadius?:0f
+    }
+
+    actual fun getShadowOffsetX(): Float {
+        return mBackground?.shadowDx?:0f
+    }
+
+    actual fun getShadowOffsetY(): Float {
+        return mBackground?.shadowDy?:0f
+    }
+
+    /**
+     * measure view width and height
+     * @param widthSpace measure宽度
+     * @param widthMode
+     * @param heightSpace measure高度
+     * @param outSize 获取计算出来的宽高
+     */
+    actual open fun measure(widthSpace: Float, widthMode: MeasureMode, heightSpace: Float, heightMode: MeasureMode, outSize: Size) {
+        var w = 0f
+        var h = 0f
+        if(widthMode == MeasureMode.EXACTLY){
+            w = widthSpace
+        }
+        if(heightMode == MeasureMode.EXACTLY){
+            h = widthSpace
+        }
+        outSize.set(w,h)
+    }
+
+    actual open fun onTouchesBegan(touches: Touches) {
+    }
+
+    actual open fun onTouchesMoved(touches: Touches) {
+    }
+
+    actual open fun onTouchesEnded(touches: Touches) {
+    }
+
+    actual open fun onTouchesCancelled(touches: Touches) {
+    }
+
 
 }

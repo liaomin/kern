@@ -19,7 +19,7 @@ class NavigateController : BasicViewController(){
         map["测试Collection"] = TestCollectionViewController()
         map["test4"] = TempTestViewViewController()
         map["ViewBorderTestController"] = ViewBorderTestController()
-        for (i in 0 until  1){
+        for (i in 0 until  2){
             map.forEach {
                 val entry = it
                 val lp = FlexLayoutParams()
@@ -27,7 +27,8 @@ class NavigateController : BasicViewController(){
                 val button = Button(it.key,lp)
                 button.padding = EdgeInsets.value(10f)
                 button.textSize = 25f
-                button.setShadow(Colors.RED,10f,0f,0f)
+                button.setBackgroundColor(Colors.GREEN,ViewState.PRESSED)
+//                button.setShadow(Colors.RED,10f,0f,0f)
                 button.setOnPressListener {
                     this.push(entry.value)
                 }

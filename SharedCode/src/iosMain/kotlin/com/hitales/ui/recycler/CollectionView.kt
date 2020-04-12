@@ -1,7 +1,7 @@
 package com.hitales.ui.recycler
 
+import com.hitales.ui.LayoutParams
 import com.hitales.ui.ScrollView
-import com.hitales.utils.Frame
 import com.hitales.utils.WeakReference
 import platform.UIKit.UICollectionView
 import platform.UIKit.UIScrollView
@@ -28,9 +28,9 @@ actual open class CollectionView : ScrollView {
         }
 
 
-    actual constructor(frame: Frame, layout: CollectionViewLayout):super(frame){
+    actual constructor(layoutParams: LayoutParams?, layout: CollectionViewLayout):super(layoutParams){
         this.layout = layout
-        layout.collectionViewRef = WeakReference(this)
+        layout.collectionView = this
     }
 
     override fun createWidget(): UIScrollView {

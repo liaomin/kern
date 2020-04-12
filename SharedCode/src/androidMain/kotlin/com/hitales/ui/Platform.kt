@@ -11,35 +11,9 @@ import com.hitales.ui.android.AndroidActivity
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.NotificationCenter
 
-//class ControllerFragment(val controller: Controller) : AndroidFragment(){
-//
-//    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-//        return controller.view.getWidget()
-//    }
-//
-//    override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator? {
-////        enterTransition = Fade()
-//        val enterAnimator = controller.enterAnimation
-//        val exitAnimation = controller.exitAnimation
-//        if(enter){
-//            if(enterAnimator != null){
-//                return  enterAnimator.toAnimator(controller.view.getWidget())
-//            }
-//        }else{
-//            if(exitAnimation != null){
-//                return exitAnimation.toAnimator(controller.view.getWidget())
-//            }
-//        }
-//        return super.onCreateAnimator(transit, enter, nextAnim)
-//    }
-//
-//}
-
 actual class Platform : ActivityDelegate{
 
     actual companion object {
-
-//        actual val mainLoopDispatcher: CoroutineDispatcher = Dispatchers.Main
 
         actual val windowWidth:Float by lazy { platform!!.windowWidth }
         actual val windowHeight:Float by lazy { platform!!.windowHeight }
