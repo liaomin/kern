@@ -5,7 +5,7 @@ import com.hitales.ui.*
 import com.hitales.ui.layout.flex.*
 import com.hitales.utils.EdgeInsets
 
-class ViewBorderTestController : BasicViewController(){
+abstract class BorderTestController<T : View> : BasicViewController(){
 
     override fun createLayout(): Layout {
         val scrollView = ScrollView()
@@ -20,6 +20,8 @@ class ViewBorderTestController : BasicViewController(){
         return (Screen.getInstance().window.width - 60f)/ 2f
     }
 
+    abstract fun getView(layoutParams: LayoutParams):T
+
     override fun onCreate() {
         super.onCreate()
         val bgColor = 0x99FF0000.toInt()
@@ -29,7 +31,7 @@ class ViewBorderTestController : BasicViewController(){
         lp.height = getItemWidth()
         lp.margin = EdgeInsets.value(10f)
 
-        var view = View(lp)
+        var view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(10f)
@@ -38,7 +40,7 @@ class ViewBorderTestController : BasicViewController(){
         view.setShadow(Colors.BLUE,9f,5f,5f)
         view.setBorderRadius(getItemWidth())
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(10f)
@@ -46,7 +48,7 @@ class ViewBorderTestController : BasicViewController(){
         view.setBorderRadius(getItemWidth())
 
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(10f)
@@ -55,7 +57,7 @@ class ViewBorderTestController : BasicViewController(){
         view.setBorderStyle(BorderStyle.DASHED)
 
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(10f)
@@ -63,7 +65,7 @@ class ViewBorderTestController : BasicViewController(){
         view.setBorderColor(Colors.BLUE)
         view.setBorderStyle(BorderStyle.DOTTED)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(10f,20F,30F,40F)
@@ -71,7 +73,7 @@ class ViewBorderTestController : BasicViewController(){
         view.setBorderColor(Colors.BLUE)
         view.setBorderStyle(BorderStyle.DOTTED)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(10f)
@@ -81,7 +83,7 @@ class ViewBorderTestController : BasicViewController(){
         view.setBorderStyle(BorderStyle.DOTTED)
 
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(10f)
@@ -92,7 +94,7 @@ class ViewBorderTestController : BasicViewController(){
 
 
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(100f)
@@ -101,7 +103,7 @@ class ViewBorderTestController : BasicViewController(){
 
 
 //        val bgColor = Colors.RED
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         view.setBackgroundColor(Colors.RED)
         addView(view)
@@ -111,7 +113,7 @@ class ViewBorderTestController : BasicViewController(){
         view.setBorderWidth(20f,5f,5f,5f)
         view.setBorderRadius(30f,40f,20f,40f)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(60f,2f,20f,5f)
@@ -119,7 +121,7 @@ class ViewBorderTestController : BasicViewController(){
         view.setBorderWidth(20f,5f,5f,5f)
 //        view.setBorderRadius(30f,40f,20f,40f)
 
-        view = View(lp)
+        view = getView(lp)
 //        val c = bgColor.reverseAlpha()
         view.setBackgroundColor(bgColor)
         addView(view)
@@ -129,7 +131,7 @@ class ViewBorderTestController : BasicViewController(){
         view.setBorderRadius(30f,40f,20f,40f)
 
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(60f,2f,20f,5f)
@@ -138,11 +140,11 @@ class ViewBorderTestController : BasicViewController(){
         view.setBorderRadius(30f,40f,20f,40f)
 
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(Colors.BLUE)
         addView(view)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(60f,2f,20f,5f)
@@ -152,7 +154,7 @@ class ViewBorderTestController : BasicViewController(){
 
 
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(60f,2f,20f,5f)
@@ -161,7 +163,7 @@ class ViewBorderTestController : BasicViewController(){
         view.setBorderRadius(30f,40f,20f,40f)
         view.setBorderRadius((Platform.windowWidth / 2 - 20) /2)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(60f,2f,20f,5f)
@@ -170,7 +172,7 @@ class ViewBorderTestController : BasicViewController(){
         view.setBorderRadius(30f,40f,20f,40f)
         view.setBorderRadius((Platform.windowWidth / 2 - 20) /2)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(60f,2f,20f,5f)
@@ -179,7 +181,7 @@ class ViewBorderTestController : BasicViewController(){
         view.setBorderRadius(30f,40f,20f,40f)
         view.setBorderRadius((Platform.windowWidth / 2 - 20) /2)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(60f,2f,20f,5f)
@@ -187,32 +189,32 @@ class ViewBorderTestController : BasicViewController(){
         view.setBorderRadius(10f,20f,30f,40f)
 
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(60f,1f,20f,10f)
         view.setBorderColor(Colors.BLUE)
 
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(60f)
         view.setBorderColor(Colors.BLUE,Colors.RED,Colors.YELLOW,Colors.TRANSPARENT)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(60f,1f,20f,10f)
         view.setBorderColor(Colors.BLUE,Colors.RED,Colors.YELLOW,Colors.TRANSPARENT)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(60f,1f,20f,10f)
         view.setBorderColor(Colors.BLUE,Colors.RED,Colors.YELLOW,Colors.ORANGE)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(0f)
@@ -220,28 +222,28 @@ class ViewBorderTestController : BasicViewController(){
 
 
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(10f)
         view.setBorderColor(Colors.BLUE)
 
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(10f)
         view.setBorderColor(Colors.GREEN)
 
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(3f)
         view.setBorderRadius(20f)
         view.setBorderColor(Colors.BLUE)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(3f)
@@ -249,7 +251,7 @@ class ViewBorderTestController : BasicViewController(){
         view.setBorderColor(Colors.GREEN)
 
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(3f)
@@ -257,7 +259,7 @@ class ViewBorderTestController : BasicViewController(){
         view.setBorderColor(Colors.BLUE)
 
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(3f)
@@ -265,83 +267,91 @@ class ViewBorderTestController : BasicViewController(){
         view.setBorderColor(Colors.BLUE)
 
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(10f,0f,0f,0f)
         view.setBorderColor(Colors.BLUE)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(10f,0f,0f,0f)
         view.setBorderColor(Colors.GREEN,0,0,0)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(0f,0f,10f,0f)
         view.setBorderColor(Colors.BLUE)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(0f,0f,10f,0f)
         view.setBorderColor(0,0,Colors.GREEN,0)
 
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(0f,10f,0f,0f)
         view.setBorderColor(Colors.BLUE)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(0f,10f,0f,0f)
         view.setBorderColor(0,Colors.GREEN,0,0)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(0f,0f,0f,10f)
         view.setBorderColor(Colors.BLUE)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(0f,0f,0f,10f)
         view.setBorderColor(0,0,0,Colors.GREEN)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(0f,10f,0f,10f)
         view.setBorderColor(Colors.BLUE)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(0f,10f,0f,10f)
         view.setBorderColor(0,Colors.GREEN,0,Colors.YELLOW)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(10f)
         view.setBorderColor(Colors.BLUE)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(10f)
         view.setBorderColor(Colors.RED,Colors.YELLOW,Colors.GREEN,Colors.BLACK)
 
-        view = View(lp)
+        view = getView(lp)
         view.setBackgroundColor(bgColor)
         addView(view)
         view.setBorderWidth(10f)
         view.setBorderRadius(getItemWidth() /2)
     }
+}
+
+class ViewBorderTestController : BorderTestController<View>(){
+
+    override fun getView(layoutParams: LayoutParams): View {
+        return View(layoutParams)
+    }
+
 }

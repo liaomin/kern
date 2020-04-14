@@ -8,10 +8,12 @@ open class ListViewLayout : DefaultCollectionViewLayout(){
     }
 }
 
-interface ListViewAdapter: CollectionViewAdapter{
-    override fun getNumberOfSection(collectionView: CollectionView): Int {
+interface ListViewDataSource : DataSource<ListView>{
+
+    override fun getNumberOfSection(collectionView: ListView): Int {
         return 1
     }
+
 }
 
 open class ListView constructor(layoutParams: LayoutParams? = null, layout: ListViewLayout): CollectionView(layoutParams,layout){

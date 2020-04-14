@@ -20,12 +20,14 @@ actual open class CollectionViewCell : ViewDelegate {
 
     actual constructor(){
         contentView = FlexLayout()
+        contentView.clipsToBounds = true
         contentView.setOnPressListener {
             onPress(contentView)
         }
         contentView.setOnLongPressListener {
             onLongPress(contentView)
         }
+        contentView.getWidget().tag = this
         contentView.delegate = this
     }
 

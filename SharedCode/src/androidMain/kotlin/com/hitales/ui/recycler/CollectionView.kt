@@ -3,6 +3,7 @@ package com.hitales.ui.recycler
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.hitales.ui.Animation
 import com.hitales.ui.LayoutParams
 import com.hitales.ui.ScrollView
 import com.hitales.ui.android.AndroidRecyclerView
@@ -28,17 +29,16 @@ actual open class CollectionView : ScrollView {
 
     var adapterHelper:AdapterHelper? = null
 
-    actual var adapter: CollectionViewAdapter? = null
+    actual var dataSource:CollectionViewDataSource? = null
         set(value) {
             field = value
-            if(value != null){
-                adapterHelper = AdapterHelper(value,this)
-            }else{
-                adapterHelper = null
-            }
+            adapterHelper = AdapterHelper(this)
         }
 
-    actual val layout: CollectionViewLayout
+    actual var layout: CollectionViewLayout
+        set(value) {
+            field = value
+        }
 
 
     override fun onOrientationChanged() {
@@ -136,7 +136,7 @@ actual open class CollectionView : ScrollView {
     open fun getItemCount(): Int {
         val adapterHelper = this.adapterHelper
         if(adapterHelper != null){
-            return adapterHelper.itemCount
+            return adapterHelper.getCount()
         }
         return 0
     }
@@ -148,10 +148,10 @@ actual open class CollectionView : ScrollView {
     open fun onCreateViewHolder(parent: ViewGroup, viewType: Int): com.hitales.ui.android.scrollview.ScrollView.ViewHolder {
         var view:com.hitales.ui.recycler.CollectionViewCell? = null
         when (viewType){
-            HEADER_TYPE -> view = adapter!!.createHeaderView(this)
-            FOOTER_TYPE -> view = adapter!!.createFooterView(this)
+            HEADER_TYPE -> view = dataSource!!.createHeaderView(this)
+            FOOTER_TYPE -> view = dataSource!!.createFooterView(this)
             else -> {
-                view = adapter!!.createItemView(this,viewType)
+                view = dataSource!!.createItemView(this,viewType)
             }
         }
         if(view == null){
@@ -166,24 +166,38 @@ actual open class CollectionView : ScrollView {
         val viewType = adapterHelper!!.getItemViewType(position)
         holder.view.tag = holder.v
         when (viewType){
-            HEADER_TYPE -> adapter!!.onBindHeaderView(this,info.section,holder.v!!)
-            FOOTER_TYPE -> adapter!!.onBindFooterView(this,info.section,holder.v!!)
+            HEADER_TYPE -> dataSource!!.onBindHeaderView(this,info.section,holder.v!!)
+            FOOTER_TYPE -> dataSource!!.onBindFooterView(this,info.section,holder.v!!)
             else -> {
-                adapter!!.onBindItemView(this,info.section,info.row,viewType,holder.v!!)
+                dataSource!!.onBindItemView(this,info.section,info.row,viewType,holder.v!!)
             }
         }
         holder.v.collectionView = this
     }
 
     fun onItemPress(section:Int,row:Int,cell:CollectionViewCell){
-        adapter?.onItemPress(this,section,row,cell)
+        val delegate = this.delegate
+        if(delegate != null && delegate is CollectionViewDelegate){
+            delegate.onItemPress(this,section,row,cell)
+        }
     }
 
     fun onItemLongPress(section:Int,row:Int,cell:CollectionViewCell){
-        adapter?.onItemLongPress(this,section,row,cell)
+        val delegate = this.delegate
+        if(delegate != null && delegate is CollectionViewDelegate){
+            delegate.onItemLongPress(this,section,row,cell)
+        }
     }
 
     override fun addSubView(view: com.hitales.ui.View, index: Int) {
-        throw RuntimeException("unsupport")
+        throw RuntimeException("unSupport")
     }
+
+    actual fun getCell(section: Int, row: Int): CollectionViewCell? {
+        return null
+    }
+
+    actual fun setLayoutWithAnimation(layout: CollectionViewLayout, animation: Animation) {
+    }
+
 }

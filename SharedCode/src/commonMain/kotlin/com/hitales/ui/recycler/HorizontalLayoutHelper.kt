@@ -6,7 +6,7 @@ import kotlin.math.min
 
 class HorizontalLayoutHelper : LayoutHelper() {
 
-    override fun getNextPageLayoutInfo(collectionView: CollectionView,layout:DefaultCollectionViewLayout,adapter:CollectionViewAdapter, currentPage: CollectionViewLayout.PageLayoutInfo?, nextPage: CollectionViewLayout.PageLayoutInfo){
+    override fun getNextPageLayoutInfo(collectionView: CollectionView,dataSource: CollectionViewDataSource,layout:DefaultCollectionViewLayout,currentPage: CollectionViewLayout.PageLayoutInfo?, nextPage: CollectionViewLayout.PageLayoutInfo){
         val minimumLineSpacing = layout.minimumLineSpacing
         val tempSize = layout.tempSize
         val headerAndFooterAddLineSpace = false
@@ -39,7 +39,7 @@ class HorizontalLayoutHelper : LayoutHelper() {
         val frameHeight = viewFrame.height - paddingTop - paddingBottom
         val attributes = nextPage.attributes
         var position = 0
-        val sectionCount = adapter.getNumberOfSection(collectionView)
+        val sectionCount = dataSource.getNumberOfSection(collectionView)
         var haveHeader = false
         if(currentPage != null && !currentPage.isEmpty()){
             frameStartX = currentPage.frame.getRight()
@@ -77,11 +77,11 @@ class HorizontalLayoutHelper : LayoutHelper() {
         frame.set(frameStartX,0f,frameEndX - frameStartX,viewFrame.height)
         for (i in sectionIndex until sectionCount){
             var section = i
-            var number = adapter.getNumberOfItem(collectionView,section)
+            var number = dataSource.getNumberOfItem(collectionView,section)
             //step 1：判断是否有header
             if((rowIndex == 0 && !haveHeader)){
-                if(adapter.haveHeaderView(collectionView,section)){
-                    adapter.getSectionHeaderViewSize(collectionView,section,tempSize)
+                if(dataSource.haveHeaderView(collectionView,section)){
+                    dataSource.getSectionHeaderViewSize(collectionView,section,tempSize)
                     if(section != 0 && headerAndFooterAddLineSpace){
                         offsetX += minimumLineSpacing
                     }
@@ -119,8 +119,8 @@ class HorizontalLayoutHelper : LayoutHelper() {
             }
             for ( j in rowIndex until number){
                 rowIndex = j
-                val viewType = adapter.getItemType(collectionView,section,rowIndex)
-                adapter.getItemViewSize(collectionView,section,rowIndex,viewType,tempSize)
+                val viewType = dataSource.getItemType(collectionView,section,rowIndex)
+                dataSource.getItemViewSize(collectionView,section,rowIndex,viewType,tempSize)
                 val attribute = layout.getCacheAttribute()
                 attribute.position = position
                 val height =  min(tempSize.height,frameHeight)
@@ -128,7 +128,7 @@ class HorizontalLayoutHelper : LayoutHelper() {
                 if(offsetY + height > endY || (maxColumns > 0 && rows.size >= maxColumns)){
                     //换行
                     if(!rows.isEmpty()){
-                        adjustRow(rows,layout,paddingTop,endY,rowHeight)
+                        adjustRow(rows,dataSource,layout,paddingTop,endY,rowHeight)
                     }
                     attributes.addAll(rows)
                     rows.clear()
@@ -154,7 +154,7 @@ class HorizontalLayoutHelper : LayoutHelper() {
             }
 
             if(!rows.isEmpty()){
-                adjustRow(rows,layout,paddingTop,endY,rowHeight)
+                adjustRow(rows,dataSource,layout,paddingTop,endY,rowHeight)
                 attributes.addAll(rows)
                 rows.clear()
                 offsetY += rowHeight + minimumLineSpacing
@@ -166,11 +166,11 @@ class HorizontalLayoutHelper : LayoutHelper() {
             offsetX -= minimumLineSpacing
             offsetY = paddingTop
 
-            if(adapter.haveFooterView(collectionView,section)){
+            if(dataSource.haveFooterView(collectionView,section)){
                 if(headerAndFooterAddLineSpace){
                     offsetX += minimumLineSpacing
                 }
-                adapter.getSectionFooterViewSize(collectionView,section,tempSize)
+                dataSource.getSectionFooterViewSize(collectionView,section,tempSize)
                 val attribute = layout.getCacheAttribute()
                 attribute.position = position
                 footerHeight = tempSize.width
@@ -195,7 +195,7 @@ class HorizontalLayoutHelper : LayoutHelper() {
     }
 
 
-    override fun adjustRow(row: ArrayList<LayoutAttribute>,layout: DefaultCollectionViewLayout, start: Float, end: Float, maxRowHeight: Float) {
+    override fun adjustRow(row: ArrayList<LayoutAttribute>,dataSource: CollectionViewDataSource,layout: DefaultCollectionViewLayout, start: Float, end: Float, maxRowHeight: Float) {
         val size = row.size
         if(this.rowHeight < maxRowHeight){
             this.rowHeight = maxRowHeight
@@ -231,14 +231,14 @@ class HorizontalLayoutHelper : LayoutHelper() {
         }
     }
 
-    override fun calculateContextSize(collectionView: CollectionView,layout: DefaultCollectionViewLayout,adapter: CollectionViewAdapter, page: CollectionViewLayout.PageLayoutInfo, contextSize: Size) {
+    override fun calculateContextSize(collectionView: CollectionView,dataSource: CollectionViewDataSource,layout: DefaultCollectionViewLayout, page: CollectionViewLayout.PageLayoutInfo, contextSize: Size) {
         page.attributes.last()?.let {
             val minimumLineSpacing = layout.minimumLineSpacing
             val headerAndFooterAddLineSpace = false
             var section = it.section
             var row = it.row
             var offset = it.frame.getRight()
-            var sections = adapter.getNumberOfSection(collectionView)
+            var sections = dataSource.getNumberOfSection(collectionView)
             for ( i in section until sections){
                 var haveHeader = false
                 if(row < 0){
@@ -250,20 +250,20 @@ class HorizontalLayoutHelper : LayoutHelper() {
                     }
                 }
                 row ++
-                if( row == 0 && !haveHeader && adapter.haveHeaderView(collectionView, section)){
+                if( row == 0 && !haveHeader && dataSource.haveHeaderView(collectionView, section)){
                     offset += headerHeight
                     if(headerAndFooterAddLineSpace){
                         offset += minimumLineSpacing
                     }
                 }
-                val itemsCount = adapter.getNumberOfItem(collectionView,section)
+                val itemsCount = dataSource.getNumberOfItem(collectionView,section)
                 val remaining = itemsCount - row
                 if(remaining > 0){
                     var rows = ceil(remaining / rowColumns.toFloat())
                     offset += rows * (rowHeight + minimumLineSpacing)
                 }
 
-                if(adapter.haveFooterView(collectionView, section)){
+                if(dataSource.haveFooterView(collectionView, section)){
                     offset += footerHeight
                 }
                 row = 0

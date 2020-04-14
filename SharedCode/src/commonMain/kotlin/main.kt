@@ -1,12 +1,15 @@
 
+
 import com.hitales.test.BasicViewController
 import com.hitales.test.TempTestViewViewController
 import com.hitales.test.back.TestCollectionViewController
+import com.hitales.test.view.TextBorderTestController
 import com.hitales.test.view.ViewBorderTestController
 import com.hitales.ui.*
 import com.hitales.ui.animation.EaseInOutInterpolator
 import com.hitales.ui.layout.flex.FlexLayoutParams
 import com.hitales.utils.EdgeInsets
+
 
 class NavigateController : BasicViewController(){
 
@@ -17,9 +20,9 @@ class NavigateController : BasicViewController(){
         map["test1测试"] = TempTestViewViewController()
         map["test2"] = TempTestViewViewController()
         map["测试Collection"] = TestCollectionViewController()
-        map["test4"] = TempTestViewViewController()
+        map["TextViewBorderTestController"] = TextBorderTestController()
         map["ViewBorderTestController"] = ViewBorderTestController()
-        for (i in 0 until  2){
+        for (i in 0 until  1){
             map.forEach {
                 val entry = it
                 val lp = FlexLayoutParams()
@@ -76,4 +79,6 @@ fun main() {
     animation.interpolator = EaseInOutInterpolator()
     window.defaultEnterAnimation = animation
     window.rootViewController = NavigateController()
+
+
 }

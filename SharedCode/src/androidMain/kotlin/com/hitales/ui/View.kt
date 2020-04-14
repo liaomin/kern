@@ -37,6 +37,8 @@ actual open class View{
 
     actual var delegate:ViewDelegate? = null
 
+    var mAnimator:Animator? = null
+
     var innerPadding : EdgeInsets? = null
         set(value) {
             field = value
@@ -285,13 +287,23 @@ actual open class View{
     }
 
     actual open fun measure(widthSpace: Float,widthMode:MeasureMode, heightSpace: Float,heightMode:MeasureMode,outSize: Size){
-        mWidget.measure(getMeasureWidth(widthSpace,widthMode), getMeasureWidth(heightSpace,heightMode))
+        val inner = innerPadding
+        var spaceWidth = widthSpace
+        var spaceHeight = heightSpace
+        if(inner != null){
+            if(widthMode == MeasureMode.EXACTLY){
+                spaceWidth += PixelUtil.toDIPFromPixel(inner.right - inner.left)
+            }
+            if(heightMode == MeasureMode.EXACTLY){
+                spaceHeight += PixelUtil.toDIPFromPixel(inner.bottom - inner.top)
+            }
+        }
+        mWidget.measure(getMeasureWidth(spaceWidth,widthMode), getMeasureWidth(spaceHeight,heightMode))
         var measuredWidth = mWidget.measuredWidth.toFloat()
         var measuredHeight = mWidget.measuredHeight.toFloat()
-        val inner = innerPadding
-        if(inner != null && this.javaClass !== com.hitales.ui.View::class.java){
-            measuredWidth = measuredWidth + inner.left - inner.right
-            measuredHeight = measuredHeight + inner.top - inner.bottom
+        if(inner != null){
+                measuredWidth = measuredWidth + inner.left - inner.right
+                measuredHeight = measuredHeight + inner.top - inner.bottom
         }
         outSize.set(PixelUtil.toDIPFromPixel(measuredWidth), PixelUtil.toDIPFromPixel(measuredHeight))
     }
@@ -302,20 +314,9 @@ actual open class View{
 
     actual open fun onLayout() {
         if(!isHidden){
-            var l = PixelUtil.toPixelFromDIP(frame.x)
-            var t = PixelUtil.toPixelFromDIP(frame.y)
             val width = PixelUtil.toPixelFromDIP(frame.width)
             val height = PixelUtil.toPixelFromDIP(frame.height)
             mBackground?.setOffsetSize(width,height)
-            var r = l + width
-            var b = t + height
-            val inner = innerPadding
-            if(inner != null){
-                l += inner.left.toInt()
-                t += inner.top.toInt()
-                r += inner.right.toInt()
-                b += inner.bottom.toInt()
-            }
             if(frame.isChanged()){
                 onFrameChanged()
             }
@@ -328,7 +329,6 @@ actual open class View{
             var t = PixelUtil.toPixelFromDIP(frame.y)
             val width = PixelUtil.toPixelFromDIP(frame.width)
             val height = PixelUtil.toPixelFromDIP(frame.height)
-            mBackground?.setOffsetSize(width,height)
             var r = l + width
             var b = t + height
             val inner = innerPadding
@@ -339,10 +339,8 @@ actual open class View{
                 b += inner.bottom.toInt()
             }
             mWidget.layout(l.toInt(), t.toInt(), r.toInt(), b.toInt())
-            if(frame.isChanged()){
-                onFrameChanged()
-            }
         }
+        onLayout()
     }
 
 
@@ -380,32 +378,50 @@ actual open class View{
         return "${this::class.java.name}: frame :$frame"
     }
 
+    actual open fun cleanAnimation(){
+        val animator = mAnimator
+        if(animator != null && animator.isRunning){
+            animator.cancel()
+        }
+        mAnimator = null
+    }
+
     actual open fun startAnimation(animation: Animation, completion: (() -> Unit)?) {
+        cleanAnimation()
         val animatorSet = animation.toAnimator(getWidget())
         val widget = mWidget
+        val startTranslationX = widget.translationX
+        val startTranslationY = widget.translationY
+        val startRotationX = widget.rotationX
+        val startRotationY = widget.rotationY
+        val startRotation = widget.rotation
+        val startAlpha = widget.alpha
+        val startScaleX = widget.scaleX
+        val startScaleY = widget.scaleY
         animatorSet.addListener(object : Animator.AnimatorListener{
 
             override fun onAnimationRepeat(animation: Animator?) {
             }
 
             override fun onAnimationEnd(animator: Animator?) {
+                mAnimator = null
                 val view = widget
                 if(!animation.fillAfter && view != null){
-                    view.translationX = 0f
-                    view.translationY = 0f
-                    view.rotationX = 0f
-                    view.rotationY = 0f
-                    view.rotation = 0f
-                    view.alpha = 1f
-                    view.scaleX = 1f
-                    view.scaleY = 1f
+                    view.translationX = startTranslationX
+                    view.translationY = startTranslationY
+                    view.rotationX = startRotationX
+                    view.rotationY = startRotationY
+                    view.rotation = startRotation
+                    view.alpha = startAlpha
+                    view.scaleX = startScaleX
+                    view.scaleY = startScaleY
                 }
                 completion?.invoke()
                 animation.delegate?.onAnimationStop(animation,this@View)
             }
 
             override fun onAnimationCancel(animator: Animator?) {
-
+                mAnimator = null
             }
 
             override fun onAnimationStart(animator: Animator?) {
@@ -413,6 +429,7 @@ actual open class View{
             }
 
         })
+        mAnimator = animatorSet
         animatorSet.start()
     }
 

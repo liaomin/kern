@@ -11,7 +11,9 @@ actual open class Layout : View {
         set(value) {
             if(field != value){
                 field = value
-                mWidget.invalidate()
+               val widget = getWidget()
+                widget.clipChildren = true
+                widget.invalidate()
             }
         }
 

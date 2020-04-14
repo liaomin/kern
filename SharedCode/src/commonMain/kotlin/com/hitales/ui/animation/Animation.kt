@@ -129,8 +129,6 @@ open class Animation(var interpolator:BezierInterpolator = LinearInterpolator())
      */
     var toScaleY = 1f
 
-    var isDone = true
-
     fun setFromTranslate(x:Float,y:Float):Animation{
         fromTranslateX = x
         fromTranslateY = y

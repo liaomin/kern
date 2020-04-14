@@ -37,16 +37,7 @@ inline fun Animation.toAnimator(widget:android.view.View):AnimatorSet{
     if(fromScaleY != toScaleY){
         animations.add(ObjectAnimator.ofFloat(widget, "scaleY", fromScaleY, toScaleY))
     }
-//    val tx = ObjectAnimator.ofFloat(widget, "translationX", PixelUtil.toPixelFromDIP(fromTranslateX), PixelUtil.toPixelFromDIP(toTranslateX))
-//    val ty = ObjectAnimator.ofFloat(widget, "translationY", PixelUtil.toPixelFromDIP(fromTranslateY), PixelUtil.toPixelFromDIP(toTranslateY))
-//    val rx = ObjectAnimator.ofFloat(widget, "rotationX", fromRotateX, toRotateX)
-//    val ry = ObjectAnimator.ofFloat(widget, "rotationY", fromRotateY, toRotateY)
-//    val rz = ObjectAnimator.ofFloat(widget, "rotation", fromRotateZ, toRotateZ)
-//    val op = ObjectAnimator.ofFloat(widget, "alpha", fromOpacity, toOpacity)
-//    val sx = ObjectAnimator.ofFloat(widget, "scaleX", fromScaleX, toScaleX)
-//    val sy = ObjectAnimator.ofFloat(widget, "scaleY", fromScaleY, toScaleY)
     val animationSet = AnimatorSet()
-//    val animations = listOf(tx,ty,rx,ry,rz,op,sx,sy)
     animationSet.playTogether(animations as Collection<Animator>)
     animationSet.duration = duration.toLong()
 

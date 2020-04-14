@@ -30,6 +30,8 @@ open class TestCollectionViewController : BasicViewController() {
     override fun createLayout(): Layout {
         val lp = LayoutParams(Platform.windowWidth,Platform.windowHeight / 2f)
         val collectionView = CollectionView(lp)
+        collectionView.clipsToBounds = true
+        collectionView.setBackgroundColor(Colors.MAGENTA)
 //        collectionView.isPageEnable = true
 //        collectionView.setBackgroundColor(Colors.RED)
 
@@ -37,7 +39,7 @@ open class TestCollectionViewController : BasicViewController() {
 //        collectionView.setShadow(Colors.BLUE,10f,10f,10f)
 
         val itemWidth = (Platform.windowWidth - 80) / 4
-        val adapter = object : CollectionViewAdapter{
+        val adapter = object : CollectionViewDataSource{
 
             override fun haveHeaderView(collectionView: CollectionView, section: Int): Boolean {
                 return true
@@ -55,13 +57,13 @@ open class TestCollectionViewController : BasicViewController() {
                 size.set(200f,200f)
             }
 
-            override fun createHeaderView(collectionView: CollectionView): CollectionViewCell? {
+            override fun createHeaderView(collectionView: CollectionView): CollectionViewCell {
                 val v= Cell()
                 v.button.setBackgroundColor(Colors.RED)
                 return v
             }
 
-            override fun createFooterView(collectionView: CollectionView): CollectionViewCell? {
+            override fun createFooterView(collectionView: CollectionView): CollectionViewCell {
                 val v= Cell()
                 v.button.setBackgroundColor(Colors.BLUE)
                 return v
@@ -129,10 +131,10 @@ open class TestCollectionViewController : BasicViewController() {
         collectionView.padding = EdgeInsets(20f,20f,20f,20f)
         (collectionView.layout as DefaultCollectionViewLayout).minimumInterItemSpacing = 40f
         (collectionView.layout as DefaultCollectionViewLayout).minimumLineSpacing = 40f
-        collectionView.layout.adjustRow = true
+        (collectionView.layout as DefaultCollectionViewLayout).adjustRow = true
 //        (collectionView.layout as DefaultCollectionViewLayout).headerAndFooterAddLineSpace = true
 //        collectionView.layout.maxColumns = 1
-        collectionView.adapter = adapter
+        collectionView.dataSource = adapter
 //        collectionView.orientation = Orientation.HORIZONTAL
 //        this.view = collectionView
 //        collectionView.setBackgroundColor(Colors.RED)

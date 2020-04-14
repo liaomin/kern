@@ -1,6 +1,7 @@
 package com.hitales.ui.android
 
 import android.content.Context
+import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -15,6 +16,11 @@ open class AndroidScrollView : com.hitales.ui.android.scrollview.ScrollView {
     var mView: ScrollView? = null
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+
+    override fun dispatchDraw(canvas: Canvas) {
+        AndroidBridge.dispatchDraw(mView!!,this,canvas)
+        super.dispatchDraw(canvas)
+    }
 
     companion object {
         fun createFromXLM(view: ScrollView):AndroidScrollView{

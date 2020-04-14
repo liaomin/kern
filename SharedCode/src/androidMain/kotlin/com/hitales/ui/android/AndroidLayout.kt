@@ -70,34 +70,10 @@ open class AndroidLayout(val mView: Layout) : ViewGroup(Platform.getApplication(
             it.layout()
         }
     }
-
-
+    
     override fun dispatchDraw(canvas: Canvas) {
-        try {
-            if(mView.clipsToBounds){
-                val bg = mView.mBackground
-                if(bg != null){
-                    var width = width.toFloat()
-                    var height = height.toFloat()
-                    val off = bg.offset
-                    if(off != null){
-                        canvas.translate(-off.x,-off.y)
-                        width = off.width
-                        height = off.height
-                    }
-                    canvas.clipPath(bg.getOuterPath(width,height))
-                    if(off != null) {
-                        canvas.translate(off.x, off.y)
-                    }
-                }else{
-                    canvas.clipRect(Rect(0,0,width,height))
-                }
-            }
-        }catch (e:Exception){
-            e.printStackTrace()
-        }finally {
-            super.dispatchDraw(canvas)
-        }
+        AndroidBridge.dispatchDraw(mView,this,canvas)
+        super.dispatchDraw(canvas)
     }
 
     override fun onAttachedToWindow() {

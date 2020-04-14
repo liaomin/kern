@@ -17,9 +17,14 @@ enum class ViewState(val value:Int) {
     SELECTED(4),
 }
 
-//open class Enum(val value: Int){
-//
-//}
+
+//typealias ViewState = Int
+//const val ViewStateNormal = 0
+//const val ViewStatePressed = 1
+//const val ViewStateFocused = 2
+//const val ViewStateSelected = 3
+
+
 //
 //class ViewState:Enum{
 //    constructor(value: Int):super(value)
@@ -180,7 +185,10 @@ expect open class View  {
     open fun onTouchesEnded(touches: Touches)
     open fun onTouchesCancelled(touches: Touches)
 
+
     open fun startAnimation(animation: Animation,completion:(()->Unit)? = null)
+    open fun cleanAnimation()
+
 }
 
 

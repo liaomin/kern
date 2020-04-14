@@ -1,7 +1,9 @@
 package com.hitales.ui.android
 
+import android.graphics.Canvas
 import android.graphics.Rect
 import android.view.MotionEvent
+import com.hitales.ui.Layout
 import com.hitales.ui.Touches
 import com.hitales.ui.View
 import com.hitales.ui.utils.PixelUtil
@@ -75,6 +77,32 @@ class AndroidBridge {
                 rect.top += padding.top.toInt()
                 rect.right += padding.right.toInt()
                 rect.bottom += padding.bottom.toInt()
+            }
+        }
+
+        fun dispatchDraw(mView:Layout,androidView: android.view.View,canvas: Canvas){
+            try {
+                if(mView.clipsToBounds){
+                    val bg = mView.mBackground
+                    if(bg != null){
+                        var width = androidView.width.toFloat()
+                        var height = androidView.height.toFloat()
+                        val off = bg.offset
+                        if(off != null){
+                            canvas.translate(-off.x,-off.y)
+                            width = off.width
+                            height = off.height
+                        }
+                        canvas.clipPath(bg.getOuterPath(width,height))
+                        if(off != null) {
+                            canvas.translate(off.x, off.y)
+                        }
+                    }else{
+                        canvas.clipRect(Rect(0,0,androidView.width,androidView.height))
+                    }
+                }
+            }catch (e:Exception){
+                e.printStackTrace()
             }
         }
 

@@ -23,6 +23,8 @@
     
     [v setBackgroundColorInt:0xffff0000];
     [v setBorderWidth:12];
+    CAAnimationGroup* d;
+    [d setRemovedOnCompletion:NO];
     
     [[self view] addSubview:v];
     
