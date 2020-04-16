@@ -540,4 +540,36 @@ actual open class View{
         mWidget.invalidate()
     }
 
+    actual open fun getPaddingLeft(): Float {
+        var inner = innerPadding
+        if(inner != null){
+            return padding?.left?:0f - inner.left
+        }
+        return padding?.left?:0f
+    }
+
+    actual open fun getPaddingRight(): Float {
+        var inner = innerPadding
+        if(inner != null){
+            return padding?.right?:0f + inner.right
+        }
+        return padding?.right?:0f
+    }
+
+    actual open fun getPaddingTop(): Float {
+        var inner = innerPadding
+        if(inner != null){
+            return padding?.top?:0f - inner.top
+        }
+        return padding?.top?:0f
+    }
+
+    actual open fun getPaddingBottom(): Float {
+        var inner = innerPadding
+        if(inner != null){
+            return padding?.bottom?:0f + inner.bottom
+        }
+        return padding?.bottom?:0f
+    }
+
 }

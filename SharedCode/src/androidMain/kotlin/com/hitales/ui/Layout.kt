@@ -69,22 +69,17 @@ actual open class Layout : View {
         children.clear()
     }
 
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-    }
-
     actual open fun measureChild(child: View,width:Float,widthMode: MeasureMode,height:Float,heightMode: MeasureMode,outSize: Size){
         var maxWidth = width
         var maxHeight = height
         val l = child.layoutParams!!
         var wMode = widthMode
         var hMode = heightMode
-        if(l.flag and LayoutParams.FLAG_WIDTH_MASK ==  LayoutParams.FLAG_WIDTH_MASK){
+        if(l.flag and LayoutParams.FLAG_WIDTH_MASK == LayoutParams.FLAG_WIDTH_MASK){
             maxWidth = l.width
             wMode = MeasureMode.EXACTLY
         }
-        if(l.flag and LayoutParams.FLAG_HEIGHT_MASK ==  LayoutParams.FLAG_HEIGHT_MASK){
+        if(l.flag and LayoutParams.FLAG_HEIGHT_MASK == LayoutParams.FLAG_HEIGHT_MASK){
             maxHeight = l.height
             hMode = MeasureMode.EXACTLY
         }
@@ -97,19 +92,26 @@ actual open class Layout : View {
     override fun measure(widthSpace: Float, widthMode: MeasureMode, heightSpace: Float, heightMode: MeasureMode, outSize: Size) {
         val maxWidth = 0f
         val maxHeight = 0f
-        val padding = this.padding
-        var w = widthSpace
-        var h = heightSpace
-        var originX = 0f
-        var originY = 0f
-        if(padding != null){
-            originX = padding.left
-            originY = padding.top
-            w -= padding.left + padding.right
-            h -= padding.top + padding.bottom
+        val paddingLeft = getPaddingLeft()
+        val paddingRight = getPaddingRight()
+        val paddingTop = getPaddingTop()
+        val paddingBottom = getPaddingBottom()
+        var w = widthSpace - paddingLeft - paddingRight
+        var h = heightSpace - paddingTop - paddingBottom
+        var wMode = widthMode
+        var hMode = heightMode
+        if(widthMode == MeasureMode.EXACTLY){
+            wMode = MeasureMode.AT_MOST
         }
+        if(heightMode == MeasureMode.EXACTLY){
+            hMode = MeasureMode.AT_MOST
+        }
+
+        var originX = paddingLeft
+        var originY = paddingTop
+
         for (view in children){
-            measureChild(view,w,widthMode, h,heightMode,outSize)
+            measureChild(view,w,wMode, h,hMode,outSize)
             val frame = view.frame
             frame.x = originX
             frame.y = originY

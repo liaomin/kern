@@ -7,7 +7,7 @@ import com.hitales.test.view.TextBorderTestController
 import com.hitales.test.view.ViewBorderTestController
 import com.hitales.ui.*
 import com.hitales.ui.animation.EaseInOutInterpolator
-import com.hitales.ui.layout.flex.FlexLayoutParams
+import com.hitales.ui.layout.flex.*
 import com.hitales.utils.EdgeInsets
 
 
@@ -35,36 +35,82 @@ class NavigateController : BasicViewController(){
                 button.setOnPressListener {
                     this.push(entry.value)
                 }
-                addView(button)
+//                addView(button)
             }
         }
 
-        val lp = FlexLayoutParams(300f)
-        lp.margin = EdgeInsets.value(5f)
-        val textInp = TextInput("",lp)
-        textInp.setBackgroundColor(Colors.RED)
-        addView(textInp)
+//        val lp = FlexLayoutParams(300f)
+//        lp.margin = EdgeInsets.value(5f)
+//        val textInp = TextInput("",lp)
+//        textInp.setBackgroundColor(Colors.RED)
+//        addView(textInp)
 
-        var text = TextInput("司马彦行书")
-        text.setBackgroundColor(Colors.RED)
-        text.setFontStyle("JingDianXingShuJian",FontStyle.BOLD_ITALIC)
-        addView(text)
+        view?.padding = EdgeInsets.value(20f)
+        val sc = ScrollView(LayoutParams(300f,300f))
+//        val sc = FlexLayout()
+//        sc.orientation = Orientation.HORIZONTAL
+        sc.padding = EdgeInsets.value(10f)
+//        sc.clipsToBounds = true
+        sc.setBackgroundColor(0x5f0000ff)
+        sc.justifyContent = JustifyContent.SPACE_AROUND
+        sc.alignItems = AlignItems.FLEX_END
+        sc.flexDirection = FlexDirection.COLUMN
+        sc.flexWarp = FlexWarp.WARP_REVERSE
+        for ( i in 0 until 10){
+            val lp = FlexLayoutParams()
+            lp.margin = EdgeInsets.value(5f)
+            var text = TextInput("司马彦行书${i+1}",lp)
+            text.setBackgroundColor(Colors.RED)
+            text.setFontStyle("JingDianXingShuJian",FontStyle.BOLD_ITALIC)
+            sc.addSubView(text)
 
-        text = TextInput("司马彦行书",lp)
-        text.setBackgroundColor(Colors.RED)
-        text.setFontStyle("JingDianXingShuJian",FontStyle.BOLD)
-        addView(text)
+            val b = Button("测试 ${i+1}",lp)
+            sc.addSubView(b)
+        }
 
-        text = TextInput("司马彦行书",lp)
-        text.setBackgroundColor(Colors.RED)
-        text.setFontStyle("JingDianXingShuJian",FontStyle.ITALIC)
-        addView(text)
+//        view?.padding = EdgeInsets.value(20f)
+//        val sc = ScrollView()
+//        sc.setShadow(Colors.RED,4f,10f,0f)
+//        sc.setBorderRadius(8f)
+//        sc.padding = EdgeInsets.value(10f)
+//        sc.setBackgroundColor(Colors.BLUE)
+//        sc.justifyContent = JustifyContent.CENTER
+//        sc.alignItems = AlignItems.STRETCH
+//        sc.flexDirection = FlexDirection.ROW
+//        for ( i in 0 until 2){
+//            val lp = FlexLayoutParams()
+//            lp.margin = EdgeInsets.value(5f)
+//            var text = TextInput("司马彦行书",lp)
+//            text.setBackgroundColor(Colors.RED)
+//            text.setFontStyle("JingDianXingShuJian",FontStyle.BOLD_ITALIC)
+//            sc.addSubView(text)
+//        }
 
-        text = TextInput("司马彦行书")
-        text.padding = EdgeInsets.identity()
-        text.setBackgroundColor(Colors.RED)
-        text.setFontStyle("JingDianXingShuJian")
-        addView(text)
+//        val lp = FlexLayoutParams()
+//        lp.flex = 1f
+//        lp.minWidth = 50f
+//        lp.height = 100f
+//        val v = View(lp)
+//        v.setBackgroundColor(Colors.YELLOW)
+//        sc.addSubView(v)
+//
+        addView(sc)
+
+//        text = TextInput("司马彦行书",lp)
+//        text.setBackgroundColor(Colors.RED)
+//        text.setFontStyle("JingDianXingShuJian",FontStyle.BOLD)
+//        addView(text)
+//
+//        text = TextInput("司马彦行书",lp)
+//        text.setBackgroundColor(Colors.RED)
+//        text.setFontStyle("JingDianXingShuJian",FontStyle.ITALIC)
+//        addView(text)
+//
+//        text = TextInput("司马彦行书")
+//        text.padding = EdgeInsets.identity()
+//        text.setBackgroundColor(Colors.RED)
+//        text.setFontStyle("JingDianXingShuJian")
+//        addView(text)
 
     }
 

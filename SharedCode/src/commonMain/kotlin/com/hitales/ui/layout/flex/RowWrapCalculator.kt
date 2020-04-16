@@ -2,24 +2,57 @@ package com.hitales.ui.layout.flex
 
 import com.hitales.ui.LayoutParams
 import com.hitales.ui.MeasureMode
+import com.hitales.ui.ScrollView
 import com.hitales.ui.View
 import com.hitales.utils.Size
+import kotlin.math.max
 
 open class RowWrapCalculator : RowCalculator() {
 
     private val allRows = ArrayList<Row>()
 
-    override fun calculate(layout: FlexLayout, direction: Int, children: List<View>, width: Float, widthMode: MeasureMode, height: Float, heightMode: MeasureMode, paddingLeft: Float, paddingTop: Float, paddingRight: Float, paddingBottom: Float, outSize: Size) {
-        var row = ArrayList<View>()
+    override fun calculate(layout: FlexLayout, children: List<View>, width: Float, widthMode: MeasureMode, selfWidthMode: MeasureMode, height: Float, heightMode: MeasureMode, selfHeightMode: MeasureMode, paddingLeft: Float, paddingTop: Float, paddingRight: Float, paddingBottom: Float, outSize: Size) {
+        var rows = ArrayList<View>()
         val flexChildren = ArrayList<View>(0)
         var flexCount = 0f
         val isReverse = isReverse(layout)
-        val isWrapReverse = isWrapReverse(layout)
-        val totalWidth = width - paddingLeft - paddingRight
-        val totalHeight = height - paddingTop - paddingBottom
+        var totalWidth = width - paddingLeft - paddingRight
+        var totalHeight = height - paddingTop - paddingBottom
         var spendWidth = 0f
-        var spendHeight = 0f
-        for (view in children){
+        var rowHeight = 0f
+        var offsetX = paddingLeft
+        var offsetY = paddingTop
+        var wMode = widthMode
+        var hMode = heightMode
+        val paddingWidth = paddingLeft + paddingRight
+        val paddingHeight = paddingTop + paddingBottom
+        if(widthMode == MeasureMode.EXACTLY){
+            wMode = MeasureMode.AT_MOST
+        }
+        if(heightMode == MeasureMode.EXACTLY){
+            hMode = MeasureMode.AT_MOST
+        }
+        val wrapFun = {isLast:Boolean ->
+            if(rows.isNotEmpty()){
+                var rowH = rowHeight
+                val isSingleRow = isLast && allRows.isEmpty()
+                if(isSingleRow){
+                    setOutSize(width,selfWidthMode,height,selfHeightMode,spendWidth+paddingLeft+paddingRight , rowHeight+paddingHeight,outSize)
+                    rowH = outSize.height - paddingHeight
+                }
+                val row = warp(layout,rows,flexChildren,flexCount,totalWidth,rowH,spendWidth,rowHeight,offsetX,offsetY, isReverse, isSingleRow ,outSize)
+                allRows.add(row)
+                offsetY += row.rowHeight
+                spendWidth = 0f
+                flexCount = 0f
+                rowHeight = 0f
+                flexChildren.clear()
+                rows.clear()
+            }
+        }
+        for (index in 0 until children.size){
+            val view = children[index]
+            val isLast = index == children.size - 1
             val frame = view.frame
             val l = view.layoutParams as FlexLayoutParams
             var measureWidthSpace = totalWidth
@@ -30,22 +63,18 @@ open class RowWrapCalculator : RowCalculator() {
                 measureHeightSpace -= margin.top - margin.bottom
             }
             if(isFlex(l)){
-                flexCount += l.flex
-
                 val occupyWidth = measureFlexWidth(l)
                 if(spendWidth + occupyWidth > totalWidth){
-                    wrap(direction, row, flexChildren, flexCount, width, height, spendWidth, spendHeight, outSize)
-                    flexChildren.add(view)
-                    row.add(view)
-                    spendHeight = 0f
-                    flexChildren.clear()
-                    flexCount = 0f
+                    wrapFun(isLast)
                 }
-                row.add(view)
+                flexCount += l.flex
+                rows.add(view)
+                flexChildren.add(view)
                 spendWidth += occupyWidth
                 continue
             }
-            layout.measureChild(view,measureWidthSpace,widthMode,measureHeightSpace,heightMode,outSize)
+            layout.measureChild(view,measureWidthSpace,wMode,measureHeightSpace,hMode,outSize)
+
             var occupyWidth = frame.width
             var occupyHeight = frame.height
             if (margin != null) {
@@ -53,138 +82,104 @@ open class RowWrapCalculator : RowCalculator() {
                 occupyHeight += margin.top + margin.bottom
             }
             if(spendWidth + occupyWidth > totalWidth){
-                wrap(direction, row, flexChildren, flexCount, width, height, spendWidth, spendHeight, outSize)
-                spendWidth = 0f
-                spendHeight = 0f
-                flexChildren.clear()
-                flexCount = 0f
+                wrapFun(isLast)
             }
-            row.add(view)
+            rows.add(view)
             spendWidth += occupyWidth
+            if(rowHeight < occupyHeight){
+                rowHeight = occupyHeight
+            }
         }
-        wrap(direction, row, flexChildren, flexCount, width, height, spendWidth, spendHeight, outSize)
+        wrapFun(true)
 
-        var originX = paddingLeft
-        var originY = paddingTop
-        if(isReverse){
-            originX = width - paddingRight
-        }
         spendWidth = 0f
-        spendHeight = 0f
-
-        var offsetX = originX
-        var offsetY = originY
-        var maxWidth = 0f
-        var maxHeight = 0f
-        var usedHeight = 0f
+        var spendHeight = 0f
         for (row in allRows){
-            val items = row.children
-            for (view in items){
-                val l = view.layoutParams as FlexLayoutParams
-                val frame = view.frame
-                val margin = l.margin
-                var occupyWidth = frame.width
-                var occupyHeight = frame.height
-                var marginLeft = 0f
-                var marginRight = 0f
-                if (margin != null) {
-                    marginLeft = margin.left
-                    marginRight = margin.right
-                    occupyWidth += marginLeft + marginRight
-                    occupyHeight += margin.top + margin.bottom
+            spendHeight += row.rowHeight
+            if(spendWidth < row.rowWidth){
+                spendWidth = row.rowWidth
+            }
+        }
+
+        setOutSize(width,selfWidthMode,height,selfHeightMode,spendWidth+paddingWidth,spendHeight+paddingHeight,outSize)
+
+        if(layout.flexWarp == FlexWarp.WARP_REVERSE && allRows.size > 1){
+            val last = allRows.last()
+            var offsetY = last.originY + last.rowHeight
+            for ( row in allRows){
+                offsetY -= row.rowHeight
+                row.setOriginYTo(offsetY)
+            }
+        }
+        val alignItems = layout.alignItems
+        if(alignItems != AlignItems.FLEX_START){
+            if(layout !is ScrollView && allRows.size > 1){
+                var rowHeight = 0f
+                for ( row in allRows){
+                    rowHeight += row.rowHeight
                 }
-                spendWidth += occupyWidth
-                if(spendHeight < occupyHeight){
-                    spendHeight = occupyHeight
+                val measuredHeight = outSize.height - paddingHeight
+                var offset = 0f
+                when(alignItems){
+                    AlignItems.CENTER -> {
+                        offset = (measuredHeight - rowHeight) / 2f
+                    }
+                    AlignItems.FLEX_END -> {
+                        offset = measuredHeight - rowHeight
+                    }
                 }
-                if(isReverse){
-                    frame.x = offsetX - occupyWidth + marginLeft
-                    frame.y = offsetY + (margin?.top?:0f)
-                    offsetX -= occupyWidth
-                }else{
-                    frame.x = offsetX + marginLeft
-                    frame.y = offsetY + (margin?.top?:0f)
-                    offsetX += occupyWidth
+                for ( row in allRows){
+                    row.setOriginYBy(offset)
                 }
             }
-            if(maxWidth < spendWidth){
-                maxWidth = spendWidth
-            }
-            if(maxHeight < spendHeight){
-                maxHeight = spendHeight
-            }
-            usedHeight += spendHeight
-            adjustRow(direction,items,totalWidth,row.spendHeight,spendWidth,spendHeight,layout.justifyContent,layout.alignItems)
-            offsetX = originX
-            offsetY += spendHeight
-            spendWidth = 0f
-            spendHeight = 0f
         }
-
-        outSize.width = maxWidth
-        outSize.height = usedHeight
-
-    }
-
-    override fun adjustChildren(layout: FlexLayout, direction: Int, children: List<View>, width: Float, widthMode: MeasureMode, height: Float, heightMode: MeasureMode, spendWidth: Float, spendHeight: Float, paddingLeft: Float, paddingTop: Float, paddingRight: Float, paddingBottom: Float, outSize: Size) {
-        val totalWidth = width - paddingLeft - paddingRight
-        val totalHeight = height - paddingTop - paddingBottom
-        var measureWidth = totalWidth
-        var measureHeight = totalHeight
-        if(widthMode == MeasureMode.UNSPECIFIED){
-            measureWidth = spendWidth
-        }
-        if(heightMode == MeasureMode.UNSPECIFIED){
-            measureHeight = spendHeight
-        }
-        var layoutWidth = width
-        var layoutHeight= height
-        if(widthMode != MeasureMode.EXACTLY){
-            layoutWidth = spendWidth + paddingLeft + paddingRight
-        }
-        if(widthMode == MeasureMode.AT_MOST){
-            if(layoutWidth > width){
-                layoutWidth = width
-            }
-        }
-        if(heightMode != MeasureMode.EXACTLY){
-            layoutHeight = spendHeight + paddingTop + paddingBottom
-        }
-        if(heightMode == MeasureMode.AT_MOST){
-            if(layoutHeight > height){
-                layoutHeight = height
-            }
-        }
-        if(layoutHeight != measureHeight){
-
-        }
-        outSize.width = layoutWidth
-        outSize.height = layoutHeight
         allRows.clear()
     }
 
-    private fun wrap(direction: Int,row:ArrayList<View>,flexChildren: ArrayList<View>,flexCount:Float,width: Float,height: Float,spendWidth: Float,spendHeight: Float,outSize: Size){
-        if(flexChildren.size > 0){
-            calculateFlex(direction, flexChildren, flexCount, width, height, spendWidth, spendHeight, outSize)
+
+    protected fun warp(layout: FlexLayout,children: ArrayList<View>,flexChildren:ArrayList<View>,flexCount: Float,rowWidth:Float,rowHeight: Float,spendWidth: Float,spendHeight: Float,offsetX: Float, offsetY: Float,isReverse:Boolean,isSingleRow:Boolean,outSize: Size):Row{
+        val maxHeight = max(rowHeight,calculateFlex(layout,flexChildren,flexCount,rowWidth,rowHeight,spendWidth,outSize))
+        val rows = ArrayList(children)
+        children.clear()
+
+        //setOrigin
+        var originX = offsetX
+        var originY = offsetY
+        if(isReverse){
+            originX += rowWidth
         }
-        var width = 0f
-        var maxHeight = 0f
-        for (view in row){
+        var spendWidth = 0f
+        var offsetX = originX
+        var offsetY = originY
+        for (view in rows){
+            val l = view.layoutParams as FlexLayoutParams
             val frame = view.frame
-            val margin = (view.layoutParams as FlexLayoutParams).margin
+            val margin = l.margin
             var occupyWidth = frame.width
             var occupyHeight = frame.height
+            var marginLeft = 0f
+            var marginRight = 0f
             if (margin != null) {
-                occupyWidth += margin.left + margin.right
+                marginLeft = margin.left
+                marginRight = margin.right
+                occupyWidth += marginLeft + marginRight
                 occupyHeight += margin.top + margin.bottom
             }
-            width += occupyWidth
-            if(maxHeight < occupyHeight){
-                maxHeight = occupyHeight
+            spendWidth += occupyWidth
+            if(isReverse){
+                frame.x = offsetX - occupyWidth + marginLeft
+                frame.y = offsetY + (margin?.top?:0f)
+                offsetX -= occupyWidth
+            }else{
+                frame.x = offsetX + marginLeft
+                frame.y = offsetY + (margin?.top?:0f)
+                offsetX += occupyWidth
             }
         }
-        allRows.add(Row(ArrayList(row),width,maxHeight))
-        row.clear()
+        val rSpendWidth = spendWidth
+        val row = if(isSingleRow) Row(rows,rSpendWidth,maxHeight,rSpendWidth,maxHeight,originX,originY) else Row(rows,rowWidth,maxHeight,rSpendWidth,maxHeight,originX,originY)
+        adjustRow(layout,row,isReverse,outSize)
+        return row
     }
 
     private fun measureFlexWidth(l:FlexLayoutParams):Float{

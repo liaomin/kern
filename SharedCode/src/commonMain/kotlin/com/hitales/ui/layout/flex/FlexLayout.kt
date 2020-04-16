@@ -1,9 +1,6 @@
 package com.hitales.ui.layout.flex
 
-import com.hitales.ui.CustomLayout
-import com.hitales.ui.LayoutParams
-import com.hitales.ui.MeasureMode
-import com.hitales.ui.View
+import com.hitales.ui.*
 import com.hitales.utils.Size
 
 
@@ -41,13 +38,6 @@ enum class AlignItems(val value:Int) {
  * https://www.runoob.com/try/try.php?filename=trycss3_js_flex-wrap
  */
 open class FlexLayout : CustomLayout<FlexLayoutParams> {
-
-    companion object{
-        internal const val DIRECTION_RIGHT = 0
-        internal const val DIRECTION_LEFT = 1
-        internal const val DIRECTION_DOWN = 2
-        internal const val DIRECTION_UP = 3
-    }
 
     val rowCalculator:RowCalculator by lazy { RowCalculator() }
 
@@ -95,41 +85,31 @@ open class FlexLayout : CustomLayout<FlexLayoutParams> {
 
 
     override fun measure(widthSpace: Float,widthMode: MeasureMode, heightSpace: Float,heightMode: MeasureMode,outSize: Size) {
-        var direction = DIRECTION_RIGHT
-        when (flexDirection) {
-            FlexDirection.COLUMN -> {
-                direction = DIRECTION_DOWN
-            }
-            FlexDirection.ROW -> {
-                direction = DIRECTION_RIGHT
-            }
-            FlexDirection.COLUMN_REVERSE -> {
-                direction = DIRECTION_UP
-            }
-            FlexDirection.ROW_REVERSE -> {
-                direction = DIRECTION_LEFT
-            }
-        }
         var w = widthSpace
         var h = heightSpace
         var wMode = widthMode
         var hMode = heightMode
 
         if(flexDirection  == FlexDirection.ROW || flexDirection == FlexDirection.ROW_REVERSE){
-            if (flexWarp == FlexWarp.NO_WARP) {
-                rowCalculator.calculate(this,direction,children,w,wMode, h,hMode, outSize)
+            if (flexWarp == FlexWarp.NO_WARP || wMode == MeasureMode.UNSPECIFIED) {
+                rowCalculator.calculate(this,children,w,wMode, h,hMode, outSize)
             }else{
-                rowWrapCalculator.calculate(this,direction,children,w,wMode, h,hMode, outSize)
+                rowWrapCalculator.calculate(this,children,w,wMode, h,hMode, outSize)
             }
         }else{
-            if (flexWarp == FlexWarp.NO_WARP) {
-                columnCalculator.calculate(this,direction,children,w,wMode, h,hMode, outSize)
+            if (flexWarp == FlexWarp.NO_WARP || hMode == MeasureMode.UNSPECIFIED) {
+                columnCalculator.calculate(this,children,w,wMode, h,hMode, outSize)
             }else{
-                columnWarpCalculator.calculate(this,direction,children,w,wMode, h,hMode, outSize)
+                columnWarpCalculator.calculate(this,children,w,wMode, h,hMode, outSize)
             }
         }
     }
 
+    fun reMeasureChild(child: View, width:Float, widthMode: MeasureMode, height:Float, heightMode: MeasureMode, outSize: Size){
+        if(Platform.os == PLATFORM_ANDROID){
+            measureChild(child, width, widthMode, height, heightMode, outSize)
+        }
+    }
 
     override fun measureChild(child: View, width:Float, widthMode: MeasureMode, height:Float, heightMode: MeasureMode, outSize: Size){
         var maxWidth = width

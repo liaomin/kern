@@ -7,6 +7,8 @@ open class LayoutParams {
     companion object {
         internal const val FLAG_WIDTH_MASK = 1
         internal const val FLAG_HEIGHT_MASK = 2
+        internal const val FLAG_WIDTH_PERCENT_MASK = 3
+        internal const val FLAG_HEIGHT_PERCENT_MASK = 4
     }
 
     constructor(width:Float = Float.NaN,height: Float =  Float.NaN){
@@ -18,6 +20,37 @@ open class LayoutParams {
      * 用位运算来提高效率，判断是否设置宽高的
      */
     internal var flag = 0
+
+    /**
+     *
+     */
+    fun setWidth(width: Float,isPercentage:Boolean = false){
+        var w = width
+        if(isPercentage && (!width.isNaN())){
+            flag = flag or FLAG_WIDTH_PERCENT_MASK
+            if(w < 0) w = 0f
+            if(w > 100) w = 100f
+        }
+        this.width = w
+    }
+
+    fun setHeight(height: Float,isPercent:Boolean = false){
+        var h = width
+        if(isPercent && (!height.isNaN())){
+            flag = flag or FLAG_HEIGHT_PERCENT_MASK
+            if(h < 0) h = 0f
+            if(h > 100) h = 100f
+        }
+        this.height = h
+    }
+
+    fun isPercentWidth():Boolean{
+        return flag and FLAG_WIDTH_PERCENT_MASK == FLAG_WIDTH_PERCENT_MASK
+    }
+
+    fun isPercentHeight():Boolean{
+        return flag and FLAG_HEIGHT_PERCENT_MASK == FLAG_HEIGHT_PERCENT_MASK
+    }
 
     var width:Float = Float.NaN
         set(value) {

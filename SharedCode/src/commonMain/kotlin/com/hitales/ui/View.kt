@@ -17,13 +17,11 @@ enum class ViewState(val value:Int) {
     SELECTED(4),
 }
 
-
 //typealias ViewState = Int
 //const val ViewStateNormal = 0
 //const val ViewStatePressed = 1
 //const val ViewStateFocused = 2
 //const val ViewStateSelected = 3
-
 
 //
 //class ViewState:Enum{
@@ -67,7 +65,9 @@ expect open class View  {
     var delegate:ViewDelegate?
 
     /**
-     * use margin and padding to calculate frame
+     * context padding
+     * if android set shadow will have innerPadding
+     * getPadding use [getPaddingRight] [getPaddingLeft] [getPaddingTop] [getPaddingBottom]]
      */
     var padding:EdgeInsets?
 
@@ -116,8 +116,10 @@ expect open class View  {
     open fun onLayout()
     open fun needLayout()
     open fun needDisplay()
-
-
+    open fun getPaddingLeft():Float
+    open fun getPaddingRight():Float
+    open fun getPaddingTop():Float
+    open fun getPaddingBottom():Float
 
     open fun removeFromSuperView()
     open fun onAttachedToWindow()
@@ -184,7 +186,6 @@ expect open class View  {
     open fun onTouchesMoved(touches: Touches)
     open fun onTouchesEnded(touches: Touches)
     open fun onTouchesCancelled(touches: Touches)
-
 
     open fun startAnimation(animation: Animation,completion:(()->Unit)? = null)
     open fun cleanAnimation()
