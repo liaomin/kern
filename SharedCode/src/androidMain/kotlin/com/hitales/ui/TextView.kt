@@ -15,6 +15,7 @@ import com.hitales.ui.android.CustomLineHeightSpan
 import com.hitales.ui.android.StateListColor
 import com.hitales.ui.android.font.FontManager
 import com.hitales.ui.utils.PixelUtil
+import com.hitales.utils.Log
 
 actual open class TextView :  View {
 
@@ -37,21 +38,6 @@ actual open class TextView :  View {
         get() = textColorList.defaultColor
         set(value) {
             textColorList.setColorForState(value)
-        }
-
-    actual open var bold:Boolean = false
-        set(value) {
-            if(field != value){
-                val widget = getWidget()
-                if(value){
-                    widget.typeface = Typeface.DEFAULT_BOLD
-                    widget.paint.isFakeBoldText = true
-                }else{
-                    widget.typeface = Typeface.DEFAULT
-                    widget.paint.isFakeBoldText = false
-                }
-            }
-            field = value
         }
 
     actual constructor(text:CharSequence?,layoutParams: LayoutParams?):super(layoutParams){
@@ -100,6 +86,22 @@ actual open class TextView :  View {
                 getTextWidget().includeFontPadding = value
             }
         }
+
+    actual open fun setFontStyle(style: FontStyle) {
+        val widget = getWidget()
+        val typeface = widget.typeface
+        try {
+            var fontStyle = Typeface.NORMAL
+            when (style){
+                FontStyle.BOLD -> fontStyle = Typeface.BOLD
+                FontStyle.ITALIC -> fontStyle = Typeface.ITALIC
+                FontStyle.BOLD_ITALIC -> fontStyle = Typeface.BOLD_ITALIC
+            }
+            widget.typeface = Typeface.create(typeface,fontStyle)
+        }catch (e:Exception){
+            Log.e(e)
+        }
+    }
 
     /**
      * 自定义字体

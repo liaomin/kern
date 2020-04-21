@@ -11,6 +11,7 @@ import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
 import com.hitales.utils.Size
+import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
@@ -150,6 +151,7 @@ actual open class View{
 
     private var onLongPressListener:((view: com.hitales.ui.View)->Unit)? = null
 
+    private var destructBlocks:LinkedList<(view: com.hitales.ui.View)->Unit>? = null
 
     actual constructor(layoutParams:LayoutParams?) {
         mWidget = createWidget()
@@ -572,4 +574,34 @@ actual open class View{
         return padding?.bottom?:0f
     }
 
+    protected fun finalize() {
+        onDestruct()
+    }
+
+    actual open fun onDestruct(){
+        var blocks = destructBlocks
+        if(blocks != null){
+            blocks.forEach {
+                it(this)
+            }
+            blocks.clear()
+        }
+        destructBlocks = null
+    }
+
+    actual fun addDestructBlock(block: (view:com.hitales.ui.View) -> Unit) {
+        getOrCreateDestructorBlocks().add(block)
+    }
+
+
+    private fun getOrCreateDestructorBlocks():LinkedList<(view: com.hitales.ui.View)->Unit>{
+        var blocks = destructBlocks
+        if(blocks != null){
+            return blocks
+        }else{
+            blocks = LinkedList()
+            destructBlocks = blocks
+            return blocks
+        }
+    }
 }

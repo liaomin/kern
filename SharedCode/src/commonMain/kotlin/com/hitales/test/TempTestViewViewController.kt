@@ -27,7 +27,7 @@ open class TempTestViewViewController : BasicViewController(),TextInputDelegate,
 //        var view = View(lp)
         view.setBackgroundColor(Colors.RED)
         view.setTextColor(Colors.BLUE)
-        view.bold = true
+        view.setFontStyle(FontStyle.BOLD_ITALIC)
         view.textSize = 30f
 //        view.autoFocus = true
         view.setBorderRadius(itemWidth/2)

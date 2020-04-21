@@ -11,6 +11,7 @@
 #import "MeasureNode.h"
 #import "BackgroundLayer.h"
 #import "KView.h"
+#import "KImageView.h"
 #import "UIView+Border.h"
 
 //! Project version number for KUI.

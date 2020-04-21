@@ -12,6 +12,9 @@ import com.hitales.utils.EdgeInsets
 
 
 class NavigateController : BasicViewController(){
+    override fun createLayout(): Layout {
+        return FlexLayout()
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -52,9 +55,10 @@ class NavigateController : BasicViewController(){
         sc.padding = EdgeInsets.value(10f)
 //        sc.clipsToBounds = true
         sc.setBackgroundColor(0x5f0000ff)
+//        sc.isPageEnable = true
         sc.justifyContent = JustifyContent.SPACE_AROUND
         sc.alignItems = AlignItems.FLEX_END
-        sc.flexDirection = FlexDirection.COLUMN
+        sc.flexDirection = FlexDirection.ROW
         sc.flexWarp = FlexWarp.WARP_REVERSE
         for ( i in 0 until 10){
             val lp = FlexLayoutParams()

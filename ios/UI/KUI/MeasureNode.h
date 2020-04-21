@@ -23,7 +23,7 @@ typedef NS_ENUM(NSUInteger, MeasureMode) {
 
 @required
 
--(CGSize)onMeasure:(CGFloat)width widthMode:(MeasureMode)widthMode height:(CGFloat)height heightMode:(MeasureMode)heightMode;
+-(CGSize)measure:(CGFloat)width widthMode:(MeasureMode)widthMode height:(CGFloat)height heightMode:(MeasureMode)heightMode;
 
 -(void)layoutSubviews;
 
@@ -32,6 +32,10 @@ typedef NS_ENUM(NSUInteger, MeasureMode) {
 -(void)willMoveToWindow:(UIWindow*)window;
 
 -(void)setPadding:(UIEdgeInsets)padding;
+
+-(UIEdgeInsets)getPadding;
+
+-(void)destructor;
 
 @end
 

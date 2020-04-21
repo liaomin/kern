@@ -38,10 +38,7 @@ expect open class TextView : View {
      * set all state color
      */
     open var textColor:Int
-    /**
-     * default false
-     */
-    open var bold:Boolean
+
 
     open var lineHeight:Float
 
@@ -86,6 +83,9 @@ expect open class TextView : View {
      * 自定义字体
      */
     open fun setFontStyle(fontName:String,style: FontStyle = FontStyle.DEFAULT)
+
+    open fun setFontStyle(style: FontStyle = FontStyle.DEFAULT)
+
     open fun setTextShadow(color:Int,radius:Float,dx:Float,dy: Float)
 
     fun enableAutoFontSizeToFit(minFontSize:Int,maxFontSize:Int)

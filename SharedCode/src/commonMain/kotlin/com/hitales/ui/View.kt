@@ -85,6 +85,7 @@ expect open class View  {
     /**
      * android elevation
      */
+    @TargetPlatform(PLATFORM_ANDROID)
     open var elevation:Float
 
     open var isHidden:Boolean
@@ -189,6 +190,11 @@ expect open class View  {
 
     open fun startAnimation(animation: Animation,completion:(()->Unit)? = null)
     open fun cleanAnimation()
+
+    open fun onDestruct()
+
+    fun addDestructBlock(block:((view:View)->Unit))
+
 
 }
 

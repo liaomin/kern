@@ -9,7 +9,7 @@ import com.hitales.ui.layout.flex.FlexDirection
 open class BasicViewController : ViewController() {
 
     override fun createLayout(): Layout {
-        return Layout()
+//        return Layout()
         val scrollView = ScrollView()
 //        scrollView.padding = EdgeInsets.value(150f)
 

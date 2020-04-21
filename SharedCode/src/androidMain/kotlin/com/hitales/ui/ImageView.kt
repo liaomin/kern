@@ -34,4 +34,11 @@ actual open class ImageView : com.hitales.ui.View {
                 ImageResizeMode.SCALE_CENTER_CROP -> getWidget().scaleType = ImageView.ScaleType.CENTER_CROP
             }
         }
+    actual var tintColor: Int = Colors.CLEAR
+        set(value) {
+            field = value
+            getWidget().setColorFilter(value)
+        }
+
+
 }

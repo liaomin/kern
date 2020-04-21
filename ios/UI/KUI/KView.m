@@ -12,7 +12,7 @@
 
 @interface KView()
 {
-
+    UIEdgeInsets _padding;
 }
 
 @end
@@ -24,7 +24,7 @@
     
 }
 
-- (CGSize)onMeasure:(CGFloat)width widthMode:(MeasureMode)widthMode height:(CGFloat)height heightMode:(MeasureMode)heightMode{
+- (CGSize)measure:(CGFloat)width widthMode:(MeasureMode)widthMode height:(CGFloat)height heightMode:(MeasureMode)heightMode{
     CGFloat w = 0;
     if(widthMode == MeasureModeExactly){
         w = width;
@@ -70,7 +70,12 @@
 
 - (void)setPadding:(UIEdgeInsets)padding
 {
-    
+    _padding = padding;
+}
+
+-(UIEdgeInsets)getPadding
+{
+    return _padding;
 }
 
 @end

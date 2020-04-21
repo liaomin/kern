@@ -34,4 +34,6 @@ expect open class ImageView : View {
      */
     open var resizeMode:ImageResizeMode
 
+    var tintColor:Int
+
 }
