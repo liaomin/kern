@@ -10,6 +10,7 @@ import com.hitales.ui.animation.toAnimator
 import com.hitales.ui.utils.PixelUtil
 import com.hitales.utils.EdgeInsets
 import com.hitales.utils.Frame
+import com.hitales.utils.Log
 import com.hitales.utils.Size
 import java.util.*
 import kotlin.math.max
@@ -579,6 +580,7 @@ actual open class View{
     }
 
     actual open fun onDestruct(){
+        Log.e("$this onDestruct")
         var blocks = destructBlocks
         if(blocks != null){
             blocks.forEach {

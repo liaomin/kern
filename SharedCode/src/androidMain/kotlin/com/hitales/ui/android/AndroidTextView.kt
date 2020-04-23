@@ -17,6 +17,7 @@ open class AndroidTextView(protected val mView: TextView) : AppCompatTextView(Pl
     init {
         AndroidBridge.init(this,mView)
         gravity = Gravity.CENTER_VERTICAL
+        setSingleLine()
         includeFontPadding = false
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
             textAlignment = View.TEXT_ALIGNMENT_TEXT_START

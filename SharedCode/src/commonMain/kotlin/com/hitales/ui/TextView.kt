@@ -75,7 +75,7 @@ expect open class TextView : View {
     open var selectable:Boolean
 
     /**
-     * default 0
+     * default 1
      */
     open var numberOfLines:Int
 

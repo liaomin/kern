@@ -155,6 +155,11 @@
         _imagelayer = nil;
     }
     _imageRef = nil;
+    [self onDestruct];
+}
+
+-(void)onDestruct
+{
 }
 
 - (void)setContentMode:(UIViewContentMode)contentMode

@@ -13,7 +13,7 @@ open class TempTestViewViewController : BasicViewController(),TextInputDelegate,
         val s =  super.createLayout() as ScrollView
         s.isPageEnable = true
         s.delegate = this
-//        s.orientation = Orientation.HORIZONTAL
+        s.orientation = Orientation.VERTICAL
         return s
     }
 

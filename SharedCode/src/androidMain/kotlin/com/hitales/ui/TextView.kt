@@ -203,9 +203,9 @@ actual open class TextView :  View {
             getTextWidget().setTextIsSelectable(value)
         }
     /**
-     * default 0
+     * default 1
      */
-    actual open var numberOfLines : Int = 0
+    actual open var numberOfLines : Int = 1
         set(value) {
             field = value
             if(value == 1){

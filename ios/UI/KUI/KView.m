@@ -78,4 +78,14 @@
     return _padding;
 }
 
+- (void)dealloc
+{
+    [self onDestruct];
+}
+
+-(void)onDestruct
+{
+    
+}
+
 @end

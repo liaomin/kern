@@ -35,7 +35,7 @@ typedef NS_ENUM(NSUInteger, MeasureMode) {
 
 -(UIEdgeInsets)getPadding;
 
--(void)destructor;
+-(void)onDestruct;
 
 @end
 

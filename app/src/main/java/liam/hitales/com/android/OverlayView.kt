@@ -119,6 +119,7 @@ class OverlayView(context: Context) : View(context),Runnable{
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        System.gc()
         val textSize = mPaint.textSize
         val marginY = 5f
         var offsetY = textSize + marginY
