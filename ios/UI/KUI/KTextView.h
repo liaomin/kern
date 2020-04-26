@@ -8,16 +8,35 @@
 
 #import <UIKit/UIKit.h>
 #import "MeasureNode.h"
-#import "KShowText.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, TextEllipsizeMode) {
     TextEllipsizeModeHead = 1,
     TextEllipsizeModeMiddle = 2,
-    TextEllipsizeModeTail = 3,
+    TextEllipsizeModeTail = 4,
 };
 
+typedef NS_ENUM(NSUInteger, TextDecorationLine) {
+    TextDecorationLineNone = 0,
+    TextDecorationLineUnderLine = 1,
+    TextDecorationLineLineThrough = 2,
+    TextDecorationLineUnderLineThrough = 3,
+};
+
+typedef NS_ENUM(NSUInteger, TextAlignment) {
+    TextAlignmentLeft = 1,
+    TextAlignmentCenter = 2,
+    TextAlignmentRight = 4,
+};
+
+
+typedef NS_ENUM(NSUInteger, FontStyle) {
+    FontStyleDefault = 0,
+    FontStyleBold = 1,
+    FontStyleItalic = 2,
+    FontStyleBoldItalic = 3,
+};
 
 @interface KTextView : UILabel<MeasureNode>
 
@@ -27,7 +46,15 @@ typedef NS_ENUM(NSUInteger, TextEllipsizeMode) {
 
 @property (nonatomic,assign) TextDecorationLine decorationLine;
 
+@property (nonatomic,assign) CGFloat fontSize;
 
+@property (nonatomic,assign) TextAlignment alignment;
+
+@property (nonatomic,assign) TextEllipsizeMode ellipsizeMode;
+
+-(void)setFontStye:(FontStyle)style;
+
+-(void)setFontStye:(FontStyle)style widthName:(NSString*)fontName;
 
 @end
 

@@ -48,8 +48,9 @@
 		9E556745244D7583004B1A5A /* 13@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E556744244D7582004B1A5A /* 13@2x.png */; };
 		9E556748244D9C57004B1A5A /* KTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E556746244D9C57004B1A5A /* KTextView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E556749244D9C57004B1A5A /* KTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E556747244D9C57004B1A5A /* KTextView.m */; };
-		9E55674C244E9F6D004B1A5A /* KShowText.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E55674A244E9F6D004B1A5A /* KShowText.h */; };
-		9E55674D244E9F6D004B1A5A /* KShowText.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E55674B244E9F6D004B1A5A /* KShowText.m */; };
+		9E55675024500CC7004B1A5A /* DestructNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E55674E24500CC7004B1A5A /* DestructNode.h */; };
+		9E55675124500CC7004B1A5A /* DestructNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E55674F24500CC7004B1A5A /* DestructNode.m */; };
+		9E55675324502858004B1A5A /* JingDianXingShuJian.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9E55675224502858004B1A5A /* JingDianXingShuJian.ttf */; };
 		9E5979F022B76F5000CABF4E /* Convert.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E5979EE22B76F5000CABF4E /* Convert.m */; };
 		9E5979F122B76F5000CABF4E /* Convert.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E5979EF22B76F5000CABF4E /* Convert.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EF48D072314FFFB00053981 /* HCollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EF48D052314FFFB00053981 /* HCollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -121,8 +122,9 @@
 		9E556744244D7582004B1A5A /* 13@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "13@2x.png"; sourceTree = "<group>"; };
 		9E556746244D9C57004B1A5A /* KTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTextView.h; sourceTree = "<group>"; };
 		9E556747244D9C57004B1A5A /* KTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTextView.m; sourceTree = "<group>"; };
-		9E55674A244E9F6D004B1A5A /* KShowText.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KShowText.h; sourceTree = "<group>"; };
-		9E55674B244E9F6D004B1A5A /* KShowText.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KShowText.m; sourceTree = "<group>"; };
+		9E55674E24500CC7004B1A5A /* DestructNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DestructNode.h; sourceTree = "<group>"; };
+		9E55674F24500CC7004B1A5A /* DestructNode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DestructNode.m; sourceTree = "<group>"; };
+		9E55675224502858004B1A5A /* JingDianXingShuJian.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = JingDianXingShuJian.ttf; path = UI/JingDianXingShuJian.ttf; sourceTree = "<group>"; };
 		9E5979EE22B76F5000CABF4E /* Convert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Convert.m; sourceTree = "<group>"; };
 		9E5979EF22B76F5000CABF4E /* Convert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Convert.h; sourceTree = "<group>"; };
 		9EF48D052314FFFB00053981 /* HCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HCollectionView.h; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 		9E26254D22AFBEBE00FCE622 = {
 			isa = PBXGroup;
 			children = (
+				9E55675224502858004B1A5A /* JingDianXingShuJian.ttf */,
 				9E556744244D7582004B1A5A /* 13@2x.png */,
 				9E26255822AFBEBE00FCE622 /* UI */,
 				9E26257822AFBED300FCE622 /* HUI */,
@@ -226,8 +229,8 @@
 				9E556741244BF5DB004B1A5A /* KImageView.m */,
 				9E556746244D9C57004B1A5A /* KTextView.h */,
 				9E556747244D9C57004B1A5A /* KTextView.m */,
-				9E55674A244E9F6D004B1A5A /* KShowText.h */,
-				9E55674B244E9F6D004B1A5A /* KShowText.m */,
+				9E55674E24500CC7004B1A5A /* DestructNode.h */,
+				9E55674F24500CC7004B1A5A /* DestructNode.m */,
 			);
 			path = KUI;
 			sourceTree = "<group>";
@@ -252,8 +255,8 @@
 			files = (
 				9E55672C24404560004B1A5A /* BackgroundLayer.h in Headers */,
 				9E55672824404395004B1A5A /* KView.h in Headers */,
-				9E55674C244E9F6D004B1A5A /* KShowText.h in Headers */,
 				9E556748244D9C57004B1A5A /* KTextView.h in Headers */,
+				9E55675024500CC7004B1A5A /* DestructNode.h in Headers */,
 				9E55673A244054A0004B1A5A /* UIView+Border.h in Headers */,
 				9E556742244BF5DB004B1A5A /* KImageView.h in Headers */,
 				9E55672524404238004B1A5A /* MeasureNode.h in Headers */,
@@ -373,6 +376,7 @@
 			files = (
 				9E26256922AFBEBF00FCE622 /* LaunchScreen.storyboard in Resources */,
 				9E556745244D7583004B1A5A /* 13@2x.png in Resources */,
+				9E55675324502858004B1A5A /* JingDianXingShuJian.ttf in Resources */,
 				9E26256622AFBEBF00FCE622 /* Assets.xcassets in Resources */,
 				9E26256122AFBEBE00FCE622 /* Main.storyboard in Resources */,
 			);
@@ -443,9 +447,9 @@
 				9E556743244BF5DB004B1A5A /* KImageView.m in Sources */,
 				9E55673B244054A0004B1A5A /* UIView+Border.m in Sources */,
 				9E55672924404395004B1A5A /* KView.m in Sources */,
+				9E55675124500CC7004B1A5A /* DestructNode.m in Sources */,
 				9E55672D24404560004B1A5A /* BackgroundLayer.m in Sources */,
 				9E556749244D9C57004B1A5A /* KTextView.m in Sources */,
-				9E55674D244E9F6D004B1A5A /* KShowText.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

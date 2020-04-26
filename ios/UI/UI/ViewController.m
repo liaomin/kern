@@ -44,15 +44,26 @@
     
     
     KTextView* t = [[KTextView alloc] initWithFrame:CGRectMake(10, 350, 160, 50)];
-    [t setPadding:UIEdgeInsetsMake(10, 10, 10, 10)];
-    t.text = @"这真是文本";
+//    [t setPadding:UIEdgeInsetsMake(10, 10, 10, 10)];
+    t.text = @"这真是文本这真是文本这真是文本这真是文本这真是文本这真是文本这真是文本这真是文本这真是文本这真是文本这真是文本这真是文本这真是文本这真是文本这真是文本这真是文本";
 //    t.attributedText = [[NSMutableAttributedString alloc] initWithString:@"这真是文2本" attributes:@{NSForegroundColorAttributeName:[UIColor blueColor], NSFontAttributeName:[UIFont systemFontOfSize:30]}];
     t.textColor = UIColor.blueColor;
     t.letterSpacing = 0.1;
-    t.lineHeight = 20;
+    t.lineHeight = 40;
     t.decorationLine = TextDecorationLineUnderLineThrough;
+//    t.adjustsFontSizeToFitWidth = YES;
+    t.fontSize = 30;
+    t.numberOfLines = 10;
+    t.ellipsizeMode = TextEllipsizeModeMiddle;
+//    t.textAlignment = TextAlignmentCenter;
+//    [t setFontStye:FontStyleDefault widthName:@"经典行书简"];
+//    t.text = @"这真是文本这真是文本这真是文本这";
+    w = [t measure:100 widthMode:MeasureModeAtMost height:100 heightMode:MeasureModeAtMost];
+    t.frame = CGRectMake(10, 350, w.width, w.height);
+    
     [t setBackgroundColor:UIColor.redColor];
     [[self view] addSubview:t];
+
     
     // Do any additional setup after loading the view.
 }
