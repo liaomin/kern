@@ -8,7 +8,7 @@ import com.hitales.utils.EdgeInsets
 abstract class BorderTestController<out T : View> : BasicViewController(){
 
     override fun createLayout(): Layout {
-        val scrollView = ScrollView()
+        val scrollView = super.createLayout() as ScrollView
         scrollView.flexDirection = FlexDirection.ROW
         scrollView.justifyContent = JustifyContent.CENTER
         scrollView.alignItems = AlignItems.CENTER

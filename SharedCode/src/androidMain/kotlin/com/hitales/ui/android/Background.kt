@@ -576,7 +576,7 @@ class Background : StateListDrawable {
        }
     }
 
-   open fun setBorderRadius(topLeftRadius:Float,topRightRadius: Float,bottomRightRadius:Float,bottomLeftRadius:Float) {
+   open fun setBorderRadius(topLeftRadius:Float,topRightRadius: Float,bottomLeftRadius:Float,bottomRightRadius:Float) {
        val changed =  borderTopLeftRadius != topLeftRadius || borderTopRightRadius != topRightRadius || borderBottomRightRadius != bottomRightRadius || borderBottomLeftRadius != bottomLeftRadius
        borderTopLeftRadius = topLeftRadius
        borderTopRightRadius = topRightRadius

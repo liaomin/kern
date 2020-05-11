@@ -2,12 +2,13 @@ package com.hitales.ui
 
 import com.hitales.ios.ui.setTransformM34
 import com.hitales.ui.animation.toIOSAnimation
-import com.hitales.ui.ios.Background
 import com.hitales.ui.ios.IOSView
 import com.hitales.utils.*
+import com.kern.ios.ui.*
 import kotlinx.cinterop.cValuesOf
 import kotlinx.cinterop.get
 import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.useContents
 import platform.CoreGraphics.CGRectMake
 import platform.Foundation.NSNumber
 import platform.Foundation.numberWithFloat
@@ -15,7 +16,6 @@ import platform.Foundation.setValue
 import platform.Foundation.valueForKeyPath
 import platform.QuartzCore.CAAnimation
 import platform.QuartzCore.CAAnimationDelegateProtocol
-import platform.QuartzCore.CALayer
 import platform.UIKit.*
 import platform.darwin.NSObject
 import platform.objc.sel_registerName
@@ -45,6 +45,15 @@ inline fun Frame.toCGRect():kotlinx.cinterop.CValue<platform.CoreGraphics.CGRect
     return CGRectMake(x.toDouble(),y.toDouble(),width.toDouble(),height.toDouble())
 }
 
+inline fun MeasureMode.toIOSMeasureMode():com.kern.ios.ui.MeasureMode{
+    if(this == MeasureMode.EXACTLY){
+        return MeasureModeExactly
+    }else if(this == MeasureMode.UNSPECIFIED){
+        return MeasureModeUnspecified
+    }
+    return MeasureModeAtMost
+}
+
 
 actual open class View {
 
@@ -62,9 +71,15 @@ actual open class View {
 
     var mBackgroundColor = Colors.CLEAR
 
-    var mBackground:Background? = null
-
     actual var padding: EdgeInsets? = null
+        set(value) {
+            field = value
+            if(value != null){
+                mWidget.setPadding(UIEdgeInsetsMake(value.top.toDouble(),value.left.toDouble(),value.bottom.toDouble(),value.right.toDouble()))
+            }else{
+                mWidget.setPadding(UIEdgeInsetsMake(0.0,0.0,0.0,0.0))
+            }
+        }
 
     actual open val frame:Frame =  Frame.identity()
 
@@ -181,27 +196,29 @@ actual open class View {
     }
 
     actual open fun setBorderColor(color: Int) {
-        getOrCreateBackground().setBorderColor(color)
+        val c = color.toUInt()
+        mWidget.setBorderColor(c,c,c,c)
     }
 
     actual open fun setBorderColor(leftColor: Int, topColor: Int, rightColor: Int, bottomColor: Int) {
-        getOrCreateBackground().setBorderColor(leftColor,topColor, rightColor, bottomColor)
+        mWidget.setBorderColor(leftColor.toUInt(),topColor.toUInt(),rightColor.toUInt(),bottomColor.toUInt())
     }
 
     actual open fun setBorderWidth(borderWidth: Float) {
-        getOrCreateBackground().setBorderWidth(borderWidth)
+        mWidget.setBorderWidth(borderWidth.toDouble())
     }
 
     actual open fun setBorderWidth(leftWidth: Float, topWidth: Float, rightWidth: Float, bottomWidth: Float) {
-        getOrCreateBackground().setBorderWidth(leftWidth, topWidth, rightWidth, bottomWidth)
+        mWidget.setBorderWidth(leftWidth.toDouble(),topWidth.toDouble(),rightWidth.toDouble(),bottomWidth.toDouble())
     }
 
     actual open fun setBorderRadius(radius: Float) {
-        getOrCreateBackground().setBorderRadius(radius,radius,radius,radius)
+        val r = radius.toDouble()
+        mWidget.setBorderRadius(r,r,r,r)
     }
 
-    actual open fun setBorderRadius(topLeftRadius: Float, topRightRadius: Float, bottomRightRadius: Float, bottomLeftRadius: Float) {
-        getOrCreateBackground().setBorderRadius(topLeftRadius,topRightRadius,bottomRightRadius,bottomLeftRadius)
+    actual open fun setBorderRadius(topLeftRadius: Float, topRightRadius: Float,bottomLeftRadius: Float, bottomRightRadius: Float) {
+        mWidget.setBorderRadius(topLeftRadius.toDouble(),topRightRadius.toDouble(),bottomLeftRadius.toDouble(),bottomRightRadius.toDouble())
     }
 
     actual open var elevation: Float = 0f
@@ -213,7 +230,11 @@ actual open class View {
         }
 
     actual open fun setBorderStyle(style: BorderStyle){
-        getOrCreateBackground().setBorderStyle(style)
+        when (style){
+            BorderStyle.SOLID -> mWidget.setBorderStyle(BorderStyleSolid)
+            BorderStyle.DOTTED -> mWidget.setBorderStyle(BorderStyleDotted)
+            BorderStyle.DASHED -> mWidget.setBorderStyle(BorderStyleDashed)
+        }
     }
 
     /**
@@ -271,14 +292,6 @@ actual open class View {
         getWidget().setFrame(CGRectMake(frame.x.toDouble(),frame.y.toDouble(),frame.width.toDouble(),frame.height.toDouble()))
     }
 
-    protected fun getOrCreateBackground(): Background {
-        if (mBackground == null) {
-            mBackground = Background(WeakReference<CALayer>(mWidget.layer))
-        }
-        mWidget.layer.setNeedsDisplay()
-        return mBackground!!
-    }
-
     actual open fun startAnimation(animation: Animation, completion: (() -> Unit)?) {
         mWidget.layer.setTransformM34(animation.m34)
         val iosAnimation = animation.toIOSAnimation()
@@ -302,7 +315,7 @@ actual open class View {
     actual var delegate:ViewDelegate? by Weak()
 
     actual open fun setShadow(color: Int, radius: Float, dx: Float, dy: Float) {
-        getOrCreateBackground().setShadow(radius, dx, dy, color)
+        mWidget.setShadow(color.toUInt(),radius.toDouble(),dx.toDouble(),dy.toDouble())
     }
 
     /**
@@ -334,51 +347,51 @@ actual open class View {
     }
 
     actual fun getLeftBorderWidth(): Float {
-        return mBackground?.borderLeftWidth?:0f
+        return mWidget.getLeftBorderWidth().toFloat()
     }
 
     actual fun getTopBorderWidth(): Float {
-        return mBackground?.borderTopWidth?:0f
+        return mWidget.getTopBorderWidth().toFloat()
     }
 
     actual fun getRightBorderWidth(): Float {
-        return mBackground?.borderRightWidth?:0f
+        return mWidget.getRightBorderWidth().toFloat()
     }
 
     actual fun getBottomBorderWidth(): Float {
-        return mBackground?.borderBottomWidth?:0f
+        return mWidget.getBottomBorderWidth().toFloat()
     }
 
     actual fun getTopLeftBorderRadius(): Float {
-        return mBackground?.borderTopLeftRadius?:0f
+        return mWidget.getTopLeftBorderRadius().toFloat()
     }
 
     actual fun getTopRightBorderRadius(): Float {
-        return mBackground?.borderTopRightRadius?:0f
+        return mWidget.getTopRightBorderRadius().toFloat()
     }
 
     actual fun getBottomLeftBorderRadius(): Float {
-        return mBackground?.borderBottomLeftRadius?:0f
+        return mWidget.getBottomLeftBorderRadius().toFloat()
     }
 
     actual fun getBottomRightBorderRadius(): Float {
-        return mBackground?.borderBottomRightRadius?:0f
+        return mWidget.getBottomRightBorderRadius().toFloat()
     }
 
     actual fun getShadowColor(): Int {
-        return mBackground?.shadowColor?:0
+        return mWidget.getShadowColor().toInt()
     }
 
     actual fun getShadowRadius(): Float {
-        return mBackground?.shadowRadius?:0f
+        return mWidget.getShadowRadius().toFloat()
     }
 
     actual fun getShadowOffsetX(): Float {
-        return mBackground?.shadowDx?:0f
+        return mWidget.getShadowOffsetX().toFloat()
     }
 
     actual fun getShadowOffsetY(): Float {
-        return mBackground?.shadowDy?:0f
+        return mWidget.getShadowOffsetY().toFloat()
     }
 
     /**
@@ -386,9 +399,17 @@ actual open class View {
      * @param widthSpace measure宽度
      * @param widthMode
      * @param heightSpace measure高度
+     * @param heightMode
      * @param outSize 获取计算出来的宽高
      */
     actual open fun measure(widthSpace: Float, widthMode: MeasureMode, heightSpace: Float, heightMode: MeasureMode, outSize: Size) {
+        if(mWidget is MeasureNodeProtocol){
+            val widget = mWidget as MeasureNodeProtocol
+            widget.measure(widthSpace.toDouble(),widthMode.toIOSMeasureMode(),heightSpace.toDouble(),heightMode.toIOSMeasureMode()).useContents {
+                outSize.set(this.width.toFloat(),this.height.toFloat())
+            }
+            return
+        }
         var w = 0f
         var h = 0f
         if(widthMode == MeasureMode.EXACTLY){
@@ -410,6 +431,32 @@ actual open class View {
     }
 
     actual open fun onTouchesCancelled(touches: Touches) {
+    }
+
+    actual open fun getPaddingLeft(): Float {
+        return padding?.left?:0f
+    }
+
+    actual open fun getPaddingRight(): Float {
+        return padding?.right?:0f
+    }
+
+    actual open fun getPaddingTop(): Float {
+        return padding?.top?:0f
+    }
+
+    actual open fun getPaddingBottom(): Float {
+        return padding?.bottom?:0f
+    }
+
+    actual open fun cleanAnimation() {
+    }
+
+    actual open fun onDestruct() {
+
+    }
+
+    actual fun addDestructBlock(block: (view: View) -> Unit) {
     }
 
 

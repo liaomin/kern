@@ -30,9 +30,8 @@
 {
     BackgroundLayer* bglayer = [self getBackgroundLayer];
     if(bglayer == NULL){
-        bglayer = [[BackgroundLayer alloc] init];
+        bglayer = [[BackgroundLayer alloc] initWithForgroundLayer:self.layer];
         bglayer.bgColor = [self getBackgroundColorInt];
-        self.backgroundColor = NULL;
         objc_setAssociatedObject(self, "__BACKGROUN_LAYER_KEY__", bglayer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return bglayer;
@@ -210,5 +209,51 @@
     return 0;
 }
 
+- (void)setPadding:(UIEdgeInsets)padding
+{
+     objc_setAssociatedObject(self, "__UIVIEW_PADDING_KEY__", [NSValue valueWithUIEdgeInsets:padding], OBJC_ASSOCIATION_RETAIN);
+}
+
+- (UIEdgeInsets)getPadding
+{
+    NSValue* v = objc_getAssociatedObject(self, "__UIVIEW_PADDING_KEY__");
+    if(v){
+        return [v UIEdgeInsetsValue];
+    }
+    return UIEdgeInsetsZero;
+}
+
+-(void)addOrRemoveBgLayer
+{
+    UIView* superView = self.superview;
+    BackgroundLayer* bgLayer = [self getBackgroundLayer];
+    if(bgLayer){
+        if(superView){
+            if(!bgLayer.superlayer){
+               [superView.layer insertSublayer:bgLayer below:self.layer];
+            }
+        }else{
+             [bgLayer removeFromSuperlayer];
+        }
+    }
+}
+
+-(void)updateMask
+{
+    BackgroundLayer* bgLayer = [self getBackgroundLayer];
+    if(bgLayer){
+        [self.layer setMask:nil];
+        if(([bgLayer haveBorderRadius] || [bgLayer haveBorderWidth])){
+            if([bgLayer isSameBorderRadius] && ![bgLayer haveBorderWidth] && [bgLayer isSameBorderWidth]){
+                self.layer.cornerRadius = [bgLayer getInnerBorderRadius];
+            }else{
+                CAShapeLayer* shape = [[CAShapeLayer alloc] init];
+                shape.backgroundColor = UIColor.redColor.CGColor;
+                shape.path = [bgLayer getInnerPath].CGPath;
+                [self.layer setMask:shape];
+            }
+        }
+    }
+}
 
 @end

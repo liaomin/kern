@@ -2,8 +2,8 @@ package com.hitales.ui.ios
 
 import com.hitales.ui.Layout
 import com.hitales.ui.ScrollView
-import com.hitales.utils.Log
 import com.hitales.utils.WeakReference
+import com.kern.ios.ui.KScrollView
 import kotlinx.cinterop.ObjCAction
 import kotlinx.cinterop.useContents
 import platform.CoreGraphics.CGRectMake
@@ -12,7 +12,7 @@ import platform.UIKit.UIScrollViewDelegateProtocol
 import platform.UIKit.UIView
 import platform.UIKit.UIWindow
 
-class IOSScrollView(val mView: WeakReference<ScrollView>) : UIScrollView(CGRectMake(0.0,0.0,0.0,0.0)),UIScrollViewDelegateProtocol{
+class IOSScrollView(val mView: WeakReference<ScrollView>) : KScrollView(CGRectMake(0.0,0.0,0.0,0.0)),UIScrollViewDelegateProtocol{
 
     init {
         this.delegate = this
@@ -32,9 +32,8 @@ class IOSScrollView(val mView: WeakReference<ScrollView>) : UIScrollView(CGRectM
         }
     }
 
-    @ObjCAction
-    fun layoutSubviews() {
-        Log.d("$mView layoutSubviews")
+    override fun layoutSubviews() {
+        super.layoutSubviews()
         val view = mView.get()
         if(view != null && view is Layout){
             this.frame.useContents {

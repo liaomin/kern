@@ -2,12 +2,12 @@ package com.hitales.ui.ios
 
 import com.hitales.ui.Button
 import com.hitales.utils.WeakReference
+import com.kern.ios.ui.KButton
 import kotlinx.cinterop.ObjCAction
 import platform.CoreGraphics.CGRectMake
-import platform.QuartzCore.CALayer
 import platform.UIKit.*
 
-class IOSButtonView(val mView: WeakReference<Button>) : UIButton(CGRectMake(0.0,0.0,0.0,0.0)) {
+class IOSButtonView(val mView: WeakReference<Button>) : KButton(CGRectMake(0.0,0.0,0.0,0.0)) {
 
 
     var preState:UIControlState = UIControlStateNormal

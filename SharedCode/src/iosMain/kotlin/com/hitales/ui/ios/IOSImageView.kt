@@ -2,14 +2,13 @@ package com.hitales.ui.ios
 
 import com.hitales.ui.ImageView
 import com.hitales.utils.WeakReference
+import com.kern.ios.ui.KImageView
 import kotlinx.cinterop.ObjCAction
 import platform.CoreGraphics.CGRectMake
-import platform.QuartzCore.CALayer
 import platform.UIKit.UIImage
-import platform.UIKit.UIImageView
 import platform.UIKit.UIWindow
 
-class IOSImageView(val mView: WeakReference<ImageView>) : UIImageView(CGRectMake(0.0,0.0,0.0,0.0)) {
+class IOSImageView(val mView: WeakReference<ImageView>) : KImageView(CGRectMake(0.0,0.0,0.0,0.0)) {
 
     @ObjCAction
     fun willMoveToWindow(window: UIWindow?){

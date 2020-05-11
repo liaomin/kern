@@ -231,10 +231,10 @@ actual open class View{
         setBorderRadius(radius, radius, radius, radius)
     }
 
-    actual open fun setBorderRadius(topLeftRadius: Float, topRightRadius: Float, bottomRightRadius: Float, bottomLeftRadius: Float
+    actual open fun setBorderRadius(topLeftRadius: Float, topRightRadius: Float, bottomLeftRadius: Float, bottomRightRadius: Float
     ) {
         val background = getOrCreateBackground()
-        background.setBorderRadius(topLeftRadius, topRightRadius, bottomRightRadius, bottomLeftRadius)
+        background.setBorderRadius(topLeftRadius, topRightRadius, bottomLeftRadius, bottomRightRadius)
         this.checkLayerType()
     }
 

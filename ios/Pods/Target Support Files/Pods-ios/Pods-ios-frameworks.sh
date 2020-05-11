@@ -161,10 +161,10 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/HUI/HUI.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/KUI/KUI.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/HUI/HUI.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/KUI/KUI.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait

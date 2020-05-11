@@ -56,6 +56,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(CGFloat)getShadowOffsetY;
 
+-(void)setPadding:(UIEdgeInsets)padding;
+
+-(UIEdgeInsets)getPadding;
+
+-(void)updateMask;
+
+-(void)addOrRemoveBgLayer;
+
 @end
 
 NS_ASSUME_NONNULL_END

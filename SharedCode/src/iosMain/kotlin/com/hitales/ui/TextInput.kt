@@ -31,16 +31,6 @@ actual open class TextInput : com.hitales.ui.TextView {
             getWidget().font = UIFont.systemFontOfSize(value.toDouble())
         }
 
-    override var bold: Boolean = false
-        set(value) {
-            field = value
-            if(value){
-                getWidget().font = UIFont.boldSystemFontOfSize(textSize.toDouble())
-            }else{
-                getWidget().font = UIFont.systemFontOfSize(textSize.toDouble())
-            }
-        }
-
     override var letterSpacing: Float = 0f
 
     override var numberOfLines: Int = 1

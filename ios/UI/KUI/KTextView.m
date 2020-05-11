@@ -9,17 +9,11 @@
 #import "KTextView.h"
 
 
-@interface KTextView()
-{
-    UIEdgeInsets _pddding;
-}
-@end
-
 @implementation KTextView
 
 - (void)drawTextInRect:(CGRect)rect
 {
-    [super drawTextInRect:UIEdgeInsetsInsetRect(rect, _pddding)];
+    [super drawTextInRect:UIEdgeInsetsInsetRect(rect, [self getPadding])];
 }
 
 -(CGSize)measure:(CGFloat)width widthMode:(MeasureMode)widthMode height:(CGFloat)height heightMode:(MeasureMode)heightMode
@@ -27,7 +21,7 @@
     if(widthMode == MeasureModeExactly && heightMode == MeasureModeExactly){
         return CGSizeMake(width, height);
     }
-    NSMutableAttributedString* attr = [self getNSAttributedString];
+    UIEdgeInsets _pddding = [self getPadding];
     CGFloat paddingWidth = _pddding.left + _pddding.right;
     CGFloat paddingHeight = _pddding.top + _pddding.bottom;
     CGFloat maxWidth = width - paddingWidth;
@@ -63,16 +57,6 @@
         measureHeight = MIN(measureHeight, maxHeight) + paddingHeight;
     }
     return CGSizeMake(measureWidth, measureHeight);
-}
-
-- (void)setPadding:(UIEdgeInsets)padding
-{
-    _pddding = padding;
-}
-
-- (UIEdgeInsets)getPadding
-{
-    return _pddding;
 }
 
 - (void)setText:(NSString *)text
@@ -250,15 +234,57 @@
     }
 }
 
+
+- (void)willMoveToSuperview:(UIView *)newSuperview
+{
+    [super willMoveToSuperview:newSuperview];
+}
+
+- (void)willMoveToWindow:(UIWindow *)newWindow
+{
+    [super willMoveToWindow:newWindow];
+}
+
+- (void)didMoveToSuperview{
+    [super didMoveToSuperview];
+    [self addOrRemoveBgLayer];
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    [self addOrRemoveBgLayer];
+    BackgroundLayer* bgLayer = [self getBackgroundLayer];
+    if(bgLayer){
+        bgLayer.frame = self.frame;
+        [self updateMask];
+    }
+}
+
+- (void)setClipsToBounds:(BOOL)clipsToBounds
+{
+    [super setClipsToBounds:clipsToBounds];
+    [self updateMask];
+}
+
 - (void)dealloc
 {
     [self onDestruct];
 }
 
-- (void)onDestruct
+-(void)onDestruct
 {
     
 }
 
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
+    BackgroundLayer* bgLayer = [self getBackgroundLayer];
+    if(bgLayer){
+        bgLayer.bgColor = [BackgroundLayer uIColor2Int:backgroundColor];
+    }else{
+        [super setBackgroundColor:backgroundColor];
+    }
+}
 
 @end

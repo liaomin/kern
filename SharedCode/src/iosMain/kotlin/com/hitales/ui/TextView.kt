@@ -1,9 +1,6 @@
 package com.hitales.ui
 import com.hitales.ui.ios.IOSTextView
-import com.hitales.utils.Size
 import com.hitales.utils.WeakReference
-import kotlinx.cinterop.useContents
-import platform.CoreGraphics.CGSizeMake
 import platform.Foundation.NSMakeRange
 import platform.Foundation.NSMutableAttributedString
 import platform.Foundation.addAttribute
@@ -59,21 +56,6 @@ actual open class TextView :  View {
     protected open fun getTextWidget(): UILabel {
         return super.getWidget() as UILabel
     }
-
-    /**
-     * default false
-     */
-    actual open var bold: Boolean = false
-        set(value) {
-            field = value
-            val widget = getTextWidget()
-            if(value){
-                widget.font = UIFont.boldSystemFontOfSize(widget.font().pointSize)
-            }else{
-                widget.font = UIFont.systemFontOfSize(widget.font().pointSize)
-            }
-            onFontChanged()
-        }
 
     /**
      * default false
@@ -180,30 +162,31 @@ actual open class TextView :  View {
         set(value) {
             getTextWidget().numberOfLines = value.toLong()
         }
-    override fun measure(widthSpace: Float, widthMode: MeasureMode, heightSpace: Float, heightMode: MeasureMode, outSize: Size) {
-        val text = this.text
-        if(text != null){
-            var width = widthSpace
-            var height = heightSpace
-            if(widthMode  == MeasureMode.UNSPECIFIED){
-                width = Float.MAX_VALUE
-            }
-            if(heightMode  == MeasureMode.UNSPECIFIED){
-                height = Float.MAX_VALUE
-            }
-            return getAttributedString().boundingRectWithSize(CGSizeMake(width.toDouble(),height.toDouble()),
-                NSStringDrawingUsesLineFragmentOrigin or NSStringDrawingUsesFontLeading,null).useContents {
-                val p = padding
-                if(p != null){
-                    outSize.set(this.size.width.toFloat() + p.left + p.right,this.size.height.toFloat() + p.top + p.bottom)
-                }else{
-                    outSize.set(this.size.width.toFloat(),this.size.height.toFloat())
-                }
-            }
-        }else{
-            super.measure(widthSpace, widthMode, heightSpace, heightMode, outSize)
-        }
-    }
+
+//    override fun measure(widthSpace: Float, widthMode: MeasureMode, heightSpace: Float, heightMode: MeasureMode, outSize: Size) {
+//        val text = this.text
+//        if(text != null){
+//            var width = widthSpace
+//            var height = heightSpace
+//            if(widthMode  == MeasureMode.UNSPECIFIED){
+//                width = Float.MAX_VALUE
+//            }
+//            if(heightMode  == MeasureMode.UNSPECIFIED){
+//                height = Float.MAX_VALUE
+//            }
+//            return getAttributedString().boundingRectWithSize(CGSizeMake(width.toDouble(),height.toDouble()),
+//                NSStringDrawingUsesLineFragmentOrigin or NSStringDrawingUsesFontLeading,null).useContents {
+//                val p = padding
+//                if(p != null){
+//                    outSize.set(this.size.width.toFloat() + p.left + p.right,this.size.height.toFloat() + p.top + p.bottom)
+//                }else{
+//                    outSize.set(this.size.width.toFloat(),this.size.height.toFloat())
+//                }
+//            }
+//        }else{
+//            super.measure(widthSpace, widthMode, heightSpace, heightMode, outSize)
+//        }
+//    }
 
     protected open fun getAttributedString():NSMutableAttributedString{
         val textWidget = getTextWidget()
@@ -243,6 +226,7 @@ actual open class TextView :  View {
      * 自定义字体
      */
     actual open fun setFontStyle(fontName: String, style: FontStyle) {
+
     }
 
     actual fun enableAutoFontSizeToFit(minFontSize: Int, maxFontSize: Int) {
@@ -252,5 +236,9 @@ actual open class TextView :  View {
     }
 
     actual open fun setTextShadow(color: Int, radius: Float, dx: Float, dy: Float) {
+    }
+
+    actual open fun setFontStyle(style: FontStyle) {
+
     }
 }

@@ -10,7 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <SharedCode/SharedCode.h>
 #import "BorderView.h"
-#import <HUI/KButton.h>
+
 
 @implementation ViewController
 
@@ -18,7 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    
+    self.view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
     
 //    BorderView* b = [[BorderView alloc] initWithFrame:CGRectMake(20, 50, 200, 200)];
 //    [b test];
@@ -49,16 +49,16 @@
     [[SharedCodePlatformCompanion companion] doInitViewController:self debug:YES];
     [SharedCodeMainKt main];
 
-    SharedCodeLayoutParams* par = [[SharedCodeLayoutParams alloc] initWithWidth:0/0.f height:0/0.f];
-    self.view = [[[SharedCodeView alloc] initWithLayoutParams:par] getWidget];
+//    SharedCodeLayoutParams* par = [[SharedCodeLayoutParams alloc] initWithWidth:0/0.f height:0/0.f];
+//    self.view = [[[SharedCodeView alloc] initWithLayoutParams:par] getWidget];
 
-    UIView* view = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 60, 40)];
-    UIButton* k = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 40)];
-           [k setTitle:@"dwd" forState:UIControlStateNormal];
-           [k setTitle:@"Highlighted" forState:UIControlStateHighlighted];
-           [k setBackgroundColor:[UIColor redColor]];
-       [self.view addSubview:view];
-    [view addSubview:k];
+//    UIView* view = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 60, 40)];
+//    UIButton* k = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 40)];
+//           [k setTitle:@"dwd" forState:UIControlStateNormal];
+//           [k setTitle:@"Highlighted" forState:UIControlStateHighlighted];
+//           [k setBackgroundColor:[UIColor redColor]];
+//       [self.view addSubview:view];
+//    [view addSubview:k];
     
 //    UIButton *v = [[UIButton alloc] initWithFrame:CGRectMake(50, 50, 50, 50)];
 //    [v setTitle:@"" forState:UIControlStateNormal];

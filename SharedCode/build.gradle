@@ -44,24 +44,19 @@ kotlin {
     }
 
     targets {
-//        fromPreset(iOSPresetTarget, 'ios') {
-//            binaries {
-//                framework('SharedCode')
-//            }
-//            compilations.main {
-//                cinterops {
-//                    myInterop {
-//                        defFile project.file("frameworks/HUI.def")
-//                        includeDirs("frameworks/HUI.framework/Headers")
-//                    }
-//
-//                    oInterop {
-//                        defFile project.file("frameworks/KUI.def")
-//                        includeDirs("frameworks/KUI.framework/Headers")
-//                    }
-//                }
-//            }
-//        }
+        fromPreset(iOSPresetTarget, 'ios') {
+            binaries {
+                framework('SharedCode')
+            }
+            compilations.main {
+                cinterops {
+                    myInterop {
+                        defFile project.file("frameworks/KUI.def")
+                        includeDirs("frameworks/KUI.framework/Headers")
+                    }
+                }
+            }
+        }
     }
 
     sourceSets {
@@ -80,21 +75,21 @@ configurations {
     compileClasspath
 }
 
-//task packForXCode(type: Sync) {
-//    final File frameworkDir = new File(buildDir, "xcode-frameworks")
-//    final String mode = project.findProperty("XCODE_CONFIGURATION")?.toUpperCase() ?: 'DEBUG'
-//    final def framework = kotlin.targets.ios.binaries.getFramework("SharedCode", mode)
-//
-//    inputs.property "mode", mode
-//    dependsOn framework.linkTask
-//
-//    from { framework.outputFile.parentFile }
-//    into frameworkDir
-//
-//    doLast {
-//        new File(frameworkDir, 'gradlew').with {
-//            text = "#!/bin/bash\nexport 'JAVA_HOME=${System.getProperty("java.home")}'\ncd '${rootProject.rootDir}'\n./gradlew \$@\n"
-//            setExecutable(true)
-//        }
-//    }
-//}
+task packForXCode(type: Sync) {
+    final File frameworkDir = new File(buildDir, "xcode-frameworks")
+    final String mode = project.findProperty("XCODE_CONFIGURATION")?.toUpperCase() ?: 'DEBUG'
+    final def framework = kotlin.targets.ios.binaries.getFramework("SharedCode", mode)
+
+    inputs.property "mode", mode
+    dependsOn framework.linkTask
+
+    from { framework.outputFile.parentFile }
+    into frameworkDir
+
+    doLast {
+        new File(frameworkDir, 'gradlew').with {
+            text = "#!/bin/bash\nexport 'JAVA_HOME=${System.getProperty("java.home")}'\ncd '${rootProject.rootDir}'\n./gradlew \$@\n"
+            setExecutable(true)
+        }
+    }
+}

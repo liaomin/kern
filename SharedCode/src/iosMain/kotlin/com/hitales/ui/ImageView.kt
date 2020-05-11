@@ -76,7 +76,12 @@ actual open class ImageView : com.hitales.ui.View {
 //            }
 //        }
 //        return size
-//
 //    }
+
+    actual var tintColor: Int
+        get() = getWidget().tintColor.toInt()
+        set(value) {
+            getWidget().tintColor = value.toUIColor()
+        }
 
 }

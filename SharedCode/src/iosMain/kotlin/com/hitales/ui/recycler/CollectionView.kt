@@ -1,5 +1,6 @@
 package com.hitales.ui.recycler
 
+import com.hitales.ui.Animation
 import com.hitales.ui.LayoutParams
 import com.hitales.ui.ScrollView
 import com.hitales.utils.WeakReference
@@ -15,17 +16,7 @@ actual open class CollectionView : ScrollView {
     }
 
 
-    actual val layout: CollectionViewLayout
-
-    actual var adapter: CollectionViewAdapter? = null
-        set(value) {
-            field = value
-            if(value != null){
-
-            }else{
-                getWidget().delegate = null
-            }
-        }
+    actual var layout: CollectionViewLayout
 
 
     actual constructor(layoutParams: LayoutParams?, layout: CollectionViewLayout):super(layoutParams){
@@ -50,5 +41,16 @@ actual open class CollectionView : ScrollView {
     override fun onScroll(offsetX: Float, offsetY: Float) {
         super.onScroll(offsetX, offsetY)
         layout?.onScroll(offsetX,offsetY)
+    }
+
+    actual var dataSource: CollectionViewDataSource?
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        set(value) {}
+
+    actual fun setLayoutWithAnimation(layout: CollectionViewLayout, animation: Animation) {
+    }
+
+    actual fun getCell(section: Int, row: Int): CollectionViewCell? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

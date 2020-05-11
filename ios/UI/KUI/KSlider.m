@@ -1,16 +1,14 @@
 //
-//  KView.m
+//  KSlider.m
 //  KUI
 //
-//  Created by 廖敏 on 4/10/20.
+//  Created by 廖敏 on 4/28/20.
 //  Copyright © 2020 廖敏. All rights reserved.
 //
 
-#import "KView.h"
-#import <objc/runtime.h>
-#import "BackgroundLayer.h"
+#import "KSlider.h"
 
-@implementation KView
+@implementation KSlider
 
 - (CGSize)measure:(CGFloat)width widthMode:(MeasureMode)widthMode height:(CGFloat)height heightMode:(MeasureMode)heightMode{
     CGFloat w = 0;
@@ -34,6 +32,7 @@
     [super willMoveToWindow:newWindow];
 }
 
+
 - (void)didMoveToSuperview{
     [super didMoveToSuperview];
     [self addOrRemoveBgLayer];
@@ -50,13 +49,11 @@
     }
 }
 
-
 - (void)setClipsToBounds:(BOOL)clipsToBounds
 {
     [super setClipsToBounds:clipsToBounds];
     [self updateMask];
 }
-
 
 - (void)dealloc
 {
@@ -77,5 +74,7 @@
         [super setBackgroundColor:backgroundColor];
     }
 }
+
+
 
 @end

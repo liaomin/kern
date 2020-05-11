@@ -17,7 +17,9 @@ typedef NS_ENUM(NSUInteger, BorderStyle) {
     BorderStyleDashed = 3,
 };
 
-@interface BackgroundLayer : CALayer
+@interface BackgroundLayer : CAShapeLayer
+
+-(instancetype)initWithForgroundLayer:(id)layer;
 
 +(uint32_t)uIColor2Int:(UIColor*)color;
 
@@ -28,6 +30,8 @@ typedef NS_ENUM(NSUInteger, BorderStyle) {
 -(void)setAllBorderRadius:(CGFloat)topLeftRadius topRightRadius:(CGFloat)topRightRadius bottomLeftRadius:(CGFloat)bottomLeftRadius bottomRightRadius:(CGFloat)bottomRightRadius;
 
 -(void)setAllShadow:(uint32_t)color radius:(CGFloat)radius dx:(CGFloat)dx dy:(CGFloat)dy;
+
+@property (nonatomic,weak,readonly) CALayer* forgroundLayer;
 
 /* borderWidth */
 @property (nonatomic,assign) CGFloat borderLeftWidth;
@@ -68,6 +72,18 @@ typedef NS_ENUM(NSUInteger, BorderStyle) {
 @property (nonatomic,assign) uint32_t mShadowColor;
 
 @property (nonatomic,assign) uint32_t mShadowRadius;
+
+-(UIBezierPath*)getInnerPath;
+
+-(BOOL)haveBorderRadius;
+
+-(BOOL)isSameBorderRadius;
+
+-(BOOL)haveBorderWidth;
+
+-(BOOL)isSameBorderWidth;
+
+-(CGFloat)getInnerBorderRadius;
 
 @end
 

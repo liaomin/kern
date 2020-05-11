@@ -34,15 +34,4 @@ class IOSView(val mView: WeakReference<View>) : KView(CGRectMake(0.0,0.0,0.0,0.0
     }
 
 
-//    override fun displayLayer(layer: CALayer) {
-//        val view = mView.get()
-//        if(view != null){
-//            mView.get()?.mBackground?.onDraw(layer,view.mBackgroundColor)
-//        }
-//    }
-//
-//    override fun drawLayer(layer: CALayer, inContext: CGContextRef?) {
-//        super.drawLayer(layer, inContext)
-//    }
-
 }

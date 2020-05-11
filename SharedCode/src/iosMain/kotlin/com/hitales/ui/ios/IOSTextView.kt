@@ -2,12 +2,12 @@ package com.hitales.ui.ios
 
 import com.hitales.ui.TextView
 import com.hitales.utils.WeakReference
+import com.kern.ios.ui.KTextView
 import kotlinx.cinterop.ObjCAction
 import platform.CoreGraphics.CGRectMake
-import platform.UIKit.UILabel
 import platform.UIKit.UIWindow
 
-class IOSTextView(val mView: WeakReference<TextView>) : UILabel(CGRectMake(0.0,0.0,0.0,0.0)) {
+class IOSTextView(val mView: WeakReference<TextView>) : KTextView(CGRectMake(0.0,0.0,0.0,0.0)) {
 
     @ObjCAction
     fun willMoveToWindow(window: UIWindow?){

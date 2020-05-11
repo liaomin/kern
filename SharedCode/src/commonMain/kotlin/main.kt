@@ -36,7 +36,7 @@ class NavigateController : BasicViewController(){
                 button.setOnPressListener {
                     this.push(entry.value)
                 }
-                addView(button)
+//                addView(button)
             }
         }
 
@@ -63,7 +63,7 @@ class NavigateController : BasicViewController(){
             lp.margin = EdgeInsets.value(5f)
             var text = TextInput("司马彦行书${i+1}",lp)
             text.setBackgroundColor(Colors.RED)
-            text.setFontStyle("JingDianXingShuJian",FontStyle.BOLD_ITALIC)
+//            text.setFontStyle("JingDianXingShuJian",FontStyle.BOLD_ITALIC)
             sc.addSubView(text)
 
             val b = Button("测试 ${i+1}",lp)

@@ -11,7 +11,7 @@ open class TempTestViewViewController : BasicViewController(),TextInputDelegate,
 
     override fun createLayout(): Layout {
         val s =  super.createLayout() as ScrollView
-        s.isPageEnable = true
+//        s.isPageEnable = true
         s.delegate = this
         s.orientation = Orientation.VERTICAL
         return s

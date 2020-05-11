@@ -10,13 +10,13 @@
 
 @interface KImageView()
 {
-    UIEdgeInsets _padding;
     CALayer* _imagelayer;
     UIImage* _imageRef;
 }
 @end
 
 @implementation KImageView
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -38,6 +38,7 @@
     if(widthMode == MeasureModeExactly && heightMode == MeasureModeExactly){
         return CGSizeMake(w, h);
     }
+    UIEdgeInsets _padding = [self getPadding];
     CGFloat paddingWidth = _padding.left + _padding.right;
     CGFloat paddingHeight = _padding.top + _padding.bottom;
     UIImage* image = _imageRef;
@@ -46,6 +47,12 @@
         BOOL resizeHeight = heightMode != MeasureModeExactly;
     
         CGSize imageSize = image.size;
+        CGFloat iScale = image.scale;
+        CGFloat mScale = [UIScreen mainScreen].scale;
+        if(iScale != mScale){
+            CGFloat scale = iScale / mScale;
+            imageSize = CGSizeMake(imageSize.width * scale, imageSize.height * scale);
+        }
         CGFloat desiredAspect = imageSize.width / imageSize.height;
         UIViewContentMode mode = self.contentMode;
         w = [self resolveAdjustedSize:width imageSize:imageSize.width + paddingWidth mode:widthMode];
@@ -99,7 +106,7 @@
 
 - (void)setPadding:(UIEdgeInsets)padding
 {
-    _padding = padding;
+    [super setPadding:padding];
     if(!_imagelayer && !UIEdgeInsetsEqualToEdgeInsets(UIEdgeInsetsZero, padding)){
         _imagelayer = [[CALayer alloc] init];
         self.image = self.image;
@@ -108,22 +115,30 @@
     }
 }
 
--(UIEdgeInsets)getPadding
-{
-    return _padding;
-}
-
-
 - (void)layoutSubviews
 {
+    [super layoutSubviews];
+    [self addOrRemoveBgLayer];
     if(_imagelayer){
         CGRect f = self.frame;
+        UIEdgeInsets _padding = [self getPadding];
         if(!UIEdgeInsetsEqualToEdgeInsets(UIEdgeInsetsZero, _padding) && _imagelayer){
             CGFloat w = f.size.width - _padding.right - _padding.left;
             CGFloat h = f.size.height - _padding.top - _padding.bottom;
             _imagelayer.frame = CGRectMake(_padding.left, _padding.top, w, h);
         }
     }
+    BackgroundLayer* bgLayer = [self getBackgroundLayer];
+    if(bgLayer){
+        bgLayer.frame = self.frame;
+        [self updateMask];
+    }
+}
+
+- (void)setClipsToBounds:(BOOL)clipsToBounds
+{
+    [super setClipsToBounds:clipsToBounds];
+    [self updateMask];
 }
 
 - (void)setImage:(UIImage *)image
@@ -172,6 +187,32 @@
 {
     if(_imagelayer){
         _imagelayer.contentsGravity = self.layer.contentsGravity;
+    }
+}
+
+
+- (void)willMoveToSuperview:(UIView *)newSuperview
+{
+    [super willMoveToSuperview:newSuperview];
+}
+
+- (void)willMoveToWindow:(UIWindow *)newWindow
+{
+    [super willMoveToWindow:newWindow];
+}
+
+- (void)didMoveToSuperview{
+    [super didMoveToSuperview];
+    [self addOrRemoveBgLayer];
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
+    BackgroundLayer* bgLayer = [self getBackgroundLayer];
+    if(bgLayer){
+        bgLayer.bgColor = [BackgroundLayer uIColor2Int:backgroundColor];
+    }else{
+        [super setBackgroundColor:backgroundColor];
     }
 }
 

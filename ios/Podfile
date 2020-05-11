@@ -6,7 +6,7 @@ target 'ios' do
   use_frameworks!
 
 
-  #pod 'HUI', :path => './UI/'
+  pod 'KUI', :path => './UI/'
 
 
   # Pods for ios

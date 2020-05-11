@@ -16,9 +16,9 @@ Pod::Spec.new do |spec|
   #
 
   spec.swift_version = "5.0.1"
-  spec.name         = "HUI"
+  spec.name         = "KUI"
   spec.version      = "0.0.1"
-  spec.summary      = "ui of HUI."
+  spec.summary      = "ui of KUI."
 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
@@ -90,8 +90,8 @@ Pod::Spec.new do |spec|
   #  Not including the public_header_files will make all headers public.
   #
 
-  spec.source_files  = "HUI", "HUI/**/*.{h,m,swift}",
-  spec.exclude_files = "HUI/Exclude"
+  spec.source_files  = "KUI", "KUI/**/*.{h,m,swift}",
+  spec.exclude_files = "KUI/Exclude"
 
   # spec.public_header_files = "Classes/**/*.h"
 

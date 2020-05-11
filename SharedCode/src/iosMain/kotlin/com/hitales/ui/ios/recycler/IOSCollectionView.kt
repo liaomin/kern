@@ -23,7 +23,7 @@ class IOSCollectionView(val collectionViewRef: WeakReference<CollectionView>):HC
     override fun getNumberOfSection(): NSInteger {
         val collectionView = collectionViewRef.get()
         if(collectionView != null){
-            collectionView.adapter?.let {
+            collectionView.dataSource?.let {
                 return it.getNumberOfSection(collectionView).toLong()
             }
         }
@@ -34,7 +34,7 @@ class IOSCollectionView(val collectionViewRef: WeakReference<CollectionView>):HC
         val section = sectionIndex.toInt()
         val collectionView = collectionViewRef.get()
         if(collectionView != null){
-            collectionView.adapter?.let {
+            collectionView.dataSource?.let {
                 var itemCount = it.getNumberOfItem(collectionView,sectionIndex.toInt()).toLong()
                 if(it.haveHeaderView(collectionView,section)){
                     itemCount++
@@ -51,7 +51,7 @@ class IOSCollectionView(val collectionViewRef: WeakReference<CollectionView>):HC
     override fun getItemType(sectionIndex: NSInteger, row: NSInteger): NSInteger {
         val collectionView = collectionViewRef.get()
         if(collectionView != null){
-            collectionView.adapter?.let {
+            collectionView.dataSource?.let {
                 var r = row.toInt()
                 val s = sectionIndex.toInt()
                 val haveHeader = it.haveHeaderView(collectionView,s)
@@ -71,7 +71,7 @@ class IOSCollectionView(val collectionViewRef: WeakReference<CollectionView>):HC
     override fun createHeaderView(sectionIndex: NSInteger, withView: HCell) {
         val collectionView = collectionViewRef.get()
         if(collectionView != null){
-            collectionView.adapter?.let {
+            collectionView.dataSource?.let {
                 val cell = it.createHeaderView(collectionView)!!
                 withView.setContent(cell.contentView.getWidget(),CellProxy(cell))
             }
@@ -81,7 +81,7 @@ class IOSCollectionView(val collectionViewRef: WeakReference<CollectionView>):HC
     override fun createFooterView(sectionIndex: NSInteger, withView: HCell) {
         val collectionView = collectionViewRef.get()
         if(collectionView != null){
-            collectionView.adapter?.let {
+            collectionView.dataSource?.let {
                 val cell = it.createFooterView(collectionView)!!
                 withView.setContent(cell.contentView.getWidget(),CellProxy(cell))
             }
@@ -91,7 +91,7 @@ class IOSCollectionView(val collectionViewRef: WeakReference<CollectionView>):HC
     override fun createItemView(sectionIndex: NSInteger, row: NSInteger, cellType: NSInteger, withView: HCell) {
         val collectionView = collectionViewRef.get()
         if(collectionView != null){
-            collectionView.adapter?.let {
+            collectionView.dataSource?.let {
                 val cell = it.createItemView(collectionView,cellType.toInt())
                 withView.setContent(cell.contentView.getWidget(),CellProxy(cell))
             }
@@ -101,7 +101,7 @@ class IOSCollectionView(val collectionViewRef: WeakReference<CollectionView>):HC
     override fun onBindHeaderView(sectionIndex: NSInteger, withView: HCell) {
         val collectionView = collectionViewRef.get()
         if(collectionView != null){
-            collectionView.adapter?.let {
+            collectionView.dataSource?.let {
                 val proxy = withView.store as CellProxy
                 it.onBindHeaderView(collectionView,sectionIndex.toInt(),proxy.cell)
             }
@@ -111,7 +111,7 @@ class IOSCollectionView(val collectionViewRef: WeakReference<CollectionView>):HC
     override fun onBindFooterView(sectionIndex: NSInteger, withView: HCell) {
         val collectionView = collectionViewRef.get()
         if(collectionView != null){
-            collectionView.adapter?.let {
+            collectionView.dataSource?.let {
                 val proxy = withView.store as CellProxy
                 it.onBindFooterView(collectionView,sectionIndex.toInt(),proxy.cell)
             }
@@ -122,7 +122,7 @@ class IOSCollectionView(val collectionViewRef: WeakReference<CollectionView>):HC
     override fun onBindItemView(sectionIndex: NSInteger, row: NSInteger, viewType: NSInteger, withView: HCell) {
         val collectionView = collectionViewRef.get()
         if(collectionView != null){
-            collectionView.adapter?.let {
+            collectionView.dataSource?.let {
                 val proxy = withView.store as CellProxy
                 it.onBindItemView(collectionView,sectionIndex.toInt(),row.toInt(),viewType.toInt(),proxy.cell)
             }
@@ -132,7 +132,7 @@ class IOSCollectionView(val collectionViewRef: WeakReference<CollectionView>):HC
     override fun getItemSize(sectionIndex: NSInteger, row: NSInteger): CValue<CGSize> {
         val collectionView = collectionViewRef.get()
         if(collectionView != null){
-            collectionView.adapter?.let {
+            collectionView.dataSource?.let {
                 var r = row.toInt()
                 val s = sectionIndex.toInt()
                 val type = it.getItemType(collectionView,s,r)

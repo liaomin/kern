@@ -67,7 +67,7 @@ expect open class View  {
     /**
      * context padding
      * if android set shadow will have innerPadding
-     * getPadding use [getPaddingRight] [getPaddingLeft] [getPaddingTop] [getPaddingBottom]]
+     * getPadding use [getPaddingRight] [getPaddingLeft] [getPaddingTop] [getPaddingBottom]
      */
     var padding:EdgeInsets?
 
@@ -154,7 +154,7 @@ expect open class View  {
     fun getRightBorderWidth():Float
     fun getBottomBorderWidth():Float
     open fun setBorderRadius(radius:Float)
-    open fun setBorderRadius(topLeftRadius:Float,topRightRadius: Float,bottomRightRadius:Float,bottomLeftRadius:Float)
+    open fun setBorderRadius(topLeftRadius:Float,topRightRadius: Float,bottomLeftRadius: Float, bottomRightRadius: Float)
     fun getTopLeftBorderRadius():Float
     fun getTopRightBorderRadius():Float
     fun getBottomLeftBorderRadius():Float

@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "BackgroundLayer.h"
+#import "UIView+Border.h"
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -19,7 +21,9 @@ typedef NS_ENUM(NSUInteger, MeasureMode) {
 
 @protocol MeasureNode <NSObject>
 
--(CGSize)onMeasure:(CGFloat)width widthMode:(MeasureMode)widthMode height:(CGFloat)height heightMode:(MeasureMode)heightMode;
+@required
+
+-(CGSize)measure:(CGFloat)width widthMode:(MeasureMode)widthMode height:(CGFloat)height heightMode:(MeasureMode)heightMode;
 
 -(void)layoutSubviews;
 
@@ -27,6 +31,11 @@ typedef NS_ENUM(NSUInteger, MeasureMode) {
 
 -(void)willMoveToWindow:(UIWindow*)window;
 
+-(void)setPadding:(UIEdgeInsets)padding;
+
+-(UIEdgeInsets)getPadding;
+
+-(void)onDestruct;
 
 @end
 
