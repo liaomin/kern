@@ -311,7 +311,7 @@ actual open class View{
         outSize.set(PixelUtil.toDIPFromPixel(measuredWidth), PixelUtil.toDIPFromPixel(measuredHeight))
     }
 
-    actual open fun onFrameChanged(){
+    protected actual open fun onFrameChanged(){
 
     }
 

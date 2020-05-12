@@ -25,6 +25,8 @@ typedef NS_ENUM(NSUInteger, MeasureMode) {
 
 -(CGSize)measure:(CGFloat)width widthMode:(MeasureMode)widthMode height:(CGFloat)height heightMode:(MeasureMode)heightMode;
 
+- (nullable UIView *)hitTest:(CGPoint)point withEvent:(nullable UIEvent *)event;
+
 -(void)layoutSubviews;
 
 -(void)willMoveToSuperview:(UIView*)superview;

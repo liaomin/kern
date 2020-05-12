@@ -7,6 +7,7 @@
 //
 
 #import "KImageView.h"
+#import "KView.h"
 
 @interface KImageView()
 {

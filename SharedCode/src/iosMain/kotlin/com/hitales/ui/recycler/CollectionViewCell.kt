@@ -31,7 +31,6 @@ actual open class CollectionViewCell : ViewDelegate {
     actual open fun applyAttribute(layoutAttribute: LayoutAttribute) {
         val frame = layoutAttribute.frame
         contentView.frame.set(0f,0f,frame.width,frame.height)
-        contentView.onFrameChanged()
     }
 
     actual open fun setBackgroundColor(color: Int, state: ViewState) {

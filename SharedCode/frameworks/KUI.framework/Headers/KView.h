@@ -15,4 +15,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface UIEvent(GetPosition)
+
+-(CGFloat)getLocationX:(UIView*)view pointerIndex:(int)pointerIndex;
+
+-(CGFloat)getLocationY:(UIView*)view pointerIndex:(int)pointerIndex;
+
+-(CGFloat)getLocationInWindowX:(int)pointerIndex;
+
+-(CGFloat)getLocationInWindowY:(int)pointerIndex;
+
+-(int)getPointerSize;
+
+-(CGFloat)getLocationX:(UIView*)view;
+
+-(CGFloat)getLocationY:(UIView*)view;
+
+@end
+
 NS_ASSUME_NONNULL_END

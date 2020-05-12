@@ -113,7 +113,7 @@ expect open class View  {
 
     var superView:Layout?
 
-    open fun onFrameChanged()
+    protected open fun onFrameChanged()
     open fun onLayout()
     open fun needLayout()
     open fun needDisplay()

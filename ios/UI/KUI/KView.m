@@ -78,4 +78,51 @@
     }
 }
 
+
+@end
+
+
+@implementation  UIEvent(GetPosition)
+
+-(CGFloat)getLocationX:(UIView*)view pointerIndex:(int)pointerIndex
+{
+    UITouch* c = [self.allTouches.allObjects objectAtIndex:pointerIndex];
+    return [c locationInView:view].x;
+}
+
+-(CGFloat)getLocationY:(UIView*)view pointerIndex:(int)pointerIndex
+{
+    UITouch* c = [self.allTouches.allObjects objectAtIndex:pointerIndex];
+    return [c locationInView:view].y;
+}
+
+-(CGFloat)getLocationInWindowX:(int)pointerIndex
+{
+    UITouch* c = [self.allTouches.allObjects objectAtIndex:pointerIndex];
+    return [c locationInView:c.window].x;
+}
+
+-(CGFloat)getLocationInWindowY:(int)pointerIndex
+{
+    UITouch* c = [self.allTouches.allObjects objectAtIndex:pointerIndex];
+    return [c locationInView:c.window].y;
+}
+
+-(int)getPointerSize
+{
+     return (int)self.allTouches.count;
+}
+
+-(CGFloat)getLocationX:(UIView*)view
+{
+    UITouch* c = [self.allTouches anyObject];
+    return [c locationInView:view].x;
+}
+
+-(CGFloat)getLocationY:(UIView*)view
+{
+    UITouch* c = [self.allTouches anyObject];
+    return [c locationInView:view].y;
+}
+
 @end

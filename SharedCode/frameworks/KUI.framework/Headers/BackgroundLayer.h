@@ -79,6 +79,12 @@ typedef NS_ENUM(NSUInteger, BorderStyle) {
 
 -(BOOL)isSameBorderRadius;
 
+-(BOOL)haveBorderWidth;
+
+-(BOOL)isSameBorderWidth;
+
+-(CGFloat)getInnerBorderRadius;
+
 @end
 
 NS_ASSUME_NONNULL_END

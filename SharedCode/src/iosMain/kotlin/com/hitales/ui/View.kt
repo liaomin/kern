@@ -55,6 +55,8 @@ inline fun MeasureMode.toIOSMeasureMode():com.kern.ios.ui.MeasureMode{
 }
 
 
+const val animation_key = "__animation_key__"
+
 actual open class View {
 
     protected  var onPressListener:((view:View)->Unit)? = null
@@ -68,6 +70,8 @@ actual open class View {
     protected var longPressGestureRecognizer:UIGestureRecognizer? = null
 
     protected val mWidget: UIView = createWidget()
+
+    private var destructBlocks:LinkedList<(view: com.hitales.ui.View)->Unit>? = null
 
     var mBackgroundColor = Colors.CLEAR
 
@@ -288,7 +292,7 @@ actual open class View {
         }
     }
 
-    actual open fun onFrameChanged(){
+    protected actual open fun  onFrameChanged(){
         getWidget().setFrame(CGRectMake(frame.x.toDouble(),frame.y.toDouble(),frame.width.toDouble(),frame.height.toDouble()))
     }
 
@@ -305,10 +309,9 @@ actual open class View {
             override fun animationDidStop(anim: CAAnimation, finished: Boolean) {
                 completion?.invoke()
                 animation.delegate?.onAnimationStop(animation,weakSelf.get())
-
             }
         }
-        mWidget.layer.addAnimation(iosAnimation,"animation")
+        mWidget.layer.addAnimation(iosAnimation,animation_key)
     }
 
 
@@ -322,7 +325,7 @@ actual open class View {
      * touches
      */
     actual open fun dispatchTouchEvent(touches: Touches): Boolean {
-        return false
+        return onInterceptTouchEvent(touches)
     }
 
     actual open fun onInterceptTouchEvent(touches: Touches): Boolean {
@@ -336,11 +339,12 @@ actual open class View {
     }
 
     actual open fun needLayout() {
+        mWidget.setNeedsLayout()
     }
 
     actual open fun needDisplay() {
+        mWidget.setNeedsDisplay()
     }
-
 
     actual open fun getBackgroundColor(): Int {
         return mBackgroundColor
@@ -450,14 +454,29 @@ actual open class View {
     }
 
     actual open fun cleanAnimation() {
+        mWidget.layer.removeAnimationForKey(animation_key)
     }
 
     actual open fun onDestruct() {
-
+        destructBlocks?.forEach {
+            it(this)
+        }
     }
 
     actual fun addDestructBlock(block: (view: View) -> Unit) {
+        getOrCreateDestructorBlocks().append(block)
     }
 
+
+    private fun getOrCreateDestructorBlocks():LinkedList<(view: com.hitales.ui.View)->Unit>{
+        var blocks = destructBlocks
+        if(blocks != null){
+            return blocks
+        }else{
+            blocks = LinkedList()
+            destructBlocks = blocks
+            return blocks
+        }
+    }
 
 }

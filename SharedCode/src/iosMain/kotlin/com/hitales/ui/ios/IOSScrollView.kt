@@ -45,7 +45,6 @@ class IOSScrollView(val mView: WeakReference<ScrollView>) : KScrollView(CGRectMa
 
     override fun touchesShouldCancelInContentView(view: UIView): Boolean {
         return true
-//        return super.touchesShouldCancelInContentView(view)
     }
 
     override fun scrollViewDidScroll(scrollView: UIScrollView) {

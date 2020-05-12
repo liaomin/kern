@@ -1,33 +1,37 @@
 package com.hitales.ui
 
-actual class Touches {
+import com.kern.ios.ui.*
+import platform.UIKit.UIEvent
+import platform.UIKit.UIView
+
+actual class Touches(val event: UIEvent,val view:UIView) {
 
     actual fun getLocationX(pointerIndex: Int): Float {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+       return  event.getLocationX(view,pointerIndex).toFloat()
     }
 
     actual fun getLocationY(pointerIndex: Int): Float {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return  event.getLocationY(view,pointerIndex).toFloat()
     }
 
     actual fun getLocationInWindowX(pointerIndex: Int): Float {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return  event.getLocationInWindowX(pointerIndex).toFloat()
     }
 
     actual fun getLocationInWindowY(pointerIndex: Int): Float {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return  event.getLocationInWindowY(pointerIndex).toFloat()
     }
 
     actual fun getPointerSize(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return  event.getPointerSize()
     }
 
     actual fun getLocationX(): Float {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return  event.getLocationX(view).toFloat()
     }
 
     actual fun getLocationY(): Float {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return  event.getLocationY(view).toFloat()
     }
 
 }
