@@ -4,4 +4,4 @@ package = com.kern.ios.ui
 headers = KUI.h
 
 compilerOpts = -framework KUI
-linkerOpts = -framework KUI -F ./frameworks
+linkerOpts = -framework KUI -F  ./frameworks

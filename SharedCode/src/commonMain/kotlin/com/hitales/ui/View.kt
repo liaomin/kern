@@ -192,9 +192,7 @@ expect open class View  {
     open fun cleanAnimation()
 
     open fun onDestruct()
-
     fun addDestructBlock(block:((view:View)->Unit))
-
 
 }
 

@@ -17,3 +17,13 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+
+@interface NSObject (Destruct)
+
+-(void)setDestruct:(SEL)sel;
+
++(void)setDestruct:(SEL)sel forClass:(Class)cls;
+
+@end
+

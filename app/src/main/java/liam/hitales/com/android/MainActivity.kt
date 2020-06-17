@@ -25,6 +25,7 @@ class MainActivity : AndroidActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         main()
+
         val w = View(this)
 
 //        val image = Image.named("2.jpg")

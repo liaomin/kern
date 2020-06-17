@@ -36,7 +36,7 @@ class NavigateController : BasicViewController(){
                 button.setOnPressListener {
                     this.push(entry.value)
                 }
-//                addView(button)
+                addView(button)
             }
         }
 

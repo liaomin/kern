@@ -9,7 +9,7 @@ import com.hitales.utils.EdgeInsets
 
 actual open class Button :  com.hitales.ui.TextView {
 
-    actual open var isEnabled: Boolean
+    actual open  var isEnabled: Boolean
         get() = getWidget().isEnabled
         set(value) {
             getWidget().isEnabled = value

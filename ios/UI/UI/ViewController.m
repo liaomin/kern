@@ -13,16 +13,54 @@
 #import <KUI/KTextView.h>
 #import <KUI/KInputView.h>
 
+@interface NTT : NSObject
+
+@end
+
+@implementation NTT
+
+-(void)dealloc
+{
+     NSLog(@"dealloc");
+}
+
+-(void)tt{
+    NSLog(@"dwdw");
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [self setDestruct:@selector(tt)];
+    }
+    return self;
+}
+
+@end
+
 @interface ViewController ()
 
 @end
 
 @implementation ViewController
 
+-(void)te{
+    
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+   
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            NSLog(@"");
+        });
+    });
+    dispatch_sync(dispatch_queue_create("", DISPATCH_QUEUE_CONCURRENT), ^{
+        NSLog(@"");
+    });
+    [NTT new];
     Class cls = [self class];
     void *cd = &cls;
     id q = (__bridge id)cd;

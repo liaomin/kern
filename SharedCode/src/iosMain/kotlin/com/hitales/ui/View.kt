@@ -18,6 +18,7 @@ import platform.QuartzCore.CAAnimation
 import platform.QuartzCore.CAAnimationDelegateProtocol
 import platform.UIKit.*
 import platform.darwin.NSObject
+import platform.objc.object_getClass
 import platform.objc.sel_registerName
 import kotlin.system.getTimeMillis
 
@@ -157,6 +158,10 @@ actual open class View {
         }
 
     actual open var layoutParams:LayoutParams? = null
+
+    init {
+        NSObject.setDestruct(sel_registerName("onDestruct"), object_getClass(this))
+    }
 
     actual constructor(layoutParams: LayoutParams?){
         this.layoutParams = layoutParams
@@ -466,7 +471,6 @@ actual open class View {
     actual fun addDestructBlock(block: (view: View) -> Unit) {
         getOrCreateDestructorBlocks().append(block)
     }
-
 
     private fun getOrCreateDestructorBlocks():LinkedList<(view: com.hitales.ui.View)->Unit>{
         var blocks = destructBlocks
