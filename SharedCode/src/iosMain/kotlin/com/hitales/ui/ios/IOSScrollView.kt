@@ -14,7 +14,8 @@ class IOSScrollView(val mView: WeakReference<ScrollView>) : UIScrollView(CGRectM
 
     init {
         this.delegate = this
-        this.setDelaysContentTouches(false)
+        this.delaysContentTouches = true
+        this.canCancelContentTouches = true
     }
 
     @ObjCAction

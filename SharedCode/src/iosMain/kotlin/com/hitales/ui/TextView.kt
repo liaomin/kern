@@ -101,8 +101,7 @@ actual open class TextView :  View {
         set(value) {
             field = value
             var attr  = getTextWidget().attributedText
-            if(attr != null){
-                attr = (attr as NSMutableAttributedString)
+            if(attr != null && attr is NSMutableAttributedString){
                 val range = NSMakeRange(0,text.length.toULong())
                 when (value){
                     TextDecorationLine.UNDERLINE ->  attr.addAttribute(NSUnderlineStyleAttributeName,NSUnderlineStyleSingle,range)
