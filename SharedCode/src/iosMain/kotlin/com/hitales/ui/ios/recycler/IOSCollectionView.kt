@@ -16,6 +16,7 @@ class IOSCollectionView(val collectionViewRef: WeakReference<CollectionView>):HC
 
     init {
         this.delegate = this
+        this.setDelaysContentTouches(false)
     }
 
     val tempSize  = Size()

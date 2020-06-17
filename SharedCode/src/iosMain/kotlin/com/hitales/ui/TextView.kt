@@ -134,8 +134,7 @@ actual open class TextView :  View {
     private fun onFontChanged(){
         val textWidget = getTextWidget()
         var attr  = textWidget.attributedText
-        if(attr != null){
-            attr = (attr as NSMutableAttributedString)
+        if(attr != null && attr is NSMutableAttributedString){
             val range = NSMakeRange(0,text.length.toULong())
             val style = NSMutableParagraphStyle()
             if(letterSpacing >= 0){

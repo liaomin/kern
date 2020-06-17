@@ -148,7 +148,7 @@
 		9E5FE1FD23A2443F00DAC2C5 /* TestInputController.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TestInputController.kt; sourceTree = "<group>"; };
 		9E5FE1FF23A2443F00DAC2C5 /* TestAnimationController.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TestAnimationController.kt; sourceTree = "<group>"; };
 		9E5FE20023A2443F00DAC2C5 /* TestAnimationInterpolatorController.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TestAnimationInterpolatorController.kt; sourceTree = "<group>"; };
-		9E7F35B0227573D500139DE6 /* ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E7F35B0227573D500139DE6 /* Kern.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kern.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E7F35B3227573D500139DE6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		9E7F35B4227573D500139DE6 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		9E7F35B6227573D500139DE6 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -334,7 +334,7 @@
 		9E7F35B1227573D500139DE6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9E7F35B0227573D500139DE6 /* ios.app */,
+				9E7F35B0227573D500139DE6 /* Kern.app */,
 				9E7F35CB227573D600139DE6 /* iosTests.xctest */,
 				9E7F35D6227573D600139DE6 /* iosUITests.xctest */,
 			);
@@ -413,7 +413,7 @@
 			);
 			name = ios;
 			productName = ios;
-			productReference = 9E7F35B0227573D500139DE6 /* ios.app */;
+			productReference = 9E7F35B0227573D500139DE6 /* Kern.app */;
 			productType = "com.apple.product-type.application";
 		};
 		9E7F35CA227573D600139DE6 /* iosTests */ = {
@@ -869,7 +869,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hitales.general.pre;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Kern;
 				SWIFT_OBJC_BRIDGING_HEADER = "ios/ios-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -899,7 +899,7 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hitales.general.pre;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Kern;
 				SWIFT_OBJC_BRIDGING_HEADER = "ios/ios-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
